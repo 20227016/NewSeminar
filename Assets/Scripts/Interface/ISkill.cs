@@ -1,0 +1,8 @@
+
+public interface ISkill
+{
+    /// <summary>
+    /// ÉXÉLÉã
+    /// </summary>
+    void Skill(CharacterBase characterBase, float skillTime, float skillCoolTime);
+}

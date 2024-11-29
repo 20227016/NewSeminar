@@ -1,0 +1,10 @@
+
+using UnityEngine;
+
+public interface IAttackStrong
+{
+    /// <summary>
+    /// ã≠çUåÇ
+    /// </summary>
+    void AttackStrong(Transform transform, float attackPower);
+}
