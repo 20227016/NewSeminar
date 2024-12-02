@@ -65,6 +65,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
     }
     // -------------------------------------------------------------------------------------
 
+    protected bool _isOutOfStamina = default;
+
     // カメラコントローラー
     protected CameraDirection _cameraDirection = default;
 
@@ -206,8 +208,10 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
         // 走った時のスタミナ消費オブザーバー
         Observable.Interval(TimeSpan.FromSeconds(0.1f))
            .Where(_ => _isRun && _networkedStamina > 0)
+           .Where(_ => !_isOutOfStamina)
            .Subscribe(_ =>
            {
+
                _networkedStamina -= _characterStatusStruct._runStamina;
            })
            .AddTo(this);
@@ -215,13 +219,22 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
         // スタミナ自動回復オブザーバー
         Observable.Interval(TimeSpan.FromSeconds(0.1f))
             .Where(_ => _networkedStamina < _characterStatusStruct._playerStatus.MaxStamina)
-            .Where(_ => _currentState == CharacterStateEnum.IDLE)
+            .Where(_ => !_isRun)
             .Subscribe(_ =>
             {
                 _networkedStamina += _characterStatusStruct._recoveryStamina;
             })
             .AddTo(this);
 
+        _currentStamina
+            .Where(_ => _ <= 0)
+            .Subscribe(_ => _isOutOfStamina = true);
+
+        _currentStamina
+            .Where(_ => _ >= 100)
+            .Subscribe(_ => _isOutOfStamina = false);
+
+        // スタミナ値の範囲を常に制限
         _networkedStamina = Mathf.Clamp(_networkedStamina, 0, _characterStatusStruct._playerStatus.MaxStamina);
     }
 
@@ -232,6 +245,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
     /// <param name="input">入力情報</param>
     public void ProcessInput(PlayerNetworkInput input)
     {
+       
 
         if (_currentState == CharacterStateEnum.ATTACK || _currentState == CharacterStateEnum.AVOIDANCE ||
             _currentState == CharacterStateEnum.SKILL || _currentState == CharacterStateEnum.DEATH)
@@ -247,7 +261,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
         {
             _isRun = !_isRun;
         }
+
         _wasRunningPressed = input.IsRunning;
+
 
         if (_moveDirection == Vector2.zero)
         {
@@ -266,10 +282,21 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
             }
             else
             {
-                _move = _moveProvider.GetRun();
-                //_animation.BoolAnimation(_animator, "Walk", false);
-                //_animation.BoolAnimation(_animator, "Run", true);
-                _moveSpeed = _characterStatusStruct._runSpeed;
+                if (_isOutOfStamina)
+                {
+                    _move = _moveProvider.GetWalk();
+                    //_animation.BoolAnimation(_animator, "Walk", true);
+                    //_animation.BoolAnimation(_animator, "Run", false);
+                    _moveSpeed = _characterStatusStruct._walkSpeed;
+                }
+                else
+                {
+                    _move = _moveProvider.GetRun();
+                    //_animation.BoolAnimation(_animator, "Walk", false);
+                    //_animation.BoolAnimation(_animator, "Run", true);
+                    _moveSpeed = _characterStatusStruct._runSpeed;
+                }
+                
             }
 
             Move(_playerTransform, _moveDirection, _moveSpeed, _rigidbody);
@@ -285,7 +312,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
                 AttackStrong(_playerTransform, _characterStatusStruct._attackMultipiler);
                 break;
 
-            case { IsAvoidance: true }:
+            case { IsAvoidance: true } when _moveDirection != Vector2.zero:
                 Avoidance(_playerTransform, _moveDirection, _characterStatusStruct._avoidanceDistance, _characterStatusStruct._avoidanceDuration);
                 break;
 
