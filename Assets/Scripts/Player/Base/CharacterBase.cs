@@ -26,8 +26,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
     [HideInInspector]
     public CharacterStateEnum _currentState = default;
 
-
-    // HP -----------------------------------------------------------------------------------
+    // HP ---------------------------------------------------------------------------------
     protected ReactiveProperty<float> _currentHP = new ReactiveProperty<float>();
 
     [Networked(OnChanged = nameof(OnNetworkedHPChanged))]
@@ -37,10 +36,10 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
     {
         changed.Behaviour._currentHP.Value = changed.Behaviour._networkedHP;
     }
-    // -------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------
 
 
-    // スタミナ ----------------------------------------------------------------------------
+    // スタミナ ---------------------------------------------------------------------------
     protected ReactiveProperty<float> _currentStamina = new ReactiveProperty<float>();
 
     [Networked(OnChanged = nameof(OnNetworkedStaminaChanged))]
@@ -50,10 +49,10 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
     {
         changed.Behaviour._currentStamina.Value = changed.Behaviour._networkedStamina;
     }
-    // -------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------
 
 
-    // スキルゲージ ------------------------------------------------------------------------
+    // スキルゲージ -----------------------------------------------------------------------
     protected ReactiveProperty<float> _currentSkillPoint = new ReactiveProperty<float>();
 
     [Networked(OnChanged = nameof(OnNetworkedSkillPointChanged))]
@@ -63,9 +62,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
     {
         changed.Behaviour._currentSkillPoint.Value = changed.Behaviour._networkedSkillPoint;
     }
-    // -------------------------------------------------------------------------------------
-
-    protected bool _isOutOfStamina = default;
+    // ------------------------------------------------------------------------------------
 
     // カメラコントローラー
     protected CameraDirection _cameraDirection = default;
@@ -84,6 +81,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
 
     // 前回のダッシュ状態を記録するフィールド
     private bool _wasRunningPressed = false;
+
+    // スタミナ切れフラグ
+    protected bool _isOutOfStamina = default;
 
     // 移動速度
     protected float _moveSpeed = default;
@@ -192,7 +192,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
         _moveSpeed = _characterStatusStruct._walkSpeed;
         _characterStatusStruct._playerStatus = new WrapperPlayerStatus();
 
-        // HP、スタミナ、スキルポイント変数をネットワークに同期する
+        // ネットワーク同期用変数とリアクティブプロパティを初期化
         _currentHP.Value = _characterStatusStruct._playerStatus.MaxHp;
         _networkedHP = _currentHP.Value;
         _currentStamina.Value = _characterStatusStruct._playerStatus.MaxStamina;
@@ -205,36 +205,46 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
                   .Subscribe(_ => Death())
                   .AddTo(this);
 
-        // 走った時のスタミナ消費オブザーバー
+        StaminaManagement();
+    }
+
+    /// <summary>
+    /// スタミナ管理
+    /// </summary>
+    private void StaminaManagement()
+    {
+
+        // 走った時のスタミナ消費
         Observable.Interval(TimeSpan.FromSeconds(0.1f))
-           .Where(_ => _isRun && _networkedStamina > 0)
-           .Where(_ => !_isOutOfStamina)
+           .Where(_ => _isRun && !_isOutOfStamina)
+           .Where(_ => _networkedStamina > 0)
            .Subscribe(_ =>
            {
-
                _networkedStamina -= _characterStatusStruct._runStamina;
            })
            .AddTo(this);
 
-        // スタミナ自動回復オブザーバー
+        // スタミナ自動回復
         Observable.Interval(TimeSpan.FromSeconds(0.1f))
+            .Where(_ => !_isRun || _isOutOfStamina)
             .Where(_ => _networkedStamina < _characterStatusStruct._playerStatus.MaxStamina)
-            .Where(_ => !_isRun)
             .Subscribe(_ =>
             {
                 _networkedStamina += _characterStatusStruct._recoveryStamina;
             })
             .AddTo(this);
 
+        // スタミナが0を下回ったらスタミナ切れフラグをtrueに
         _currentStamina
             .Where(_ => _ <= 0)
             .Subscribe(_ => _isOutOfStamina = true);
 
+        // スタミナが最大値の半分まで回復したらスタミナ切れフラグをfalseに
         _currentStamina
-            .Where(_ => _ >= 100)
+            .Where(_ => _ >= _characterStatusStruct._playerStatus.MaxStamina / 2)
             .Subscribe(_ => _isOutOfStamina = false);
 
-        // スタミナ値の範囲を常に制限
+        // スタミナ値の範囲を制限
         _networkedStamina = Mathf.Clamp(_networkedStamina, 0, _characterStatusStruct._playerStatus.MaxStamina);
     }
 
@@ -245,62 +255,15 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
     /// <param name="input">入力情報</param>
     public void ProcessInput(PlayerNetworkInput input)
     {
-       
-
-        if (_currentState == CharacterStateEnum.ATTACK || _currentState == CharacterStateEnum.AVOIDANCE ||
-            _currentState == CharacterStateEnum.SKILL || _currentState == CharacterStateEnum.DEATH)
+        if (_currentState == CharacterStateEnum.ATTACK ||
+            _currentState == CharacterStateEnum.AVOIDANCE ||
+            _currentState == CharacterStateEnum.SKILL ||
+            _currentState == CharacterStateEnum.DEATH)
         {
             return;
         }
 
-        // 入力情報を移動方向に格納
-        _moveDirection = input.MoveDirection;
-
-        // Run状態の切り替え
-        if (input.IsRunning && !_wasRunningPressed)
-        {
-            _isRun = !_isRun;
-        }
-
-        _wasRunningPressed = input.IsRunning;
-
-
-        if (_moveDirection == Vector2.zero)
-        {
-            _currentState = CharacterStateEnum.IDLE;
-            //_animation.BoolAnimation(_animator, "Walk", false);
-            //_animation.BoolAnimation(_animator, "Run", false);
-        }
-        else
-        {
-            if (!_isRun)
-            {
-                _move = _moveProvider.GetWalk();
-                //_animation.BoolAnimation(_animator, "Walk", true);
-                //_animation.BoolAnimation(_animator, "Run", false);
-                _moveSpeed = _characterStatusStruct._walkSpeed;
-            }
-            else
-            {
-                if (_isOutOfStamina)
-                {
-                    _move = _moveProvider.GetWalk();
-                    //_animation.BoolAnimation(_animator, "Walk", true);
-                    //_animation.BoolAnimation(_animator, "Run", false);
-                    _moveSpeed = _characterStatusStruct._walkSpeed;
-                }
-                else
-                {
-                    _move = _moveProvider.GetRun();
-                    //_animation.BoolAnimation(_animator, "Walk", false);
-                    //_animation.BoolAnimation(_animator, "Run", true);
-                    _moveSpeed = _characterStatusStruct._runSpeed;
-                }
-                
-            }
-
-            Move(_playerTransform, _moveDirection, _moveSpeed, _rigidbody);
-        }
+        MoveManagement(input);
 
         switch (input)
         {
@@ -330,6 +293,67 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
 
             default:
                 break;
+        }
+    }
+
+    /// <summary>
+    /// 移動入力を管理
+    /// </summary>
+    /// <param name="input"></param>
+    private void MoveManagement(PlayerNetworkInput input)
+    {
+
+        // 入力情報を移動方向に格納
+        _moveDirection = input.MoveDirection;
+
+        // Run状態を切り替える
+        if (input.IsRunning && !_wasRunningPressed)
+        {
+            _isRun = !_isRun;
+        }
+
+        // Run状態を退避しておく
+        _wasRunningPressed = input.IsRunning;
+
+        // 移動値がない時は待機状態に
+        if (_moveDirection == Vector2.zero)
+        {
+            _currentState = CharacterStateEnum.IDLE;
+            //_animation.BoolAnimation(_animator, "Walk", false);
+            //_animation.BoolAnimation(_animator, "Run", false);
+        }
+        else
+        {
+            // 歩きの場合
+            if (!_isRun)
+            {
+                _move = _moveProvider.GetWalk();
+                //_animation.BoolAnimation(_animator, "Walk", true);
+                //_animation.BoolAnimation(_animator, "Run", false);
+                _moveSpeed = _characterStatusStruct._walkSpeed;
+            }
+            else
+            {
+                // スタミナ切れの時
+                if (_isOutOfStamina)
+                {
+                    _move = _moveProvider.GetWalk();
+                    //_animation.BoolAnimation(_animator, "Walk", true);
+                    //_animation.BoolAnimation(_animator, "Run", false);
+                    _moveSpeed = _characterStatusStruct._walkSpeed;
+                }
+                else
+                {
+                    _move = _moveProvider.GetRun();
+                    //_animation.BoolAnimation(_animator, "Walk", false);
+                    //_animation.BoolAnimation(_animator, "Run", true);
+                    _moveSpeed = _characterStatusStruct._runSpeed;
+                }
+
+            }
+
+            // 移動を実行
+            Move(_playerTransform, _moveDirection, _moveSpeed, _rigidbody);
         }
     }
 
@@ -414,6 +438,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
             _characterStatusStruct._playerStatus.MaxHp
         );
     }
+
 
     /// <summary>
     /// 死亡処理
