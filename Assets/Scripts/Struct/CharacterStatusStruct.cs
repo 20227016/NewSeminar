@@ -61,4 +61,25 @@ public struct CharacterStatusStruct
     /// 蘇生時間
     /// </summary>
     public float _ressurectionTime;
+
+    /// <summary>
+    /// スタミナ自動回復量
+    /// </summary>
+    public float _recoveryStamina;
+
+    /// <summary>
+    /// ダッシュ時スタミナ消費量
+    /// </summary>
+    public float _runStamina;
+
+    /// <summary>
+    /// 回避時スタミナ消費
+    /// </summary>
+    public float _avoidanceStamina;
+
+    /// <summary>
+    /// スタミナ切れ時間
+    /// </summary>
+    public float _outOfStaminaTime;
+
 }

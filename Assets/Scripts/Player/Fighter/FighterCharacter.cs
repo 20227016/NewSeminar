@@ -12,9 +12,9 @@ using System.Collections;
 /// </summary>
 public class FighterCharacter : CharacterBase
 {
-    public override void AttackLight()
+    public override void AttackLight(Transform transform, float attackMultipiler)
     {
-        base.AttackLight();
+        base.AttackLight(transform, attackMultipiler);
         _passive.Passive(this);
     }
 

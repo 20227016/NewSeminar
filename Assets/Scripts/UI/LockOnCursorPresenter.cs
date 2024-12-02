@@ -12,26 +12,21 @@ using UnityEngine;
 /// </summary>
 public class LockOnCursorPresenter : MonoBehaviour
 {
-    private PlayerTargetting _player = default;
-
     private LockOnCursorView _lockOnCursorView = default;
 
     /// <summary>
     /// 初期化処理
     /// </summary>
-    private void Start()
+    private void Awake()
     {
-
         _lockOnCursorView = GetComponent<LockOnCursorView>();
-
-        GameLauncher.Instance.OnPlayerJoin.Subscribe(_ => SetModel(_));
     }
 
-
-    private void SetModel(GameObject player)
+    public void SetModel(GameObject player)
     {
-        _player = player.GetComponentInChildren<PlayerTargetting>();
-
-        _player.LockOnEvent.Subscribe(target => _lockOnCursorView.UpdateLockOnCursorTarget(target));
+        player.GetComponentInChildren<PlayerTargetting>()
+            .LockOnEvent
+            .Subscribe(target => _lockOnCursorView.UpdateLockOnCursorTarget(target))
+            .AddTo(this);
     }
 }
