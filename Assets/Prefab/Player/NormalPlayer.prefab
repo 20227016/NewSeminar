@@ -201,7 +201,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
@@ -268,11 +268,12 @@ MonoBehaviour:
     _runSpeed: 0.2
     _avoidanceDistance: 10
     _avoidanceDuration: 0.2
-    _attackMultipiler: 0
-    _defensePower: 0
-    _skillTime: 0
-    _skillCoolTime: 0
-    _counterTime: 0
+    _attackMultipiler: 1
+    _attackSpeed: 1
+    _defensePower: 10
+    _skillTime: 1
+    _skillCoolTime: 10
+    _counterTime: 1
     _skillPointUpperLimit: 100
     _ressurectionTime: 10
     _recoveryStamina: 3
