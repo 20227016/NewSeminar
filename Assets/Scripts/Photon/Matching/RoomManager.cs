@@ -20,7 +20,7 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
 {
 
     [SerializeField, Tooltip("ネットワークランナー")]
-    private static NetworkRunner _networkRunner = default; // 静的なインスタンスとして宣言
+    private NetworkRunner _networkRunner = default; // 静的なインスタンスとして宣言
 
     [SerializeField, Tooltip("部屋参加ボタンのプレハブ")]
     private GameObject _roomButtonPrefab = default; 
@@ -28,14 +28,14 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
     [SerializeField, Tooltip("ページスライドするやつ")]
     private Transform _roomListContent = default; // ScrollView の Content にアタッチ
 
-    private TextMeshProUGUI _buttonText = default;
+    private Text _buttonText = default;
 
-    private StartGameResult result = default;
+    private StartGameResult _result = default;
 
     [SerializeField]
-    private TextMeshProUGUI cardNameText = default;
+    private Text _RunnerStatusText = default;
     [SerializeField]
-    private TextMeshProUGUI _cardNameText = default;
+    private Text _PlayerCountText = default;
 
     /// <summary>
     /// 現在の参加人数
@@ -81,7 +81,7 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
             GameObject roomButtonInstance = Instantiate(_roomButtonPrefab, _roomListContent);
 
             // ボタンにルーム名を表示
-            _buttonText = roomButtonInstance.GetComponentInChildren<TextMeshProUGUI>();
+            _buttonText = roomButtonInstance.GetComponentInChildren<Text>();
             if (_buttonText != null)
             {
                 _buttonText.text = room.RoomName;
@@ -177,8 +177,8 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
 
     private void Update()
     {
-        cardNameText.text = "ランナー " + _networkRunner.IsRunning;
-        _cardNameText.text = "現在の人数 " + currentPlayerCount;
+        _RunnerStatusText.text = "ランナー " + _networkRunner.IsRunning;
+        _PlayerCountText.text = "現在の人数 " + currentPlayerCount;
     }
 
     // -------------------------------------------------------------------------------クライアントがホストからプレイヤー数を取得するための総合処理
