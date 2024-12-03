@@ -216,6 +216,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
 
         // 走った時のスタミナ消費
         Observable.Interval(TimeSpan.FromSeconds(0.1f))
+           .Where(_ => _currentState == CharacterStateEnum.MOVE)
            .Where(_ => _isRun && !_isOutOfStamina)
            .Where(_ => _networkedStamina > 0)
            .Subscribe(_ =>
@@ -226,6 +227,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
 
         // スタミナ自動回復
         Observable.Interval(TimeSpan.FromSeconds(0.1f))
+            .Where(_ => _currentState != CharacterStateEnum.AVOIDANCE)
             .Where(_ => !_isRun || _isOutOfStamina)
             .Where(_ => _networkedStamina < _characterStatusStruct._playerStatus.MaxStamina)
             .Subscribe(_ =>
@@ -275,7 +277,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
                 AttackStrong(_playerTransform, _characterStatusStruct._attackMultipiler);
                 break;
 
-            case { IsAvoidance: true } when _moveDirection != Vector2.zero:
+            case { IsAvoidance: true } when _moveDirection != Vector2.zero && !_isOutOfStamina:
                 Avoidance(_playerTransform, _moveDirection, _characterStatusStruct._avoidanceDistance, _characterStatusStruct._avoidanceDuration);
                 break;
 
