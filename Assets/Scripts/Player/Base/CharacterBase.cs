@@ -114,7 +114,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
 
     #endregion
 
-
     /// <summary>
     /// 生成時処理
     /// </summary>
@@ -130,7 +129,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
         Setup();
     }
 
-
     /// <summary>
     /// ネットワーク同期アップデート
     /// </summary>
@@ -141,9 +139,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
             // 入力情報収集
             ProcessInput(data);
         }
-
     }
-
 
     /// <summary>
     /// プレイヤーごとに設定するもの
@@ -205,49 +201,81 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
                   .Subscribe(_ => Death())
                   .AddTo(this);
 
-        StaminaManagement();
+        ManageStamina();
     }
 
     /// <summary>
     /// スタミナ管理
     /// </summary>
-    private void StaminaManagement()
+    private void ManageStamina()
     {
+        // 走った時のスタミナ消費処理
+        HandleRunStaminaConsumption();
 
-        // 走った時のスタミナ消費
-        Observable.Interval(TimeSpan.FromSeconds(0.1f))
-           .Where(_ => _currentState == CharacterStateEnum.MOVE)
-           .Where(_ => _isRun && !_isOutOfStamina)
-           .Where(_ => _networkedStamina > 0)
-           .Subscribe(_ =>
-           {
-               _networkedStamina -= _characterStatusStruct._runStamina;
-           })
-           .AddTo(this);
+        // スタミナ自動回復処理
+        HandleStaminaRecovery();
 
-        // スタミナ自動回復
+        // スタミナ切れフラグの管理
+        HandleOutOfStaminaFlag();
+
+        // スタミナ値を範囲内に制限
+        _networkedStamina = Mathf.Clamp(_networkedStamina, 0, _characterStatusStruct._playerStatus.MaxStamina);
+    }
+
+    /// <summary>
+    /// 走った時のスタミナ消費
+    /// </summary>
+    private void HandleRunStaminaConsumption()
+    {
         Observable.Interval(TimeSpan.FromSeconds(0.1f))
+            // 走り状態時
+            .Where(_ => _currentState == CharacterStateEnum.RUN)
+            // スタミナが0以上の時
+            .Where(_ => _networkedStamina > 0)
+            .Subscribe(_ =>
+            {
+                _networkedStamina -= _characterStatusStruct._runStamina;
+            })
+            .AddTo(this);
+    }
+
+    /// <summary>
+    /// スタミナ自動回復
+    /// </summary>
+    private void HandleStaminaRecovery()
+    {
+        Observable.Interval(TimeSpan.FromSeconds(0.1f))
+            // 回避状態ではない
             .Where(_ => _currentState != CharacterStateEnum.AVOIDANCE)
-            .Where(_ => !_isRun || _isOutOfStamina)
+            // 走っていない or スタミナ切れ or 移動していない
+            .Where(_ => !_isRun || _isOutOfStamina || _moveDirection == Vector2.zero)
+            // スタミナが最大値以下
             .Where(_ => _networkedStamina < _characterStatusStruct._playerStatus.MaxStamina)
             .Subscribe(_ =>
             {
-                _networkedStamina += _characterStatusStruct._recoveryStamina;
+                // スタミナ切れ時は回復速度が半減
+                float recoveryRate = _isOutOfStamina ? 2.0f : 1.0f;
+                _networkedStamina += _characterStatusStruct._recoveryStamina / recoveryRate;
             })
             .AddTo(this);
+    }
 
+    /// <summary>
+    /// スタミナ切れフラグの管理
+    /// </summary>
+    private void HandleOutOfStaminaFlag()
+    {
         // スタミナが0を下回ったらスタミナ切れフラグをtrueに
         _currentStamina
-            .Where(_ => _ <= 0)
-            .Subscribe(_ => _isOutOfStamina = true);
+            .Where(stamina => stamina <= 0)
+            .Subscribe(_ => _isOutOfStamina = true)
+            .AddTo(this);
 
         // スタミナが最大値の半分まで回復したらスタミナ切れフラグをfalseに
         _currentStamina
-            .Where(_ => _ >= _characterStatusStruct._playerStatus.MaxStamina / 2)
-            .Subscribe(_ => _isOutOfStamina = false);
-
-        // スタミナ値の範囲を制限
-        _networkedStamina = Mathf.Clamp(_networkedStamina, 0, _characterStatusStruct._playerStatus.MaxStamina);
+            .Where(stamina => stamina >= _characterStatusStruct._playerStatus.MaxStamina / 2)
+            .Subscribe(_ => _isOutOfStamina = false)
+            .AddTo(this);
     }
 
 
@@ -301,10 +329,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
     /// <summary>
     /// 移動入力を管理
     /// </summary>
-    /// <param name="input"></param>
+    /// <param name="input">収集した入力情報</param>
     private void MoveManagement(PlayerNetworkInput input)
     {
-
         // 入力情報を移動方向に格納
         _moveDirection = input.MoveDirection;
 
@@ -313,56 +340,37 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage
         {
             _isRun = !_isRun;
         }
-
-        // Run状態を退避しておく
         _wasRunningPressed = input.IsRunning;
 
-        // 移動値がない時は待機状態に
+        // 移動値がない場合は待機状態に
         if (_moveDirection == Vector2.zero)
         {
             _currentState = CharacterStateEnum.IDLE;
             //_animation.BoolAnimation(_animator, "Walk", false);
             //_animation.BoolAnimation(_animator, "Run", false);
+            return;
         }
-        else
-        {
-            // 歩きの場合
-            if (!_isRun)
-            {
-                _move = _moveProvider.GetWalk();
-                //_animation.BoolAnimation(_animator, "Walk", true);
-                //_animation.BoolAnimation(_animator, "Run", false);
-                _moveSpeed = _characterStatusStruct._walkSpeed;
-            }
-            else
-            {
-                // スタミナ切れの時
-                if (_isOutOfStamina)
-                {
-                    _move = _moveProvider.GetWalk();
-                    //_animation.BoolAnimation(_animator, "Walk", true);
-                    //_animation.BoolAnimation(_animator, "Run", false);
-                    _moveSpeed = _characterStatusStruct._walkSpeed;
-                }
-                else
-                {
-                    _move = _moveProvider.GetRun();
-                    //_animation.BoolAnimation(_animator, "Walk", false);
-                    //_animation.BoolAnimation(_animator, "Run", true);
-                    _moveSpeed = _characterStatusStruct._runSpeed;
-                }
 
-            }
+        // スタミナ切れの場合は常に歩き
+        bool isWalking = !_isRun || _isOutOfStamina;
 
-            // 移動を実行
-            Move(_playerTransform, _moveDirection, _moveSpeed, _rigidbody);
-        }
+        // 状態に応じて移動設定を変更
+        _move = isWalking ? _moveProvider.GetWalk() : _moveProvider.GetRun();
+        _moveSpeed = isWalking ? _characterStatusStruct._walkSpeed : _characterStatusStruct._runSpeed;
+        _currentState = isWalking ? CharacterStateEnum.WALK : CharacterStateEnum.RUN;
+
+        // アニメーション
+        // _animation.BoolAnimation(_animator, "Walk", isWalking);
+        // _animation.BoolAnimation(_animator, "Run", !isWalking);
+
+        // 移動を実行
+        Move(_playerTransform, _moveDirection, _moveSpeed, _rigidbody, _currentState);
     }
 
 
-    public virtual void Move(Transform transform, Vector2 moveDirection, float moveSpeed, Rigidbody rigidbody)
+    public virtual void Move(Transform transform, Vector2 moveDirection, float moveSpeed, Rigidbody rigidbody, CharacterStateEnum characterState)
     {
-        _currentState = CharacterStateEnum.MOVE;
+        _currentState = characterState;
         _move.Move(transform, moveDirection, moveSpeed, rigidbody);
     }
 
