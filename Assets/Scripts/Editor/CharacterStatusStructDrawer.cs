@@ -6,74 +6,82 @@ public class CharacterStatusStructDrawer : PropertyDrawer
 {
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        EditorGUI.BeginProperty(position, label, property);
+        // 開閉可能なFoldout
+        property.isExpanded = EditorGUI.Foldout(new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight), property.isExpanded, "キャラクターステータス");
 
-        // インデント設定
-        var indent = EditorGUI.indentLevel;
-        EditorGUI.indentLevel = 1;
+        if (!property.isExpanded)
+            return;
 
-        // ラインの高さ
-        var lineHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-        var rect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
+        // インデントを1段階深くする
+        EditorGUI.indentLevel++;
 
-        // 区切り線の描画
-        DrawSeparator(ref rect, position.width);
+        // 各フィールドの描画
+        float fieldY = position.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // 初期Y位置を設定
 
-        // プロパティのラベルを表示
-        EditorGUI.LabelField(rect, "キャラクターステータス");
-        rect.y += lineHeight;
+        // 項目ごとにラベルを配置
+        fieldY = DrawLabel(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), "基礎ステータス");
+        fieldY = DrawLabelField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), "最大HP量", "100");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_walkSpeed", "通常移動速度");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_runSpeed", "ダッシュ移動速度");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_avoidanceDistance", "回避距離");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_avoidanceDuration", "回避持続時間 ( 秒 )");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackPower", "攻撃力");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackSpeed", "攻撃速度倍率 ( × 攻撃速度 )");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_defensePower", "防御力");
 
-        // 各フィールドの日本語ラベルを順番に描画
-        DrawPropertyWithLabel(property, rect, "_walkSpeed", "通常移動速度", ref rect, lineHeight);
-        DrawPropertyWithLabel(property, rect, "_runSpeed", "ダッシュ移動速度", ref rect, lineHeight);
-        DrawPropertyWithLabel(property, rect, "_avoidanceDistance", "回避距離", ref rect, lineHeight);
-        DrawPropertyWithLabel(property, rect, "_avoidanceDuration", "回避持続時間", ref rect, lineHeight);
-        DrawPropertyWithLabel(property, rect, "_attackMultipiler", "攻撃倍率", ref rect, lineHeight);
-        DrawPropertyWithLabel(property, rect, "_attackSpeed", "攻撃速度", ref rect, lineHeight);
-        DrawPropertyWithLabel(property, rect, "_defensePower", "防御力", ref rect, lineHeight);
-        DrawPropertyWithLabel(property, rect, "_skillTime", "スキル継続時間", ref rect, lineHeight);
-        DrawPropertyWithLabel(property, rect, "_skillCoolTime", "スキルクールタイム", ref rect, lineHeight);
-        DrawPropertyWithLabel(property, rect, "_skillPointUpperLimit", "スキルポイント上限値", ref rect, lineHeight);
-        DrawPropertyWithLabel(property, rect, "_recoveryStamina", "スタミナ自動回復量", ref rect, lineHeight);
-        DrawPropertyWithLabel(property, rect, "_runStamina", "ダッシュ時スタミナ消費量", ref rect, lineHeight);
-        DrawPropertyWithLabel(property, rect, "_avoidanceStamina", "回避時スタミナ消費量", ref rect, lineHeight);
-        DrawPropertyWithLabel(property, rect, "_counterTime", "カウンター受付時間", ref rect, lineHeight);
-        DrawPropertyWithLabel(property, rect, "_ressurectionTime", "蘇生所要時間", ref rect, lineHeight);
-        DrawSeparator(ref rect, position.width);
+        fieldY = DrawLabel(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), "スタミナ関連");
+        fieldY = DrawLabelField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), "最大スタミナ量", "100");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_recoveryStamina", "スタミナ自動回復量 ( / 秒 )");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_runStamina", "ダッシュ移動時スタミナ消費量 ( / 秒 )");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_avoidanceStamina", "回避時スタミナ消費量");
 
-        // インデントを元に戻す
-        EditorGUI.indentLevel = indent;
-        EditorGUI.EndProperty();
+        fieldY = DrawLabel(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), "スキル関連");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_skillPointUpperLimit", "スキルポイント上限値");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_skillDuration", "スキル持続時間 ( 秒 )");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_skillCoolTime", "スキルクールタイム ( 秒 )");
+
+        fieldY = DrawLabel(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), "その他");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_counterTime", "カウンター受付時間 ( 秒 )");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_ressurectionTime", "蘇生所要時間 ( 秒 )");
+
+        // インデントを戻す
+        EditorGUI.indentLevel--;
     }
 
-    private void DrawPropertyWithLabel(SerializedProperty property, Rect rect, string propertyName, string label, ref Rect currentRect, float lineHeight)
+    private float DrawField(Rect position, SerializedProperty property, string fieldName, string displayName)
     {
-        var prop = property.FindPropertyRelative(propertyName);
-        if (prop != null)
+        SerializedProperty field = property.FindPropertyRelative(fieldName);
+        if (field != null)
         {
-            EditorGUI.PropertyField(currentRect, prop, new GUIContent(label));
-            currentRect.y += lineHeight;
+            EditorGUI.PropertyField(position, field, new GUIContent(displayName));
+            position.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // 次の項目に備えてYを調整
         }
+        return position.y; // 次のY位置を返す
     }
 
-    private void DrawSeparator(ref Rect rect, float width)
+    private float DrawLabel(Rect position, string label)
     {
-        // 区切り線の高さと位置
-        float lineHeight = 2f;
-        Rect separatorRect = new Rect(rect.x, rect.y, width, lineHeight);
+        // ラベル描画
+        EditorGUI.LabelField(position, label, EditorStyles.boldLabel);
+        return position.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+    }
 
-        // 区切り線の描画（灰色）
-        EditorGUI.DrawRect(separatorRect, Color.black);
-
-        // 区切り線の高さを調整
-        rect.y += lineHeight + EditorGUIUtility.standardVerticalSpacing;
+    private float DrawLabelField(Rect position, string label, string value)
+    {
+        // ラベルフィールド描画
+        EditorGUI.LabelField(position, label, value);
+        return position.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
     }
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        // 子プロパティの数に基づいて高さを計算
-        int fieldCount = property.CountInProperty();
-        float separatorHeight = 2f + EditorGUIUtility.standardVerticalSpacing; // 区切り線の高さ
-        return (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing) * fieldCount + separatorHeight;
+        if (!property.isExpanded)
+            return EditorGUIUtility.singleLineHeight;
+
+        // 各項目のラベルを含めた高さを計算
+        int fieldCount = property.CountInProperty() + 2; // 操作できない2つのフィールドを追加
+        int labelCount = 4; // 項目ラベルの数（例: 移動速度、回避など）
+
+        return EditorGUIUtility.singleLineHeight * (fieldCount + labelCount) + EditorGUIUtility.standardVerticalSpacing * (fieldCount + labelCount - 1);
     }
 }

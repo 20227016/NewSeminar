@@ -52,7 +52,7 @@ GameObject:
   - component: {fileID: 2219986813403867100}
   - component: {fileID: 3366692412886370783}
   m_Layer: 6
-  m_Name: NormalPlayer
+  m_Name: 0_Normal
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -267,19 +267,18 @@ MonoBehaviour:
     _walkSpeed: 0.1
     _runSpeed: 0.2
     _avoidanceDistance: 10
-    _avoidanceDuration: 0.2
-    _attackMultipiler: 1
+    _avoidanceDuration: 0.5
+    _attackPower: 10
     _attackSpeed: 1
     _defensePower: 10
-    _skillTime: 1
-    _skillCoolTime: 10
-    _counterTime: 1
+    _skillDuration: 0
+    _skillCoolTime: 20
+    _counterTime: 0.5
     _skillPointUpperLimit: 100
-    _ressurectionTime: 10
-    _recoveryStamina: 3
-    _runStamina: 3
+    _ressurectionTime: 5
+    _recoveryStamina: 25
+    _runStamina: 25
     _avoidanceStamina: 20
-    _outOfStaminaTime: 3
   _currentState: 0
 --- !u!114 &8628474662727558189
 MonoBehaviour:
