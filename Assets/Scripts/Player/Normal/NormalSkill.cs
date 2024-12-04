@@ -1,6 +1,4 @@
-
 using UnityEngine;
-using System.Collections;
 
 /// <summary>
 /// NormalSkill.cs
@@ -13,8 +11,7 @@ using System.Collections;
 public class NormalSkill : MonoBehaviour, ISkill
 {
 
-
-    public void Skill(CharacterBase characterBase, float skillTime, float skillCoolTime)
+    public void Skill(CharacterBase characterBase, float skillTime)
     {
         Debug.Log("ノーマルのスキル");
     }

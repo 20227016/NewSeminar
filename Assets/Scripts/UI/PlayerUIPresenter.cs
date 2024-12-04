@@ -40,6 +40,6 @@ public class PlayerUIPresenter : MonoBehaviour
         thisPlayer.CurrentStamina.Subscribe(value => _playerUIViews.UpdateGauge(_staminaGauge, value, _animationSpeed));
 
         // スキルポイントの更新
-        thisPlayer.CurrentSkillPoint.Subscribe(value => _playerUIViews.UpdateGauge(_staminaGauge, value, _animationSpeed));
+        thisPlayer.CurrentSkillPoint.Subscribe(value => _playerUIViews.UpdateGauge(_skillPointGauge, value, _animationSpeed));
     }
 }

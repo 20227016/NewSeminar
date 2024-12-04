@@ -21,10 +21,10 @@ public class PlayerAttackLight : IAttackLight
         _comboCounter = comboCounter;
     }
 
-    public void AttackLight(Transform transform, float attackMultiplier)
+    public void AttackLight(CharacterBase characterBase, float attackMultiplier)
     {
-        Vector3 attackPosition = transform.position + new Vector3(0, 1, 0); // 攻撃の発射地点
-        Vector3 attackDirection = transform.forward; // 攻撃の方向
+        Vector3 attackPosition = characterBase.transform.position + new Vector3(0, 1, 0); // 攻撃の発射地点
+        Vector3 attackDirection = characterBase.transform.forward; // 攻撃の方向
 
         // 指定した半径内のコライダーを取得
         Collider[] hitColliders = Physics.OverlapSphere(attackPosition, attackRadius, LayerMask.GetMask("Enemy"));
@@ -66,6 +66,9 @@ public class PlayerAttackLight : IAttackLight
 
                 // 相手にダメージを与える
                 target.ReceiveDamage(damage);
+
+                // 攻撃がヒットしたことをプレイヤー側に返す
+                characterBase.AttackHit();
 
             }
 

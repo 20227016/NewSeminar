@@ -30,9 +30,9 @@ public struct CharacterStatusStruct
     public float _avoidanceDuration;
 
     /// <summary>
-    /// 攻撃倍率
+    /// 攻撃力
     /// </summary>
-    public float _attackMultipiler;
+    public float _attackPower;
 
     /// <summary>
     /// 攻撃速度
@@ -47,7 +47,7 @@ public struct CharacterStatusStruct
     /// <summary>
     /// スキルタイム
     /// </summary>
-    public float _skillTime;
+    public float _skillDuration;
 
     /// <summary>
     /// スキルクールタイム

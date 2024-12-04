@@ -1,6 +1,4 @@
-
 using UnityEngine;
-using System.Collections;
 
 /// <summary>
 /// HealerSkill.cs
@@ -12,8 +10,10 @@ using System.Collections;
 /// </summary>
 public class HealerSkill : MonoBehaviour, ISkill
 {
-    public void Skill(CharacterBase characterBase, float skillTime, float skillCoolTime)
+    public void Skill(CharacterBase characterBase, float skillTime)
     {
-        print("ヒーラーのスキル");
+        Debug.Log("ヒーラーのスキル");
+
+
     }
 }
