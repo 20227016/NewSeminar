@@ -13,7 +13,7 @@ using Fusion;
 /// 作成日: 10/7
 /// 作成者: 高橋光栄
 /// </summary>
-public class ClickEventkall : MonoBehaviour
+public class ClickEventCall : MonoBehaviour
 {
     [SerializeField, Tooltip("カメラ格納用")]
     private Camera _camera = default;
