@@ -3,8 +3,8 @@ public interface IReceiveDamage
 {
 
     /// <summary>
-    /// ダメージ処理
+    /// 被ダメージ処理
     /// </summary>
-    /// <param name="damegeValue">ダメージ</param>
+    /// <param name="damegeValue">被ダメージ量</param>
     public void ReceiveDamage(int damegeValue);
 }

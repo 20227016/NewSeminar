@@ -3,9 +3,7 @@ using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
@@ -20,7 +18,7 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
 {
 
     [SerializeField, Tooltip("ネットワークランナー")]
-    private static NetworkRunner _networkRunner = default; // 静的なインスタンスとして宣言
+    private NetworkRunner _networkRunner = default; // 静的なインスタンスとして宣言
 
     [SerializeField, Tooltip("部屋参加ボタンのプレハブ")]
     private GameObject _roomButtonPrefab = default; 
@@ -28,14 +26,17 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
     [SerializeField, Tooltip("ページスライドするやつ")]
     private Transform _roomListContent = default; // ScrollView の Content にアタッチ
 
-    private TextMeshProUGUI _buttonText = default;
+    [SerializeField, Tooltip("ランナーが開始してあるかを描画するテキスト")]
+    private Text _runnerStatusText = default;
+    [SerializeField, Tooltip("プレイヤー数を描画するテキスト")]
+    private Text _playerCountText = default;
 
-    private StartGameResult result = default;
+    private Text _buttonText = default;
 
-    [SerializeField]
-    private TextMeshProUGUI cardNameText = default;
-    [SerializeField]
-    private TextMeshProUGUI _cardNameText = default;
+    private StartGameResult _result = default;
+
+    private IParticipantsSpawner _iSpawner = default;
+   
 
     /// <summary>
     /// 現在の参加人数
@@ -57,11 +58,20 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
     private void Start()
     {
 
+        _iSpawner = this.GetComponent<IParticipantsSpawner>();
+        if (_iSpawner == null)
+        {
+
+            Debug.LogError("IParticipantsSpawnerの獲得に失敗おっぱい");
+
+        }
         // ネットワークランナーの存在確認
         if (_networkRunner == null)
         {
+
             print("ランナーを作成しました");
             _networkRunner = gameObject.AddComponent<NetworkRunner>();
+
         }
         Debug.Log($"RoomManagerのStateAuthority: {this.HasStateAuthority}");
         Debug.Log($"NetworkObjectがアタッチされているか: {this.GetComponent<NetworkObject>() != null}");
@@ -70,6 +80,9 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
 
     }
 
+    /// <summary>
+    /// 初期処理
+    /// </summary>
     private void InitializeRoomListUI()
     {
 
@@ -81,7 +94,7 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
             GameObject roomButtonInstance = Instantiate(_roomButtonPrefab, _roomListContent);
 
             // ボタンにルーム名を表示
-            _buttonText = roomButtonInstance.GetComponentInChildren<TextMeshProUGUI>();
+            _buttonText = roomButtonInstance.GetComponentInChildren<Text>();
             if (_buttonText != null)
             {
                 _buttonText.text = room.RoomName;
@@ -98,7 +111,10 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
     }
 
 
-    // 部屋に入室するための処理
+    /// <summary>
+    /// 部屋に入室するための処理
+    /// </summary>
+    /// <param name="roomName"></param>
     private async void JoinRoom(string roomName)
     {
         Debug.Log($"{roomName} に入室を試みます。");
@@ -113,7 +129,7 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
         // プレイヤー数が0ならホスト、それ以外はクライアント
         GameMode gameMode = room.CurrentPlayerCount == 0 ? GameMode.Host : GameMode.Client;
 
-        // Args＝引数
+        // サーバー情報（Args＝引数）
         StartGameArgs startGameArgs = new StartGameArgs()
         {
             GameMode = gameMode,
@@ -121,64 +137,65 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
             SceneManager = this.gameObject.AddComponent<NetworkSceneManagerDefault>()
         };
 
-        // 指定したネットワークモードでのゲームをスタートさせる（セッション名が重複している等で失敗する）
-        StartGameResult result = await _networkRunner.StartGame(startGameArgs);
-        if (result.Ok)
+        // ゲームモードに合わせた参加者を生成
+        if (await _iSpawner.Spawner(startGameArgs,_networkRunner))
         {
-            Debug.Log($"部屋 {roomName} に正常に参加しました。");
 
-            if (gameMode == GameMode.Host)
-            {
+            print("接続成功");
 
-                // ホストがStateAuthorityを持つために、ネットワークオブジェクトのStateAuthorityをホストに設定
-                NetworkObject networkObject = GetComponent<NetworkObject>();
-
-                // 必要な場合、StateAuthorityをホストに設定
-                if (networkObject != null && !networkObject.HasStateAuthority)
-                {
-                    // 自分のPlayerに対してStateAuthorityを設定
-                    //networkObject.AssignStateAuthority(_networkRunner.LocalPlayer);
-                }
-
-                Debug.Log("ホストとして部屋に参加しました。");
-                UpdatePlayerCount(roomName, 1); // ホストの初期設定
-            }
-            else
-            {
-                Debug.Log("クライアントとして部屋に参加しました。");
-                // 参加リクエスト（プレイヤー数をホストに通知）
-                RPC_RequestPlayerCountUpdate(roomName);
-            }
         }
         else
         {
-            print(gameMode);
-            print(result);
-            Debug.LogError($"部屋 {roomName} に参加できませんでした: {result.ShutdownReason}");
+
+            print("接続失敗");
+
         }
 
-        // 最新のプレイヤー数を確認
-        Debug.Log($"部屋 {roomName} の現在のプレイヤー数: {room.CurrentPlayerCount}");
+        //// 指定したネットワークモードでのゲームをスタートさせる（セッション名が重複している等で失敗する）
+        //StartGameResult result = await _networkRunner.StartGame(startGameArgs);
+        //if (result.Ok)
+        //{
+        //    Debug.Log($"部屋 {roomName} に正常に参加しました。");
+
+        //    if (gameMode == GameMode.Host)
+        //    {
+
+        //        // ホストがStateAuthorityを持つために、ネットワークオブジェクトのStateAuthorityをホストに設定
+        //        NetworkObject networkObject = GetComponent<NetworkObject>();
+
+        //        // 必要な場合、StateAuthorityをホストに設定
+        //        if (networkObject != null && !networkObject.HasStateAuthority)
+        //        {
+        //            // 自分のPlayerに対してStateAuthorityを設定
+        //            //networkObject.AssignStateAuthority(_networkRunner.LocalPlayer);
+        //        }
+
+        //        Debug.Log("ホストとして部屋に参加しました。");
+        //        UpdatePlayerCount(roomName, 1); // ホストの初期設定
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("クライアントとして部屋に参加しました。");
+        //        // 参加リクエスト（プレイヤー数をホストに通知）
+        //        //RPC_RequestPlayerCountUpdate(roomName);
+        //    }
+        //}
+        //else
+        //{
+        //    print(gameMode);
+        //    print(result);
+        //    Debug.LogError($"部屋 {roomName} に参加できませんでした: {result.ShutdownReason}");
+        //}
+
+        //// 最新のプレイヤー数を確認
+        //Debug.Log($"部屋 {roomName} の現在のプレイヤー数: {room.CurrentPlayerCount}");
 
     }
-
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    private void RPC_RequestPlayerCountUpdate(string roomName)
-    {
-        Debug.Log($"クライアントからプレイヤー数更新リクエストを受信しました: {roomName}");
-
-        RoomInfo room = _preDefinedRooms.Find(r => r.RoomName == roomName);
-        if (room != null)
-        {
-            UpdatePlayerCount(roomName, room.CurrentPlayerCount + 1);
-        }
-    }
-
 
     private void Update()
     {
-        cardNameText.text = "ランナー " + _networkRunner.IsRunning;
-        _cardNameText.text = "現在の人数 " + currentPlayerCount;
+        _runnerStatusText.text = "ランナー " + _networkRunner.IsRunning;
+        _playerCountText.text = "現在の人数 " + currentPlayerCount;
     }
 
     // -------------------------------------------------------------------------------クライアントがホストからプレイヤー数を取得するための総合処理
@@ -188,30 +205,12 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
         // RPCでホストからプレイヤー数を取得する処理
         return await Task.FromResult(0); // 仮の処理。実際にはRPCを実装
     }
-
-    // プレイヤー数を取得するRPC
-    public void RPC_GetPlayerCount(NetworkRunner runner, string roomName)
-    {
-        // ここでルーム名に基づいてプレイヤー数を取得
-        int playerCount = GetPlayerCount(roomName); // 実装に応じてプレイヤー数を取得
-
-        // プレイヤー数をクライアントに返す
-        RPC_SendPlayerCount(playerCount);
-    }
-
     // クライアントにプレイヤー数を送信するRPC
     private void RPC_SendPlayerCount(int playerCount)
     {
         // プレイヤー数をクライアント側で処理する
         // 例: playerCountを保存またはUIを更新
         Debug.Log($"プレイヤー数: {playerCount}");
-    }
-
-    private int GetPlayerCount(string roomName)
-    {
-        // ここで実際のプレイヤー数を計算して返す
-        // 仮にルーム名に基づいて固定の数を返す
-        return 3; // 例: 3人がプレイ中
     }
 
     // ---------------------------------------------------------------------------------------終わり
@@ -298,7 +297,8 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
     }
 
     // ホストが人数を更新する処理
-    private void UpdatePlayerCount(string roomName, int newPlayerCount)
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    private void RPC_UpdatePlayerCount(string roomName, int newPlayerCount)
     {
         print("送られてきた部屋名"+roomName);
         print("送られてきた人数(1が理想)"+newPlayerCount);
@@ -314,30 +314,7 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
 
 
 
-    /// <summary>
-    /// ネットワークで使用する変数の管理
-    /// 現在の役割
-    /// ・RoomInfoで現在の部屋の人数をCurrentPlayerCountに代入する(同期変数)
-    /// </summary>
-    public class RoomInfo
-    {
 
-        [Networked] public string RoomName { get; private set; }
-        [Networked] public int CurrentPlayerCount { get; set; } // 現在のプレイヤー数[ネットワーク上で同期]
-        [Networked] public int MaxPlayerCount { get; private set; } // 最大プレイヤー数[ネットワーク上で同期]
-
-        public RoomInfo(string roomName, int maxPlayerCount)
-        {
-            RoomName = roomName;
-            MaxPlayerCount = maxPlayerCount;
-            CurrentPlayerCount = 0; // 初期人数
-        }
-
-        public void UpdatePlayerCount(int newPlayerCount)
-        {
-            CurrentPlayerCount = newPlayerCount; // プレイヤー数を更新する
-        }
-    }
 
     // 固定メソッド
     #region

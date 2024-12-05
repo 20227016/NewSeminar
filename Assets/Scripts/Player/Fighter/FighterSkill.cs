@@ -1,6 +1,6 @@
-
 using UnityEngine;
-using System.Collections;
+using UniRx;
+using System;
 
 /// <summary>
 /// FighterSkill.cs
@@ -12,8 +12,25 @@ using System.Collections;
 /// </summary>
 public class FighterSkill : MonoBehaviour, ISkill
 {
-    public void Skill(CharacterBase characterBase, float skillTime, float skillCoolTime)
+    [SerializeField, Tooltip("スキルによる攻撃速度上昇倍率")]
+    private float _attackSpeedMaltipiler = 2.0f;
+
+    public void Skill(CharacterBase characterBase, float skillTime)
     {
-        print("ファイターのスキル");
+        Debug.Log("ファイターのスキル");
+
+        // 元の攻撃速度を保持
+        float originalAttackSpeed = characterBase._characterStatusStruct._attackSpeed;
+
+        // 攻撃速度を一時的に変更
+        characterBase._characterStatusStruct._attackSpeed *= _attackSpeedMaltipiler;
+
+        // skillTime後に元の攻撃速度に戻す
+        Observable.Timer(TimeSpan.FromSeconds(skillTime))
+            .Subscribe(_ =>
+            {
+                characterBase._characterStatusStruct._attackSpeed = originalAttackSpeed;
+                Debug.Log("スキル効果終了");
+            });
     }
 }

@@ -1,6 +1,4 @@
-
 using UnityEngine;
-using System.Collections;
 
 /// <summary>
 /// FighterPassive.cs
@@ -12,8 +10,13 @@ using System.Collections;
 /// </summary>
 public class FighterPassive : MonoBehaviour, IPassive
 {
+    [SerializeField, Tooltip("パッシブによるHP回復量")]
+    private int _passiveHealValue = 2;
+
     public void Passive(CharacterBase characterBase)
     {
-        characterBase.ReceiveDamage(-2);
+        Debug.Log("ファイターのパッシブ");
+
+        characterBase.ReceiveHeal(_passiveHealValue);
     }
 }

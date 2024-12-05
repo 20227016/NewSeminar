@@ -6,5 +6,5 @@ public interface IAttackStrong
     /// <summary>
     /// ã≠çUåÇ
     /// </summary>
-    void AttackStrong(Transform transform, float attackPower);
+    void AttackStrong(CharacterBase characterBase, float attackPower);
 }

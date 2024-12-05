@@ -6,9 +6,13 @@ public enum CharacterStateEnum
     /// </summary>
     IDLE,
     /// <summary>
-    /// ˆÚ“®
+    /// •à‚«ˆÚ“®
     /// </summary>
-    MOVE,
+    WALK,
+    /// <summary>
+    /// ‘–‚èˆÚ“®
+    /// </summary>
+    RUN,
     /// <summary>
     /// ‰ñ”ð
     /// </summary>

@@ -1,4 +1,6 @@
 
+using UnityEngine;
+
 [System.Serializable]
 public struct CharacterStatusStruct
 {
@@ -28,9 +30,14 @@ public struct CharacterStatusStruct
     public float _avoidanceDuration;
 
     /// <summary>
-    /// 攻撃倍率
+    /// 攻撃力
     /// </summary>
-    public float _attackMultipiler;
+    public float _attackPower;
+
+    /// <summary>
+    /// 攻撃速度
+    /// </summary>
+    public float _attackSpeed;
 
     /// <summary>
     /// 防御力
@@ -40,7 +47,7 @@ public struct CharacterStatusStruct
     /// <summary>
     /// スキルタイム
     /// </summary>
-    public float _skillTime;
+    public float _skillDuration;
 
     /// <summary>
     /// スキルクールタイム
@@ -53,12 +60,12 @@ public struct CharacterStatusStruct
     public float _counterTime;
 
     /// <summary>
-    /// スキルポイント上限
+    /// スキルポイント上限値
     /// </summary>
     public float _skillPointUpperLimit;
 
     /// <summary>
-    /// 蘇生時間
+    /// 蘇生所要時間
     /// </summary>
     public float _ressurectionTime;
 
@@ -76,10 +83,5 @@ public struct CharacterStatusStruct
     /// 回避時スタミナ消費
     /// </summary>
     public float _avoidanceStamina;
-
-    /// <summary>
-    /// スタミナ切れ時間
-    /// </summary>
-    public float _outOfStaminaTime;
 
 }
