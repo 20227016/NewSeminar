@@ -1,4 +1,5 @@
 using Fusion;
+using UnityEngine;
 
 /// <summary>
 /// ネットワークで使用する変数の管理
@@ -19,8 +20,9 @@ public class RoomInfo
         CurrentParticipantCount = 0; // 初期人数
     }
 
-    public void UpdateParticipantCount(int newParticipantCount)
+    public void UpdateParticipantCount()
     {
-        CurrentParticipantCount = newParticipantCount; // プレイヤー数を更新する
+        CurrentParticipantCount++; // プレイヤー数を更新する
+        Debug.Log(CurrentParticipantCount+"プレイヤー数を更新");
     }
 }

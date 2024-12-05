@@ -16,6 +16,11 @@ public class Participant : MonoBehaviour,IParticipantInfo
     private RoomInfo _roomInfo = default;
 
     /// <summary>
+    /// 自分のネットオブジェクト
+    /// </summary>
+    private NetworkObject _netObj = default;
+
+    /// <summary>
     /// 開始処理
     /// </summary>
     void Start()
@@ -23,6 +28,7 @@ public class Participant : MonoBehaviour,IParticipantInfo
 
         // 参加人数を加算
         RPC_ParticipantCountAdd();
+        _netObj = this.GetComponent<NetworkObject>();
 
     }
 
@@ -37,7 +43,7 @@ public class Participant : MonoBehaviour,IParticipantInfo
     {
 
         await WaitForNotNull();
-        _roomInfo.UpdateParticipantCount(_roomInfo.CurrentParticipantCount++);
+        _roomInfo.UpdateParticipantCount();
 
     }
 
@@ -65,21 +71,6 @@ public class Participant : MonoBehaviour,IParticipantInfo
     public void SetRoomInfo(RoomInfo roomInfo)
     {
 
-        NetworkObject netObj = this.GetComponent<NetworkObject>();
-        // ネットワークオブジェクトではないとき
-        if(netObj == null)
-        {
-
-            return;
-
-        }
-        // クライアントの時
-        if (netObj.HasInputAuthority)
-        {
-
-            return;
-
-        }
         this._roomInfo = roomInfo;
 
     }
