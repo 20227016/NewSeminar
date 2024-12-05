@@ -90,9 +90,9 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
         {
 
             print("生成成功");
-            // 入室情報表示
-            //_runnerStatusText.text = "ランナー " + _networkRunner.IsRunning;
-            //_playerCountText.text = "現在の人数 " + ++currentPlayerCount;
+            //入室情報表示
+            _runnerStatusText.text = "ランナー " + _networkRunner.IsRunning;
+            _playerCountText.text = "現在の人数 " + _preDefinedRoom.CurrentParticipantCount;
 
         }
         else
