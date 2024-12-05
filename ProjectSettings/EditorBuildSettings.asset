@@ -5,12 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
-takahahashi
-    path: Assets/Scenes/WorkSpace/Takahashi.unity
-    guid: ce0ab37bab5404f43b3e7438ef4e9037
-
+  - enabled: 0
     path: Assets/Scenes/WorkSpace/Daayama.unity
     guid: 09479c056aa2f6f47985082339cea4d7
-
+  - enabled: 1
+    path: Assets/Scenes/Title.unity
+    guid: 7bf11c6f7a97f6b40b130b863edec629
   m_configObjects: {}

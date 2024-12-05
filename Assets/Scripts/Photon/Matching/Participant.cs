@@ -43,7 +43,7 @@ public class Participant : NetworkBehaviour,IParticipantInfo
     {
 
         await WaitForNotNull();
-        _roomInfo.UpdateParticipantCount();
+        _roomInfo.CurrentParticipantCount++;
 
     }
 

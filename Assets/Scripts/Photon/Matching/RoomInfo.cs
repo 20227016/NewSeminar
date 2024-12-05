@@ -6,23 +6,23 @@ using UnityEngine;
 /// 現在の役割
 /// ・RoomInfoで現在の部屋の人数をCurrentPlayerCountに代入する(同期変数)
 /// </summary>
-public class RoomInfo
+public class RoomInfo : NetworkBehaviour
 {
 
-    [Networked] public string RoomName { get; private set; }
-    [Networked] public int CurrentParticipantCount { get; set; } // 現在のプレイヤー数[ネットワーク上で同期]
-    [Networked] public int MaxParticipantCount { get; private set; } // 最大プレイヤー数[ネットワーク上で同期]
+    [Networked] public string RoomName { get => _roomName; set => _roomName = value; }
+    // 現在のプレイヤー数[ネットワーク上で同期]
+    [Networked] public int CurrentParticipantCount { get => _currentParticipantCount; set => _currentParticipantCount = value; }
+    // 最大プレイヤー数[ネットワーク上で同期]
+    [Networked] public int MaxParticipantCount { get => _maxParticipantCount; set => _maxParticipantCount = value; }
 
-    public RoomInfo(string roomName, int maxPlayerCount)
+    private string _roomName = "Room";
+    private int _currentParticipantCount = 0;
+    private int _maxParticipantCount = 4;
+
+    public void SetRoomInfo(string roomName, int maxPlayerCount)
     {
         RoomName = roomName;
         MaxParticipantCount = maxPlayerCount;
         CurrentParticipantCount = 0; // 初期人数
-    }
-
-    public void UpdateParticipantCount()
-    {
-        CurrentParticipantCount++; // プレイヤー数を更新する
-        Debug.Log(CurrentParticipantCount+"プレイヤー数を更新");
     }
 }
