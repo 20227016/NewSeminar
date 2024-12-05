@@ -54,7 +54,8 @@ MonoBehaviour:
   NetworkGuid:
     RawGuidValue: d274c0c812f259240b591823566565b8
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 4331148653848535231}
   SimulationBehaviours: []
 --- !u!114 &4331148653848535231
 MonoBehaviour:
@@ -68,3 +69,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f92c6dc9848563b47bb4fecd4103ce3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
