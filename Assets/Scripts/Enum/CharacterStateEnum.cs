@@ -16,7 +16,7 @@ public enum CharacterStateEnum
     /// <summary>
     /// ‰ñ”ğ
     /// </summary>
-    AVOIDANCE,
+    AVOIDANCE_ACTION,
     /// <summary>
     /// UŒ‚
     /// </summary>
