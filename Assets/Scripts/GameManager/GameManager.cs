@@ -1,16 +1,15 @@
 
-using UnityEngine;
-using System.Collections;
-using UniRx;
 using System;
+using UniRx;
+using UnityEngine;
 
 /// <summary>
 /// GameManager.cs
-/// ã‚¯ãƒ©ã‚¹èª¬æ˜
-/// ç¥ã€‚ã“ã®ã‚¯ãƒ©ã‚¹ã¯ç¥ã§ã™ã€‚ã‚ãŒã‚ã‚
+/// ƒNƒ‰ƒXà–¾
+/// _B‚±‚ÌƒNƒ‰ƒX‚Í_‚Å‚·B‚ ‚ª‚ß‚ë
 ///
-/// ä½œæˆæ—¥: 10/3
-/// ä½œæˆè€…: é«˜æ©‹å…‰æ „
+/// ì¬“ú: 10/3
+/// ì¬Ò: ‚‹´Œõ‰h
 /// </summary>
 public class GameManager : MonoBehaviour
 {
@@ -18,23 +17,23 @@ public class GameManager : MonoBehaviour
     private Subject<Unit> OnGameStart = new Subject<Unit>();
     public IObservable<Unit> GameStart => OnGameStart;
 
-    private GameInitializer _gameInitializer = new GameInitializer();
-
-
     private void Awake()
     {
-        // ã‚²ãƒ¼ãƒ é–‹å§‹ã‚¤ãƒ™ãƒ³ãƒˆã‚’è³¼èª­
-        _gameInitializer.InitializationComplete.Subscribe(_ => StartGame());
+        print("w“Ç‚ğŠJn‚µ‚Ü‚·");
+        // ƒQ[ƒ€ŠJnƒCƒxƒ“ƒg‚ğw“Ç
+        GameInitializer.Instance.InitializationComplete.Subscribe(_ => StartGame());
 
-        // ã‚²ãƒ¼ãƒ åˆæœŸè¨­å®šã‚’é–‹å§‹
-        _gameInitializer.StartInitialization();
+        print("GameInitializer‚ğŒÄ‚Ño‚µAƒQ[ƒ€‚Ì‰Šúˆ—‚ğŠJn‚³‚¹‚Ü‚·");
+        // ƒQ[ƒ€‰Šúİ’è‚ğŠJn
+        GameInitializer.Instance.StartInitialization();
     }
 
     /// <summary>
-    /// ã‚²ãƒ¼ãƒ é–‹å§‹ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç™ºè¡Œã™ã‚‹(ã‚²ãƒ¼ãƒ é–‹å§‹ãƒˆãƒªã‚¬ãƒ¼ãŒæ¬²ã—ã„ã‚¯ãƒ©ã‚¹ã¯ã“ã®ã‚¤ãƒ™ãƒ³ãƒˆã‚’è³¼èª­ã—ã¦ã­)
+    /// ƒQ[ƒ€ŠJnƒCƒxƒ“ƒg‚ğ”­s‚·‚é(ƒQ[ƒ€ŠJnƒgƒŠƒK[‚ª—~‚µ‚¢ƒNƒ‰ƒX‚Í‚±‚ÌƒCƒxƒ“ƒg‚ğw“Ç‚µ‚Ä‚Ë)
     /// </summary>
     private void StartGame()
     {
+        print("‚·‚×‚Ä‚Ì‰Šúˆ—‚ªŠ®—¹‚µ‚Ü‚µ‚½BƒQ[ƒ€‚ğƒXƒ^[ƒg‚µ‚Ü‚·");
         OnGameStart.OnNext(Unit.Default);
     }
 }

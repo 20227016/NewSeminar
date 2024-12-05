@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/WorkSpace/Takahashi.unity
+    guid: ce0ab37bab5404f43b3e7438ef4e9037
   m_configObjects: {}
