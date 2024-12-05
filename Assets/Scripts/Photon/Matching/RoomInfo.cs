@@ -9,18 +9,18 @@ public class RoomInfo
 {
 
     [Networked] public string RoomName { get; private set; }
-    [Networked] public int CurrentPlayerCount { get; set; } // 現在のプレイヤー数[ネットワーク上で同期]
-    [Networked] public int MaxPlayerCount { get; private set; } // 最大プレイヤー数[ネットワーク上で同期]
+    [Networked] public int CurrentParticipantCount { get; set; } // 現在のプレイヤー数[ネットワーク上で同期]
+    [Networked] public int MaxParticipantCount { get; private set; } // 最大プレイヤー数[ネットワーク上で同期]
 
     public RoomInfo(string roomName, int maxPlayerCount)
     {
         RoomName = roomName;
-        MaxPlayerCount = maxPlayerCount;
-        CurrentPlayerCount = 0; // 初期人数
+        MaxParticipantCount = maxPlayerCount;
+        CurrentParticipantCount = 0; // 初期人数
     }
 
-    public void UpdatePlayerCount(int newPlayerCount)
+    public void UpdateParticipantCount(int newParticipantCount)
     {
-        CurrentPlayerCount = newPlayerCount; // プレイヤー数を更新する
+        CurrentParticipantCount = newParticipantCount; // プレイヤー数を更新する
     }
 }

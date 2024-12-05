@@ -4,6 +4,6 @@ using System.Threading.Tasks;
 public interface IParticipantsSpawner
 {
 
-    public Task<bool> Spawner(StartGameArgs startGameArgs, NetworkRunner _networkRunner);
+    public Task<bool> Spawner(StartGameArgs startGameArgs, NetworkRunner _networkRunner, RoomInfo preDefinedRoom);
 
 }
