@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class Participant : MonoBehaviour,IParticipantInfo
+public class Participant : NetworkBehaviour,IParticipantInfo
 {
 
     /// <summary>
