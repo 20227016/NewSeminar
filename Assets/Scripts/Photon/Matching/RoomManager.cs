@@ -33,6 +33,8 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
     /// </summary>
     private IParticipantsSpawner _iSpawner = default;
 
+    private int _memoryPlayerCount = default;
+
   
 
     private void Start()
@@ -90,15 +92,27 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
         {
 
             print("生成成功");
-            //入室情報表示
-            _runnerStatusText.text = "ランナー " + _networkRunner.IsRunning;
-            _playerCountText.text = "現在の人数 " + _preDefinedRoom.CurrentParticipantCount;
+           
 
         }
         else
         {
 
             print("生成失敗");
+
+        }
+
+    }
+
+    private void Update()
+    {
+
+        if (_memoryPlayerCount !=_preDefinedRoom.CurrentParticipantCount )
+        {
+
+            //入室情報表示
+            _runnerStatusText.text = "ランナー " + _networkRunner.IsRunning;
+            _playerCountText.text = "現在の人数 " + _preDefinedRoom.CurrentParticipantCount;
 
         }
 
