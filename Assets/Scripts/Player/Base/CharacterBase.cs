@@ -259,7 +259,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         Observable.Interval(TimeSpan.FromSeconds(STAMINA_UPDATE_INTERVAL))
             // 回避状態ではない
-            .Where(_ => _currentState != CharacterStateEnum.AVOIDANCE)
+            .Where(_ => _currentState != CharacterStateEnum.AVOIDANCE_ACTION)
             // 走っていない or スタミナ切れ or 移動していない
             .Where(_ => !_isRun || _isOutOfStamina || _moveDirection == Vector2.zero)
             // スタミナが最大値以下
@@ -299,7 +299,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected virtual void ProcessInput(PlayerNetworkInput input)
     {
         if (_currentState == CharacterStateEnum.ATTACK ||
-            _currentState == CharacterStateEnum.AVOIDANCE ||
+            _currentState == CharacterStateEnum.AVOIDANCE_ACTION ||
             _currentState == CharacterStateEnum.SKILL ||
             _currentState == CharacterStateEnum.DEATH)
         {
@@ -394,12 +394,10 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _playerAttackLight.AttackLight(characterBase, attackMultipiler);
 
-        ReceiveDamage(20);
-
         //_animation.TriggerAnimation(_animator, "AttackLight");
 
         // ミリ秒に変換して待機
-        await UniTask.Delay((int)(800));
+        await UniTask.Delay((int)(500));
 
         _currentState = CharacterStateEnum.IDLE;
 
@@ -413,11 +411,12 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _playerAttackStrong.AttackStrong(characterBase, attackMultipiler);
 
+        ReceiveDamage(20);
         _networkedSkillPoint = 100f;
 
         //_animation.TriggerAnimation(_animator, "AttackStrong");
 
-        await UniTask.Delay((int)(800));
+        await UniTask.Delay((int)(500));
 
         _currentState = CharacterStateEnum.IDLE;
 
@@ -434,7 +433,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         if (_moveDirection != Vector2.zero || !_isOutOfStamina) return;
 
-        _currentState = CharacterStateEnum.AVOIDANCE;
+        _currentState = CharacterStateEnum.AVOIDANCE_ACTION;
 
         _networkedStamina -= _characterStatusStruct._avoidanceStamina;
 

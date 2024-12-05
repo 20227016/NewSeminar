@@ -33,14 +33,15 @@ public class PlayerAttackLight : IAttackLight
         if (hitColliders.Length <= 0)
         {
 
-            //Debug.Log("攻撃がヒットしませんでした。");
+            Debug.Log("攻撃がヒットしませんでした。");
             return;
 
         }
 
         foreach (Collider collider in hitColliders)
         {
-
+            Debug.Log("攻撃がヒット" + collider.name);
+            
             IReceiveDamage target = collider.GetComponent<IReceiveDamage>();
             if (target == null)
             {
@@ -51,6 +52,7 @@ public class PlayerAttackLight : IAttackLight
 
             // 敵が攻撃の方向にいるか確認
             Vector3 directionToEnemy = (collider.transform.position - attackPosition).normalized;
+
             if (Vector3.Dot(directionToEnemy, attackDirection) > 0) // 前方にいるかチェック
             {
 

@@ -20,6 +20,7 @@ public class FighterCharacter : CharacterBase
         Observable.Timer(TimeSpan.FromSeconds(skillCoolTime))
             .Subscribe(_ =>
             {
+                _isSkillCoolTime = false;
                 Debug.Log("スキルクールタイム終了");
             });
 

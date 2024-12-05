@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// PlayerAttackLight.cs
 /// クラス説明
-/// プレイヤー弱攻撃
+/// プレイヤー強攻撃
 /// 
 /// 作成日: 9/10
 /// 作成者: 山田智哉
@@ -33,14 +33,14 @@ public class PlayerAttackStrong : IAttackStrong
         if (hitColliders.Length <= 0)
         {
 
-            //Debug.Log("攻撃がヒットしませんでした。");
+            Debug.Log("強攻撃がヒットしませんでした。");
             return;
 
         }
 
         foreach (Collider collider in hitColliders)
         {
-
+            Debug.Log("強攻撃がヒット" + collider.name);
             IReceiveDamage target = collider.GetComponent<IReceiveDamage>();
             if (target == null)
             {
