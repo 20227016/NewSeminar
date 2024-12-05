@@ -298,7 +298,7 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
 
     // ホストが人数を更新する処理
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    private void UpdatePlayerCount(string roomName, int newPlayerCount)
+    private void RPC_UpdatePlayerCount(string roomName, int newPlayerCount)
     {
         print("送られてきた部屋名"+roomName);
         print("送られてきた人数(1が理想)"+newPlayerCount);
