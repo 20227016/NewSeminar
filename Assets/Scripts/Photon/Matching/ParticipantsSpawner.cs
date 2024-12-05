@@ -21,7 +21,7 @@ using UnityEngine.UI;
 /// 
 /// 
 /// </summary>
-public class ParticipantsSpawner : MonoBehaviour,IParticipantsSpawner
+public class ParticipantsSpawner : MonoBehaviour, IParticipantsSpawner
 {
 
     [SerializeField, Tooltip("Participantsのプレハブ")]
@@ -29,13 +29,13 @@ public class ParticipantsSpawner : MonoBehaviour,IParticipantsSpawner
 
     /// <summary>
     /// ホストへ生成した通知
+    /// 
     /// </summary>
     /// <returns></returns>
-    public async Task<bool> Spawner( StartGameArgs startGameArgs, NetworkRunner _networkRunner)
+    public async Task<bool> Spawner(StartGameArgs startGameArgs, NetworkRunner _networkRunner, RoomInfo preDefinedRoom)
     {
 
         print("スポナーへようこそ");
-
         try
         {
 
@@ -57,6 +57,8 @@ public class ParticipantsSpawner : MonoBehaviour,IParticipantsSpawner
                 return false;
 
             }
+            // 参加者オブジェクト
+            NetworkObject participant = default;
             // 参加者の参加形態による処理
             switch (_networkRunner.GameMode)
             {
@@ -64,8 +66,8 @@ public class ParticipantsSpawner : MonoBehaviour,IParticipantsSpawner
                 //　ホスト
                 case GameMode.Host:
 
-                    // ネットワーク上に参加者を生成
-                    NetworkObject participant = _networkRunner.Spawn(_participantPrefab, Vector3.zero, Quaternion.identity, _networkRunner.LocalPlayer);
+                    // 参加者をホストとして生成
+                    participant = _networkRunner.Spawn(_participantPrefab, Vector3.zero, Quaternion.identity, _networkRunner.LocalPlayer);
                     // 生成に失敗したとき
                     if (participant == null)
                     {
@@ -74,31 +76,56 @@ public class ParticipantsSpawner : MonoBehaviour,IParticipantsSpawner
                         return false;
 
                     }
-                    // ホストがStateAuthorityを持つために、ネットワークオブジェクトのStateAuthorityをホストに設定
-                    participant = GetComponent<NetworkObject>();
-
                     Debug.Log("ホストとして部屋に参加しました。");
+                    if (participant.HasStateAuthority)
+                    {
+
+                        Debug.Log("ホストの権限取得に成功");
+
+                    }
+                    else
+                    {
+
+                        Debug.LogError("ホストの権限取得に失敗");
+
+                    }
+                    // Room情報をわたすインターフェース
+                    IParticipantInfo iParticipantInfo = participant.GetComponent<IParticipantInfo>();
+                    if (iParticipantInfo == null)
+                    {
+
+                        Debug.LogError("ホストにRoom情報を渡すためのインターフェースがない");
+                        return false;
+
+                    }
+                    iParticipantInfo.SetRoomInfo(preDefinedRoom);
 
                     break;
                 // クライアント
                 case GameMode.Client:
 
+                    // 参加者をクライアントとして生成
+                    participant = _networkRunner.Spawn(_participantPrefab);
+                    // 生成に失敗したとき
+                    if (participant == null)
+                    {
+
+                        Debug.LogError("参加者オブジェクトの生成に失敗");
+                        return false;
+
+                    }
                     Debug.Log("クライアントとして部屋に参加しました。");
-                    // 参加リクエスト（プレイヤー数をホストに通知）
-                    //RPC_RequestPlayerCountUpdate(roomName);
 
                     break;
 
-
             }
-
-
             return true;
 
         }
         catch
         {
 
+            Debug.LogError("エラー");
             // 生成失敗
             return false;
 
