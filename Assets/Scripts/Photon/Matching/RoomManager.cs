@@ -87,6 +87,12 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
             SceneManager = this.gameObject.AddComponent<NetworkSceneManagerDefault>()
 
         };
+        Debug.Log("参加人数");
+        Debug.Log(_preDefinedRoom.CurrentParticipantCount);
+        Debug.Log("登録方法");
+        Debug.Log(startGameArgs.GameMode);
+        Debug.Log(startGameArgs.SessionName);
+        Debug.Log(startGameArgs.SceneManager);
         // ゲームモードに合わせた参加者を生成
         if (await _iSpawner.Spawner(startGameArgs,_networkRunner,_preDefinedRoom))
         {
