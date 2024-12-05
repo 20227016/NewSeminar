@@ -999,6 +999,7 @@ GameObject:
   - component: {fileID: 1007769471}
   - component: {fileID: 1007769470}
   - component: {fileID: 1007769472}
+  - component: {fileID: 1007769473}
   m_Layer: 0
   m_Name: Matching
   m_TagString: Untagged
@@ -1062,6 +1063,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 1007769470}
+  - {fileID: 1007769473}
   SimulationBehaviours: []
 --- !u!114 &1007769472
 MonoBehaviour:
@@ -1076,6 +1078,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _participantPrefab: {fileID: 7549502800452744222, guid: d274c0c812f259240b591823566565b8, type: 3}
+--- !u!114 &1007769473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1007769467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 132902135af8bf144bf0fef486b8cc81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  _RoomName: Room
+  _CurrentParticipantCount: 0
+  _MaxParticipantCount: 4
 --- !u!1 &1097105486
 GameObject:
   m_ObjectHideFlags: 0

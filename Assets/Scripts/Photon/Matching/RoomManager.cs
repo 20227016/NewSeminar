@@ -25,8 +25,10 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
     [SerializeField, Tooltip("プレイヤー数を描画するテキスト")]
     private Text _playerCountText = default;
 
-   [SerializeField, Tooltip("部屋情報を格納するためのクラス")]
-    private RoomInfo _preDefinedRoom = new RoomInfo("Room", 4);
+    /// <summary>
+    /// 部屋情報を格納するためのクラス
+    /// </summary>
+    private RoomInfo _preDefinedRoom = default;
 
     /// <summary>
     /// 参加者オブジェクトをスポーンさせる
@@ -40,6 +42,13 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
     private void Start()
     {
 
+        _preDefinedRoom = this.GetComponent<RoomInfo>();
+        if (_preDefinedRoom == null)
+        {
+
+            Debug.LogError("ルーム管理クラスの獲得に失敗おっぱい");
+
+        }
         _iSpawner = this.GetComponent<IParticipantsSpawner>();
         if (_iSpawner == null)
         {
@@ -76,8 +85,10 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
             return;
 
         }
+        print("ゲームモード");
         // プレイヤー数が0ならホスト、それ以外はクライアント
         GameMode gameMode = _preDefinedRoom.CurrentParticipantCount == 0 ? GameMode.Host : GameMode.Client;
+        
         // サーバー情報（Args＝引数）
         StartGameArgs startGameArgs = new StartGameArgs()
         {
