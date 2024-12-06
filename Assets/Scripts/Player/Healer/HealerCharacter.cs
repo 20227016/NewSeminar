@@ -20,6 +20,7 @@ public class HealerCharacter : CharacterBase
             .Subscribe(_ =>
             {
                 Debug.Log("スキルクールタイム終了");
+                _isSkillCoolTime = false;
             });
 
         _isSkillCoolTime = true;

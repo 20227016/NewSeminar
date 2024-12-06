@@ -14,7 +14,7 @@ public class PlayerAttackLight : IAttackLight
     private IComboCounter _comboCounter;
 
     // 攻撃範囲の半径
-    private float attackRadius = 1.5f;
+    private float _attackRadius = 1.5f;
 
     public PlayerAttackLight(IComboCounter comboCounter)
     {
@@ -27,28 +27,16 @@ public class PlayerAttackLight : IAttackLight
         Vector3 attackDirection = characterBase.transform.forward; // 攻撃の方向
 
         // 指定した半径内のコライダーを取得
-        Collider[] hitColliders = Physics.OverlapSphere(attackPosition, attackRadius, LayerMask.GetMask("Enemy"));
+        Collider[] hitColliders = Physics.OverlapSphere(attackPosition, _attackRadius, LayerMask.GetMask("Enemy"));
 
-        // 敵がヒットした場合の処理
-        if (hitColliders.Length <= 0)
-        {
-
-            Debug.Log("攻撃がヒットしませんでした。");
-            return;
-
-        }
+        if (hitColliders.Length <= 0) return;
 
         foreach (Collider collider in hitColliders)
         {
             Debug.Log("攻撃がヒット" + collider.name);
             
             IReceiveDamage target = collider.GetComponent<IReceiveDamage>();
-            if (target == null)
-            {
-
-                return;
-
-            }
+            if (target == null) return;
 
             // 敵が攻撃の方向にいるか確認
             Vector3 directionToEnemy = (collider.transform.position - attackPosition).normalized;
@@ -56,8 +44,10 @@ public class PlayerAttackLight : IAttackLight
             if (Vector3.Dot(directionToEnemy, attackDirection) > 0) // 前方にいるかチェック
             {
 
-                // コンボを追加し、コンボ数を取得
+                // コンボ数を加算
                 _comboCounter.AddCombo();
+
+                // 現在のコンボ数を取得
                 int currentCombo = _comboCounter.GetCombo();
 
                 // コンボ倍率を計算

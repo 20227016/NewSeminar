@@ -297,50 +297,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &605218725
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 605218727}
-  - component: {fileID: 605218726}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &605218726
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 605218725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c3957c832091d44f9db4aab23a55564, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &605218727
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 605218725}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &643199593
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -349,9 +305,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1742486185846943359, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
+      propertyPath: m_BiasY
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1742486185846943359, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
+      propertyPath: m_ScreenY
+      value: 0.40000004
+      objectReference: {fileID: 0}
+    - target: {fileID: 1742486185846943359, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
+      propertyPath: m_SoftZoneWidth
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1742486185846943359, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
+      propertyPath: m_DeadZoneHeight
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1742486185846943359, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
+      propertyPath: m_SoftZoneHeight
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 3009175127396240598, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
-      propertyPath: m_CameraRadius
-      value: 1
+      propertyPath: m_IgnoreTag
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3009175127396240598, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
+      propertyPath: m_TransparentLayers.m_Bits
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 5127226456078123827, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
       propertyPath: m_LocalPosition.x
@@ -399,7 +379,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8005833928300892595, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
       propertyPath: m_ScreenY
-      value: 0.6
+      value: 0.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1067,11 +1047,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: playerAvatarPrefab.RawGuidValue.Array.data[0]
-      value: -5407578435035574049
+      value: -8935083708819005062
       objectReference: {fileID: 0}
     - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: playerAvatarPrefab.RawGuidValue.Array.data[1]
-      value: -562848426904979014
+      value: -4303228637196471512
       objectReference: {fileID: 0}
     - target: {fileID: 2436158963617984829, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1127,7 +1107,6 @@ SceneRoots:
   - {fileID: 485642879}
   - {fileID: 1093040120}
   - {fileID: 8182813615759598739}
-  - {fileID: 605218727}
   - {fileID: 1417702193}
   - {fileID: 893740443}
   - {fileID: 643199593}
