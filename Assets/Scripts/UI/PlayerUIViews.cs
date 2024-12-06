@@ -3,6 +3,8 @@ using UnityEngine;
 using UniRx;
 using UnityEngine.UI;
 using System;
+using TMPro;
+using System.Collections.Generic;
 
 /// <summary>
 /// PlayerUIViews.cs
@@ -14,26 +16,30 @@ using System;
 /// </summary>
 public class PlayerUIViews
 {
-    private IDisposable _animationDisposable = default;
+    // 各ゲージごとにアニメーション用のIDisposableを管理
+    private readonly Dictionary<Slider, IDisposable> _animationDisposables = new Dictionary<Slider, IDisposable>();
 
-
-    public void UpdateGauge(Slider slider, float value,  float animationSpeed)
+    public void UpdateGauge(Slider slider, float value, float animationSpeed)
     {
-        if (_animationDisposable != null)
+        // アニメーション中の場合は停止
+        if (_animationDisposables.ContainsKey(slider))
         {
-            _animationDisposable.Dispose();
+            _animationDisposables[slider]?.Dispose();
         }
 
-        _animationDisposable = Observable.EveryUpdate()
+        // アニメーションを開始
+        _animationDisposables[slider] = Observable.EveryUpdate()
             .Subscribe(_ =>
             {
-                // ゲージを滑らかに減らす
+                // ゲージを滑らかに更新
                 slider.value = Mathf.Lerp(slider.value, value, Time.deltaTime * animationSpeed);
-                // 目標値に近づいたらアニメーションを終了する
+
+                // 目標値に到達したらアニメーションを終了
                 if (Mathf.Abs(slider.value - value) < 0.01f)
                 {
                     slider.value = value;
-                    _animationDisposable.Dispose();
+                    _animationDisposables[slider]?.Dispose();
+                    _animationDisposables.Remove(slider);
                 }
             });
     }
