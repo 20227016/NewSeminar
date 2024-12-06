@@ -349,6 +349,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3009175127396240598, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
+      propertyPath: m_CameraRadius
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5127226456078123827, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -392,6 +396,10 @@ PrefabInstance:
     - target: {fileID: 7684730494696875335, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
       propertyPath: m_Name
       value: TargettingCamera
+      objectReference: {fileID: 0}
+    - target: {fileID: 8005833928300892595, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
+      propertyPath: m_ScreenY
+      value: 0.6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -704,7 +712,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5147249982692110543, guid: 3dd2ee17bf314d64cad026e99eb466dd, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6347600818415458670, guid: 3dd2ee17bf314d64cad026e99eb466dd, type: 3}
       propertyPath: m_AnchorMax.x
@@ -732,15 +740,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8574769979411044466, guid: 3dd2ee17bf314d64cad026e99eb466dd, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8574769979411044466, guid: 3dd2ee17bf314d64cad026e99eb466dd, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8574769979411044466, guid: 3dd2ee17bf314d64cad026e99eb466dd, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -887,6 +895,7 @@ GameObject:
   - component: {fileID: 1558975266}
   - component: {fileID: 1558975265}
   - component: {fileID: 1558975269}
+  - component: {fileID: 1558975270}
   m_Layer: 7
   m_Name: Scarecrow
   m_TagString: Untagged
@@ -1008,8 +1017,42 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &1558975270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558975264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd25ebd8aaf215149868bb15575e4a11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  ignoreLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _enemyStatusStruct:
+    _hp: 0
+    _attackPower: 0
+    _attackPowerSpeed: 0
+    _moveSpeed: 0
+    _diffencePower: 0
+    _attackCoolTime: 0
+    _attackDelayTime: 0
+    _downedTime: 0
+  _tags: []
+  _myAnimator: {fileID: 0}
+  _playerTrans: {fileID: 0}
+  _searhDistance: 2
+  _attackMultiplier1: 1
+  _attackMultiplier2: 1
+  _attackMultiplier3: 1
 --- !u!1001 &8182813615759598739
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1024,11 +1067,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: playerAvatarPrefab.RawGuidValue.Array.data[0]
-      value: -4256456636577776900
+      value: -5407578435035574049
       objectReference: {fileID: 0}
     - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: playerAvatarPrefab.RawGuidValue.Array.data[1]
-      value: 5094561915730723354
+      value: -562848426904979014
       objectReference: {fileID: 0}
     - target: {fileID: 2436158963617984829, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: m_LocalPosition.x

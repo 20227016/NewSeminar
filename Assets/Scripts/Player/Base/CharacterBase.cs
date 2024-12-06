@@ -168,8 +168,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
             // UIを設定
             GameObject canvas = GameObject.FindGameObjectWithTag("Canvas");
-            PlayerUIPresenter playerUIPresenter = canvas.GetComponent<PlayerUIPresenter>();
-            LockOnCursorPresenter lockOnCursorPresenter = canvas.GetComponent<LockOnCursorPresenter>();
+            PlayerUIPresenter playerUIPresenter = canvas.GetComponentInChildren<PlayerUIPresenter>();
+            LockOnCursorPresenter lockOnCursorPresenter = canvas.GetComponentInChildren<LockOnCursorPresenter>();
             playerUIPresenter.SetModel(this.gameObject);
             lockOnCursorPresenter.SetModel(this.gameObject);
         }

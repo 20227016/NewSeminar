@@ -2,6 +2,7 @@
 using UnityEngine;
 using UniRx;
 using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// PlayerUIPresenter.cs
@@ -28,18 +29,22 @@ public class PlayerUIPresenter : MonoBehaviour
     [SerializeField, Tooltip("ゲージ変動アニメーション速度")]
     private float _animationSpeed = 10f;
 
+    /// <summary>
+    /// UIにモデルをセットする
+    /// </summary>
+    /// <param name="player">セットするプレイヤー</param>
     public void SetModel(GameObject player)
     {
-
+        // キャラクターをセット
         CharacterBase thisPlayer = player.GetComponentInChildren<CharacterBase>();
 
-        // HPの更新
+        // HPの更新購読
         thisPlayer.CurrentHP.Subscribe(value => _playerUIViews.UpdateGauge(_hpGauge, value, _animationSpeed));
 
-        // スタミナの更新
+        // スタミナの更新購読
         thisPlayer.CurrentStamina.Subscribe(value => _playerUIViews.UpdateGauge(_staminaGauge, value, _animationSpeed));
 
-        // スキルポイントの更新
+        // スキルポイントの更新購読
         thisPlayer.CurrentSkillPoint.Subscribe(value => _playerUIViews.UpdateGauge(_skillPointGauge, value, _animationSpeed));
     }
 }
