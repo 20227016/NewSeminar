@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
@@ -37,9 +38,19 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
 
     private int _memoryPlayerCount = default;
 
-  
+
 
     private void Start()
+    {
+
+        GetInfo();
+        Debug.Log($"NetworkObjectのアタッチの可否: {this.GetComponent<NetworkObject>() != null}");
+        // 入室
+        JoinRoom();
+
+    }
+
+    private void GetInfo()
     {
 
         _preDefinedRoom = this.GetComponent<RoomInfo>();
@@ -64,10 +75,6 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
             _networkRunner = gameObject.AddComponent<NetworkRunner>();
 
         }
-        Debug.Log($"RoomManagerのStateAuthority: {this.HasStateAuthority}");
-        Debug.Log($"NetworkObjectがアタッチされているか: {this.GetComponent<NetworkObject>() != null}");
-        // 入室
-        JoinRoom();
 
     }
 
@@ -85,31 +92,12 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
             return;
 
         }
-        print("ゲームモード");
-        // プレイヤー数が0ならホスト、それ以外はクライアント
-        GameMode gameMode = _preDefinedRoom.CurrentParticipantCount == 0 ? GameMode.Host : GameMode.Client;
-        
-        // サーバー情報（Args＝引数）
-        StartGameArgs startGameArgs = new StartGameArgs()
-        {
-
-            GameMode = gameMode,
-            SessionName = _preDefinedRoom.RoomName,
-            SceneManager = this.gameObject.AddComponent<NetworkSceneManagerDefault>()
-
-        };
-        Debug.Log("参加人数");
-        Debug.Log(_preDefinedRoom.CurrentParticipantCount);
-        Debug.Log("登録方法");
-        Debug.Log(startGameArgs.GameMode);
-        Debug.Log(startGameArgs.SessionName);
-        Debug.Log(startGameArgs.SceneManager);
-        // ゲームモードに合わせた参加者を生成
-        if (await _iSpawner.Spawner(startGameArgs,_networkRunner,_preDefinedRoom))
+        // 参加者を生成
+        if (await _iSpawner.Spawner( _networkRunner, _preDefinedRoom))
         {
 
             print("生成成功");
-           
+
 
         }
         else
@@ -123,15 +111,6 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
 
     private void Update()
     {
-
-        if (_memoryPlayerCount !=_preDefinedRoom.CurrentParticipantCount )
-        {
-
-            //入室情報表示
-            _runnerStatusText.text = "ランナー " + _networkRunner.IsRunning;
-            _playerCountText.text = "現在の人数 " + _preDefinedRoom.CurrentParticipantCount;
-
-        }
 
     }
 

@@ -1,6 +1,11 @@
 using Fusion;
+using Fusion.Sockets;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 /// <summary>
 /// ネットワークで使用する変数の管理
 /// 現在の役割
@@ -19,10 +24,14 @@ public class RoomInfo : NetworkBehaviour
     private int _currentParticipantCount = 0;
     private int _maxParticipantCount = 4;
 
+    private NetworkObject _networkObject = default;
+
+
     public void SetRoomInfo(string roomName, int maxPlayerCount)
     {
         RoomName = roomName;
         MaxParticipantCount = maxPlayerCount;
         CurrentParticipantCount = 0; // 初期人数
     }
+
 }
