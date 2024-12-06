@@ -108,108 +108,8 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
         }
 
     }
+    
 
-    private void Update()
-    {
-
-    }
-
-
-
-    ///// <summary>
-    ///// プレイヤーが入室したことを他のクライアントに通知するメソッド
-    ///// RPCの発信者を指定(RpcSources.StateAuthorit)し、
-    ///// 全クライアント(RpcTargets.All)に通知を送る
-    ///// 〇このメソッドが呼ばれるタイミング
-    ///// ・プレイヤーが部屋に参加したとき
-    ///// </summary>
-    ///// <param name="roomName">部屋の変数名</param>
-    //[Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    //private void RPC_NotifyPlayerJoined(string roomName, int currentPlayerCount)
-    //{
-
-    //    Debug.Log($"RPCで通知: 部屋 {roomName} にプレイヤーが参加しました");
-
-    //    // 既存のUIを更新するためのメソッド
-    //    // 入室した部屋のプレイヤー数を更新
-    //    UpdateRoomInfo(roomName, currentPlayerCount);
-    //}
-
-    ///// <summary>
-    ///// 全てのクライアントで部屋の情報を更新する(今のところは人数の更新)
-    ///// </summary>
-    ///// <param name="roomName"></param>
-    ///// <param name="currentPlayerCount"></param>
-    //[Rpc(RpcSources.All, RpcTargets.All)]
-    //private void RPC_UpdateRoomInfo(string roomName, int newPlayerCount)
-    //{
-
-    //    RoomInfo room = _preDefinedRoom.Find(r => r.RoomName == roomName);
-    //    if (room != null)
-    //    {
-    //        // 現在のnewPlayerCountをCurrentPlayerCountに代入する
-    //        room.UpdatePlayerCount(newPlayerCount);
-    //        Debug.Log($"部屋 {roomName} の人数を更新: {newPlayerCount}");
-    //    }
-    //}
-
-    ///// <summary>
-    ///// 部屋の情報を更新する
-    ///// </summary>
-    //private void UpdateRoomInfo(string roomName, int newPlayerCount)
-    //{
-    //    foreach (RoomInfo room in _preDefinedRoom)
-    //    {
-    //        if (room.RoomName == roomName)
-    //        {
-    //            //// プレイヤー数を更新
-    //            //room.CurrentPlayerCount = newPlayerCount;
-
-    //            //// ボタンのテキストを更新
-    //            //_buttonText = room.ButtonInstance.GetComponentInChildren<TextMeshProUGUI>();
-    //            //if (_buttonText != null)
-    //            //{
-    //            //    _buttonText.text = $"{room.RoomName} ({room.CurrentPlayerCount}/{room.MaxPlayerCount})";
-    //            //}
-    //            break;
-    //        }
-    //    }
-    //}
-
-
-
-    //// 部屋名を渡して、現在のプレイヤー数を取得するメソッド
-    //private int GetCurrentPlayerCount(string roomName)
-    //{
-    //    // 指定された部屋名に基づいて RoomInfo を検索
-    //    RoomInfo room = _preDefinedRoom.Find(r => r.RoomName == roomName);
-    //    if (room != null)
-    //    {
-
-    //        Debug.Log("人数は"+ room.CurrentPlayerCount + "です");
-    //        // 部屋が見つかった場合、その部屋の現在のプレイヤー数を返す
-    //        return room.CurrentPlayerCount;
-    //    }
-    //    Debug.Log("ルームが見つからない");
-    //    // 部屋が見つからなかった場合、0を返す（エラー処理も検討可能）
-    //    return 0;
-    //}
-
-    //// ホストが人数を更新する処理
-    //[Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    //private void RPC_UpdatePlayerCount(string roomName, int newPlayerCount)
-    //{
-    //    print("送られてきた部屋名"+roomName);
-    //    print("送られてきた人数(1が理想)"+newPlayerCount);
-    //    RoomInfo room = _preDefinedRoom.Find(r => r.RoomName == roomName);
-    //    if (room != null)
-    //    {
-    //        print("人数の更新処理を開始します");
-    //        room.UpdatePlayerCount(newPlayerCount);
-    //        RPC_UpdateRoomInfo(roomName, newPlayerCount); // 全クライアントに同期
-    //        print("UpdatePlayerCountで更新処理が呼び出されました。現在のプレイヤー数は "+ newPlayerCount);
-    //    }
-    //}
 
     // 固定メソッド
     #region
@@ -357,4 +257,8 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
     }
 
     #endregion
+
+
 }
+
+
