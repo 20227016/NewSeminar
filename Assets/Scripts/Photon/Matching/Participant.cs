@@ -43,6 +43,11 @@ public class Participant : NetworkBehaviour,IParticipantInfo
     {
 
         await WaitForNotNull();
+        // データ初期化
+        _roomInfo.RoomName = _roomInfo.RoomName;
+        _roomInfo.MaxParticipantCount = _roomInfo.MaxParticipantCount;
+        _roomInfo.CurrentParticipantCount = _roomInfo.CurrentParticipantCount;
+        // 更新
         _roomInfo.CurrentParticipantCount++;
 
     }

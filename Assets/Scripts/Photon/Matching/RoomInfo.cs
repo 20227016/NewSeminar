@@ -14,24 +14,10 @@ using UnityEngine.UI;
 public class RoomInfo : NetworkBehaviour
 {
 
-    [Networked] public string RoomName { get => _roomName; set => _roomName = value; }
+    [Networked] public string RoomName { get; set; } = "Room";
     // 現在のプレイヤー数[ネットワーク上で同期]
-    [Networked] public int CurrentParticipantCount { get => _currentParticipantCount; set => _currentParticipantCount = value; }
+    [Networked] public int CurrentParticipantCount { get; set; } = 0 ;
     // 最大プレイヤー数[ネットワーク上で同期]
-    [Networked] public int MaxParticipantCount { get => _maxParticipantCount; set => _maxParticipantCount = value; }
-
-    private string _roomName = "Room";
-    private int _currentParticipantCount = 0;
-    private int _maxParticipantCount = 4;
-
-    private NetworkObject _networkObject = default;
-
-
-    public void SetRoomInfo(string roomName, int maxPlayerCount)
-    {
-        RoomName = roomName;
-        MaxParticipantCount = maxPlayerCount;
-        CurrentParticipantCount = 0; // 初期人数
-    }
+    [Networked] public int MaxParticipantCount { get; set; } = 4;
 
 }
