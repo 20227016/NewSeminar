@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
@@ -32,31 +33,79 @@ public class ParticipantsSpawner : MonoBehaviour, IParticipantsSpawner
     /// 
     /// </summary>
     /// <returns></returns>
-    public async Task<bool> Spawner(StartGameArgs startGameArgs, NetworkRunner _networkRunner, RoomInfo preDefinedRoom)
+    public async Task<bool> Spawner( NetworkRunner _networkRunner, RoomInfo preDefinedRoom)
     {
 
         print("スポナーへようこそ");
         try
         {
 
+            // セッション方法
+            StartGameArgs startGameArgs = default;
+            // セッション実行結果
+            StartGameResult result = default;
+            
+            // サーバー情報（Args＝引数）
+            startGameArgs = new StartGameArgs()
+            {
+
+                // ゲームモード
+                GameMode = GameMode.Host,
+                // セッション名
+                SessionName = "Room",
+                // ネットワーク上でのシーン遷移同期？
+                SceneManager = this.gameObject.AddComponent<NetworkSceneManagerDefault>(),
+                // セッション作成時に、現在のシーンに置かれたシーンオブジェクトをスポーンする
+                Scene = SceneManager.GetActiveScene().buildIndex
+
+            };
+            Debug.Log("ホストで参加処理を実行");
             // 指定したネットワークモードでのゲームをスタートさせる（セッション名が重複している等で失敗する）
-            StartGameResult result = await _networkRunner.StartGame(startGameArgs);
+            result = await _networkRunner.StartGame(startGameArgs);
             // セッションが成功したか
             if (result.Ok)
             {
 
-                Debug.Log($"部屋 {startGameArgs.SessionName} に正常に参加しました。");
+                Debug.Log($"部屋 {startGameArgs.SessionName} に　ホスト　として正常に参加しました。");
 
             }
             else
             {
 
-                Debug.LogError($"部屋 {startGameArgs.SessionName} に参加できませんでした: {result.ShutdownReason}");
-                Debug.LogError($"接続を解除し終了します");
-                await _networkRunner.Shutdown();
-                return false;
+                // サーバー情報（Args＝引数）
+                startGameArgs = new StartGameArgs()
+                {
+
+                    // ゲームモード
+                    GameMode = GameMode.Client,
+                    // セッション名
+                    SessionName = "Room",
+                    // ネットワーク上でのシーン遷移同期？
+                    SceneManager = this.gameObject.AddComponent<NetworkSceneManagerDefault>(),
+                    // セッション作成時に、現在のシーンに置かれたシーンオブジェクトをスポーンする
+                    Scene = SceneManager.GetActiveScene().buildIndex
+
+                };
+                // 指定したネットワークモードでのゲームをスタートさせる（セッション名が重複している等で失敗する）
+                result = await _networkRunner.StartGame(startGameArgs);
+                if (result.Ok)
+                {
+
+                    Debug.Log($"部屋 {startGameArgs.SessionName} に　クライアント　として正常に参加しました。");
+
+                }
+                else
+                {
+
+                    Debug.LogError($"部屋 {startGameArgs.SessionName} に参加できませんでした: {result.ShutdownReason}");
+                    Debug.LogError($"接続を解除し終了します");
+                    await _networkRunner.Shutdown();
+                    return false;
+
+                }
 
             }
+           
             // 参加者オブジェクト
             NetworkObject participant = default;
             // 参加者の参加形態による処理
