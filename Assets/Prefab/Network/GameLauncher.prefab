@@ -45,9 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4683a7b1a0225e49adf8d7e1dbb5db0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkRunnerPrefab: {fileID: 426084891996397564, guid: d560832a9ed58294d94a620c45982206, type: 3}
+  networkRunnerPrefab: {fileID: 2398789667054413817, guid: 7d2bbb37f0570514684b499e2a4fb9d6, type: 3}
   playerAvatarPrefab:
-    RawGuidValue: 3fde6a0a6bc2f8348ace3ca05a9213c7
+    RawGuidValue: df50a45c106cf4b4baf9f07b565c30f8
   _playerSpawnPos: {x: 0, y: 0, z: 0}
 --- !u!114 &5050406778293680978
 MonoBehaviour:
