@@ -1,29 +1,54 @@
-using System;
-using System.Collections.Generic;
 using Fusion;
 using Fusion.Sockets;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UniRx;
+using UnityEngine.SceneManagement;
 
 public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
-    public static GameLauncher _instance;
+    public static GameLauncher _instance = default;
 
-    [SerializeField]
-    private NetworkRunner networkRunnerPrefab;
+    [SerializeField, Tooltip("ネットワークランナー")]
+    private NetworkRunner networkRunnerPrefab = default;
 
-    [SerializeField]
-    private NetworkPrefabRef playerAvatarPrefab;
+    [SerializeField, Tooltip("プレイヤーアバター")]
+    private NetworkPrefabRef playerAvatarPrefab = default;
 
     [SerializeField, Tooltip("プレイヤーのスポーン位置")]
     private Vector3 _playerSpawnPos = default;
 
+    /// <summary>
+    /// メインカメラ
+    /// </summary>
+    private Camera _mainCamera = default;
+
+    /// <summary>
+    /// インプットシステム
+    /// </summary>
     private PlayerInput _playerInput = default;
 
+    /// <summary>
+    /// インプットステート
+    /// </summary>
+    private readonly Dictionary<string, bool> InputState = new()
+    {
+        { "Run", false },
+        { "AttackLight", false },
+        { "AttackStrong", false },
+        { "Targetting", false },
+        { "Skill", false },
+        { "Resurrection", false },
+        { "Avoidance", false }
+    };
+
+    /// <summary>
+    /// 移動値
+    /// </summary>
     private Vector2 _moveInput = default;
 
-    private Camera _mainCamera = default;
+   
 
     public static GameLauncher Instance
     {
@@ -33,31 +58,63 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
+    /// <summary>
+    /// 開始前処理
+    /// </summary>
     private async void Awake()
     {
+
+        // インスタンスがあるかつ自分ではないとき
         if (_instance != null && _instance != this)
         {
-            Destroy(gameObject);
+            Destroy(this.gameObject);
             return;
         }
         _instance = this;
-        DontDestroyOnLoad(gameObject);
-
+        // ロード時に消さない
+        DontDestroyOnLoad(this.gameObject);
+        /*　　　取得　　　*/
         _mainCamera = Camera.main;
-        _playerInput = GetComponent<PlayerInput>();
-        RegisterInputActions(true);
-
+        _playerInput = this.GetComponent<PlayerInput>();
         NetworkRunner networkRunner = Instantiate(networkRunnerPrefab);
+        // 関数登録
+        RegisterInputActions(true);
+        // コールバック設定
         networkRunner.AddCallbacks(this);
 
-        StartGameResult result = await networkRunner.StartGame(new StartGameArgs
+        StartGameArgs startGameArgs = new StartGameArgs
         {
+            // ゲームモード
             GameMode = GameMode.AutoHostOrClient,
-            SceneManager = networkRunner.GetComponent<NetworkSceneManagerDefault>()
-        });
+            // セッション名
+            SessionName = "Room",
+            // ネットワーク上でのシーン遷移同期？
+            SceneManager = this.gameObject.AddComponent<NetworkSceneManagerDefault>(),
+            // セッション作成時に、現在のシーンに置かれたシーンオブジェクトをスポーンする
+            Scene = SceneManager.GetActiveScene().buildIndex,
+        };
+        // ランナースタート
+        StartGameResult result = await networkRunner.StartGame(startGameArgs);
+        if (networkRunner.IsServer)
+        {
+
+            Debug.Log($"ホスト　で{startGameArgs}の設定通りに参加処理実行");
+
+        }
+        else
+        {
+
+            Debug.Log($"クライアント　で{startGameArgs}の設定通りに参加処理実行");
+
+        }
+        
 
     }
 
+    /// <summary>
+    /// 関数登録
+    /// </summary>
+    /// <param name="isRegister"></param>
     private void RegisterInputActions(bool isRegister)
     {
         // 一括登録
@@ -80,17 +137,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    private readonly Dictionary<string, bool> InputStates = new()
-    {
-        { "Run", false },
-        { "AttackLight", false },
-        { "AttackStrong", false },
-        { "Targetting", false },
-        { "Skill", false },
-        { "Resurrection", false },
-        { "Avoidance", false }
-    };
-
     /// <summary>
     /// 入力管理メソッド
     /// </summary>
@@ -106,31 +152,31 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
                 break;
 
             case "Run":
-                InputStates["Run"] = true;
+                InputState["Run"] = true;
                 break;
 
             case "AttackLight":
-                InputStates["AttackLight"] = !context.canceled;
+                InputState["AttackLight"] = !context.canceled;
                 break;
 
             case "AttackStrong":
-                InputStates["AttackStrong"] = !context.canceled;
+                InputState["AttackStrong"] = !context.canceled;
                 break;
 
             case "Targetting":
-                InputStates["Targetting"] = !context.canceled;
+                InputState["Targetting"] = !context.canceled;
                 break;
 
             case "Skill":
-                InputStates["Skill"] = !context.canceled;
+                InputState["Skill"] = !context.canceled;
                 break;
 
             case "Resurrection":
-                InputStates["Resurrection"] = !context.canceled;
+                InputState["Resurrection"] = !context.canceled;
                 break;
 
             case "Avoidance":
-                InputStates["Avoidance"] = !context.canceled;
+                InputState["Avoidance"] = !context.canceled;
                 break;
 
             default:
@@ -167,13 +213,13 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         PlayerNetworkInput data = new()
         {
             MoveDirection = GetMoveDirectionFromCamera(),
-            IsRunning = InputStates["Run"],
-            IsAttackLight = InputStates["AttackLight"],
-            IsAttackStrong = InputStates["AttackStrong"],
-            IsTargetting = InputStates["Targetting"],
-            IsSkill = InputStates["Skill"],
-            IsResurrection = InputStates["Resurrection"],
-            IsAvoidance = InputStates["Avoidance"],
+            IsRunning = InputState["Run"],
+            IsAttackLight = InputState["AttackLight"],
+            IsAttackStrong = InputState["AttackStrong"],
+            IsTargetting = InputState["Targetting"],
+            IsSkill = InputState["Skill"],
+            IsResurrection = InputState["Resurrection"],
+            IsAvoidance = InputState["Avoidance"],
         };
 
         // 入力を収集
@@ -189,30 +235,48 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private void ResetInput()
     {
         // trueの入力を初期化する
-        foreach (string key in new List<string>(InputStates.Keys))
+        foreach (string key in new List<string>(InputState.Keys))
         {
 
-            if (InputStates[key])
+            if (InputState[key])
             {
-                InputStates[key] = false; // 値をリセット
+                InputState[key] = false; // 値をリセット
             }
         }
     }
 
-    // プレイヤーが参加した時の処理
+    /// <summary>
+    /// プレイヤーが参加した時の処理
+    /// </summary>
+    /// <param name="runner"></param>
+    /// <param name="player"></param>
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        if (!runner.IsServer)
-        {
-            return;
-        }
 
-        var spawnPosition = new Vector3(_playerSpawnPos.x + UnityEngine.Random.Range(0, 10), _playerSpawnPos.y, _playerSpawnPos.z);
-        var avatar = runner.Spawn(playerAvatarPrefab, spawnPosition, Quaternion.identity, player);
+        Vector3 spawnPosition = new Vector3(_playerSpawnPos.x + UnityEngine.Random.Range(0, 10), _playerSpawnPos.y, _playerSpawnPos.z);
+        NetworkObject avatar = default;
+        if (runner.IsServer)
+        {
+
+            avatar = runner.Spawn(playerAvatarPrefab, spawnPosition, Quaternion.identity, runner.LocalPlayer);
+            Debug.Log($"ホストに権限付与");
+
+        }
+        else
+        {
+
+            avatar = runner.Spawn(playerAvatarPrefab, spawnPosition, Quaternion.identity, player);
+
+        }
         runner.SetPlayerObject(player, avatar);
+
     }
 
-    // プレイヤーが退出した時の処理
+    /// <summary>
+    /// プレイヤーが退出した時の処理
+    /// </summary>
+    /// <param name="runner"></param>
+    /// <param name="player"></param>
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         if (!runner.IsServer)
@@ -220,7 +284,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             return;
         }
 
-        if (runner.TryGetPlayerObject(player, out var avatar))
+        if (runner.TryGetPlayerObject(player, out NetworkObject avatar))
         {
             runner.Despawn(avatar);
         }
