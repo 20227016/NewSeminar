@@ -57,14 +57,14 @@ public class RoomManager : NetworkBehaviour, INetworkRunnerCallbacks
         if (_preDefinedRoom == null)
         {
 
-            Debug.LogError("ルーム管理クラスの獲得に失敗おっぱい");
+            Debug.LogError("ルーム管理クラスの獲得に失敗");
 
         }
         _iSpawner = this.GetComponent<IParticipantsSpawner>();
         if (_iSpawner == null)
         {
 
-            Debug.LogError("IParticipantsSpawnerの獲得に失敗おっぱい");
+            Debug.LogError("IParticipantsSpawnerの獲得に失敗");
 
         }
         // ネットワークランナーの存在確認

@@ -1,11 +1,8 @@
 using Fusion;
-using Fusion.Sockets;
-using System;
-using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 /// <summary>
 /// 
@@ -33,11 +30,10 @@ public class ParticipantsSpawner : MonoBehaviour, IParticipantsSpawner
     /// 
     /// </summary>
     /// <returns></returns>
-    public async Task<bool> Spawner(NetworkRunner _networkRunner, RoomInfo preDefinedRoom)
+    public async Task<bool> Spawner(NetworkRunner networkRunner, RoomInfo preDefinedRoom)
     {
 
         print("スポナーへようこそ");
-
 
         // セッション方法
         StartGameArgs startGameArgs = default;
@@ -57,19 +53,23 @@ public class ParticipantsSpawner : MonoBehaviour, IParticipantsSpawner
             Scene = SceneManager.GetActiveScene().buildIndex
 
         };
-        Debug.Log("ホストで参加処理を実行");
+        Debug.Log($"ホスト　で{startGameArgs}　の設定で参加処理実行");
         // 指定したネットワークモードでのゲームをスタートさせる（セッション名が重複している等で失敗する）
-        result = await _networkRunner.StartGame(startGameArgs);
+        result = await networkRunner.StartGame(startGameArgs);
+        Debug.Log($"結果：{result}");
         // セッションが成功したか
         if (result.Ok)
         {
 
-            Debug.Log($"部屋 {startGameArgs.SessionName} に　ホスト　として正常に参加しました。");
+            Debug.Log($"ホスト　として部屋 {startGameArgs.SessionName} に正常に参加しました。");
 
         }
         else
         {
 
+            Debug.LogError($"ホスト　として部屋 {startGameArgs.SessionName} に参加できませんでした: {result.ShutdownReason}");
+            Debug.LogError($"セッションを解除し終了します");
+            await networkRunner.Shutdown();
             // サーバー情報（Args＝引数）
             startGameArgs = new StartGameArgs()
             {
@@ -84,39 +84,40 @@ public class ParticipantsSpawner : MonoBehaviour, IParticipantsSpawner
                 Scene = SceneManager.GetActiveScene().buildIndex
 
             };
+            Debug.Log($"クライアント　で{startGameArgs}　の設定で参加処理実行");
+
             // 指定したネットワークモードでのゲームをスタートさせる（セッション名が重複している等で失敗する）
-            result = await _networkRunner.StartGame(startGameArgs);
+            result = await networkRunner.StartGame(startGameArgs);
+            Debug.Log($"結果：{result}");
             if (result.Ok)
             {
 
-                Debug.Log($"部屋 {startGameArgs.SessionName} に　クライアント　として正常に参加しました。");
+                Debug.Log($"クライアント　として部屋 {startGameArgs.SessionName} に正常に参加しました。");
 
             }
             else
             {
 
-                Debug.LogError($"部屋 {startGameArgs.SessionName} に参加できませんでした: {result.ShutdownReason}");
+                Debug.LogError($"クライアントとして　部屋 {startGameArgs.SessionName} に参加できませんでした: {result.ShutdownReason}");
                 Debug.LogError($"接続を解除し終了します");
-                await _networkRunner.Shutdown();
+                await networkRunner.Shutdown();
                 return false;
 
             }
 
         }
-        if (startGameArgs.GameMode != GameMode.Host)
+        if (startGameArgs.GameMode == GameMode.Client)
         {
 
             Debug.Log($"入室検査");
-            Debug.Log($"セッション状態：{_networkRunner.SessionInfo}");
-            Debug.Log($"セッション名：{_networkRunner.SessionInfo.Name}");
-            Debug.Log($"セッションアクセス数：{_networkRunner.ActivePlayers}");
+            Debug.Log($"セッション状態：{networkRunner.SessionInfo}");
             Debug.Log($"現在の参加数: {preDefinedRoom.CurrentParticipantCount}");
             Debug.Log($"最大参加人数: {preDefinedRoom.MaxParticipantCount}");
             if (preDefinedRoom.CurrentParticipantCount == preDefinedRoom.MaxParticipantCount + 1)
             {
 
                 Debug.LogError($"人数が最大に達しているため部屋 {startGameArgs.SessionName} に参加できませんでした: {result.ShutdownReason}");
-                await _networkRunner.Shutdown();
+                await networkRunner.Shutdown();
                 return false;
 
             }
@@ -124,18 +125,18 @@ public class ParticipantsSpawner : MonoBehaviour, IParticipantsSpawner
 
         }
 
-
+        Debug.Log($"ホスト・クライアント各処理");
         // 参加者オブジェクト
         NetworkObject participant = default;
         // 参加者の参加形態による処理
-        switch (_networkRunner.GameMode)
+        switch (networkRunner.GameMode)
         {
 
             //　ホスト
             case GameMode.Host:
 
                 // 参加者をホストとして生成
-                participant = _networkRunner.Spawn(_participantPrefab, Vector3.zero, Quaternion.identity, _networkRunner.LocalPlayer);
+                participant = networkRunner.Spawn(_participantPrefab, Vector3.zero, Quaternion.identity, networkRunner.LocalPlayer);
                 // 生成に失敗したとき
                 if (participant == null)
                 {
@@ -155,6 +156,7 @@ public class ParticipantsSpawner : MonoBehaviour, IParticipantsSpawner
                 {
 
                     Debug.LogError("ホストの権限取得に失敗");
+                    return false;
 
                 }
                 // Room情報をわたすインターフェース
@@ -173,7 +175,7 @@ public class ParticipantsSpawner : MonoBehaviour, IParticipantsSpawner
             case GameMode.Client:
 
                 // 参加者をクライアントとして生成
-                participant = _networkRunner.Spawn(_participantPrefab);
+                participant = networkRunner.Spawn(_participantPrefab);
                 // 生成に失敗したとき
                 if (participant == null)
                 {
@@ -192,5 +194,4 @@ public class ParticipantsSpawner : MonoBehaviour, IParticipantsSpawner
 
 
     }
-
 }
