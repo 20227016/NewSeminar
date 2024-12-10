@@ -5,7 +5,8 @@ using UniRx;
 public class EnemySpawner : NetworkBehaviour
 {
     [SerializeField, Tooltip("生成するエネミーのPrefab")]
-    private NetworkObject enemyPrefab;
+    private NetworkPrefabRef enemyPrefab;
+
 
     [SerializeField, Tooltip("生成するエネミーの数")]
     private int enemyCount = default;

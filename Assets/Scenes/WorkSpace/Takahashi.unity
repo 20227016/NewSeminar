@@ -211,7 +211,8 @@ MonoBehaviour:
   WordOffset: 0
   WordCount: 0
   _interpolationDataSource: 0
-  enemyPrefab: {fileID: 4716216170960049801, guid: 0aabfed02eb59374691f2a2f90b23435, type: 3}
+  enemyPrefab:
+    RawGuidValue: 0aabfed02eb59374691f2a2f90b23435
   enemyCount: 5
   spawnAreaCenter: {fileID: 168012432}
   spawnRadius: 10
