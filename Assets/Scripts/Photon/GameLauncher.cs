@@ -2,9 +2,11 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+
 
 public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -14,7 +16,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRunner networkRunnerPrefab = default;
 
     [SerializeField, Tooltip("プレイヤーアバター")]
-    private NetworkPrefabRef _playerPrefab = default;
+    private NetworkPrefabRef _participantsPrefab = default;
 
     [SerializeField, Tooltip("プレイヤーのスポーン位置")]
     private Vector3 _playerSpawnPos = default;
@@ -69,6 +71,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private async void Awake()
     {
 
+        Debug.Log($"Awake処理");
         // インスタンスがあるかつ自分ではないとき
         if (_instance != null && _instance != this)
         {
@@ -86,7 +89,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         RegisterInputActions(true);
         // コールバック設定
         networkRunner.AddCallbacks(this);
-
         StartGameArgs startGameArgs = new StartGameArgs
         {
             // ゲームモード
@@ -100,6 +102,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         };
         // ランナースタート
         StartGameResult result = await networkRunner.StartGame(startGameArgs);
+        Debug.Log($"サーバー状態:{networkRunner.IsServer}");
         if (networkRunner.IsServer)
         {
 
@@ -271,7 +274,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     /// </summary>
     /// <param name="runner"></param>
     /// <param name="player"></param>
-    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
+    public async void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
 
         Debug.Log($"プレイヤー参加");
@@ -282,22 +285,39 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             return;
         }
         Vector3 spawnPosition = new Vector3(_playerSpawnPos.x + UnityEngine.Random.Range(0, 10), _playerSpawnPos.y, _playerSpawnPos.z);
-        NetworkObject playerObj = default;
+        NetworkObject participantsObj = default;
         if (_roomInfo.CurrentParticipantCount == 0)
         {
 
-            playerObj = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.LocalPlayer);
-            Debug.Log($"ホストに権限付与");
+            Debug.Log($"ホストオブジェクトを生成");
+            participantsObj = runner.Spawn(_participantsPrefab, spawnPosition, Quaternion.identity, runner.LocalPlayer);
+            participantsObj.name = $"{_roomInfo.CurrentParticipantCount}_Host";
+            IParticipantInfo iParticipantInfo = participantsObj.GetComponent<IParticipantInfo>();
+            if (iParticipantInfo == null)
+            {
 
+                Debug.LogError("ホストオブジェクトにルーム情報を渡すインターフェースが見つかりません");
+
+            }
+            iParticipantInfo.SetRoomInfo(_roomInfo);
+            
         }
         else
         {
 
-            playerObj = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity);
-            Debug.Log($"クライアント生成");
+            if(_roomInfo.CurrentParticipantCount >= _roomInfo.MaxParticipantCount)
+            {
 
+                Debug.Log($"最大人数の{_roomInfo.MaxParticipantCount}人に達したため参加できません");
+                return;
+
+            }
+            Debug.Log($"クライアントオブジェクトを生成");
+            participantsObj = runner.Spawn(_participantsPrefab, spawnPosition, Quaternion.identity);
+            participantsObj.name = $"{_roomInfo.CurrentParticipantCount}_Client";
+        
         }
-        runner.SetPlayerObject(player, playerObj);
+        runner.SetPlayerObject(player, participantsObj);
         
 
     }

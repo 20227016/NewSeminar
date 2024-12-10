@@ -21,20 +21,7 @@ public class Participant : NetworkBehaviour,IParticipantInfo
     private NetworkObject _netObj = default;
 
     /// <summary>
-    /// 開始処理
-    /// </summary>
-    void Start()
-    {
-
-        // 参加人数を加算
-        RPC_ParticipantCountAdd();
-        _netObj = this.GetComponent<NetworkObject>();
-
-    }
-
-    
-    /// <summary>
-    /// 参加者人数を加算
+    /// 参加者が増えたときにルーム管理に追加
     /// 呼び出し:ホストとクライアント
     /// 実行する:ホスト
     /// </summary>
@@ -42,30 +29,34 @@ public class Participant : NetworkBehaviour,IParticipantInfo
     public async void RPC_ParticipantCountAdd()
     {
 
-        await WaitForNotNull();
+        Debug.Log($"呼び出したオブジェクト:{this.gameObject}");
         // データ初期化
         _roomInfo.RoomName = _roomInfo.RoomName;
         _roomInfo.MaxParticipantCount = _roomInfo.MaxParticipantCount;
         _roomInfo.CurrentParticipantCount = _roomInfo.CurrentParticipantCount;
         // 更新
-        _roomInfo.CurrentParticipantCount++;
+        _roomInfo.CurrentParticipantCount = _roomInfo.CurrentParticipantCount + 1;
+        Debug.Log($"ルーム参加人数変更:{_roomInfo.CurrentParticipantCount}");
 
     }
 
     /// <summary>
-    ///  中身が入るまで待機
+    /// 参加者が減った時にルーム管理から削除
+    /// 呼び出し:ホストとクライアント
+    /// 実行する:ホスト
     /// </summary>
-    /// <returns></returns>
-    private async Task WaitForNotNull()
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public async void RPC_ParticipantCountRemove()
     {
 
-        while (_roomInfo == null)
-        {
-
-            // _roomInfo が null の場合は 100ミリ秒待機して再確認
-            await Task.Delay(100);
-
-        }
+        Debug.Log($"呼び出したオブジェクト:{this.gameObject}");
+        // データ初期化
+        _roomInfo.RoomName = _roomInfo.RoomName;
+        _roomInfo.MaxParticipantCount = _roomInfo.MaxParticipantCount;
+        _roomInfo.CurrentParticipantCount = _roomInfo.CurrentParticipantCount;
+        // 更新
+        _roomInfo.CurrentParticipantCount = _roomInfo.CurrentParticipantCount + 1;
+        Debug.Log($"ルーム参加人数変更:{_roomInfo.CurrentParticipantCount}");
 
     }
 

@@ -14,7 +14,7 @@ using UnityEngine.UI;
 public class RoomInfo : NetworkBehaviour
 {
 
-    [Networked] public string RoomName { get; set; } = "Room";
+    [Networked] public string RoomName { get; set; } = "RoomTest";
     // 現在のプレイヤー数[ネットワーク上で同期]
     [Networked] public int CurrentParticipantCount { get; set; } = 0 ;
     // 最大プレイヤー数[ネットワーク上で同期]
