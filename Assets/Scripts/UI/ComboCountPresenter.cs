@@ -2,6 +2,7 @@
 using UnityEngine;
 using TMPro;
 using UniRx;
+using Cysharp.Threading.Tasks;
 
 /// <summary>
 /// ComboCountPresenter.cs
@@ -16,14 +17,29 @@ public class ComboCountPresenter : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI _comboCountText = default;
 
+    [SerializeField]
+    private TextMeshProUGUI _comboMultiplierText = default;
+
     /// <summary>
     /// 更新前処理
     /// </summary>
-    private void Start()
+    private async void Start()
     {
+        await UniTask.WaitUntil(() => ComboCounter.Instance != null);
+
         ComboCounter comboCounter = ComboCounter.Instance;
         ComboCountView comboCountView = new ComboCountView();
-        comboCounter.ComboCount.Subscribe(value => comboCountView.UpdateText(value, _comboCountText));
+
+        // コンボ数を購読
+        comboCounter.ComboReactiveProperty
+            .DistinctUntilChanged()
+            .Subscribe(value => comboCountView.UpdateText(value, _comboCountText, 0));
+
+        // コンボ倍率を購読
+        comboCounter.ComboReactiveProperty
+            .DistinctUntilChanged()
+            .Subscribe(value => comboCountView.UpdateText(comboCounter.GetComboMultiplier(), _comboMultiplierText, 1));
+
     }
 
 }

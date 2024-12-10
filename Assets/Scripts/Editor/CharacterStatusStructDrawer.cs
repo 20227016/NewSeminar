@@ -26,6 +26,8 @@ public class CharacterStatusStructDrawer : PropertyDrawer
         fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_avoidanceDistance", "‰ñ”ğ‹——£");
         fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_avoidanceDuration", "‰ñ”ğ‘±ŠÔ ( •b )");
         fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackPower", "UŒ‚—Í");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackLightMultiplier", "ãUŒ‚ƒ_ƒ[ƒW”{—¦");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackStrongMultiplier", "‹­UŒ‚ƒ_ƒ[ƒW”{—¦");
         fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackSpeed", "UŒ‚‘¬“x”{—¦ ( ~ UŒ‚‘¬“x )");
         fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_defensePower", "–hŒä—Í");
 

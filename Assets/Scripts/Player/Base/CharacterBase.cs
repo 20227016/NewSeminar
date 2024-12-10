@@ -127,6 +127,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     #endregion
 
+
     /// <summary>
     /// 生成時処理
     /// </summary>
@@ -142,6 +143,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         Setup();
     }
 
+
     /// <summary>
     /// ネットワーク同期アップデート
     /// </summary>
@@ -153,6 +155,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             ProcessInput(data);
         }
     }
+
 
     /// <summary>
     /// プレイヤーごとに設定するもの
@@ -175,6 +178,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         }
     }
 
+
     /// <summary>
     /// コンポーネントのキャッシュ
     /// </summary>
@@ -189,6 +193,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _animator = GetComponent<Animator>();
         _rigidbody = GetComponentInParent<Rigidbody>();
     }
+
 
     /// <summary>
     /// 数値等の初期設定
@@ -217,6 +222,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         ManageStamina();
     }
 
+
     /// <summary>
     /// スタミナ管理
     /// </summary>
@@ -235,6 +241,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _networkedStamina = Mathf.Clamp(_networkedStamina, 0, _characterStatusStruct._playerStatus.MaxStamina);
     }
 
+
     /// <summary>
     /// 走った時のスタミナ消費
     /// </summary>
@@ -251,6 +258,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             })
             .AddTo(this);
     }
+
 
     /// <summary>
     /// スタミナ自動回復
@@ -272,6 +280,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             })
             .AddTo(this);
     }
+
 
     /// <summary>
     /// スタミナ切れフラグの管理
@@ -311,11 +320,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         switch (input)
         {
             case { IsAttackLight: true }:
-                AttackLight(this, _characterStatusStruct._attackPower);
+                AttackLight(this, _characterStatusStruct._attackPower, _characterStatusStruct._attackLightMultiplier);
                 break;
 
             case { IsAttackStrong: true }:
-                AttackStrong(this, _characterStatusStruct._attackPower);
+                AttackStrong(this, _characterStatusStruct._attackPower, _characterStatusStruct._attackStrongMultiplier);
                 break;
 
             case { IsAvoidance: true }:
@@ -338,6 +347,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
                 break;
         }
     }
+
 
     /// <summary>
     /// 移動入力を管理
@@ -388,11 +398,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     }
 
 
-    protected virtual async void AttackLight(CharacterBase characterBase, float attackMultipiler)
+    protected virtual async void AttackLight(CharacterBase characterBase, float attackPower, float attackMultipiler)
     {
         _currentState = CharacterStateEnum.ATTACK;
 
-        _playerAttackLight.AttackLight(characterBase, attackMultipiler);
+        _playerAttackLight.AttackLight(characterBase, attackPower, attackMultipiler);
 
         //_animation.TriggerAnimation(_animator, "AttackLight");
 
@@ -404,12 +414,12 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     }
 
 
-    protected virtual async void AttackStrong(CharacterBase characterBase, float attackMultipiler)
+    protected virtual async void AttackStrong(CharacterBase characterBase, float attackPower, float attackMultipiler)
     {
         
         _currentState = CharacterStateEnum.ATTACK;
 
-        _playerAttackStrong.AttackStrong(characterBase, attackMultipiler);
+        _playerAttackStrong.AttackStrong(characterBase, attackPower, attackMultipiler);
 
         ReceiveDamage(20);
         _networkedSkillPoint = 100f;
@@ -458,11 +468,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         if (!Object.HasStateAuthority) return;
 
-        _networkedHP = Mathf.Clamp(
-            _networkedHP - (damageValue - _characterStatusStruct._defensePower),
-            0,
-            _characterStatusStruct._playerStatus.MaxHp
-        );
+        _networkedHP += (damageValue - _characterStatusStruct._defensePower);
     }
 
 
@@ -470,11 +476,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         if (!Object.HasStateAuthority) return;
 
-        _networkedHP = Mathf.Clamp(
-            _networkedHP + healValue,
-            0,
-            _characterStatusStruct._playerStatus.MaxHp
-        );
+        _networkedHP += healValue;
     }
 
 
@@ -491,6 +493,5 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         _currentState = CharacterStateEnum.DEATH;
         //_animation.PlayAnimation(_animator, "Death");
-        this.gameObject.SetActive(false);
     }
 }

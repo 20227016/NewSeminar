@@ -46,8 +46,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkRunnerPrefab: {fileID: 2398789667054413817, guid: 7d2bbb37f0570514684b499e2a4fb9d6, type: 3}
+  comboCounterPrefab:
+    RawGuidValue: 5b5d9af90a3574d4bb59ad0d1e7e309b
   playerAvatarPrefab:
-    RawGuidValue: df50a45c106cf4b4baf9f07b565c30f8
+    RawGuidValue: 7aa176f9b434008428b39d9c5adc47c4
   _playerSpawnPos: {x: 0, y: 0, z: 0}
 --- !u!114 &5050406778293680978
 MonoBehaviour:

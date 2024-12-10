@@ -2723,6 +2723,8 @@ MonoBehaviour:
     _avoidanceDistance: 10
     _avoidanceDuration: 0.2
     _attackPower: 10
+    _attackLightMultiplier: 1
+    _attackStrongMultiplier: 1.5
     _attackSpeed: 1
     _defensePower: 10
     _skillDuration: 20

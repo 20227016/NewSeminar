@@ -5,7 +5,7 @@ public interface IComboCounter
     /// コンボ取得
     /// </summary>
     /// <returns>現在のコンボ数</returns>
-    int GetCombo();
+    float GetComboMultiplier();
 
     /// <summary>
     /// コンボ加算

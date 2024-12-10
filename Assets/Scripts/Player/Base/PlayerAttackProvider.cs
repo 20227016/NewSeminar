@@ -1,4 +1,5 @@
 
+using UnityEngine;
 /// <summary>
 /// PlayerAttackProvider.cs
 /// クラス説明
@@ -9,9 +10,9 @@
 /// </summary>
 public class PlayerAttackProvider : IAttackProvider
 {
-    public PlayerAttackLight _playerAttackLight = new PlayerAttackLight(ComboCounter.Instance);
+    public PlayerAttackLight _playerAttackLight = new PlayerAttackLight();
 
-    public PlayerAttackStrong _playerAttackStrong = new PlayerAttackStrong(ComboCounter.Instance);
+    public PlayerAttackStrong _playerAttackStrong = new PlayerAttackStrong();
 
     public IAttackLight GetAttackLight()
     {
