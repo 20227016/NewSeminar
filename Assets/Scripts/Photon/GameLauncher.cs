@@ -14,10 +14,15 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRunner networkRunnerPrefab = default;
 
     [SerializeField, Tooltip("プレイヤーアバター")]
-    private NetworkPrefabRef playerAvatarPrefab = default;
+    private NetworkPrefabRef _playerPrefab = default;
 
     [SerializeField, Tooltip("プレイヤーのスポーン位置")]
     private Vector3 _playerSpawnPos = default;
+
+    /// <summary>
+    /// 部屋管理
+    /// </summary>
+    private RoomInfo _roomInfo = default; 
 
     /// <summary>
     /// メインカメラ
@@ -138,6 +143,22 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     /// <summary>
+    /// 更新前処理
+    /// </summary>
+    private void Start()
+    {
+
+        _roomInfo = GameObject.Find("Room").GetComponent<RoomInfo>();
+        if (_roomInfo == null)
+        {
+
+            Debug.LogError("ルーム管理情報が入っていません");
+
+        }
+
+    }
+
+    /// <summary>
     /// 入力管理メソッド
     /// </summary>
     /// <param name="context">入力アクション</param>
@@ -253,22 +274,31 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
 
+        Debug.Log($"プレイヤー参加");
+        Debug.Log($"{_roomInfo.CurrentParticipantCount }");
+        // ホストで参加するとき
+        if (!runner.IsServer)
+        {
+            return;
+        }
         Vector3 spawnPosition = new Vector3(_playerSpawnPos.x + UnityEngine.Random.Range(0, 10), _playerSpawnPos.y, _playerSpawnPos.z);
-        NetworkObject avatar = default;
-        if (runner.IsServer)
+        NetworkObject playerObj = default;
+        if (_roomInfo.CurrentParticipantCount == 0)
         {
 
-            avatar = runner.Spawn(playerAvatarPrefab, spawnPosition, Quaternion.identity, runner.LocalPlayer);
+            playerObj = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, runner.LocalPlayer);
             Debug.Log($"ホストに権限付与");
 
         }
         else
         {
 
-            avatar = runner.Spawn(playerAvatarPrefab, spawnPosition, Quaternion.identity, player);
+            playerObj = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity);
+            Debug.Log($"クライアント生成");
 
         }
-        runner.SetPlayerObject(player, avatar);
+        runner.SetPlayerObject(player, playerObj);
+        
 
     }
 
