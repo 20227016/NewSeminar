@@ -1,85 +1,113 @@
-
 using Cysharp.Threading.Tasks;
+using Fusion;
 using System;
 using System.Threading;
 using UniRx;
+using UnityEngine;
 
 /// <summary>
 /// ComboCounter.cs
-/// クラス説明
-/// コンボのシングルトンクラス
-///
+/// Photon Fusion に対応したコンボカウントクラス
 /// 作成日: 9/24
 /// 作成者: 山田智哉
 /// </summary>
-public class ComboCounter : IComboCounter
+public class ComboCounter : NetworkBehaviour, IComboCounter
 {
+    // シングルトン
     private static ComboCounter _instance;
-    private ReactiveProperty<int> _comboCount;
-    public IReadOnlyReactiveProperty<int> ComboCount => _comboCount;
+    public static ComboCounter Instance => _instance;
 
+
+    // コンボ数をネットワーク同期 ---------------------------------------------------------
+    [Networked(OnChanged = nameof(OnComboCountChanged))]
+    private int _networkComboCount { get; set; } // ネットワーク同期されるプロパティ
+
+    private ReactiveProperty<int> _comboReactiveProperty = new(0);
+    public IReadOnlyReactiveProperty<int> ComboReactiveProperty => _comboReactiveProperty;
+
+    private static void OnComboCountChanged(Changed<ComboCounter> changed)
+    {
+        changed.Behaviour._comboReactiveProperty.Value = changed.Behaviour._networkComboCount;
+    }
+    // ------------------------------------------------------------------------------------
+
+    // リセットタイマーのキャンセレーショントークン
     private CancellationTokenSource _comboResetCancellationTokenSource;
 
-    // コンボリセットまでの時間（秒）
-    private const float _comboResetTime = 10f;
+    // コンボリセットに要する時間
+    private const float COMBO_RESET_TIME = 10f;
 
-    /// <summary>
-    /// コンボカウンターのシングルトン化
-    /// </summary>
-    public static ComboCounter Instance
+
+    private void Awake()
     {
-        get
+        // シングルトン化
+        if (_instance == null)
         {
-            if (_instance == null)
-            {
-                _instance = new ComboCounter();
-                _instance.Initialize(); // 初期化処理を追加
-            }
-
-            return _instance;
+            _instance = this;
         }
-    }
+        else if (_instance != this)
+        {
+            Destroy(gameObject);
+        }
 
-    // コンストラクタで初期化
-    private void Initialize()
-    {
-        _comboCount = new ReactiveProperty<int>(0); // ReactivePropertyの初期化
         _comboResetCancellationTokenSource = new CancellationTokenSource();
     }
 
+    public override void Spawned()
+    {
+        // 初期化
+        if (Object.HasStateAuthority)
+        {
+            _networkComboCount = 0;
+        }
+    }
+
+    /// <summary>
+    /// コンボ加算
+    /// </summary>
     public void AddCombo()
     {
-        // コンボ数を加算
-        _comboCount.Value++;
+        if (!Object.HasStateAuthority) return; // State Authority のみ加算可能
+
+        // コンボを加算
+        _networkComboCount++;
 
         // 既存のリセット処理があればキャンセル
         _comboResetCancellationTokenSource.Cancel();
         _comboResetCancellationTokenSource = new CancellationTokenSource();
 
-        // リセットのタイマーを開始
+        // コンボリセットタイマーを開始
         StartComboResetTimerAsync(_comboResetCancellationTokenSource.Token).Forget();
     }
 
-    // コンボ数を取得
-    public int GetCombo()
-    {
-        return _comboCount.Value;
-    }
-
-    // コンボリセットのタイマー処理
+    /// <summary>
+    /// コンボリセットタイマー
+    /// </summary>
     private async UniTaskVoid StartComboResetTimerAsync(CancellationToken token)
     {
         try
         {
-            // 一定時間待つ（キャンセル可能）
-            await UniTask.Delay(TimeSpan.FromSeconds(_comboResetTime), cancellationToken: token);
+            await UniTask.Delay(TimeSpan.FromSeconds(COMBO_RESET_TIME), cancellationToken: token);
 
-            // タイマーが完了したらコンボ数をリセット
-            _comboCount.Value = 0;
+            // コンボ数をリセット
+            if (Object.HasStateAuthority)
+            {
+                _networkComboCount = 0; 
+            }
         }
         catch (OperationCanceledException)
         {
-            // タイマーがキャンセルされた場合は何もしない
+            // キャンセル時は何もしない
         }
+    }
+
+    /// <summary>
+    /// 現在のコンボ倍率を取得
+    /// </summary>
+    public float GetComboMultiplier()
+    {
+        // 10コンボ毎にコンボ倍率が0.1づつ上昇、最低等倍、最高2倍
+        float comboMultiplier = Mathf.Clamp(1 + (_networkComboCount / 100), 1, 2);
+        return comboMultiplier;
     }
 }

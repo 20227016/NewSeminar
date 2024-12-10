@@ -35,6 +35,16 @@ public struct CharacterStatusStruct
     public float _attackPower;
 
     /// <summary>
+    /// 弱攻撃ダメージ倍率
+    /// </summary>
+    public float _attackLightMultiplier;
+
+    /// <summary>
+    /// 強攻撃ダメージ倍率
+    /// </summary>
+    public float _attackStrongMultiplier;
+
+    /// <summary>
     /// 攻撃速度
     /// </summary>
     public float _attackSpeed;

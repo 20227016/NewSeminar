@@ -11,19 +11,12 @@ using System.Collections;
 /// </summary>
 public class PlayerAttackStrong : IAttackStrong
 {
-    private IComboCounter _comboCounter;
-
     // 攻撃範囲の半径
     private float _attackRadius = 1.5f;
 
-    public PlayerAttackStrong(IComboCounter comboCounter)
+    public void AttackStrong(CharacterBase characterBase,  float attackPower, float attackMultiplier)
     {
-        _comboCounter = comboCounter;
-    }
-
-    public void AttackStrong(CharacterBase characterBase, float attackMultiplier)
-    {
-        Vector3 attackPosition = characterBase.transform.position + new Vector3(0, 1, 0); // 攻撃の発射地点
+        Vector3 attackPosition = characterBase.transform.position + new Vector3(0, 1, 0); // 攻撃の地点
         Vector3 attackDirection = characterBase.transform.forward; // 攻撃の方向
 
         // 指定した半径内のコライダーを取得
@@ -36,6 +29,7 @@ public class PlayerAttackStrong : IAttackStrong
             Debug.Log("強攻撃がヒット" + collider.name);
 
             IReceiveDamage target = collider.GetComponent<IReceiveDamage>();
+
             if (target == null) return;
 
             // 敵が攻撃の方向にいるか確認
@@ -44,17 +38,16 @@ public class PlayerAttackStrong : IAttackStrong
             if (Vector3.Dot(directionToEnemy, attackDirection) > 0) // 前方にいるかチェック
             {
 
+                ComboCounter comboCounter = ComboCounter.Instance;
+
                 // コンボ数を加算
-                _comboCounter.AddCombo();
+                comboCounter.AddCombo();
 
-                // 現在のコンボ数を取得
-                int currentCombo = _comboCounter.GetCombo();
-
-                // コンボ倍率を計算
-                float comboMultiplier = Mathf.Clamp(1 + currentCombo * 0.01f, 1, 2);
+                // 現在のコンボ倍率を取得
+                float comboMultiplier = comboCounter.GetComboMultiplier();
 
                 // 与ダメージを計算
-                int damage = Mathf.FloorToInt(10 * attackMultiplier * comboMultiplier);
+                int damage = Mathf.FloorToInt(attackPower * attackMultiplier * comboMultiplier);
 
                 // 相手にダメージを与える
                 target.ReceiveDamage(damage);

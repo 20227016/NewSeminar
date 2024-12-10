@@ -6,5 +6,5 @@ public interface IAttackLight
     /// <summary>
     /// ãUŒ‚
     /// </summary>
-    void AttackLight(CharacterBase characterBase, float attackPower);
+    void AttackLight(CharacterBase characterBase, float attackPower, float attackMultiplier);
 }
