@@ -23,10 +23,8 @@ public class PlayerTargetting : MonoBehaviour, ITargetting
     private const float CameraRotationCorrectionFactor = Mathf.PI * 2;
     private const float DistanceNormalizationFactor = 500f;
 
-    [SerializeField, Tooltip("通常時の仮想カメラ")]
     private CinemachineVirtualCamera _normalCamera = default;
 
-    [SerializeField, Tooltip("ターゲッティング時の仮想カメラ")]
     private CinemachineVirtualCamera _targettingCamera = default;
 
     [SerializeField, Tooltip("ターゲットのレイヤー")]
@@ -56,11 +54,9 @@ public class PlayerTargetting : MonoBehaviour, ITargetting
     public void InitializeSetting(Camera camera)
     {
         _mainCamera = camera;
-        
-
-
+        _normalCamera = GameObject.Find("NormalCamera").GetComponent<CinemachineVirtualCamera>();
+        _targettingCamera = GameObject.Find("TargettingCamera").GetComponent<CinemachineVirtualCamera>();
         _normalCameraPOV = _normalCamera.GetCinemachineComponent<CinemachinePOV>();
-
         _targettingCamera.enabled = false;
         _isTargetting = false;
 
@@ -81,7 +77,7 @@ public class PlayerTargetting : MonoBehaviour, ITargetting
         {
             // 現在のターゲットにターゲット検索結果を格納
             _currentTarget = SearchTarget();
-            
+
             if (_currentTarget == null) return;
 
             _targettingCamera.LookAt = _currentTarget.transform;
