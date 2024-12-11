@@ -39,7 +39,7 @@ public class PlayerAttackLight : IAttackLight
                 ComboCounter comboCounter = ComboCounter.Instance;
 
                 // コンボ数を加算
-                comboCounter.AddCombo();
+                //comboCounter.AddCombo();
 
                 // 現在のコンボ倍率を取得
                 float comboMultiplier = comboCounter.GetComboMultiplier();
