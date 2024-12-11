@@ -2735,6 +2735,21 @@ MonoBehaviour:
     _recoveryStamina: 25
     _runStamina: 25
     _avoidanceStamina: 20
+  _characterAnimationStruct:
+    _idleAnimation: {fileID: 7400000, guid: d0d3809b813aa0b4f90429d5587583f0, type: 3}
+    _walkAnimation: {fileID: 7400000, guid: 625dee4eb35dcee4280d5bcea189b903, type: 3}
+    _runAnimation: {fileID: 7400000, guid: 48c57212316e5a643ae3d2c5f377ef90, type: 3}
+    _attackLightAnimation1: {fileID: 7400000, guid: b055cb499f0be834986acf45f6711225, type: 3}
+    _attackLightAnimation2: {fileID: 7400000, guid: 27a6a9f585a42884db1c7631777bc9bd, type: 3}
+    _attackLightAnimation3: {fileID: 7400000, guid: e5d4c4888f72844449577d099b578916, type: 3}
+    _attackStrongAnimation: {fileID: 7400000, guid: 3eb5549acb632954f97777c8a711f5f3, type: 3}
+    _avoidanceActionAnimation: {fileID: 7400000, guid: 61fd65a60aa03c74099fe9785ba57090, type: 3}
+    _skillAnimation: {fileID: 7400000, guid: 7c627f23f6d1fdf43b168d065fa8dfbd, type: 3}
+    _ressurectionAnimation: {fileID: 0}
+    _reviveAnimation: {fileID: 7400000, guid: 92dd41a7cc7984943a71b5fac14016ba, type: 3}
+    _damageReactionLightAnimation: {fileID: 7400000, guid: a9d6207cec8e8eb4f9f65dbbf30bfdbf, type: 3}
+    _damageReactionHeavyAnimation: {fileID: 7400000, guid: d7a8c02acfab4664c99092cdddd05377, type: 3}
+    _deathAnimation: {fileID: 7400000, guid: d6c39c4ed4f199b45b933e1409242721, type: 3}
   _currentState: 0
 --- !u!114 &4405098942096439548
 MonoBehaviour:

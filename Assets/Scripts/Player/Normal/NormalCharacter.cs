@@ -13,20 +13,4 @@ using UnityEngine;
 public class NormalCharacter : CharacterBase
 {
 
-    public override void Skill(CharacterBase characterBase, float skillTime, float skillCoolTime)
-    {
-        if (_isSkillCoolTime) return;
-
-        Observable.Timer(TimeSpan.FromSeconds(skillCoolTime))
-            .Subscribe(_ =>
-            {
-                Debug.Log("スキルクールタイム終了");
-            });
-
-        _isSkillCoolTime = true;
-
-        _networkedSkillPoint = 0f;
-
-        _skill.Skill(this, skillTime);
-    }
 }
