@@ -11,11 +11,6 @@ using UnityEngine;
 public class TankCharacter : CharacterBase
 {
 
-    public override void Skill(CharacterBase characterBase, float skillTime, float skillCoolTime)
-    {
-        _skill.Skill(characterBase, skillTime);
-    }
-
     protected override void AvoidanceAction(Transform transform)
     {
         _passive.Passive(this);

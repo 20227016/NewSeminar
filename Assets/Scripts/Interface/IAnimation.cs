@@ -3,8 +3,25 @@ using UnityEngine;
 
 public interface IAnimation
 {
-    void TriggerAnimation(Animator animator, string animationName);
-    void BoolAnimation(Animator animator, string animationName, bool isPlay);
+    /// <summary>
+    /// trigger操作用
+    /// </summary>
+    /// <param name="animator">操作するアニメーター</param>
+    /// <param name="animationClip">操作するアニメーションクリップ</param>
+    void TriggerAnimation(Animator animator, AnimationClip animationClip);
 
-    void PlayAnimation(Animator animator, string animationName);
+    /// <summary>
+    /// bool操作用
+    /// </summary>
+    /// <param name="animator">操作するアニメーター</param>
+    /// <param name="animationClip">操作するアニメーションクリップ</param>
+    /// <param name="isPlay">再生するか</param>
+    void BoolAnimation(Animator animator, AnimationClip animationClip, bool isPlay);
+
+    /// <summary>
+    /// play操作用
+    /// </summary>
+    /// <param name="animator">操作するアニメーター</param>
+    /// <param name="animationClip">操作するアニメーションクリップ</param>
+    void PlayAnimation(Animator animator, AnimationClip animationClip);
 }

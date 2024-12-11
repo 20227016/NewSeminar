@@ -34,8 +34,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     #region 変数
 
     // ステータス
-    [SerializeField, Tooltip("ステータス値")]
     public CharacterStatusStruct _characterStatusStruct = default;
+
+    public CharacterAnimationStruct _characterAnimationStruct = default;
 
     // ステート
     protected CharacterStateEnum _characterStateEnum = default;
@@ -369,8 +370,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         if (_moveDirection == Vector2.zero)
         {
             _currentState = CharacterStateEnum.IDLE;
-            //_animation.BoolAnimation(_animator, "Walk", false);
-            //_animation.BoolAnimation(_animator, "Run", false);
+            _animation.BoolAnimation(_animator, _characterAnimationStruct._walkAnimation, false);
+            _animation.BoolAnimation(_animator, _characterAnimationStruct._runAnimation, false);
             return;
         }
 
@@ -382,9 +383,15 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _moveSpeed = isWalking ? _characterStatusStruct._walkSpeed : _characterStatusStruct._runSpeed;
         _currentState = isWalking ? CharacterStateEnum.WALK : CharacterStateEnum.RUN;
 
-        // アニメーション
-        // _animation.BoolAnimation(_animator, "Walk", isWalking);
-        // _animation.BoolAnimation(_animator, "Run", !isWalking);
+        // アニメーションの制御を明確に
+        if (isWalking)
+        {
+            _animation.BoolAnimation(_animator, _characterAnimationStruct._walkAnimation, true);
+        }
+        else
+        {
+            _animation.BoolAnimation(_animator, _characterAnimationStruct._runAnimation, true);
+        }
 
         // 移動を実行
         Move(_playerTransform, _moveDirection, _moveSpeed, _rigidbody, _currentState);
@@ -404,7 +411,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _playerAttackLight.AttackLight(characterBase, attackPower, attackMultipiler);
 
-        _animation.TriggerAnimation(_animator, "PunchTrigger");
+        _animation.TriggerAnimation(_animator, _characterAnimationStruct._attackLightAnimation1);
 
         // ミリ秒に変換して待機
         await UniTask.Delay((int)(500));
@@ -420,11 +427,10 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _currentState = CharacterStateEnum.ATTACK;
 
         _playerAttackStrong.AttackStrong(characterBase, attackPower, attackMultipiler);
-
-        ReceiveDamage(20);
+        
         _networkedSkillPoint = 100f;
 
-        //_animation.TriggerAnimation(_animator, "AttackStrong");
+        _animation.TriggerAnimation(_animator, _characterAnimationStruct._attackStrongAnimation);
 
         await UniTask.Delay((int)(500));
 
@@ -445,6 +451,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _currentState = CharacterStateEnum.AVOIDANCE_ACTION;
 
+        _animation.TriggerAnimation(_animator, _characterAnimationStruct._avoidanceActionAnimation);
+
         _networkedStamina -= _characterStatusStruct._avoidanceStamina;
 
         _avoidance.Avoidance(transform, _moveDirection, _characterStatusStruct._avoidanceDistance, _characterStatusStruct._avoidanceDuration);
@@ -455,11 +463,33 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     }
 
 
-    public abstract void Skill(CharacterBase characterBase, float skillTime, float skillCoolTime);
+    protected virtual void Skill(CharacterBase characterBase, float skillTime, float skillCoolTime) 
+    {
+        // クールタイム中ならリターン
+        if (_isSkillCoolTime) return;
+
+        // クールタイム管理
+        _isSkillCoolTime = true;
+
+        Observable.Timer(TimeSpan.FromSeconds(skillCoolTime))
+            .Subscribe(_ =>
+            {
+                Debug.Log("スキルクールタイム終了");
+                _isSkillCoolTime = false;
+            });
+
+        // 発動後スキルポイントを０に
+        _networkedSkillPoint = 0f;
+
+        _skill.Skill(this, skillTime);
+    }
+
 
 
     protected virtual void Resurrection(Transform transform, float ressurectionTime)
     {
+        _animation.BoolAnimation(_animator, _characterAnimationStruct._deathAnimation, true);
+
         _resurrection.Resurrection(transform, ressurectionTime);
     }
 
@@ -467,6 +497,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     public virtual void ReceiveDamage(int damageValue)
     {
         if (!Object.HasStateAuthority) return;
+
+        _animation.PlayAnimation(_animator, _characterAnimationStruct._damageReactionLightAnimation);
 
         _networkedHP += (damageValue - _characterStatusStruct._defensePower);
     }
@@ -492,6 +524,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected virtual void Death()
     {
         _currentState = CharacterStateEnum.DEATH;
-        //_animation.PlayAnimation(_animator, "Death");
+
+        _animation.PlayAnimation(_animator, _characterAnimationStruct._deathAnimation);
     }
 }
