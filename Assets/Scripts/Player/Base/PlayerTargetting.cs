@@ -77,7 +77,7 @@ public class PlayerTargetting : MonoBehaviour, ITargetting
         {
             // 現在のターゲットにターゲット検索結果を格納
             _currentTarget = SearchTarget();
-            
+
             if (_currentTarget == null) return;
 
             _targettingCamera.LookAt = _currentTarget.transform;

@@ -2,9 +2,11 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+
 
 public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -14,10 +16,15 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRunner networkRunnerPrefab = default;
 
     [SerializeField, Tooltip("プレイヤーアバター")]
-    private NetworkPrefabRef playerAvatarPrefab = default;
+    private NetworkPrefabRef _participantsPrefab = default;
 
     [SerializeField, Tooltip("プレイヤーのスポーン位置")]
     private Vector3 _playerSpawnPos = default;
+
+    /// <summary>
+    /// 部屋管理
+    /// </summary>
+    private RoomInfo _roomInfo = default; 
 
     /// <summary>
     /// メインカメラ
@@ -64,6 +71,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private async void Awake()
     {
 
+        Debug.Log($"Awake処理");
         // インスタンスがあるかつ自分ではないとき
         if (_instance != null && _instance != this)
         {
@@ -81,7 +89,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         RegisterInputActions(true);
         // コールバック設定
         networkRunner.AddCallbacks(this);
-
         StartGameArgs startGameArgs = new StartGameArgs
         {
             // ゲームモード
@@ -95,6 +102,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         };
         // ランナースタート
         StartGameResult result = await networkRunner.StartGame(startGameArgs);
+        Debug.Log($"サーバー状態:{networkRunner.IsServer}");
         if (networkRunner.IsServer)
         {
 
@@ -135,6 +143,22 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
                 action.canceled -= HandleInput;
             }
         }
+    }
+
+    /// <summary>
+    /// 更新前処理
+    /// </summary>
+    private void Start()
+    {
+
+        _roomInfo = GameObject.Find("Room").GetComponent<RoomInfo>();
+        if (_roomInfo == null)
+        {
+
+            Debug.LogError("ルーム管理情報が入っていません");
+
+        }
+
     }
 
     /// <summary>
@@ -250,25 +274,51 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     /// </summary>
     /// <param name="runner"></param>
     /// <param name="player"></param>
-    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
+    public async void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
 
+        Debug.Log($"プレイヤー参加");
+        Debug.Log($"{_roomInfo.CurrentParticipantCount }");
+        // ホストで参加するとき
+        if (!runner.IsServer)
+        {
+            return;
+        }
         Vector3 spawnPosition = new Vector3(_playerSpawnPos.x + UnityEngine.Random.Range(0, 10), _playerSpawnPos.y, _playerSpawnPos.z);
-        NetworkObject avatar = default;
-        if (runner.IsServer)
+        NetworkObject participantsObj = default;
+        if (_roomInfo.CurrentParticipantCount == 0)
         {
 
-            avatar = runner.Spawn(playerAvatarPrefab, spawnPosition, Quaternion.identity, runner.LocalPlayer);
-            Debug.Log($"ホストに権限付与");
+            Debug.Log($"ホストオブジェクトを生成");
+            participantsObj = runner.Spawn(_participantsPrefab, spawnPosition, Quaternion.identity, runner.LocalPlayer);
+            participantsObj.name = $"{_roomInfo.CurrentParticipantCount}_Host";
+            IParticipantInfo iParticipantInfo = participantsObj.GetComponent<IParticipantInfo>();
+            if (iParticipantInfo == null)
+            {
 
+                Debug.LogError("ホストオブジェクトにルーム情報を渡すインターフェースが見つかりません");
+
+            }
+            iParticipantInfo.SetRoomInfo(_roomInfo);
+            
         }
         else
         {
 
-            avatar = runner.Spawn(playerAvatarPrefab, spawnPosition, Quaternion.identity, player);
+            if(_roomInfo.CurrentParticipantCount >= _roomInfo.MaxParticipantCount)
+            {
 
+                Debug.Log($"最大人数の{_roomInfo.MaxParticipantCount}人に達したため参加できません");
+                return;
+
+            }
+            Debug.Log($"クライアントオブジェクトを生成");
+            participantsObj = runner.Spawn(_participantsPrefab, spawnPosition, Quaternion.identity);
+            participantsObj.name = $"{_roomInfo.CurrentParticipantCount}_Client";
+        
         }
-        runner.SetPlayerObject(player, avatar);
+        runner.SetPlayerObject(player, participantsObj);
+        
 
     }
 
