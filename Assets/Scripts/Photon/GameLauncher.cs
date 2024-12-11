@@ -22,6 +22,11 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private Vector3 _playerSpawnPos = default;
 
     /// <summary>
+    /// 接続をホストに解除された参加者
+    /// </summary>
+    private List<PlayerRef> _disconnectPlayerRef = new ();
+
+    /// <summary>
     /// 部屋管理
     /// </summary>
     private RoomInfo _roomInfo = default;
@@ -317,7 +322,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
                 Debug.Log($"最大人数の{_roomInfo.MaxParticipantCount}人に達したため参加できません");
                 Debug.Log($"セッションを終了します");
-                await runner.Shutdown();
+                runner.Disconnect(player);
+                _disconnectPlayerRef.Add(player);
                 return;
 
             }
@@ -342,6 +348,14 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         if (!runner.IsServer)
         {
             return;
+        }
+        // ホストに切断されたことがセッションを終了原因の場合
+        if (_disconnectPlayerRef.Contains(player))
+        {
+
+            _disconnectPlayerRef.Remove(player);
+            return;
+
         }
         if (runner.TryGetPlayerObject(player, out NetworkObject avatar))
         {

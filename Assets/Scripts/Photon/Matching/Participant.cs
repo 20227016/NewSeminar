@@ -53,7 +53,7 @@ public class Participant : NetworkBehaviour, IRoomController
     /// 呼び出し:ホストとクライアント
     /// 実行する:ホスト
     /// </summary>
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    [Rpc(RpcSources.All, RpcTargets.All)]
     public async void RPC_ParticipantCountAdd()
     {
 
@@ -62,6 +62,19 @@ public class Participant : NetworkBehaviour, IRoomController
         // 更新
         _roomInfo.CurrentParticipantCount = _roomInfo.CurrentParticipantCount + 1;
         Debug.Log($"ルーム参加人数変更:{_roomInfo.CurrentParticipantCount}");
+        if(_roomInfo.CurrentParticipantCount == 1)
+        {
+
+            GameObject.Find($"Participant_{_roomInfo.CurrentParticipantCount}").GetComponent<Text>().text = $"Host_{_roomInfo.CurrentParticipantCount}";
+
+        }
+        else
+        {
+
+            GameObject.Find($"Participant_{_roomInfo.CurrentParticipantCount}").GetComponent<Text>().text = $"Client_{_roomInfo.CurrentParticipantCount}";
+
+        }
+        
 
     }
 
@@ -70,12 +83,24 @@ public class Participant : NetworkBehaviour, IRoomController
     /// 呼び出し:ホストとクライアント
     /// 実行する:ホスト
     /// </summary>
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    [Rpc(RpcSources.All, RpcTargets.All)]
     public async void RPC_ParticipantCountRemove()
     {
 
         await GetRoomAwait();
         Debug.Log($"呼び出したオブジェクト:{this.gameObject}");
+        if(_roomInfo.CurrentParticipantCount == 1)
+        {
+
+            GameObject.Find($"Host_{_roomInfo.CurrentParticipantCount}").GetComponent<Text>().text = $"Participant_{_roomInfo.CurrentParticipantCount}";
+
+        }
+        else
+        {
+
+            GameObject.Find($"Client_{_roomInfo.CurrentParticipantCount}").GetComponent<Text>().text = $"Participant_{_roomInfo.CurrentParticipantCount}";
+
+        }
         // 更新
         _roomInfo.CurrentParticipantCount = _roomInfo.CurrentParticipantCount - 1;
         Debug.Log($"ルーム参加人数変更:{_roomInfo.CurrentParticipantCount}");
