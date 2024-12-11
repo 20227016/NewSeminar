@@ -404,7 +404,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _playerAttackLight.AttackLight(characterBase, attackPower, attackMultipiler);
 
-        //_animation.TriggerAnimation(_animator, "AttackLight");
+        _animation.TriggerAnimation(_animator, "PunchTrigger");
 
         // ミリ秒に変換して待機
         await UniTask.Delay((int)(500));

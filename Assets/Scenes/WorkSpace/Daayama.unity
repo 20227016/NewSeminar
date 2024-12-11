@@ -1152,6 +1152,14 @@ PrefabInstance:
       propertyPath: playerAvatarPrefab.RawGuidValue.Array.data[1]
       value: -4303228637196471512
       objectReference: {fileID: 0}
+    - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
+      propertyPath: _participantsPrefab.RawGuidValue.Array.data[0]
+      value: -5407578435035574049
+      objectReference: {fileID: 0}
+    - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
+      propertyPath: _participantsPrefab.RawGuidValue.Array.data[1]
+      value: -562848426904979014
+      objectReference: {fileID: 0}
     - target: {fileID: 2436158963617984829, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
