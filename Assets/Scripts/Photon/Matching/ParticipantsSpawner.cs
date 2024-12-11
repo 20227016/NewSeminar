@@ -160,7 +160,7 @@ public class ParticipantsSpawner : MonoBehaviour, IParticipantsSpawner
 
                 }
                 // Room情報をわたすインターフェース
-                IParticipantInfo iParticipantInfo = participant.GetComponent<IParticipantInfo>();
+                 IRoomController iParticipantInfo = participant.GetComponent< IRoomController>();
                 if (iParticipantInfo == null)
                 {
 
@@ -168,7 +168,7 @@ public class ParticipantsSpawner : MonoBehaviour, IParticipantsSpawner
                     return false;
 
                 }
-                iParticipantInfo.SetRoomInfo(preDefinedRoom);
+                //iParticipantInfo.SetRoomInfo(preDefinedRoom);
 
                 break;
             // クライアント

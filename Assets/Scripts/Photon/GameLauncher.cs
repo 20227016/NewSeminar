@@ -24,7 +24,12 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     /// <summary>
     /// 部屋管理
     /// </summary>
-    private RoomInfo _roomInfo = default; 
+    private RoomInfo _roomInfo = default;
+
+    /// <summary>
+    /// ホストに
+    /// </summary>
+    private  IRoomController _iRoomController = default;
 
     /// <summary>
     /// メインカメラ
@@ -35,6 +40,11 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     /// インプットシステム
     /// </summary>
     private PlayerInput _playerInput = default;
+    
+    /// <summary>
+    /// ネットワークランナー
+    /// </summary>
+    NetworkRunner _networkRunner = default;
 
     /// <summary>
     /// インプットステート
@@ -54,8 +64,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     /// 移動値
     /// </summary>
     private Vector2 _moveInput = default;
-
-   
 
     public static GameLauncher Instance
     {
@@ -84,11 +92,11 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         /*　　　取得　　　*/
         _mainCamera = Camera.main;
         _playerInput = this.GetComponent<PlayerInput>();
-        NetworkRunner networkRunner = Instantiate(networkRunnerPrefab);
+        _networkRunner = Instantiate(networkRunnerPrefab);
         // 関数登録
         RegisterInputActions(true);
         // コールバック設定
-        networkRunner.AddCallbacks(this);
+        _networkRunner.AddCallbacks(this);
         StartGameArgs startGameArgs = new StartGameArgs
         {
             // ゲームモード
@@ -101,18 +109,18 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             Scene = SceneManager.GetActiveScene().buildIndex,
         };
         // ランナースタート
-        StartGameResult result = await networkRunner.StartGame(startGameArgs);
-        Debug.Log($"サーバー状態:{networkRunner.IsServer}");
-        if (networkRunner.IsServer)
+        StartGameResult result = await _networkRunner.StartGame(startGameArgs);
+        Debug.Log($"サーバー状態:{_networkRunner.IsServer}");
+        if (_networkRunner.IsServer)
         {
 
-            Debug.Log($"ホスト　で{startGameArgs}の設定通りに参加処理実行");
+            Debug.Log($"ホスト　で{startGameArgs}の設定通りにセッション開始");
 
         }
         else
         {
 
-            Debug.Log($"クライアント　で{startGameArgs}の設定通りに参加処理実行");
+            Debug.Log($"クライアント　で{startGameArgs}の設定通りにセッション開始");
 
         }
         
@@ -292,15 +300,14 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             Debug.Log($"ホストオブジェクトを生成");
             participantsObj = runner.Spawn(_participantsPrefab, spawnPosition, Quaternion.identity, runner.LocalPlayer);
             participantsObj.name = $"{_roomInfo.CurrentParticipantCount}_Host";
-            IParticipantInfo iParticipantInfo = participantsObj.GetComponent<IParticipantInfo>();
-            if (iParticipantInfo == null)
+            _iRoomController = participantsObj.GetComponent<IRoomController>();
+            if (_iRoomController == null)
             {
 
                 Debug.LogError("ホストオブジェクトにルーム情報を渡すインターフェースが見つかりません");
 
             }
-            iParticipantInfo.SetRoomInfo(_roomInfo);
-            
+
         }
         else
         {
@@ -309,6 +316,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             {
 
                 Debug.Log($"最大人数の{_roomInfo.MaxParticipantCount}人に達したため参加できません");
+                Debug.Log($"セッションを終了します");
+                await runner.Shutdown();
                 return;
 
             }
@@ -318,7 +327,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         
         }
         runner.SetPlayerObject(player, participantsObj);
-        
+        // 参加人数を増やす
+        _iRoomController.RPC_ParticipantCountAdd();
 
     }
 
@@ -333,11 +343,13 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         {
             return;
         }
-
         if (runner.TryGetPlayerObject(player, out NetworkObject avatar))
         {
             runner.Despawn(avatar);
         }
+        // 参加人数を減らす
+        _iRoomController.RPC_ParticipantCountRemove();
+
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
