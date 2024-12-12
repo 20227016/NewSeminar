@@ -36,6 +36,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     // ステータス
     public CharacterStatusStruct _characterStatusStruct = default;
 
+    // 再生するアニメーション設定
     public CharacterAnimationStruct _characterAnimationStruct = default;
 
     // ステート
@@ -106,6 +107,12 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     // スキルクールタイム中フラグ
     protected bool _isSkillCoolTime = default;
+
+    // 現在の弱攻撃コンボ段階
+    protected int _comboCount = 1;
+
+    // コンボ段階リセット用
+    private IDisposable _comboResetDisposable;
 
     // 移動速度
     protected float _moveSpeed = default;
@@ -268,7 +275,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         Observable.Interval(TimeSpan.FromSeconds(STAMINA_UPDATE_INTERVAL))
             // 回避状態ではない
-            .Where(_ => _currentState != CharacterStateEnum.AVOIDANCE_ACTION)
+            .Where(_ => _currentState != CharacterStateEnum.AVOIDANCE)
             // 走っていない or スタミナ切れ or 移動していない
             .Where(_ => !_isRun || _isOutOfStamina || _moveDirection == Vector2.zero)
             // スタミナが最大値以下
@@ -309,8 +316,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected virtual void ProcessInput(PlayerNetworkInput input)
     {
         if (_currentState == CharacterStateEnum.ATTACK ||
-            _currentState == CharacterStateEnum.AVOIDANCE_ACTION ||
+            _currentState == CharacterStateEnum.AVOIDANCE ||
             _currentState == CharacterStateEnum.SKILL ||
+            _currentState == CharacterStateEnum.DAMAGE_REACTION ||
             _currentState == CharacterStateEnum.DEATH)
         {
             return;
@@ -329,7 +337,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
                 break;
 
             case { IsAvoidance: true }:
-                AvoidanceAction(_playerTransform);
+                Avoidance(_playerTransform);
                 break;
 
             case { IsTargetting: true }:
@@ -401,41 +409,57 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected virtual void Move(Transform transform, Vector2 moveDirection, float moveSpeed, Rigidbody rigidbody, CharacterStateEnum characterState)
     {
         _currentState = characterState;
+
         _move.Move(transform, moveDirection, moveSpeed, rigidbody);
     }
 
 
-    protected virtual async void AttackLight(CharacterBase characterBase, float attackPower, float attackMultipiler)
+    protected virtual void AttackLight(CharacterBase characterBase, float attackPower, float attackMultiplier)
     {
         _currentState = CharacterStateEnum.ATTACK;
 
-        _playerAttackLight.AttackLight(characterBase, attackPower, attackMultipiler);
+        _playerAttackLight.AttackLight(characterBase, attackPower, attackMultiplier);
 
-        _animation.TriggerAnimation(_animator, _characterAnimationStruct._attackLightAnimation1);
+        _animator.speed = _characterStatusStruct._attackSpeed;
 
-        // ミリ秒に変換して待機
-        await UniTask.Delay((int)(500));
+        // アニメーション配列とコンボロジック
+        AnimationClip[] attackAnimations = new[]
+        {
+            _characterAnimationStruct._attackLightAnimation1,
+            _characterAnimationStruct._attackLightAnimation2,
+            _characterAnimationStruct._attackLightAnimation3
+        };
 
-        _currentState = CharacterStateEnum.IDLE;
+        AnimationClip attackAnimation = attackAnimations[(_comboCount - 1) % attackAnimations.Length];
+        _comboCount = (_comboCount % attackAnimations.Length) + 1;
 
+        float animationDuration = _animation.TriggerAnimation(_animator, attackAnimation) / _characterStatusStruct._attackSpeed;
+
+        // 前のリセット処理を解除
+        _comboResetDisposable?.Dispose();
+
+        // 一定時間経過でコンボがリセット
+        _comboResetDisposable = Observable.Timer(TimeSpan.FromSeconds(animationDuration * 2))
+            .Subscribe(_ => _comboCount = 1)
+            .AddTo(this);
+
+        ResetState(animationDuration);
     }
 
 
-    protected virtual async void AttackStrong(CharacterBase characterBase, float attackPower, float attackMultipiler)
+    protected virtual void AttackStrong(CharacterBase characterBase, float attackPower, float attackMultipiler)
     {
-        
         _currentState = CharacterStateEnum.ATTACK;
+
+        _animator.speed = _characterStatusStruct._attackSpeed;
+
+        _networkedSkillPoint = 100f;
 
         _playerAttackStrong.AttackStrong(characterBase, attackPower, attackMultipiler);
         
-        _networkedSkillPoint = 100f;
+        float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._attackStrongAnimation) / _characterStatusStruct._attackSpeed;
 
-        _animation.TriggerAnimation(_animator, _characterAnimationStruct._attackStrongAnimation);
-
-        await UniTask.Delay((int)(500));
-
-        _currentState = CharacterStateEnum.IDLE;
-
+        ResetState(animationDuration);
     }
 
 
@@ -445,21 +469,19 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     }
 
 
-    protected virtual async void AvoidanceAction(Transform transform)
+    protected virtual void Avoidance(Transform transform)
     {
-        if (_moveDirection != Vector2.zero || !_isOutOfStamina) return;
+        if (_moveDirection == Vector2.zero || _isOutOfStamina) return;
 
-        _currentState = CharacterStateEnum.AVOIDANCE_ACTION;
-
-        _animation.TriggerAnimation(_animator, _characterAnimationStruct._avoidanceActionAnimation);
+        _currentState = CharacterStateEnum.AVOIDANCE;
 
         _networkedStamina -= _characterStatusStruct._avoidanceStamina;
 
         _avoidance.Avoidance(transform, _moveDirection, _characterStatusStruct._avoidanceDistance, _characterStatusStruct._avoidanceDuration);
 
-        await UniTask.Delay((int)(500));
+        float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._avoidanceActionAnimation);
 
-        _currentState = CharacterStateEnum.IDLE;
+        ResetState(animationDuration);
     }
 
 
@@ -467,6 +489,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         // クールタイム中ならリターン
         if (_isSkillCoolTime) return;
+
+        _currentState = CharacterStateEnum.SKILL;
 
         // クールタイム管理
         _isSkillCoolTime = true;
@@ -482,8 +506,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _networkedSkillPoint = 0f;
 
         _skill.Skill(this, skillTime);
-    }
 
+        float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._skillAnimation);
+
+        ResetState(animationDuration);
+    }
 
 
     protected virtual void Resurrection(Transform transform, float ressurectionTime)
@@ -498,9 +525,13 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         if (!Object.HasStateAuthority) return;
 
-        _animation.PlayAnimation(_animator, _characterAnimationStruct._damageReactionLightAnimation);
+        if (_currentState == CharacterStateEnum.DAMAGE_REACTION) return;
 
         _networkedHP += (damageValue - _characterStatusStruct._defensePower);
+
+        float animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._damageReactionLightAnimation);
+
+        ResetState(animationDuration);
     }
 
 
@@ -513,9 +544,25 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
 
     /// <summary>
-    /// 攻撃ヒット処理
+    /// 自分の攻撃がヒットしたときの処理
     /// </summary>
     public virtual void AttackHit() { }
+
+
+    /// <summary>
+    /// ステートリセット処理
+    /// </summary>
+    /// <param name="resetTime">リセットまでの時間</param>
+    protected async virtual void ResetState(float resetTime)
+    {
+        resetTime *= 1000;
+
+        await UniTask.Delay((int)resetTime);
+
+        _animator.speed = 1.0f;
+
+        _currentState = CharacterStateEnum.IDLE;
+    }
 
 
     /// <summary>

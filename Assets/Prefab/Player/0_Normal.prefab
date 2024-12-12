@@ -1731,7 +1731,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3652189715948183228}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 038320a534bd8b444b43734860d1a211, type: 3}
+  m_Avatar: {fileID: 9000000, guid: 98a56ff2c8ee98645a4d3f79fa1506c5, type: 3}
   m_Controller: {fileID: 0}
   m_CullingMode: 1
   m_UpdateMode: 0
@@ -1864,7 +1864,7 @@ MonoBehaviour:
   _characterStatusStruct:
     _walkSpeed: 0.1
     _runSpeed: 0.2
-    _avoidanceDistance: 10
+    _avoidanceDistance: 5
     _avoidanceDuration: 0.5
     _attackPower: 10
     _attackLightMultiplier: 1
@@ -1879,6 +1879,21 @@ MonoBehaviour:
     _recoveryStamina: 25
     _runStamina: 25
     _avoidanceStamina: 20
+  _characterAnimationStruct:
+    _idleAnimation: {fileID: 0}
+    _walkAnimation: {fileID: 0}
+    _runAnimation: {fileID: 0}
+    _attackLightAnimation1: {fileID: 0}
+    _attackLightAnimation2: {fileID: 0}
+    _attackLightAnimation3: {fileID: 0}
+    _attackStrongAnimation: {fileID: 0}
+    _avoidanceActionAnimation: {fileID: 0}
+    _skillAnimation: {fileID: 0}
+    _ressurectionAnimation: {fileID: 0}
+    _reviveAnimation: {fileID: 0}
+    _damageReactionLightAnimation: {fileID: 0}
+    _damageReactionHeavyAnimation: {fileID: 0}
+    _deathAnimation: {fileID: 0}
   _currentState: 0
 --- !u!114 &3438511579667766232
 MonoBehaviour:

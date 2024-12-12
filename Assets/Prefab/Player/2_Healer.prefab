@@ -2424,7 +2424,7 @@ Animator:
   m_Controller: {fileID: 0}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -2553,7 +2553,7 @@ MonoBehaviour:
   _characterStatusStruct:
     _walkSpeed: 0.1
     _runSpeed: 0.2
-    _avoidanceDistance: 10
+    _avoidanceDistance: 5
     _avoidanceDuration: 0.5
     _attackPower: 10
     _attackLightMultiplier: 1
@@ -2568,6 +2568,21 @@ MonoBehaviour:
     _recoveryStamina: 25
     _runStamina: 25
     _avoidanceStamina: 20
+  _characterAnimationStruct:
+    _idleAnimation: {fileID: 0}
+    _walkAnimation: {fileID: 0}
+    _runAnimation: {fileID: 0}
+    _attackLightAnimation1: {fileID: 0}
+    _attackLightAnimation2: {fileID: 0}
+    _attackLightAnimation3: {fileID: 0}
+    _attackStrongAnimation: {fileID: 0}
+    _avoidanceActionAnimation: {fileID: 0}
+    _skillAnimation: {fileID: 0}
+    _ressurectionAnimation: {fileID: 0}
+    _reviveAnimation: {fileID: 0}
+    _damageReactionLightAnimation: {fileID: 0}
+    _damageReactionHeavyAnimation: {fileID: 0}
+    _deathAnimation: {fileID: 0}
   _currentState: 0
 --- !u!114 &3384669752205669083
 MonoBehaviour:

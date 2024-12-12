@@ -16,7 +16,7 @@ public enum CharacterStateEnum
     /// <summary>
     /// ‰ñ”ğ
     /// </summary>
-    AVOIDANCE_ACTION,
+    AVOIDANCE,
     /// <summary>
     /// UŒ‚
     /// </summary>
@@ -25,6 +25,10 @@ public enum CharacterStateEnum
     /// ƒXƒLƒ‹
     /// </summary>
     SKILL,
+    /// <summary>
+    /// ”í’e
+    /// </summary>
+    DAMAGE_REACTION,
     /// <summary>
     /// €–S
     /// </summary>

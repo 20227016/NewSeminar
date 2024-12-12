@@ -13,7 +13,7 @@ using System.Collections;
 public class PlayerAnima : IAnimation
 {
 
-    public void TriggerAnimation(Animator animator, AnimationClip animationClip)
+    public float TriggerAnimation(Animator animator, AnimationClip animationClip)
     {
         // パラメーターを配列に取得
         AnimatorControllerParameter[] parameters = animator.parameters;
@@ -28,7 +28,9 @@ public class PlayerAnima : IAnimation
         }
 
         animator.SetTrigger(animationClip.name + "Trigger");
-        Debug.Log(animationClip.name);
+
+        // アニメーションの再生時間を返す
+        return animationClip.length;
     }
 
     public void BoolAnimation(Animator animator, AnimationClip animationClip, bool isPlay)
@@ -44,13 +46,15 @@ public class PlayerAnima : IAnimation
                 animator.SetBool(parameter.name, false);
             }
         }
+
         animator.SetBool(animationClip.name, isPlay);
-        Debug.Log(animationClip.name);
     }
 
-    public void PlayAnimation(Animator animator, AnimationClip animationClip)
+    public float PlayAnimation(Animator animator, AnimationClip animationClip)
     {
         animator.Play(animationClip.name);
-        Debug.Log(animationClip.name);
+
+        // アニメーションの再生時間を返す
+        return animationClip.length;
     }
 }
