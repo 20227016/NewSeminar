@@ -43,9 +43,28 @@ public class Participant : NetworkBehaviour, IRoomController
             _roomInfo.RoomName = _roomInfo.RoomName;
             _roomInfo.MaxParticipantCount = _roomInfo.MaxParticipantCount;
             _roomInfo.CurrentParticipantCount = _roomInfo.CurrentParticipantCount;
+            // 名前の変更
+            this.gameObject.name = $"{_roomInfo.CurrentParticipantCount}_Host";
+
+        }
+        else
+        {
+
+            // 名前の変更
+            this.gameObject.name = $"{_roomInfo.CurrentParticipantCount}_Client";
 
         }
        
+    }
+
+    /// <summary>
+    /// 参加者が書かれるテキストの名前を共有
+    /// </summary>
+    private void NameShare()
+    {
+
+
+
     }
 
     /// <summary>
@@ -57,6 +76,7 @@ public class Participant : NetworkBehaviour, IRoomController
     public async void RPC_ParticipantCountAdd()
     {
 
+        Debug.Log("クライアントでも実行");
         await GetRoomAwait();
         Debug.Log($"呼び出したオブジェクト:{this.gameObject}");
         // 更新
