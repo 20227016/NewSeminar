@@ -287,7 +287,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     /// </summary>
     /// <param name="runner"></param>
     /// <param name="player"></param>
-    public async void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
+    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
 
         Debug.Log($"プレイヤー参加");
@@ -304,7 +304,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
             Debug.Log($"ホストオブジェクトを生成");
             participantsObj = runner.Spawn(_participantsPrefab, spawnPosition, Quaternion.identity, runner.LocalPlayer);
-            participantsObj.name = $"{_roomInfo.CurrentParticipantCount}_Host";
             _iRoomController = participantsObj.GetComponent<IRoomController>();
             if (_iRoomController == null)
             {
@@ -329,7 +328,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             }
             Debug.Log($"クライアントオブジェクトを生成");
             participantsObj = runner.Spawn(_participantsPrefab, spawnPosition, Quaternion.identity);
-            participantsObj.name = $"{_roomInfo.CurrentParticipantCount}_Client";
         
         }
         runner.SetPlayerObject(player, participantsObj);
