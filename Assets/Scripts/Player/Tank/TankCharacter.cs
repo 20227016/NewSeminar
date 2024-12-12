@@ -11,7 +11,7 @@ using UnityEngine;
 public class TankCharacter : CharacterBase
 {
 
-    protected override void AvoidanceAction(Transform transform)
+    protected override void Avoidance(Transform transform)
     {
         _passive.Passive(this);
     }

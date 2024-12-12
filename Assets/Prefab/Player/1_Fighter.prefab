@@ -2720,8 +2720,8 @@ MonoBehaviour:
   _characterStatusStruct:
     _walkSpeed: 0.1
     _runSpeed: 0.2
-    _avoidanceDistance: 10
-    _avoidanceDuration: 0.2
+    _avoidanceDistance: 5
+    _avoidanceDuration: 0.5
     _attackPower: 10
     _attackLightMultiplier: 1
     _attackStrongMultiplier: 1.5
@@ -2763,7 +2763,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6d85ea7471cb8a47b87df1f0cf6c19e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attackSpeedMaltipiler: 2
+  _attackSpeedMaltipiler: 1.5
 --- !u!114 &5064425199042777687
 MonoBehaviour:
   m_ObjectHideFlags: 0

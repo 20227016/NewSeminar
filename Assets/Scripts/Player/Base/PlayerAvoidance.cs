@@ -15,6 +15,9 @@ public class PlayerAvoidance : IAvoidance
     // 回避中フラグ
     private bool _isAvoiding = false;
 
+    // 回避開始までの遅延
+    private const int AVOIDANCE_START_DELAY = 100;
+
     public void Avoidance(Transform transform, Vector2 avoidanceDirection, float avoidanceDistance, float avoidanceDuration)
     {
         if (_isAvoiding) return;
@@ -32,6 +35,9 @@ public class PlayerAvoidance : IAvoidance
     private async UniTaskVoid AvoidanceCoroutine(Transform transform, Vector3 startPosition, Vector3 endPosition, float duration, Vector3 moveDirection)
     {
         _isAvoiding = true;
+
+        await UniTask.Delay(AVOIDANCE_START_DELAY); // 遅延時間をミリ秒単位で指定
+
         float elapsedTime = 0f;
 
         // 回避の持続時間が経過するまでループ
@@ -46,7 +52,7 @@ public class PlayerAvoidance : IAvoidance
             Vector3 nextPosition = Vector3.Lerp(startPosition, endPosition, progress);
 
             // 移動方向にレイキャストを飛ばして壁があるか確認
-            if (Physics.Raycast(transform.position, moveDirection, out RaycastHit hit, transform.localScale.x / 2f, LayerMask.GetMask("Stage")))
+            if (Physics.Raycast(transform.position, moveDirection, transform.localScale.x / 2f, LayerMask.GetMask("Stage")))
             {
                 // 衝突している場合、回避を終了させる
                 break;

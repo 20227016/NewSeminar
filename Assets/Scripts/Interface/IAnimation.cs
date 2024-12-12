@@ -8,7 +8,7 @@ public interface IAnimation
     /// </summary>
     /// <param name="animator">操作するアニメーター</param>
     /// <param name="animationClip">操作するアニメーションクリップ</param>
-    void TriggerAnimation(Animator animator, AnimationClip animationClip);
+    float TriggerAnimation(Animator animator, AnimationClip animationClip);
 
     /// <summary>
     /// bool操作用
@@ -23,5 +23,5 @@ public interface IAnimation
     /// </summary>
     /// <param name="animator">操作するアニメーター</param>
     /// <param name="animationClip">操作するアニメーションクリップ</param>
-    void PlayAnimation(Animator animator, AnimationClip animationClip);
+    float PlayAnimation(Animator animator, AnimationClip animationClip);
 }
