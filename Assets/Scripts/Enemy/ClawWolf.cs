@@ -26,7 +26,7 @@ public class ClawWolf : BaseEnemy
     [SerializeField, Header("攻撃３の倍率")]
     private float _attackMultiplier3 = 1;
 
-    private EnemyMovementState _movementState = EnemyMovementState.IDLE;
+    private EnemyMovementState _movementState = EnemyMovementState.WALKING;
     private EnemyActionState _actionState = EnemyActionState.SEARCHING;
 
     private float _attackID = default;
@@ -40,6 +40,19 @@ public class ClawWolf : BaseEnemy
         //Raycastの基本設定
         BasicRaycast();
         _boxCastStruct._distance = _searhDistance;
+        //アニメーター取得
+        RuntimeAnimatorController myRuntimeAnimator = _myAnimator.runtimeAnimatorController;
+        AnimationClip[] animationClips = myRuntimeAnimator.animationClips;
+        foreach (AnimationClip animationClip in animationClips)
+        {
+
+            //animationClip.averageSpeed
+
+        }
+
+        //_myAnimator.SetFloat("Attack1", _enemyStatusStruct._attackPowerSpeed);
+        //_myAnimator.SetFloat("Attack2", _enemyStatusStruct._attackPowerSpeed);
+        //_myAnimator.SetFloat("Attack3", _enemyStatusStruct._attackPowerSpeed);
 
     }
 

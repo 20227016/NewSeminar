@@ -10,7 +10,7 @@ using System.Collections;
 /// 作成日: /
 /// 作成者: 
 /// </summary>
-public class EnemyAnimation : IEnemyAnimation
+public class EnemyAnimation2 : IEnemyAnimation
 {
 
 
@@ -88,30 +88,9 @@ public class EnemyAnimation : IEnemyAnimation
     /// <param name="_attackID">攻撃ナンバー</param>
     public void Attack(Animator _animator, int _attackID)
     {
-        _animator.Play("Attack" + _attackID, 1); // レイヤー1で攻撃アニメーションを再生
-    }
 
-    /// <summary>
-    /// 攻撃アニメーションを再生する
-    /// </summary>
-    /// <param name="_animator">呼び出したオブジェクトのアニメーター</param>
-    public void PlayAttackAnimation(Animator _animator)
-    {
-        // ランダムに攻撃IDを選択（例: 0〜2）
-        int attackID = Random.Range(0, 3);
-        Attack(_animator, attackID);
-    }
+        _animator.Play("Attack" + _attackID,1);
 
-    /// <summary>
-    /// 攻撃アニメーションの再生時間を取得
-    /// </summary>
-    /// <param name="_animator">呼び出したオブジェクトのアニメーター</param>
-    /// <returns>攻撃アニメーションの長さ（秒）</returns>
-    public float GetAttackAnimationLength(Animator _animator)
-    {
-        // 現在のアニメーションステート情報を取得
-        AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(1); // レイヤー1
-        return stateInfo.length;
     }
 
 }
