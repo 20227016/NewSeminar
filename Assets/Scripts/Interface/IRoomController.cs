@@ -1,8 +1,10 @@
+using Fusion;
+
 public interface  IRoomController
 {
 
-    public void RPC_ParticipantCountAdd();
+    public void ParticipantCountAdd(PlayerRef playerRef);
 
-    public void RPC_ParticipantCountRemove();
+    public void ParticipantCountRemove(PlayerRef playerRef);
 
 }
