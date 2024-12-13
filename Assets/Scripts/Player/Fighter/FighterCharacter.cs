@@ -13,10 +13,11 @@ using UnityEngine;
 public class FighterCharacter : CharacterBase
 {
 
-    public override void AttackHit()
+    public override void AttackHit(int damage)
     {
-        base.AttackHit();
+        base.AttackHit(damage);
 
+        // パッシブを発動
         _passive.Passive(this);
     }
 }
