@@ -245,7 +245,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // スタミナ切れフラグの管理
         HandleOutOfStaminaFlag();
 
-        // スタミナ値を範囲内に制限
         _networkedStamina = Mathf.Clamp(_networkedStamina, 0, _characterStatusStruct._playerStatus.MaxStamina);
     }
 
@@ -391,7 +390,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _moveSpeed = isWalking ? _characterStatusStruct._walkSpeed : _characterStatusStruct._runSpeed;
         _currentState = isWalking ? CharacterStateEnum.WALK : CharacterStateEnum.RUN;
 
-        // アニメーションの制御を明確に
         if (isWalking)
         {
             _animation.BoolAnimation(_animator, _characterAnimationStruct._walkAnimation, true);
@@ -420,6 +418,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _playerAttackLight.AttackLight(characterBase, attackPower, attackMultiplier);
 
+        // 攻撃速度を適用
         _animator.speed = _characterStatusStruct._attackSpeed;
 
         // アニメーション配列とコンボロジック
@@ -452,8 +451,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _currentState = CharacterStateEnum.ATTACK;
 
         _animator.speed = _characterStatusStruct._attackSpeed;
-
-        _networkedSkillPoint = 100f;
 
         _playerAttackStrong.AttackStrong(characterBase, attackPower, attackMultipiler);
         
@@ -515,6 +512,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     protected virtual void Resurrection(Transform transform, float ressurectionTime)
     {
+
         _animation.BoolAnimation(_animator, _characterAnimationStruct._deathAnimation, true);
 
         _resurrection.Resurrection(transform, ressurectionTime);
@@ -525,9 +523,14 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         if (!Object.HasStateAuthority) return;
 
+        // 被弾中は無敵
         if (_currentState == CharacterStateEnum.DAMAGE_REACTION) return;
 
-        _networkedHP += (damageValue - _characterStatusStruct._defensePower);
+        // ダメージ量に防御力を適応して最終ダメージを算出
+        float damage = (damageValue - _characterStatusStruct._defensePower);
+
+        // 現在HPから最終ダメージを引く
+        _networkedHP = Mathf.Clamp(_networkedHP + damageValue, 0, _characterStatusStruct._playerStatus.MaxHp);
 
         float animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._damageReactionLightAnimation);
 
@@ -539,14 +542,21 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         if (!Object.HasStateAuthority) return;
 
-        _networkedHP += healValue;
+        _networkedHP = Mathf.Clamp(_networkedHP + healValue, 0, _characterStatusStruct._playerStatus.MaxHp);
     }
 
 
     /// <summary>
     /// 自分の攻撃がヒットしたときの処理
     /// </summary>
-    public virtual void AttackHit() { }
+    public virtual void AttackHit(int damage) 
+    {
+        // スキルポイントを与ダメージを参照してチャージする
+        float chargeSkillPoint = damage / 2;
+
+        _networkedSkillPoint = Mathf.Clamp(_networkedSkillPoint+ chargeSkillPoint, 0, _characterStatusStruct._skillPointUpperLimit);
+
+    }
 
 
     /// <summary>
@@ -555,10 +565,12 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// <param name="resetTime">リセットまでの時間</param>
     protected async virtual void ResetState(float resetTime)
     {
+        // ミリ秒に変換
         resetTime *= 1000;
 
         await UniTask.Delay((int)resetTime);
 
+        // アニメーション速度を元に戻す
         _animator.speed = 1.0f;
 
         _currentState = CharacterStateEnum.IDLE;

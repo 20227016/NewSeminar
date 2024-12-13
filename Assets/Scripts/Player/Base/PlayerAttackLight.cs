@@ -51,7 +51,7 @@ public class PlayerAttackLight : IAttackLight
                 target.ReceiveDamage(damage);
 
                 // 攻撃がヒットしたことをプレイヤー側に返す
-                characterBase.AttackHit();
+                characterBase.AttackHit(damage);
 
             }
 

@@ -53,7 +53,7 @@ public class PlayerAttackStrong : IAttackStrong
                 target.ReceiveDamage(damage);
 
                 // 攻撃がヒットしたことをプレイヤー側に返す
-                characterBase.AttackHit();
+                characterBase.AttackHit(damage);
             }
 
         }
