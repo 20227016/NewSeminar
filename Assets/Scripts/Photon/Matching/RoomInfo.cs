@@ -7,10 +7,13 @@ using Fusion;
 public class RoomInfo : NetworkBehaviour
 {
 
-    [Networked] public string RoomName { get; set; } = "Room1";
+    [Networked]
+    public string RoomName { get; set; } = "Room1";
     // 現在のプレイヤー数[ネットワーク上で同期]
-    [Networked] public int CurrentParticipantCount { get; set; } = 0 ;
+    [Networked]
+    public int CurrentParticipantCount { get; set; } = 0 ;
     // 最大プレイヤー数[ネットワーク上で同期]
-    [Networked] public int MaxParticipantCount { get; set; } = 4;
+    [Networked]
+    public int MaxParticipantCount { get; set; } = 4;
 
 }

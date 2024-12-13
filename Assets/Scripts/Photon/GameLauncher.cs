@@ -2,7 +2,6 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -10,6 +9,10 @@ using UnityEngine.SceneManagement;
 
 public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
+
+    /// <summary>
+    /// シングルトン
+    /// </summary>
     public static GameLauncher _instance = default;
 
     [SerializeField, Tooltip("ネットワークランナー")]
@@ -70,6 +73,9 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     /// </summary>
     private Vector2 _moveInput = default;
 
+    /// <summary>
+    /// シングルトン
+    /// </summary>
     public static GameLauncher Instance
     {
         get
@@ -84,7 +90,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private async void Awake()
     {
 
-        Debug.Log($"Awake処理");
+        Debug.Log($"Awake処理＿開始: {this.GetType().Name}クラス");
         // インスタンスがあるかつ自分ではないとき
         if (_instance != null && _instance != this)
         {
@@ -128,7 +134,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             Debug.Log($"クライアント　で{startGameArgs}の設定通りにセッション開始");
 
         }
-        
+        Debug.Log($"Awake処理＿終了: {this.GetType().Name}クラス");
 
     }
 
@@ -290,9 +296,9 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
 
-        Debug.Log($"プレイヤー参加");
-        Debug.Log($"{_roomInfo.CurrentParticipantCount }");
-        // ホストで参加するとき
+        Debug.Log($"プレイヤー参加処理＿開始: {this.GetType().Name}クラス");
+        Debug.Log($"{_roomInfo.CurrentParticipantCount }人がすでに参加");
+        // ホストで参加しているとき通る
         if (!runner.IsServer)
         {
             return;
@@ -331,8 +337,10 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         
         }
         runner.SetPlayerObject(player, participantsObj);
+        participantsObj.name = participantsObj.name.Replace("(Clone)", ""); ;
         // 参加人数を増やす
-        _iRoomController.RPC_ParticipantCountAdd();
+        _iRoomController.ParticipantCountAdd(player);
+        Debug.Log($"プレイヤー参加処理＿終了: {this.GetType().Name}クラス");
 
     }
 
@@ -343,6 +351,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     /// <param name="player"></param>
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
+        Debug.Log($"プレイヤー退出処理＿開始: {this.GetType().Name}クラス");
         if (!runner.IsServer)
         {
             return;
@@ -360,7 +369,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             runner.Despawn(avatar);
         }
         // 参加人数を減らす
-        _iRoomController.RPC_ParticipantCountRemove();
+        _iRoomController.ParticipantCountRemove(player);
+        Debug.Log($"プレイヤー退出処理＿開始: {this.GetType().Name}クラス");
 
     }
 
