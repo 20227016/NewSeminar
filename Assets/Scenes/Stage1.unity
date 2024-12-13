@@ -369,6 +369,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 6b8686abf45747e49b90402d181f468c, type: 2}
+    - target: {fileID: 7884689884213430917, guid: 62ecae6c37c13cb449cf9b758f46358b, type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8380210480553479935, guid: 62ecae6c37c13cb449cf9b758f46358b, type: 3}
       propertyPath: m_Name
       value: Stage_All
