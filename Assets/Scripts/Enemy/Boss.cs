@@ -63,7 +63,7 @@ public class Boss : BaseEnemy
     {
         switch (_movementState)
         {
-            // 待機
+            // 基本状態
             case BossMovementState.IDLE:
 
                 break;
@@ -71,17 +71,17 @@ public class Boss : BaseEnemy
             // ダウン(ブレイク状態)
             case BossMovementState.DOWNED:
 
-                break;
+                return;
 
             // 死亡
             case BossMovementState.DIE:
 
-                break;
+                return;
         }
 
         switch (_attacktState)
         {
-            // 待機
+            // 攻撃待機
             case BossAttackState.IDLE:
 
                 break;
@@ -106,5 +106,69 @@ public class Boss : BaseEnemy
 
                 break;
         }
+    }
+
+    /// <summary>
+    /// 基本状態
+    /// </summary>
+    private void BossIdle()
+    {
+
+    }
+
+    /// <summary>
+    /// ダウン
+    /// </summary>
+    private void BossDowned()
+    {
+
+    }
+
+    /// <summary>
+    /// 死ぬ
+    /// </summary>
+    private void BossDie()
+    {
+
+    }
+
+    // <summary>
+    /// 攻撃待機
+    /// </summary>
+    private void AttackIdle()
+    {
+
+    }
+
+    // <summary>
+    /// つばさでうつ
+    /// </summary>
+    private void WingAttack()
+    {
+
+    }
+
+    // <summary>
+    /// シャドーボール
+    /// </summary>
+    private void MagicAttack()
+    {
+
+    }
+
+    // <summary>
+    /// はかいこうせん
+    /// </summary>
+    private void BeamAttack()
+    {
+
+    }
+
+    // <summary>
+    /// 雑魚敵召喚
+    /// </summary>
+    private void Summon()
+    {
+
     }
 }

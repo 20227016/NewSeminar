@@ -26,7 +26,7 @@ public class Golem : BaseEnemy
     private Transform _targetTrans = default;
 
     [SerializeField, Tooltip("探索範囲(前方距離)")]
-    protected float _searchRange = default;
+    protected float _searchRange = 20f;
 
     [SerializeField, Tooltip("移動速度")]
     private float moveSpeed = default; // ゴーレムの移動速度

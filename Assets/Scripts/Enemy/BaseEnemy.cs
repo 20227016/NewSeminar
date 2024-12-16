@@ -48,17 +48,6 @@ public abstract class BaseEnemy : MonoBehaviour,IReceiveDamage
         {
             return; // 処理を終了
         }
-        /*
-        // 現在の位置を基準にボックスキャストの範囲を描画
-        Matrix4x4 rotationMatrix = Matrix4x4.TRS(_boxCastStruct._originPos, Quaternion.LookRotation(_boxCastStruct._direction), Vector3.one);
-        Gizmos.matrix = rotationMatrix;
-
-        // BoxCastの可視化
-        Gizmos.DrawWireCube(Vector3.zero, _boxCastStruct._size);
-
-        // レイの先の地点を描画
-        Gizmos.DrawWireCube(_boxCastStruct._direction * _boxCastStruct._distance, _boxCastStruct._size);
-        */
 
         // 現在の位置を基準にボックスキャストの範囲を描画
         Vector3 start = _boxCastStruct._originPos;

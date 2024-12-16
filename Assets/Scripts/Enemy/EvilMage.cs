@@ -44,9 +44,6 @@ public class EvilMage : BaseEnemy
     [Tooltip("発射する魔法弾のPrefab")]
     [SerializeField] private GameObject _magicProjectilePrefab;
 
-    [Tooltip("魔法弾の発射位置")]
-    [SerializeField] private Transform _firePoint;
-
     [Tooltip("魔法攻撃の溜め時間")]
     [SerializeField] private float _chargeTime = 1.5f;
 
@@ -257,14 +254,14 @@ public class EvilMage : BaseEnemy
             return;
         }
 
-        if (_magicProjectilePrefab == null || _firePoint == null)
+        if (_magicProjectilePrefab == null)
         {
             Debug.LogWarning("魔法弾のPrefabまたは発射位置が設定されていません。");
             return;
         }
 
         // 魔法弾を生成
-        Instantiate(_magicProjectilePrefab, _firePoint.position, _firePoint.rotation);
+        Instantiate(_magicProjectilePrefab, transform.position + transform.forward * 2.5f + Vector3.up * 0.75f, transform.rotation);
     }
 
     /// <summary>
