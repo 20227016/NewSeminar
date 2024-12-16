@@ -48,9 +48,6 @@ public class EvilMage : BaseEnemy
     [Tooltip("魔法攻撃の溜め時間")]
     [SerializeField] private float _chargeTime = 1.3f;
 
-    [Tooltip("魔法弾の速度")]
-    [SerializeField] private float _projectileSpeed = 10f;
-
     [SerializeField] private bool isCharging = default; // 溜め動作中かどうか
     [SerializeField] private bool isCancelCharge = default; // 溜めをキャンセルするか
 
