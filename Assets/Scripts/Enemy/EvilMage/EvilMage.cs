@@ -38,14 +38,15 @@ public class EvilMage : BaseEnemy
     private float _turnSpeed = 60f; // 回転速度 (度/秒)
 
     private Animator _animator;
-    private Renderer _golemRenderer; // 子オブジェクトのRendererを取得
+    private Renderer _evilMageRenderer; // 子オブジェクトのRendererを取得
+    private ParticleSystem[] _evilMageEffects; // 子オブジェクトのParticleSystemを取得
 
     [Header("魔法攻撃設定")]
     [Tooltip("発射する魔法弾のPrefab")]
     [SerializeField] private GameObject _magicProjectilePrefab;
 
     [Tooltip("魔法攻撃の溜め時間")]
-    [SerializeField] private float _chargeTime = 1.5f;
+    [SerializeField] private float _chargeTime = 1.3f;
 
     [Tooltip("魔法弾の速度")]
     [SerializeField] private float _projectileSpeed = 10f;
@@ -59,7 +60,8 @@ public class EvilMage : BaseEnemy
         BasicRaycast();
 
         _animator = GetComponent<Animator>();
-        _golemRenderer = transform.Find("EvilMage").GetComponent<Renderer>();
+        _evilMageRenderer = transform.Find("EvilMage").GetComponent<Renderer>();
+        _evilMageEffects = GetComponentsInChildren<ParticleSystem>();
     }
 
     /// <summary>
@@ -235,6 +237,10 @@ public class EvilMage : BaseEnemy
         _animator.SetTrigger("Attack02");
 
         // 溜め中のエフェクトなどをここで再生可能
+        foreach (var effect in _evilMageEffects)
+        {
+            effect.Play();
+        }
 
         // 溜め時間の待機
         yield return new WaitForSeconds(_chargeTime);
@@ -326,8 +332,8 @@ public class EvilMage : BaseEnemy
         _animator.SetTrigger("Die");
 
         // 透明化処理（未実装）
-        if (_golemRenderer == null) yield break;
-        Material material = _golemRenderer.material;
+        if (_evilMageRenderer == null) yield break;
+        Material material = _evilMageRenderer.material;
         float fadeStep = 1f / fadeDuration;
 
         for (float t = 0; t < 1f; t += Time.deltaTime * fadeStep)
