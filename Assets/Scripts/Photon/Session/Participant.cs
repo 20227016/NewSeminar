@@ -5,6 +5,8 @@ using UnityEngine;
 public class Participant : NetworkBehaviour, IRoomController
 {
 
+   
+
     /// <summary>
     /// 部屋情報
     /// </summary>
@@ -20,8 +22,9 @@ public class Participant : NetworkBehaviour, IRoomController
     /// </summary>
     private NetworkObject _networkObject = default;
 
-    public  void Start()
+    public void Start()
     {
+
         Debug.Log($"Start処理＿開始: {this.GetType().Name}クラス");
         InitialGet();
         // 自分がホストオブジェクトの時
@@ -43,6 +46,7 @@ public class Participant : NetworkBehaviour, IRoomController
 
         }
         Debug.Log($"Start処理＿終了: {this.GetType().Name}クラス");
+
     }
 
     /// <summary>
@@ -59,7 +63,7 @@ public class Participant : NetworkBehaviour, IRoomController
 
         }
         _networkRunner = GetRunner.GetRunnerMethod();
-        if(_networkRunner == null)
+        if (_networkRunner == null)
         {
 
             Debug.LogError($"自分についているネットワークランナーが見つかりません");
@@ -73,36 +77,50 @@ public class Participant : NetworkBehaviour, IRoomController
     /// 呼び出し:ホストとクライアント
     /// 実行する:ホスト
     /// </summary>
-    public async void ParticipantCountAdd(PlayerRef playerRef)
+    public async void ParticipantAdd(PlayerRef playerRef)
     {
 
-        Debug.Log($"参加者加算処理＿開始: {this.GetType().Name}クラス");
         // Roomクラス取得まで待つ
         await GetRoomAwait();
+        Debug.Log($"参加者加算処理＿開始: {this.GetType().Name}クラス");
         Debug.Log($"呼び出したオブジェクト:{this.gameObject}");
-        // 更新
+        // 人数更新
         _roomInfo.CurrentParticipantCount = _roomInfo.CurrentParticipantCount + 1;
         Debug.Log($"現在のルーム参加人数変更:{_roomInfo.CurrentParticipantCount}");
-        string text = "";
+        // 入室時の仮の名前
+        string name = "";
         if (_roomInfo.CurrentParticipantCount == 1)
         {
 
-            text = $"{_networkRunner.GetPlayerObject(playerRef).name}";
+            name = $"{_roomInfo.CurrentParticipantCount}_Host";
             Debug.LogError($"{_networkRunner.GetPlayerObject(playerRef).name}");
 
         }
         else
         {
 
-            text = $"{_networkRunner.GetPlayerObject(playerRef).name}";
+            name = $"{_roomInfo.CurrentParticipantCount}_Client";
             Debug.LogError($"{_networkRunner.GetPlayerObject(playerRef).name}");
 
         }
+        
+        NetworkObject participant = _networkRunner.GetPlayerObject(playerRef);
+         INameMemory iNameSet = participant.GetComponent< INameMemory>();
+        if (iNameSet == null)
+        {
+
+            Debug.LogError($"名前を設定するためのインターフェースが見つかりません");
+
+        }
+        iNameSet.Name = name;
+        iNameSet.RPC_NameUpdate();
+        int index = _roomInfo.SetName(name);
         // テキスト設定
-        GameObject.Find($"Participant_{_roomInfo.CurrentParticipantCount}").GetComponent<TextMemory>().Character = text;
+        GameObject.Find($"Participant_{index}").GetComponent<TextMemory>().Name = name;
         // テキスト更新
-        GameObject.Find($"Participant_{_roomInfo.CurrentParticipantCount}").GetComponent<TextMemory>().RPC_TextUpdate();
+        GameObject.Find($"Participant_{index}").GetComponent<TextMemory>().RPC_TextUpdate();
         Debug.Log($"参加者加算処理＿終了: {this.GetType().Name}クラス");
+
     }
 
     /// <summary>
@@ -110,15 +128,23 @@ public class Participant : NetworkBehaviour, IRoomController
     /// 呼び出し:ホストとクライアント
     /// 実行する:ホスト
     /// </summary>
-    public async void ParticipantCountRemove(PlayerRef playerRef)
+    public async void ParticipantRemove(PlayerRef playerRef)
     {
 
         await GetRoomAwait();
-        Debug.Log($"呼び出したオブジェクト:{this.gameObject}");
-        // テキスト設定
-        GameObject.Find($"Participant_{_roomInfo.CurrentParticipantCount}").GetComponent<TextMemory>().Character = $"名前";
-        // テキスト更新
-        GameObject.Find($"Participant_{_roomInfo.CurrentParticipantCount}").GetComponent<TextMemory>().RPC_TextUpdate();
+        // 名前を消したあとの名前の配列をもらう
+        (string name, bool isRegistration)[] nameInfos = _roomInfo.RemoveName(_networkRunner.GetPlayerObject(playerRef).name);
+        for (int i = 0; i < nameInfos.Length; i++)
+        {
+
+            // ヒエラルキー上にあるオブジェクト指定
+            int index = i + 1;
+            // テキスト設定
+            GameObject.Find($"Participant_{index}").GetComponent<TextMemory>().Name = $"{nameInfos[i].name}";
+            // テキスト更新
+            GameObject.Find($"Participant_{index}").GetComponent<TextMemory>().RPC_TextUpdate();
+
+        }
         // 更新
         _roomInfo.CurrentParticipantCount = _roomInfo.CurrentParticipantCount - 1;
         Debug.Log($"現在のルーム参加人数変更:{_roomInfo.CurrentParticipantCount}");
@@ -126,7 +152,30 @@ public class Participant : NetworkBehaviour, IRoomController
     }
 
     /// <summary>
-    /// 
+    /// 名前の変更
+    /// </summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public async void RPC_ParticipantReName(string newName, NetworkObject participantsObj)
+    {
+
+        if (!_networkRunner.IsServer)
+        {
+
+            return;
+
+        }
+        await GetRoomAwait();
+        int index = _roomInfo.ReName(newName, participantsObj.name);
+        Debug.Log($"{index}");
+
+        // テキスト設定
+        GameObject.Find($"Participant_{index}").GetComponent<TextMemory>().Name = $"{newName}";
+        // テキスト更新
+        GameObject.Find($"Participant_{index}").GetComponent<TextMemory>().RPC_TextUpdate();
+    }
+
+    /// <summary>
+    /// _roomInfo取得まで待機
     /// </summary>
     /// <returns></returns>
     private async Task GetRoomAwait()
