@@ -314,7 +314,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             if (_iRoomController == null)
             {
 
-                Debug.LogError("ホストオブジェクトにルーム情報を渡すインターフェースが見つかりません");
+                Debug.LogError("ホストオブジェクトに通信を渡すインターフェースが見つかりません");
 
             }
 
@@ -337,9 +337,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         
         }
         runner.SetPlayerObject(player, participantsObj);
-        participantsObj.name = participantsObj.name.Replace("(Clone)", ""); ;
         // 参加人数を増やす
-        _iRoomController.ParticipantCountAdd(player);
+        _iRoomController.ParticipantAdd(player);
         Debug.Log($"プレイヤー参加処理＿終了: {this.GetType().Name}クラス");
 
     }
@@ -364,12 +363,12 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             return;
 
         }
+        // 参加人数を減らす
+        _iRoomController.ParticipantRemove(player);
         if (runner.TryGetPlayerObject(player, out NetworkObject avatar))
         {
             runner.Despawn(avatar);
         }
-        // 参加人数を減らす
-        _iRoomController.ParticipantCountRemove(player);
         Debug.Log($"プレイヤー退出処理＿開始: {this.GetType().Name}クラス");
 
     }

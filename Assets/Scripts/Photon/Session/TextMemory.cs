@@ -1,5 +1,4 @@
 using Fusion;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +6,7 @@ public class TextMemory : NetworkBehaviour
 {
 
     [Networked,Tooltip("中身が入っているときにテキストを更新")]
-    public String Character { get; set; } = "";
+    public string Name { get; set; } = "";
 
     /// <summary>
     /// 自分のテキストコンポーネント
@@ -28,10 +27,10 @@ public class TextMemory : NetworkBehaviour
 
         }
         // 中身があるとき
-        if(Character != "")
+        if(Name != "")
         {
 
-            _text.text = Character;
+            _text.text = Name;
 
 
         }
@@ -45,7 +44,7 @@ public class TextMemory : NetworkBehaviour
     public void RPC_TextUpdate()
     {
 
-        _text.text = Character;
+        _text.text = Name;
 
     }
 

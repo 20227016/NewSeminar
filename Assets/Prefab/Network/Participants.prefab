@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7288234867165482982}
   - component: {fileID: -7060298833040904488}
   - component: {fileID: 4331148653848535231}
+  - component: {fileID: -556592192091719407}
   m_Layer: 0
   m_Name: Participants
   m_TagString: Untagged
@@ -56,6 +57,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 4331148653848535231}
+  - {fileID: -556592192091719407}
   SimulationBehaviours: []
 --- !u!114 &4331148653848535231
 MonoBehaviour:
@@ -72,3 +74,19 @@ MonoBehaviour:
   WordOffset: 0
   WordCount: 0
   _interpolationDataSource: 0
+--- !u!114 &-556592192091719407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7549502800452744222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae684fbf6dbb3e247bed97d3c1af9637, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  _Name: 
