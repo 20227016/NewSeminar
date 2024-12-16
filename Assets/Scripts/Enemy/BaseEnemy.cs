@@ -40,9 +40,13 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
 
     private void OnDrawGizmos()
     {
-
         /// 可視化
         Gizmos.color = Color.red;
+
+        if (_boxCastStruct._direction == Vector3.zero)
+        {
+            return;
+        }
 
         // 現在の位置を基準にボックスキャストの範囲を描画
         Matrix4x4 rotationMatrix = Matrix4x4.TRS(_boxCastStruct._originPos, Quaternion.LookRotation(_boxCastStruct._direction), Vector3.one);
