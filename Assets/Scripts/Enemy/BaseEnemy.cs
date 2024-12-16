@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using System;
-using Fusion;
 
 /// <summary>
 /// BaseEnemy.cs
@@ -14,7 +13,7 @@ using Fusion;
 /// 作成日: /
 /// 作成者: 
 /// </summary>
-public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
+public abstract class BaseEnemy : MonoBehaviour,IReceiveDamage
 {
 
     [SerializeField, Header("無視するレイヤー")]
@@ -25,7 +24,7 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     protected List<string> _tags = new List<string>();
 
     // UniTaskキャンセルトークン
-    private CancellationTokenSource _cancellatToken = default;
+    // private CancellationTokenSource _cancellatToken = default;
 
     // 探索するときに使用する構造体
     protected BoxCastStruct _boxCastStruct = default;
@@ -44,6 +43,12 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
         /// 可視化
         Gizmos.color = Color.red;
 
+        // ゼロベクトルチェック
+        if (_boxCastStruct._direction == Vector3.zero)
+        {
+            return; // 処理を終了
+        }
+        /*
         // 現在の位置を基準にボックスキャストの範囲を描画
         Matrix4x4 rotationMatrix = Matrix4x4.TRS(_boxCastStruct._originPos, Quaternion.LookRotation(_boxCastStruct._direction), Vector3.one);
         Gizmos.matrix = rotationMatrix;
@@ -53,7 +58,34 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
 
         // レイの先の地点を描画
         Gizmos.DrawWireCube(_boxCastStruct._direction * _boxCastStruct._distance, _boxCastStruct._size);
+        */
 
+        // 現在の位置を基準にボックスキャストの範囲を描画
+        Vector3 start = _boxCastStruct._originPos;
+
+        // 中間地点の描画用に座標を計算
+        Vector3 direction = _boxCastStruct._direction.normalized;
+        int segmentCount = 10; // 分割数
+        float segmentLength = _boxCastStruct._distance / segmentCount;
+
+        // ボックスキャストの全体を描画
+        for (int i = 0; i <= segmentCount; i++)
+        {
+            Vector3 segmentCenter = start + direction * (segmentLength * i);
+
+            // 描画用マトリックス
+            Matrix4x4 rotationMatrix = Matrix4x4.TRS(segmentCenter, Quaternion.LookRotation(direction), Vector3.one);
+            Gizmos.matrix = rotationMatrix;
+
+            // レイの終端を強調表示
+            if (i == segmentCount)
+            {   
+                Gizmos.color = Color.yellow;
+            }
+
+            // セグメントを描画
+            Gizmos.DrawWireCube(Vector3.zero, _boxCastStruct._size);
+        }
     }
 
     protected virtual void BasicRaycast()
@@ -87,7 +119,7 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
 
         // 半径（直径ではない）
         _boxCastStruct._size = (transform.localScale - Vector3.forward * transform.localScale.z);
-        _boxCastStruct._size += Vector3.right * _boxCastStruct._size.x * 2;
+        _boxCastStruct._size += Vector3.right * _boxCastStruct._size.x * 4;
         _boxCastStruct._size -= Vector3.one / 100;
 
     }

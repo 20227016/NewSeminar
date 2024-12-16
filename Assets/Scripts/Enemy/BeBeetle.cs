@@ -4,7 +4,6 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using System;
 using UniRx;
-using Fusion;
 
 /// <summary>
 /// EnemyTest.cs
@@ -21,7 +20,7 @@ public class BeBeetle : BaseEnemy
     // UniTaskキャンセルトークン
     private CancellationTokenSource _cancellatToken = default;
 
-    [Tooltip("ゲームマネージャー格納用")]
+    [SerializeField, Tooltip("ゲームマネージャー格納用")]
     private GameManager _gameManager = default;
 
     [SerializeField, Header("自分のアニメーター")]
@@ -43,52 +42,28 @@ public class BeBeetle : BaseEnemy
 
     private GameObject _player = default;
 
-    [Networked] private bool _executionOnce { get; set; }
-
     // 自分の現在の位置を格納
-    [Networked] private Vector3 _newPosition{ get; set; }
+    private Vector3 _newPosition = default;
 
     // 自分が当たった位置を取得
-    [Networked] private Vector3 _hitAttackPos{ get; set; }
+    private Vector3 _hitAttackPos = default;
 
     // ゲームが開始されているか
-    [Networked] private bool _startGame { get; set; }
+    private bool _startGame = false;
     // 攻撃中か
-    [Networked] private bool _isAttack { get; set; }
+    private bool _isAttack = false;
     // ダウン中か
-    [Networked] private bool _isDowned { get; set; }
+    private bool _isDowned = false;
     // 死亡中か
-    [Networked] private bool _isDeath { get; set; }
+    private bool _isDeath = false;
 
     /// <summary>
     /// ゲーム開始を購読
     /// </summary>
-    public override void Spawned()
+    private void Awake()
     {
-        base.Spawned();
-        _gameManager = FindObjectOfType<GameManager>();
         // ゲーム開始イベントを購読
         _gameManager.GameStart.Subscribe(_ => StartGame());
-        print("ゲーム開始イベントを購読しました");
-    }
-
-
-    public override void FixedUpdateNetwork()
-    {
-        if ((_startGame)&&(!_executionOnce))
-        {
-            // 毎フレームの更新処理をUniRxで行う
-            Observable.EveryUpdate()
-                .Subscribe(_ => UpdateLogic())
-                .AddTo(this);
-
-            // 疑似スタートメソッド
-            StartLogic();
-
-            print("スタートとアップデートを起動します");
-
-            _executionOnce = true;
-        }
     }
 
     /// <summary>
@@ -98,6 +73,16 @@ public class BeBeetle : BaseEnemy
     {
         print("GameInitializerからゲーム開始処理を受け取りました。ビービートル起動");
         _startGame = true;
+        if(_startGame)
+        {
+            // 毎フレームの更新処理をUniRxで行う
+            Observable.EveryUpdate()
+                .Subscribe(_ => UpdateLogic())
+                .AddTo(this);
+
+            // 疑似スタートメソッド
+            StartLogic();
+        }
     }
 
     /// <summary>
@@ -105,18 +90,15 @@ public class BeBeetle : BaseEnemy
     /// </summary>
     private void StartLogic()
     {
-        // スタートロジックをサーバー側で制御する
-        if (Runner.IsServer)
-        {
-            // Rayの位置更新
-            SetPostion();
 
-            // キャンセルトークン生成
-            _cancellatToken = new CancellationTokenSource();
+        // Rayの位置更新
+        SetPostion();
 
-            // プレイヤーを取得
-            _player = GameObject.FindWithTag("Player");
-        }
+        // キャンセルトークン生成
+        _cancellatToken = new CancellationTokenSource();
+
+        // プレイヤーを取得
+        _player = GameObject.FindWithTag("Player");
     }
 
     /// <summary>
@@ -124,78 +106,74 @@ public class BeBeetle : BaseEnemy
     /// </summary>
     protected void UpdateLogic()
     {
-        // アップデートロジックをサーバー側で制御する
-        if (Runner.IsServer)
+
+        print(_movementState);
+        // レイキャスト設定
+        RayCastSetting();
+
+        switch (_movementState)
         {
-            print(_movementState);
-            // レイキャスト設定
-            RayCastSetting();
 
-            switch (_movementState)
-            {
+            // 待機
+            case EnemyMovementState.IDLE:
+               
+                _enemyAnimation.Movement(_myAnimator, 0);
 
-                // 待機
-                case EnemyMovementState.IDLE:
-
-                    _enemyAnimation.Movement(_myAnimator, 0);
-
-                    break;
+                break;
 
 
-                // 移動
-                case EnemyMovementState.RUNNING:
+            // 移動
+            case EnemyMovementState.RUNNING:
 
-                    BeBeetleMove();
+                BeBeetleMove();
 
-                    break;
-
-
-                // ダウン(ブレイク)
-                case EnemyMovementState.DOWNED:
-
-                    BeBeetleDowned(_cancellatToken.Token).Forget();
-
-                    break;
-
-                // 死亡
-                case EnemyMovementState.DIE:
-
-                    BeBeetleDeath(_cancellatToken.Token).Forget();
-
-                    break;
-
-            }
+                break;
 
 
-            switch (_actionState)
-            {
+            // ダウン(ブレイク)
+            case EnemyMovementState.DOWNED:
 
-                // サーチ
-                case EnemyActionState.SEARCHING:
+                BeBeetleDowned(_cancellatToken.Token).Forget();
 
-                    if ((!_isDowned) && (!_isDeath))
-                    {
-                        // プレイヤーを見続ける
-                        PlayerLook();
+                break;
 
-                        // RayHit判定
-                        PlayerSearch();
-                    }
+            // 死亡
+            case EnemyMovementState.DIE:
 
-                    break;
+                BeBeetleDeath(_cancellatToken.Token).Forget();
 
+                break;
 
-                // 攻撃
-                case EnemyActionState.ATTACKING:
-
-
-                    // 攻撃処理
-                    RushAttack(_cancellatToken.Token).Forget();
-
-                    break;
-            }
         }
-       
+
+        
+        switch (_actionState)
+        {
+
+            // サーチ
+            case EnemyActionState.SEARCHING:
+
+                if((!_isDowned)&&(!_isDeath))
+                {
+                    // プレイヤーを見続ける
+                    PlayerLook();
+
+                    // RayHit判定
+                    PlayerSearch();
+                }
+
+                break;
+
+
+            // 攻撃
+            case EnemyActionState.ATTACKING:
+
+
+                // 攻撃処理
+                RushAttack(_cancellatToken.Token).Forget();
+
+                break;
+        }
     }
 
     /// <summary>
