@@ -78,5 +78,33 @@ public class Boss : BaseEnemy
 
                 break;
         }
+
+        switch (_attacktState)
+        {
+            // 待機
+            case BossAttackState.IDLE:
+
+                break;
+
+            // つばさでうつ
+            case BossAttackState.WING:
+
+                break;
+
+            // シャドーボール
+            case BossAttackState.MAGIC:
+
+                break;
+
+            // はかいこうせん
+            case BossAttackState.BEAM:
+
+                break;
+
+            // 雑魚敵召喚
+            case BossAttackState.SUMMON:
+
+                break;
+        }
     }
 }
