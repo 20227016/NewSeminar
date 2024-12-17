@@ -134,7 +134,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             Debug.Log($"クライアント　で{startGameArgs}の設定通りにセッション開始");
 
         }
-        Debug.Log($"Awake処理＿終了: {this.GetType().Name}クラス");
 
     }
 
@@ -296,6 +295,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
 
+        Debug.Log($"Awake処理＿終了: {this.GetType().Name}クラス");
         Debug.Log($"プレイヤー参加処理＿開始: {this.GetType().Name}クラス");
         Debug.Log($"{_roomInfo.CurrentParticipantCount }人がすでに参加");
         // ホストで参加しているとき通る

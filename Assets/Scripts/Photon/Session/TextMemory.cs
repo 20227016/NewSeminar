@@ -6,7 +6,7 @@ public class TextMemory : NetworkBehaviour
 {
 
     [Networked,Tooltip("中身が入っているときにテキストを更新")]
-    public string Name { get; set; } = "";
+    public string Character { get; set; } = "";
 
     /// <summary>
     /// 自分のテキストコンポーネント
@@ -26,12 +26,23 @@ public class TextMemory : NetworkBehaviour
             Debug.LogError($"{this.gameObject}のにテキストコンポーネントが入っていません");
 
         }
-        // 中身があるとき
-        if(Name != "")
+        // 中身がないとき
+        if(Character == "")
         {
 
-            _text.text = Name;
+            // 中身があるとき
+            if (_text.text != "")
+            {
 
+                Character = _text.text;
+
+            }
+
+        }
+        else
+        {
+
+            _text.text = Character;
 
         }
 
@@ -44,7 +55,7 @@ public class TextMemory : NetworkBehaviour
     public void RPC_TextUpdate()
     {
 
-        _text.text = Name;
+        _text.text = Character;
 
     }
 
