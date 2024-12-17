@@ -24,7 +24,6 @@ public class CharacterStatusStructDrawer : PropertyDrawer
         fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_walkSpeed", "通常移動速度");
         fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_runSpeed", "ダッシュ移動速度");
         fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_avoidanceDistance", "回避距離");
-        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_avoidanceDuration", "回避持続時間 ( 秒 )");
         fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackPower", "攻撃力");
         fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackLightMultiplier", "弱攻撃ダメージ倍率");
         fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackStrongMultiplier", "強攻撃ダメージ倍率");

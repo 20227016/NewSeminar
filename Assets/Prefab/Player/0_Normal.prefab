@@ -1459,8 +1459,8 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1877988490393578206}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 98a56ff2c8ee98645a4d3f79fa1506c5, type: 3}
-  m_Controller: {fileID: 0}
+  m_Avatar: {fileID: 9000000, guid: 038320a534bd8b444b43734860d1a211, type: 3}
+  m_Controller: {fileID: 9100000, guid: 3609c7173d6d90d41b684223ffe8e828, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1593,14 +1593,13 @@ MonoBehaviour:
     _walkSpeed: 0.1
     _runSpeed: 0.2
     _avoidanceDistance: 5
-    _avoidanceDuration: 0.5
     _attackPower: 10
     _attackLightMultiplier: 1
     _attackStrongMultiplier: 1.5
     _attackSpeed: 1
     _defensePower: 10
     _skillDuration: 0
-    _skillCoolTime: 20
+    _skillCoolTime: 10
     _counterTime: 0.5
     _skillPointUpperLimit: 100
     _ressurectionTime: 5
@@ -1609,19 +1608,19 @@ MonoBehaviour:
     _avoidanceStamina: 20
   _characterAnimationStruct:
     _idleAnimation: {fileID: 7400000, guid: f8c2d6a0ce3bc2d40b090cd67dd23862, type: 3}
-    _walkAnimation: {fileID: 7400000, guid: f8c2d6a0ce3bc2d40b090cd67dd23862, type: 3}
-    _runAnimation: {fileID: 7400000, guid: f8c2d6a0ce3bc2d40b090cd67dd23862, type: 3}
-    _attackLightAnimation1: {fileID: 7400000, guid: f8c2d6a0ce3bc2d40b090cd67dd23862, type: 3}
-    _attackLightAnimation2: {fileID: 7400000, guid: f8c2d6a0ce3bc2d40b090cd67dd23862, type: 3}
-    _attackLightAnimation3: {fileID: 7400000, guid: f8c2d6a0ce3bc2d40b090cd67dd23862, type: 3}
-    _attackStrongAnimation: {fileID: 7400000, guid: f8c2d6a0ce3bc2d40b090cd67dd23862, type: 3}
-    _avoidanceActionAnimation: {fileID: 7400000, guid: f8c2d6a0ce3bc2d40b090cd67dd23862, type: 3}
-    _skillAnimation: {fileID: 7400000, guid: f8c2d6a0ce3bc2d40b090cd67dd23862, type: 3}
+    _walkAnimation: {fileID: 7400016, guid: df74f516f8958a24bab217e3603c71cd, type: 3}
+    _runAnimation: {fileID: 7400016, guid: 5fe51830c6e12034892d1041e85357b6, type: 3}
+    _attackLightAnimation1: {fileID: 7400000, guid: f1613afb92638e743bace9a9392b5ee7, type: 3}
+    _attackLightAnimation2: {fileID: 7400000, guid: a55383ab4dbd734488b7abc4b819934f, type: 3}
+    _attackLightAnimation3: {fileID: 7400000, guid: 2353f29f22b4ca2438a5c32f3628a876, type: 3}
+    _attackStrongAnimation: {fileID: 7400000, guid: 214c7c9b1789eca4fa03313e4abaac1d, type: 3}
+    _avoidanceActionAnimation: {fileID: 7400000, guid: b9afcb4a5f7a61a45b51867baaaf01b4, type: 3}
+    _skillAnimation: {fileID: 7400000, guid: c0684b252dc920a448c6f6bff196b12f, type: 2}
     _ressurectionAnimation: {fileID: 0}
-    _reviveAnimation: {fileID: 7400000, guid: f8c2d6a0ce3bc2d40b090cd67dd23862, type: 3}
-    _damageReactionLightAnimation: {fileID: 7400000, guid: f8c2d6a0ce3bc2d40b090cd67dd23862, type: 3}
-    _damageReactionHeavyAnimation: {fileID: 7400000, guid: f8c2d6a0ce3bc2d40b090cd67dd23862, type: 3}
-    _deathAnimation: {fileID: 7400000, guid: f8c2d6a0ce3bc2d40b090cd67dd23862, type: 3}
+    _reviveAnimation: {fileID: 7400000, guid: af89f34a3b0fc374a80eff2c889bdf30, type: 3}
+    _damageReactionLightAnimation: {fileID: 7400000, guid: 03d7bb31f4803fd45ae78430b375c9b8, type: 3}
+    _damageReactionHeavyAnimation: {fileID: 7400000, guid: c1d5e2eb31078e744a792fc216838df4, type: 3}
+    _deathAnimation: {fileID: 7400000, guid: 0a205e82d4075b346b912ccfe0a0bfd2, type: 3}
   _currentState: 0
 --- !u!114 &4762466880810951508
 MonoBehaviour:
@@ -5078,27 +5077,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4714933827498358, guid: 0a5d9b51542336948b7d2a699f71cd8c, type: 3}
       propertyPath: m_LocalScale.x
-      value: 100
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 4714933827498358, guid: 0a5d9b51542336948b7d2a699f71cd8c, type: 3}
       propertyPath: m_LocalScale.y
-      value: 100
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 4714933827498358, guid: 0a5d9b51542336948b7d2a699f71cd8c, type: 3}
       propertyPath: m_LocalScale.z
-      value: 100
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 4714933827498358, guid: 0a5d9b51542336948b7d2a699f71cd8c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 12.639332
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4714933827498358, guid: 0a5d9b51542336948b7d2a699f71cd8c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.194005
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4714933827498358, guid: 0a5d9b51542336948b7d2a699f71cd8c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.8099504
+      value: -0.6
       objectReference: {fileID: 0}
     - target: {fileID: 4714933827498358, guid: 0a5d9b51542336948b7d2a699f71cd8c, type: 3}
       propertyPath: m_LocalRotation.w

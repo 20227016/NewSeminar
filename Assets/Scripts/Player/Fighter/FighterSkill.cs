@@ -13,7 +13,7 @@ using System;
 public class FighterSkill : MonoBehaviour, ISkill
 {
     [SerializeField, Tooltip("スキルによる攻撃速度上昇倍率")]
-    private float _attackSpeedMaltipiler = 2.0f;
+    private float _attackSpeedMaltiplier = 2.0f;
 
     public void Skill(CharacterBase characterBase, float skillTime)
     {
@@ -23,7 +23,7 @@ public class FighterSkill : MonoBehaviour, ISkill
         float originalAttackSpeed = characterBase._characterStatusStruct._attackSpeed;
 
         // 攻撃速度を一時的に変更
-        characterBase._characterStatusStruct._attackSpeed *= _attackSpeedMaltipiler;
+        characterBase._characterStatusStruct._attackSpeed *= _attackSpeedMaltiplier;
 
         // skillTime後に元の攻撃速度に戻す
         Observable.Timer(TimeSpan.FromSeconds(skillTime))
