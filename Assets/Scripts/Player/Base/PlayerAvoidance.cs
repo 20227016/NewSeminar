@@ -15,7 +15,7 @@ public class PlayerAvoidance : IAvoidance
     // 回避中フラグ
     private bool _isAvoiding = false;
 
-    // 回避開始までの遅延
+    // 回避開始までの遅延(ミリ秒)
     private const int AVOIDANCE_START_DELAY = 100;
 
     public void Avoidance(Transform transform, Vector2 avoidanceDirection, float avoidanceDistance, float avoidanceDuration)
@@ -41,7 +41,7 @@ public class PlayerAvoidance : IAvoidance
         float elapsedTime = 0f;
 
         // 回避の持続時間が経過するまでループ
-        while (elapsedTime < duration)
+        while (elapsedTime < duration - (AVOIDANCE_START_DELAY * 0.001))
         {
             elapsedTime += Time.deltaTime;
 

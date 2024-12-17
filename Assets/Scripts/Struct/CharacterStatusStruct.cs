@@ -25,11 +25,6 @@ public struct CharacterStatusStruct
     public float _avoidanceDistance;
 
     /// <summary>
-    /// 回避持続時間
-    /// </summary>
-    public float _avoidanceDuration;
-
-    /// <summary>
     /// 攻撃力
     /// </summary>
     public float _attackPower;

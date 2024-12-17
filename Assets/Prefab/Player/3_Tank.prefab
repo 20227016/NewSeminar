@@ -771,13 +771,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1401921145460247152}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.046013933, y: 0.67609155, z: -0.7284636, w: -0.10061678}
-  m_LocalPosition: {x: 12.231172, y: 2.7940087, z: 3.837222}
-  m_LocalScale: {x: 99.99998, y: 99.999954, z: 100}
+  m_LocalRotation: {x: 0.06642606, y: 0.6835234, z: -0.72688633, w: 0.004426204}
+  m_LocalPosition: {x: 2, y: 6, z: 2}
+  m_LocalScale: {x: 120, y: 120, z: 120}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3893828351740526078}
-  m_LocalEulerAnglesHint: {x: -83.867, y: 21.461, z: -52.155}
+  m_LocalEulerAnglesHint: {x: -263.867, y: 122.093, z: -52.155}
 --- !u!33 &8997771949573489611
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1302,7 +1302,7 @@ Animator:
   m_GameObject: {fileID: 2315900077808935384}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 038320a534bd8b444b43734860d1a211, type: 3}
-  m_Controller: {fileID: 9100000, guid: 5fbed9cae3571aa4f8273283e531893a, type: 2}
+  m_Controller: {fileID: 9100000, guid: 94298c561ea543549bf9182b81badcf5, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1435,7 +1435,6 @@ MonoBehaviour:
     _walkSpeed: 0.1
     _runSpeed: 0.2
     _avoidanceDistance: 5
-    _avoidanceDuration: 0.5
     _attackPower: 10
     _attackLightMultiplier: 1
     _attackStrongMultiplier: 1.5
@@ -1450,21 +1449,22 @@ MonoBehaviour:
     _runStamina: 25
     _avoidanceStamina: 20
   _characterAnimationStruct:
-    _idleAnimation: {fileID: 0}
-    _walkAnimation: {fileID: 0}
-    _runAnimation: {fileID: 0}
-    _attackLightAnimation1: {fileID: 0}
-    _attackLightAnimation2: {fileID: 0}
-    _attackLightAnimation3: {fileID: 0}
-    _attackStrongAnimation: {fileID: 0}
-    _avoidanceActionAnimation: {fileID: 0}
-    _skillAnimation: {fileID: 0}
+    _idleAnimation: {fileID: 7400000, guid: f8c2d6a0ce3bc2d40b090cd67dd23862, type: 3}
+    _walkAnimation: {fileID: 7400016, guid: df74f516f8958a24bab217e3603c71cd, type: 3}
+    _runAnimation: {fileID: 7400016, guid: 5fe51830c6e12034892d1041e85357b6, type: 3}
+    _attackLightAnimation1: {fileID: 7400000, guid: f1613afb92638e743bace9a9392b5ee7, type: 3}
+    _attackLightAnimation2: {fileID: 7400000, guid: 008afb724902e7c49b099951c0e5aa83, type: 3}
+    _attackLightAnimation3: {fileID: 7400000, guid: 0f24f31f62ce52946a2176b6c6934b1f, type: 3}
+    _attackStrongAnimation: {fileID: 7400000, guid: 214c7c9b1789eca4fa03313e4abaac1d, type: 3}
+    _avoidanceActionAnimation: {fileID: 7400000, guid: 5755383679c026d4fad9375850861b5f, type: 2}
+    _skillAnimation: {fileID: -203655887218126122, guid: 194381201037de248820e3825408f495, type: 3}
     _ressurectionAnimation: {fileID: 0}
-    _reviveAnimation: {fileID: 0}
-    _damageReactionLightAnimation: {fileID: 0}
-    _damageReactionHeavyAnimation: {fileID: 0}
-    _deathAnimation: {fileID: 0}
+    _reviveAnimation: {fileID: 7400000, guid: af89f34a3b0fc374a80eff2c889bdf30, type: 3}
+    _damageReactionLightAnimation: {fileID: 7400000, guid: 03d7bb31f4803fd45ae78430b375c9b8, type: 3}
+    _damageReactionHeavyAnimation: {fileID: 7400000, guid: c1d5e2eb31078e744a792fc216838df4, type: 3}
+    _deathAnimation: {fileID: 7400000, guid: 0a205e82d4075b346b912ccfe0a0bfd2, type: 3}
   _currentState: 0
+  _blockReactionAnimation: {fileID: 7400002, guid: 06b2d730cc61165409b7dfc816822cbc, type: 3}
 --- !u!114 &2544810034382573789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1489,6 +1489,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fc48ffcd734dfd46993e41d2caa777f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _guardMultiplier: 2
 --- !u!114 &2493756517466308921
 MonoBehaviour:
   m_ObjectHideFlags: 0

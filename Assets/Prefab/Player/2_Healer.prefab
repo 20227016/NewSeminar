@@ -2829,7 +2829,6 @@ MonoBehaviour:
     _walkSpeed: 0.1
     _runSpeed: 0.2
     _avoidanceDistance: 5
-    _avoidanceDuration: 0.5
     _attackPower: 10
     _attackLightMultiplier: 1
     _attackStrongMultiplier: 1.5
@@ -2850,14 +2849,14 @@ MonoBehaviour:
     _attackLightAnimation1: {fileID: 7400000, guid: ecf1c9844e13bbe48a8729667efdc143, type: 3}
     _attackLightAnimation2: {fileID: 7400000, guid: b7616e73e4c0c0040980501dd6867831, type: 3}
     _attackLightAnimation3: {fileID: 7400000, guid: e0919932c9c179142ad06cf4ee11f204, type: 3}
-    _attackStrongAnimation: {fileID: 0}
-    _avoidanceActionAnimation: {fileID: 7400000, guid: 8c04f5c0b2d6d4549beb678f6117c856, type: 3}
-    _skillAnimation: {fileID: 0}
+    _attackStrongAnimation: {fileID: 7400000, guid: 83fd44d401787364287914e1737a9ada, type: 3}
+    _avoidanceActionAnimation: {fileID: 7400000, guid: b9afcb4a5f7a61a45b51867baaaf01b4, type: 3}
+    _skillAnimation: {fileID: 7400000, guid: 9af131dd67761d944b33d6636ae3168c, type: 3}
     _ressurectionAnimation: {fileID: 0}
     _reviveAnimation: {fileID: 7400000, guid: 97ebffc4754391e439a90a6653198a15, type: 3}
-    _damageReactionLightAnimation: {fileID: 0}
-    _damageReactionHeavyAnimation: {fileID: 0}
-    _deathAnimation: {fileID: 0}
+    _damageReactionLightAnimation: {fileID: 7400000, guid: 2871eb9c6dc797345a35ca1ded1f3969, type: 3}
+    _damageReactionHeavyAnimation: {fileID: 7400000, guid: c1d5e2eb31078e744a792fc216838df4, type: 3}
+    _deathAnimation: {fileID: 7400000, guid: b046a199cf4e9ce42b28d575236a79be, type: 3}
   _currentState: 0
 --- !u!114 &3010514447135096629
 MonoBehaviour:
@@ -4859,15 +4858,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4814251842664052, guid: d9197eec8ecc7714cbb8825a1467ae11, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.30000025
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 4814251842664052, guid: d9197eec8ecc7714cbb8825a1467ae11, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.30000016
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 4814251842664052, guid: d9197eec8ecc7714cbb8825a1467ae11, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.30000028
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 4814251842664052, guid: d9197eec8ecc7714cbb8825a1467ae11, type: 3}
       propertyPath: m_LocalPosition.x

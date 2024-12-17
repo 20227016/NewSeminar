@@ -2588,7 +2588,7 @@ Animator:
   m_GameObject: {fileID: 2789168958803033147}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 038320a534bd8b444b43734860d1a211, type: 3}
-  m_Controller: {fileID: 9100000, guid: b86fafbb65f6d4e4aaaed030c1c2c905, type: 2}
+  m_Controller: {fileID: 9100000, guid: 8f2f5123e7b753b44ad9b59d61095cb5, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2721,7 +2721,6 @@ MonoBehaviour:
     _walkSpeed: 0.1
     _runSpeed: 0.2
     _avoidanceDistance: 5
-    _avoidanceDuration: 0.5
     _attackPower: 10
     _attackLightMultiplier: 1
     _attackStrongMultiplier: 1.5
@@ -2736,20 +2735,20 @@ MonoBehaviour:
     _runStamina: 25
     _avoidanceStamina: 20
   _characterAnimationStruct:
-    _idleAnimation: {fileID: 7400000, guid: d0d3809b813aa0b4f90429d5587583f0, type: 3}
-    _walkAnimation: {fileID: 7400000, guid: 625dee4eb35dcee4280d5bcea189b903, type: 3}
-    _runAnimation: {fileID: 7400000, guid: 48c57212316e5a643ae3d2c5f377ef90, type: 3}
-    _attackLightAnimation1: {fileID: 7400000, guid: b055cb499f0be834986acf45f6711225, type: 3}
-    _attackLightAnimation2: {fileID: 7400000, guid: 27a6a9f585a42884db1c7631777bc9bd, type: 3}
-    _attackLightAnimation3: {fileID: 7400000, guid: e5d4c4888f72844449577d099b578916, type: 3}
-    _attackStrongAnimation: {fileID: 7400000, guid: 3eb5549acb632954f97777c8a711f5f3, type: 3}
-    _avoidanceActionAnimation: {fileID: 7400000, guid: 61fd65a60aa03c74099fe9785ba57090, type: 3}
-    _skillAnimation: {fileID: 7400000, guid: 7c627f23f6d1fdf43b168d065fa8dfbd, type: 3}
+    _idleAnimation: {fileID: 7400000, guid: cd6b8800735c1234fa390689961beb00, type: 3}
+    _walkAnimation: {fileID: 7400000, guid: b1afb1a8906792749986c8e7514a1796, type: 3}
+    _runAnimation: {fileID: 7400000, guid: 2b3687baef9c3de4fb17819d28c3bb25, type: 3}
+    _attackLightAnimation1: {fileID: 7400000, guid: 731f9bd15c6d320409e05242ce5014e7, type: 3}
+    _attackLightAnimation2: {fileID: 7400000, guid: 32c188adf73f86148880cd1517bb3cb9, type: 3}
+    _attackLightAnimation3: {fileID: 7400000, guid: 2c7ae777fd6301b40ad8954e241f915b, type: 3}
+    _attackStrongAnimation: {fileID: 7400000, guid: 19ebcbbc574ea694c8c4c123842cb4da, type: 3}
+    _avoidanceActionAnimation: {fileID: 7400000, guid: b9afcb4a5f7a61a45b51867baaaf01b4, type: 3}
+    _skillAnimation: {fileID: 7400000, guid: 821dd59ad23dac343b27799e8583b6ea, type: 3}
     _ressurectionAnimation: {fileID: 0}
-    _reviveAnimation: {fileID: 7400000, guid: 92dd41a7cc7984943a71b5fac14016ba, type: 3}
-    _damageReactionLightAnimation: {fileID: 7400000, guid: a9d6207cec8e8eb4f9f65dbbf30bfdbf, type: 3}
-    _damageReactionHeavyAnimation: {fileID: 7400000, guid: d7a8c02acfab4664c99092cdddd05377, type: 3}
-    _deathAnimation: {fileID: 7400000, guid: d6c39c4ed4f199b45b933e1409242721, type: 3}
+    _reviveAnimation: {fileID: 7400000, guid: af89f34a3b0fc374a80eff2c889bdf30, type: 3}
+    _damageReactionLightAnimation: {fileID: 7400000, guid: 27d6f5b82e5f3f549ba041b7ba628a9d, type: 3}
+    _damageReactionHeavyAnimation: {fileID: 7400000, guid: c1d5e2eb31078e744a792fc216838df4, type: 3}
+    _deathAnimation: {fileID: 7400000, guid: d828de0f312bb9d4aa3a85bdf39ce798, type: 3}
   _currentState: 0
 --- !u!114 &4405098942096439548
 MonoBehaviour:
@@ -2763,7 +2762,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6d85ea7471cb8a47b87df1f0cf6c19e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attackSpeedMaltipiler: 1.5
+  _attackSpeedMaltipiler: 1.2
 --- !u!114 &5064425199042777687
 MonoBehaviour:
   m_ObjectHideFlags: 0
