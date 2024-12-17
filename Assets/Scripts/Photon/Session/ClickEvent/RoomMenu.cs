@@ -1,6 +1,4 @@
 using Fusion;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +14,11 @@ public class RoomMenu : MonoBehaviour
     /// ネットワークランナー
     /// </summary>
     private NetworkRunner _networkRunner = default;
+
+    /// <summary>
+    /// 自分のネットオブジェクト
+    /// </summary>
+    private NetworkObject _myParticipantObj = default;
 
     /// <summary>
     /// 更新前処理
@@ -46,20 +49,42 @@ public class RoomMenu : MonoBehaviour
     public void ReName()
     {
 
-        string newName = _nameInputField.text;
         // 自分のセッションのプレイヤーレフ
         PlayerRef playerRef = _networkRunner.LocalPlayer;
         // 自分のセッションの参加者オブジェクト
-        NetworkObject participantsObj = _networkRunner.GetPlayerObject(playerRef);
-        Debug.LogError($"プレイヤーレフとの関連オブジェ{participantsObj}");
-        IRoomController _iRoomController = participantsObj.GetComponent<IRoomController>();
-        if (_iRoomController == null)
+        _myParticipantObj = _networkRunner.GetPlayerObject(playerRef);
+        string newName = _nameInputField.text;
+        Debug.LogError($"プレイヤーレフとの関連オブジェ{_myParticipantObj}");
+        IReName iRename = _myParticipantObj.GetComponent<IReName>();
+        if (iRename == null)
         {
 
             Debug.LogError("ホストオブジェクトにルーム情報を渡すインターフェースが見つかりません");
 
         }
-        _iRoomController.RPC_ParticipantReName(newName, participantsObj);
+        iRename.RPC_ParticipantReName(newName, _myParticipantObj);
+
+    }
+
+    /// <summary>
+    /// 準備完了またホストの時または出撃
+    /// </summary>
+    public void Ready()
+    {
+
+        // 自分のセッションのプレイヤーレフ
+        PlayerRef playerRef = _networkRunner.LocalPlayer;
+        // 自分のセッションの参加者オブジェクト
+        _myParticipantObj = _networkRunner.GetPlayerObject(playerRef);
+        Debug.Log($"{_myParticipantObj.name}呼び出したオブジェクト");
+        IReady iReady = _myParticipantObj.GetComponent<IReady>();
+        if (iReady == null)
+        {
+
+            Debug.LogError("ホストオブジェクトにルーム情報を渡すインターフェースが見つかりません");
+
+        }
+        iReady.ParticipantReady(_myParticipantObj);
 
     }
 

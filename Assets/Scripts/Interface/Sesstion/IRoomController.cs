@@ -8,6 +8,4 @@ public interface  IRoomController
 
     public void ParticipantRemove(PlayerRef playerRef);
 
-    public void RPC_ParticipantReName(string name, NetworkObject participantsObj);
-
 }

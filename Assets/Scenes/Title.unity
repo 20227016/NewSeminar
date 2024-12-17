@@ -1051,7 +1051,6 @@ GameObject:
   - component: {fileID: 993511161}
   - component: {fileID: 993511160}
   - component: {fileID: 993511159}
-  - component: {fileID: 993511162}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1133,23 +1132,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &993511162
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 993511158}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74abb324aceb00e4f98a38fdc13e8434, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _camera: {fileID: 993511160}
-  _raycaster: {fileID: 1097105487}
-  _eventSystem: {fileID: 855191242}
-  _roomName: 
-  _runner: {fileID: 0}
 --- !u!1 &1007769467
 GameObject:
   m_ObjectHideFlags: 0
@@ -1313,6 +1295,7 @@ MonoBehaviour:
   - {fileID: 466306030}
   - {fileID: 1185780920}
   - {fileID: 1781991408}
+  - {fileID: 1650431170}
   SimulationBehaviours: []
 --- !u!1 &1185780916
 GameObject:
@@ -1704,8 +1687,9 @@ GameObject:
   - component: {fileID: 1650431167}
   - component: {fileID: 1650431169}
   - component: {fileID: 1650431168}
+  - component: {fileID: 1650431170}
   m_Layer: 0
-  m_Name: 'Text '
+  m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1772,6 +1756,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1650431166}
   m_CullTransparentMesh: 1
+--- !u!114 &1650431170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650431166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef3c955e607c30a41bfbacb99fdce978, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  _Character: 
 --- !u!1 &1753645012
 GameObject:
   m_ObjectHideFlags: 0
@@ -2165,7 +2165,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2123271191}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 756870949}
+        m_TargetAssemblyTypeName: RoomMenu, Assembly-CSharp
+        m_MethodName: Ready
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2123271191
 MonoBehaviour:
   m_ObjectHideFlags: 0
