@@ -16,13 +16,27 @@ using Random = System.Random;
 /// </summary>
 public class BossDemo : BaseEnemy
 {
+    [Header("魔弾攻撃設定")]
+    [Tooltip("発射する魔弾のPrefab")]
+    [SerializeField] private GameObject _magicBullet;
+
+    [Tooltip("魔弾攻撃の溜め時間")]
+    [SerializeField] private float _bulletChargeTime = 1.3f;
+
+    [Tooltip("魔弾の生成許可")]
+    [SerializeField] private bool isBulletGeneration = true;
+
+    private float _currentTimer = 0f; // 現在時間
+    private float _attackTransitionTime = 5f; // 攻撃移行時間
+
+    private Animator _animator;
 
     // ボスの行動パターン用.変数(最初はアイドル状態からスタート)
     // 1.アイドル
     // 2.攻撃
     // 3.ダウン
     // 4.死亡
-    private int _actionState = 2; // デバックで2にしてるだけ。本当は1からスタート。条件を付けて2にし、行動パターンを制御して(例.アイドルを5秒間繰り返すと2になる)
+    private int _actionState = 1; // デバックで2にしてるだけ。本当は1からスタート。条件を付けて2にし、行動パターンを制御して(例.アイドルを5秒間繰り返すと2になる)
 
     // ボスの攻撃パターン用.変数(抽選し、行動パターンを決める)
     // 1.羽の薙ぎ払い攻撃
@@ -33,9 +47,9 @@ public class BossDemo : BaseEnemy
     // 行動パターンを抽選し、その結果を配列に格納する
     private int[] _confirmedAttackState = new int[3];
 
-    private void Start()
+    private void Awake()
     {
-        
+        _animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -131,7 +145,8 @@ public class BossDemo : BaseEnemy
     private void IdleState()
     {
         print("アイドルなう");
-        // アイドル状態の処理を書く
+        
+        
     }
 
 　　/// <summary>
@@ -175,6 +190,17 @@ public class BossDemo : BaseEnemy
     private void MagicBulletAttack()
     {
         print("魔弾攻撃を実行しました");
+
+        if (isBulletGeneration)
+        {
+            // 魔法弾を生成
+            Vector3 position = new Vector3(6f, 6f, 15f); // 位置 (x6, y6, z15)
+            Quaternion rotation = Quaternion.Euler(0f, -180f, 0f); // 向き (Y軸を -180° 回転)
+            Instantiate(_magicBullet, position, rotation);
+            isBulletGeneration = false;
+        }
+
+
     }
 
     /// <summary>
