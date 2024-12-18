@@ -233,14 +233,14 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _currentSkillPoint.Value = 0f;
         _networkedSkillPoint = _currentSkillPoint.Value;
 
-        ManageStamina();
+        StaminaManagement();
     }
 
 
     /// <summary>
     /// スタミナ管理
     /// </summary>
-    protected virtual void ManageStamina()
+    protected virtual void StaminaManagement()
     {
         // 走った時のスタミナ消費処理
         HandleRunStaminaConsumption();
@@ -249,8 +249,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         HandleStaminaRecovery();
 
         // スタミナ切れフラグの管理
-        HandleOutOfStaminaFlag();
+        HandleOutOfStamina();
 
+        // スタミナの最小、最大値を制限
         _networkedStamina = Mathf.Clamp(_networkedStamina, 0, _characterStatusStruct._playerStatus.MaxStamina);
     }
 
@@ -298,7 +299,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// <summary>
     /// スタミナ切れフラグの管理
     /// </summary>
-    protected virtual void HandleOutOfStaminaFlag()
+    protected virtual void HandleOutOfStamina()
     {
         // スタミナが0を下回ったらスタミナ切れフラグをtrueに
         _currentStamina
@@ -329,7 +330,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 状態が特定のものなら入力を無視
         if (_notAttackAccepted ||
             _currentState == CharacterStateEnum.AVOIDANCE ||
-            //_currentState == CharacterStateEnum.SKILL ||
+            _currentState == CharacterStateEnum.SKILL ||
             _currentState == CharacterStateEnum.DAMAGE_REACTION ||
             _currentState == CharacterStateEnum.DEATH)
         {
@@ -374,6 +375,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         }
     }
 
+    public override void Render()
+    {
+        base.Render();
+        _animation.BoolAnimation(_animator, _characterAnimationStruct._idleAnimation, true);
+    }
 
     /// <summary>
     /// 移動入力を管理
@@ -424,25 +430,50 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     }
 
 
-    protected virtual void AttackLight(CharacterBase characterBase, float attackPower, float attackMultiplier)
+    public virtual void AttackLight(CharacterBase characterBase, float attackPower, float attackMultiplier)
     {
         _currentState = CharacterStateEnum.ATTACK;
-
-        _playerAttackLight.AttackLight(characterBase, attackPower, attackMultiplier);
 
         // 攻撃速度を適用
         _animator.speed = _characterStatusStruct._attackSpeed;
 
-        // アニメーション配列とコンボロジック
-        AnimationClip[] attackAnimations = new[]
-        {
-            _characterAnimationStruct._attackLightAnimation1,
-            _characterAnimationStruct._attackLightAnimation2,
-            _characterAnimationStruct._attackLightAnimation3
-        };
+        // 各段に応じたアニメーション、delay、rangeを取得
+        AnimationClip attackAnimation = null;
+        float delay = 0f;
+        float range = 0f;
 
-        AnimationClip attackAnimation = attackAnimations[(_comboCount - 1) % attackAnimations.Length];
-        _comboCount = (_comboCount % attackAnimations.Length) + 1;
+        switch (_comboCount)
+        {
+            case 1:
+                attackAnimation = _characterAnimationStruct._attackLightAnimation1;
+                delay = _characterStatusStruct._attackLight1HitboxDelay;
+                range = _characterStatusStruct._attackLight1HitboxRange;
+                break;
+            case 2:
+                attackAnimation = _characterAnimationStruct._attackLightAnimation2;
+                delay = _characterStatusStruct._attackLight2HitboxDelay;
+                range = _characterStatusStruct._attackLight2HitboxRange;
+                break;
+            case 3:
+                attackAnimation = _characterAnimationStruct._attackLightAnimation3;
+                delay = _characterStatusStruct._attackLight3HitboxDelay;
+                range = _characterStatusStruct._attackLight3HitboxRange;
+                break;
+            default:
+                break;
+        }
+
+        _comboCount = (_comboCount % 3) + 1;  // コンボカウントの更新
+
+        delay /= _animator.speed;
+
+        _playerAttackLight.AttackLight(
+           characterBase,
+           attackPower,
+           attackMultiplier,
+           delay,
+           range
+           );
 
         float animationDuration = _animation.PlayAnimation(_animator, attackAnimation) / _characterStatusStruct._attackSpeed;
 
@@ -465,20 +496,26 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     }
 
 
-    protected virtual void AttackStrong(CharacterBase characterBase, float attackPower, float attackMultipiler)
+    public virtual void AttackStrong(CharacterBase characterBase, float attackPower, float attackMultipiler)
     {
         _notAttackAccepted = true;
 
         _currentState = CharacterStateEnum.ATTACK;
 
+        _playerAttackStrong.AttackStrong(
+            characterBase,
+            attackPower,
+            attackMultipiler,
+            _characterStatusStruct._attackStrongHitboxDelay / _animator.speed,
+            _characterStatusStruct._attackStrongHitboxRange);
+
         _animator.speed = _characterStatusStruct._attackSpeed;
 
-        _networkedSkillPoint = 100f;
-        _playerAttackStrong.AttackStrong(characterBase, attackPower, attackMultipiler);
-
         float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._attackStrongAnimation) / _characterStatusStruct._attackSpeed;
-
+       
         ResetState(animationDuration, () => _notAttackAccepted = false);
+        _networkedSkillPoint = 100;
+        _networkedHP -= 10f;
     }
 
 
@@ -506,31 +543,29 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     protected virtual void Skill(CharacterBase characterBase, float skillTime, float skillCoolTime) 
     {
-        //// クールタイム中ならリターン
-        //if (_isSkillCoolTime) return;
+        // クールタイム中ならリターン
+        if (_isSkillCoolTime) return;
 
-        //_currentState = CharacterStateEnum.SKILL;
+        _currentState = CharacterStateEnum.SKILL;
 
-        //// クールタイム管理
-        //_isSkillCoolTime = true;
+        // クールタイム管理
+        _isSkillCoolTime = true;
 
-        //Observable.Timer(TimeSpan.FromSeconds(skillCoolTime))
-        //    .Subscribe(_ =>
-        //    {
-        //        //Debug.Log("スキルクールタイム終了");
-        //        _isSkillCoolTime = false;
-        //    });
+        Observable.Timer(TimeSpan.FromSeconds(skillCoolTime))
+            .Subscribe(_ =>
+            {
+                //Debug.Log("スキルクールタイム終了");
+                _isSkillCoolTime = false;
+            });
 
-        //// 発動後スキルポイントを０に
-        //_networkedSkillPoint = 0f;
+        // 発動後スキルポイントを０に
+        _networkedSkillPoint = 0f;
 
-        //_skill.Skill(this, skillTime);
+        _skill.Skill(this, skillTime);
 
-        //float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._skillAnimation);
+        float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._skillAnimation);
 
-        //ResetState(animationDuration);
-
-        ReceiveDamage(70);
+        ResetState(animationDuration);
     }
 
 

@@ -45,6 +45,28 @@ public struct CharacterStatusStruct
     public float _attackSpeed;
 
     /// <summary>
+    /// 弱攻撃1段目の当たり判定発生遅延
+    /// </summary>
+    public float _attackLight1HitboxDelay;
+
+    /// <summary>
+    /// 弱攻撃1段目の当たり判定範囲
+    /// </summary>
+    public float _attackLight1HitboxRange;
+
+    public float _attackLight2HitboxDelay;
+
+    public float _attackLight2HitboxRange;
+
+    public float _attackLight3HitboxDelay;
+
+    public float _attackLight3HitboxRange;
+
+    public float _attackStrongHitboxDelay;
+
+    public float _attackStrongHitboxRange;
+
+    /// <summary>
     /// 防御力
     /// </summary>
     public float _defensePower;

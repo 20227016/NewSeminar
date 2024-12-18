@@ -6,5 +6,6 @@ public interface IAttackStrong
     /// <summary>
     /// ‹­UŒ‚
     /// </summary>
-    void AttackStrong(CharacterBase characterBase, float attackPower, float attackMultiplier);
+    void AttackStrong(CharacterBase characterBase, float attackPower, float attackMultiplier, float delay, float range);
+
 }

@@ -15,6 +15,6 @@ public class NormalPassive : MonoBehaviour, IPassive
 
     public void Passive(CharacterBase characterBase)
     {
-
+        Debug.Log("ノーマルのパッシブ");
     }
 }

@@ -2554,7 +2554,7 @@ GameObject:
   - component: {fileID: 5064425199042777687}
   - component: {fileID: 8756446559984316052}
   m_Layer: 6
-  m_Name: 1_Fighter
+  m_Name: 2_Fighter
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2718,14 +2718,22 @@ MonoBehaviour:
   WordCount: 0
   _interpolationDataSource: 0
   _characterStatusStruct:
-    _walkSpeed: 0.1
-    _runSpeed: 0.2
+    _walkSpeed: 1
+    _runSpeed: 2
     _avoidanceDistance: 5
-    _attackPower: 10
+    _attackPower: 8
     _attackLightMultiplier: 1
     _attackStrongMultiplier: 1.5
     _attackSpeed: 1
-    _defensePower: 10
+    _attackLight1HitboxDelay: 0.1
+    _attackLight1HitboxRange: 1.5
+    _attackLight2HitboxDelay: 0.2
+    _attackLight2HitboxRange: 1.5
+    _attackLight3HitboxDelay: 0.5
+    _attackLight3HitboxRange: 1.5
+    _attackStrongHitboxDelay: 0.3
+    _attackStrongHitboxRange: 1.5
+    _defensePower: 8
     _skillDuration: 20
     _skillCoolTime: 30
     _counterTime: 0.5
@@ -2740,7 +2748,7 @@ MonoBehaviour:
     _runAnimation: {fileID: 7400000, guid: 2b3687baef9c3de4fb17819d28c3bb25, type: 3}
     _attackLightAnimation1: {fileID: 7400000, guid: 731f9bd15c6d320409e05242ce5014e7, type: 3}
     _attackLightAnimation2: {fileID: 7400000, guid: 32c188adf73f86148880cd1517bb3cb9, type: 3}
-    _attackLightAnimation3: {fileID: 7400000, guid: 2c7ae777fd6301b40ad8954e241f915b, type: 3}
+    _attackLightAnimation3: {fileID: 7400000, guid: 5e6a2f0b53dce7b468e8469e2f517410, type: 3}
     _attackStrongAnimation: {fileID: 7400000, guid: 19ebcbbc574ea694c8c4c123842cb4da, type: 3}
     _avoidanceActionAnimation: {fileID: 7400000, guid: b9afcb4a5f7a61a45b51867baaaf01b4, type: 3}
     _skillAnimation: {fileID: 7400000, guid: 821dd59ad23dac343b27799e8583b6ea, type: 3}
@@ -2762,7 +2770,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6d85ea7471cb8a47b87df1f0cf6c19e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attackSpeedMaltipiler: 1.2
+  _attackSpeedMaltiplier: 1.2
 --- !u!114 &5064425199042777687
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -305,34 +305,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1742486185846943359, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
-      propertyPath: m_BiasY
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1742486185846943359, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
-      propertyPath: m_ScreenY
-      value: 0.40000004
-      objectReference: {fileID: 0}
-    - target: {fileID: 1742486185846943359, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
-      propertyPath: m_SoftZoneWidth
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1742486185846943359, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
-      propertyPath: m_DeadZoneHeight
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1742486185846943359, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
-      propertyPath: m_SoftZoneHeight
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3009175127396240598, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
-      propertyPath: m_IgnoreTag
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 3009175127396240598, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
-      propertyPath: m_TransparentLayers.m_Bits
-      value: 4294967295
-      objectReference: {fileID: 0}
     - target: {fileID: 5127226456078123827, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -376,10 +348,6 @@ PrefabInstance:
     - target: {fileID: 7684730494696875335, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
       propertyPath: m_Name
       value: TargettingCamera
-      objectReference: {fileID: 0}
-    - target: {fileID: 8005833928300892595, guid: b48a59cfcdb63864cb9e1281bf7db8ac, type: 3}
-      propertyPath: m_ScreenY
-      value: 0.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1252,19 +1220,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: playerAvatarPrefab.RawGuidValue.Array.data[0]
-      value: -8935083708819005062
+      value: -4267510503662075145
       objectReference: {fileID: 0}
     - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: playerAvatarPrefab.RawGuidValue.Array.data[1]
-      value: -4303228637196471512
+      value: -1473450001561217942
       objectReference: {fileID: 0}
     - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: _participantsPrefab.RawGuidValue.Array.data[0]
-      value: -8905423163417540451
+      value: -4267510503662075145
       objectReference: {fileID: 0}
     - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: _participantsPrefab.RawGuidValue.Array.data[1]
-      value: -1307292089815617253
+      value: -1473450001561217942
       objectReference: {fileID: 0}
     - target: {fileID: 2436158963617984829, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: m_LocalPosition.x

@@ -2,14 +2,14 @@
 using UnityEngine;
 
 /// <summary>
-/// PlayerRun.cs
+/// PlayerMove.cs
 /// クラス説明
-/// プレイヤーの走行クラス
+/// プレイヤー歩行クラス
 ///
-/// 作成日: 9/13
+/// 作成日: 9/10
 /// 作成者: 山田智哉
 /// </summary>
-public class PlayerRun : IMove
+public class PlayerWalk :IMove
 {
     // 移動方向キャッシュ用
     private Vector3 _cachedMoveDirection = default;
@@ -20,7 +20,7 @@ public class PlayerRun : IMove
         _cachedMoveDirection.Set(moveDirection.x, 0, moveDirection.y);
 
         // 移動量を計算 
-        Vector3 moveVector = _cachedMoveDirection * moveSpeed; // 時間に基づいて移動量を計算
+        Vector3 moveVector = _cachedMoveDirection * moveSpeed / 10; // 時間に基づいて移動量を計算
 
         // Rigidbodyを使って移動
         rigidbody.MovePosition(transform.position + moveVector);
