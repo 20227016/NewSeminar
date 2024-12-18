@@ -37,11 +37,6 @@ public class CharacterSelectionManager : NetworkBehaviour
     [Networked]
     private NetworkBool _fighterChoice { get; set; } = false;
 
-    private void Update()
-    {
-        print(_characterDecision);
-    }
-
     //キャラクター1のボタンにつける
     public void OnClick1()
     {
