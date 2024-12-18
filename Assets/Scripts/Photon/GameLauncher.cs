@@ -291,8 +291,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     /// プレイヤーが参加した時の処理
     /// </summary>
     /// <param name="runner"></param>
-    /// <param name="player"></param>
-    public async void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
+    /// <param name="playerRef"></param>
+    public async void OnPlayerJoined(NetworkRunner runner, PlayerRef playerRef)
     {
 
         while(!_networkRunner.IsRunning)
@@ -333,8 +333,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
                 Debug.Log($"最大人数の{_roomInfo.MaxParticipantCount}人に達したため参加できません");
                 Debug.Log($"セッションを終了します");
-                runner.Disconnect(player);
-                _disconnectPlayerRef.Add(player);
+                runner.Disconnect(playerRef);
+                _disconnectPlayerRef.Add(playerRef);
                 return;
 
             }
@@ -342,9 +342,9 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             participantsObj = runner.Spawn(_participantsPrefab, spawnPosition, Quaternion.identity);
         
         }
-        runner.SetPlayerObject(player, participantsObj);
+        runner.SetPlayerObject(playerRef, participantsObj);
         // 参加人数を増やす
-        _iRoomController.ParticipantAdd(player);
+        _iRoomController.ParticipantAdd(playerRef);
         Debug.Log($"プレイヤー参加処理＿終了: {this.GetType().Name}クラス");
 
     }
@@ -353,8 +353,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     /// プレイヤーが退出した時の処理
     /// </summary>
     /// <param name="runner"></param>
-    /// <param name="player"></param>
-    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
+    /// <param name="playerRef"></param>
+    public void OnPlayerLeft(NetworkRunner runner, PlayerRef playerRef)
     {
         Debug.Log($"プレイヤー退出処理＿開始: {this.GetType().Name}クラス");
         if (!runner.IsServer)
@@ -362,16 +362,16 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             return;
         }
         // ホストに切断されたことがセッションを終了原因の場合
-        if (_disconnectPlayerRef.Contains(player))
+        if (_disconnectPlayerRef.Contains(playerRef))
         {
 
-            _disconnectPlayerRef.Remove(player);
+            _disconnectPlayerRef.Remove(playerRef);
             return;
 
         }
         // 参加人数を減らす
-        _iRoomController.ParticipantRemove(player);
-        if (runner.TryGetPlayerObject(player, out NetworkObject avatar))
+        _iRoomController.ParticipantRemove(playerRef);
+        if (runner.TryGetPlayerObject(playerRef, out NetworkObject avatar))
         {
             runner.Despawn(avatar);
         }

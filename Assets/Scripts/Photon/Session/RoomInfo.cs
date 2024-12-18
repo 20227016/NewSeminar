@@ -193,16 +193,17 @@ public class RoomInfo : NetworkBehaviour
     public bool GoCheck()
     {
 
-        foreach((string name, bool isRegistration, bool isReady) nameInfo in _nameInfos)
+        // Q‰Á‚µ‚Ä‚¢‚él‚ª‚·‚×‚Ä€”õŠ®—¹’†‚Ì
+        for (int i = 0; i < CurrentParticipantCount; i++)
         {
 
-            if (nameInfo.isReady)
+            if (_nameInfos[i].isReady)
             {
 
                 continue;
 
             }
-            return false;
+            break;
 
         }
         return true;
