@@ -1076,7 +1076,7 @@ Transform:
   m_GameObject: {fileID: 3972964382682025698}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1135,9 +1135,8 @@ MonoBehaviour:
   _targetLayer: 6
   _searchRadius: 30
   _targetTrans: {fileID: 0}
-  _magicProjectilePrefab: {fileID: 8033826139063798512, guid: bdc18960230ebeb4d9a4572b641a1890, type: 3}
+  _magicProjectilePrefab: {fileID: 810653205754761373, guid: f1fdc9886ac3a2842807fbff501d9ebe, type: 3}
   _chargeTime: 1.5
-  _projectileSpeed: 10
   isCharging: 0
   isCancelCharge: 0
 --- !u!1 &3972964382682025700
@@ -2215,9 +2214,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3972964382682190526}
     m_Modifications:
+    - target: {fileID: 1111793306440779180, guid: ebc35bc26e195ff43af54907faf1f6ac, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3367314013316085171, guid: ebc35bc26e195ff43af54907faf1f6ac, type: 3}
       propertyPath: m_Name
       value: Charge slash green
+      objectReference: {fileID: 0}
+    - target: {fileID: 3534217756811399166, guid: ebc35bc26e195ff43af54907faf1f6ac, type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3997295877255497330, guid: ebc35bc26e195ff43af54907faf1f6ac, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2259,8 +2266,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5166316017537996253, guid: ebc35bc26e195ff43af54907faf1f6ac, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4949285242511541319, guid: ebc35bc26e195ff43af54907faf1f6ac, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ebc35bc26e195ff43af54907faf1f6ac, type: 3}
