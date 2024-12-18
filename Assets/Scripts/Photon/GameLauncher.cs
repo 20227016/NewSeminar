@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-
+using System.Threading.Tasks;
 
 public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -292,9 +292,15 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     /// </summary>
     /// <param name="runner"></param>
     /// <param name="player"></param>
-    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
+    public async void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
 
+        while(!_networkRunner.IsRunning)
+        {
+
+            await Task.Delay(1000);
+
+        }
         Debug.Log($"Awake処理＿終了: {this.GetType().Name}クラス");
         Debug.Log($"プレイヤー参加処理＿開始: {this.GetType().Name}クラス");
         Debug.Log($"{_roomInfo.CurrentParticipantCount }人がすでに参加");
