@@ -6,13 +6,23 @@ using System.Threading.Tasks;
 public class Ready : BaseRoom, IReady
 {
 
+    /// <summary>
+    /// Readyオブジェクトのテキストメモリー
+    /// </summary>
     private TextMemory _textMemory = default;
 
-    public override void Spawned()
+    /// <summary>
+    /// ルームの参加者人数が増えるまで待つ時間
+    /// </summary>
+    private const int _awaitTime = 1000;
+
+    public override async void Spawned()
     {
 
         base.Spawned();
+        await Task.Delay(_awaitTime);
         _textMemory = GameObject.Find("Ready").transform.Find("Text").GetComponent<TextMemory>();
+        ChangeText();
 
     }
 
@@ -135,7 +145,7 @@ public class Ready : BaseRoom, IReady
 
         // 準備完了人数
         int num = _roomInfo.ReadyGoCount();
-        _textMemory.Character = $"準備完了({num}/4)";
+        _textMemory.Character = $"準備完了({num}/{_roomInfo.CurrentParticipantCount})";
         _textMemory.RPC_TextUpdate();
 
     }

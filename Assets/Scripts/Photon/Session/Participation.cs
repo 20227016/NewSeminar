@@ -84,29 +84,4 @@ public class Participation : BaseRoom, IRoomController
 
     }
 
-   
-
-    /// <summary>
-    /// €”õŠ®—¹‚Ì•ÏX
-    /// </summary>
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public async void RPC_Ready()
-    {
-
-        await GetRoomAwait();
-        if (_networkRunner.IsServer)
-        {
-
-            return;
-
-        }
-        else
-        {
-
-
-
-        }
-        
-    }
-
 }
