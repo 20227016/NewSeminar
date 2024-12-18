@@ -157,8 +157,6 @@ public class BossDemo : BaseEnemy
     /// </summary>
     private void IdleState()
     {
-        print("アイドルなう");
-
         if (IsAnimationFinished("Wing Slash Attack")
             || IsAnimationFinished("MagicBullet")
             || IsAnimationFinished("LaserBeam"))
@@ -187,7 +185,7 @@ public class BossDemo : BaseEnemy
             _confirmedAttackState[_currentLottery] = _currentLottery + 1;
         }
 
-        Debug.Log("配列の初期状態: " + string.Join(", ", _confirmedAttackState));
+        // Debug.Log("配列の初期状態: " + string.Join(", ", _confirmedAttackState));
 
         // シャッフル
         for (_currentLottery = _confirmedAttackState.Length - 1; _currentLottery > 0; _currentLottery--)
@@ -198,7 +196,7 @@ public class BossDemo : BaseEnemy
             _confirmedAttackState[j] = tmp;
         }
 
-        Debug.Log("シャッフル後の配列: " + string.Join(", ", _confirmedAttackState));
+        // Debug.Log("シャッフル後の配列: " + string.Join(", ", _confirmedAttackState));
     }
 
     /// <summary>
@@ -206,8 +204,6 @@ public class BossDemo : BaseEnemy
     /// </summary>
     private void WingAttack()
     {
-        print("羽の薙ぎ払い攻撃を実行しました");
-
         _animator.SetInteger("TransitionNo", 1);
         _actionState = 1;
         _currentTimer = 5f;
@@ -218,8 +214,6 @@ public class BossDemo : BaseEnemy
     /// </summary>
     private void MagicBulletAttack()
     {
-        print("魔弾攻撃を実行しました");
-
         _animator.SetInteger("TransitionNo", 2);
         if (isBulletGeneration)
         {
@@ -239,8 +233,6 @@ public class BossDemo : BaseEnemy
     /// </summary>
     private void LaserAttack()
     {
-        print("レーザー攻撃を実行しました");
-
         _animator.SetInteger("TransitionNo", 3);
         _LaserBeam.gameObject.SetActive(true);
         _actionState = 1;

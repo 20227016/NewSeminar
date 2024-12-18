@@ -68,6 +68,8 @@ public class Golem : BaseEnemy
 
     private void Awake()
     {
+        _searchRange = 20f;
+
         // Raycastをつかうための基本設定をしてくれる関数
         BasicRaycast();
 
@@ -288,7 +290,7 @@ public class Golem : BaseEnemy
         }
 
         // 壁を検知
-        if (IsPathBlocked(direction, 3.0f))
+        if (IsPathBlocked(direction, detectionDistance))
         {
             _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
             _movementState = EnemyMovementState.IDLE;
@@ -651,19 +653,36 @@ public class Golem : BaseEnemy
     /// </summary>
     private void PlayerSearch()
     {
-        RaycastHit hit = Search.BoxCast(_boxCastStruct);
-        if (!hit.collider)
+        // ボックスキャストの設定
+        Vector3 center = transform.position; // キャスト開始位置
+        Vector3 halfExtents = new Vector3(1f, 1f, 1f); // ボックスの半径
+        Vector3 direction = transform.forward; // キャストの方向
+        float maxDistance = 10f; // キャストの最大距離
+        Quaternion orientation = Quaternion.identity; // ボックスの回転（回転なし）
+        int layerMask = (1 << 6) | (1 << 8); // レイヤーマスク（レイヤー6と8）
+
+        // ボックスキャストの実行
+        if (Physics.BoxCast(center, halfExtents, direction, out RaycastHit hit, orientation, maxDistance, layerMask))
         {
-            _targetTrans = null;   
-            return;
+            // Debug.Log("ヒットしたオブジェクト: " + hit.collider.gameObject.name);
+
+            // プレイヤー（レイヤー6）の場合の処理
+            if (hit.collider.gameObject.layer == 6)
+            {
+                _targetTrans = hit.collider.gameObject.transform;
+                _playerLastKnownPosition = _targetTrans.position; // プレイヤーの位置を記録
+                _movementState = EnemyMovementState.RUNNING;
+            }
+            else
+            {
+                _targetTrans = null; // プレイヤー以外ならターゲットを解除
+            }
         }
-
-        if (hit.collider.gameObject.layer == 6)
+        else
         {
-            _targetTrans = hit.collider.gameObject.transform;
-            _playerLastKnownPosition = _targetTrans.position; // プレイヤーの位置を記録
-
-            _movementState = EnemyMovementState.RUNNING;
+            // ヒットしなかった場合
+            _targetTrans = null;
+            // Debug.Log("プレイヤーもステージも検出されませんでした。");
         }
     }
 }
