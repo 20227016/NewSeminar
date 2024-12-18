@@ -25,10 +25,21 @@ public class CharacterStatusStructDrawer : PropertyDrawer
         fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_runSpeed", "ダッシュ移動速度");
         fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_avoidanceDistance", "回避距離");
         fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackPower", "攻撃力");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_defensePower", "防御力");
+
+        fieldY = DrawLabel(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), "攻撃関連");
         fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackLightMultiplier", "弱攻撃ダメージ倍率");
         fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackStrongMultiplier", "強攻撃ダメージ倍率");
         fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackSpeed", "攻撃速度倍率 ( × 攻撃速度 )");
-        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_defensePower", "防御力");
+
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackLight1HitboxDelay", "弱攻撃1段目遅延 ( 秒 )");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackLight1HitboxRange", "弱攻撃1段目範囲");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackLight2HitboxDelay", "弱攻撃2段目遅延 ( 秒 )");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackLight2HitboxRange", "弱攻撃2段目範囲");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackLight3HitboxDelay", "弱攻撃3段目遅延 ( 秒 )");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackLight3HitboxRange", "弱攻撃3段目範囲");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackStrongHitboxDelay", "強攻撃遅延 ( 秒 )");
+        fieldY = DrawField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), property, "_attackStrongHitboxRange", "強攻撃範囲");
 
         fieldY = DrawLabel(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), "スタミナ関連");
         fieldY = DrawLabelField(new Rect(position.x, fieldY, position.width, EditorGUIUtility.singleLineHeight), "最大スタミナ量", "100");
@@ -55,21 +66,19 @@ public class CharacterStatusStructDrawer : PropertyDrawer
         if (field != null)
         {
             EditorGUI.PropertyField(position, field, new GUIContent(displayName));
-            position.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // 次の項目に備えてYを調整
+            position.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
         }
-        return position.y; // 次のY位置を返す
+        return position.y;
     }
 
     private float DrawLabel(Rect position, string label)
     {
-        // ラベル描画
         EditorGUI.LabelField(position, label, EditorStyles.boldLabel);
         return position.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
     }
 
     private float DrawLabelField(Rect position, string label, string value)
     {
-        // ラベルフィールド描画
         EditorGUI.LabelField(position, label, value);
         return position.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
     }
@@ -79,9 +88,9 @@ public class CharacterStatusStructDrawer : PropertyDrawer
         if (!property.isExpanded)
             return EditorGUIUtility.singleLineHeight;
 
-        // 各項目のラベルを含めた高さを計算
-        int fieldCount = property.CountInProperty() + 2; // 操作できない2つのフィールドを追加
-        int labelCount = 4; // 項目ラベルの数（例: 移動速度、回避など）
+        // 項目数を計算
+        int fieldCount = property.CountInProperty() + 2; // 実際に描画するフィールド数
+        int labelCount = 5;  // ラベルの数
 
         return EditorGUIUtility.singleLineHeight * (fieldCount + labelCount) + EditorGUIUtility.standardVerticalSpacing * (fieldCount + labelCount - 1);
     }

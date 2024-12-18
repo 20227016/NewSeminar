@@ -17,7 +17,7 @@ public class FighterSkill : MonoBehaviour, ISkill
 
     public void Skill(CharacterBase characterBase, float skillTime)
     {
-        Debug.Log("ファイターのスキル");
+        Debug.Log("ファイターのスキル発動");
 
         // 元の攻撃速度を保持
         float originalAttackSpeed = characterBase._characterStatusStruct._attackSpeed;

@@ -1268,7 +1268,7 @@ GameObject:
   - component: {fileID: 1466253889594462176}
   - component: {fileID: 2493756517466308921}
   m_Layer: 6
-  m_Name: 3_Tank
+  m_Name: 4_Tank
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1432,22 +1432,30 @@ MonoBehaviour:
   WordCount: 0
   _interpolationDataSource: 0
   _characterStatusStruct:
-    _walkSpeed: 0.1
-    _runSpeed: 0.2
+    _walkSpeed: 0.8
+    _runSpeed: 1.6
     _avoidanceDistance: 5
     _attackPower: 10
     _attackLightMultiplier: 1
     _attackStrongMultiplier: 1.5
     _attackSpeed: 1
-    _defensePower: 10
+    _attackLight1HitboxDelay: 0.3
+    _attackLight1HitboxRange: 2
+    _attackLight2HitboxDelay: 0.3
+    _attackLight2HitboxRange: 2
+    _attackLight3HitboxDelay: 0.3
+    _attackLight3HitboxRange: 2
+    _attackStrongHitboxDelay: 0.3
+    _attackStrongHitboxRange: 2
+    _defensePower: 15
     _skillDuration: 30
     _skillCoolTime: 30
     _counterTime: 0.5
     _skillPointUpperLimit: 100
     _ressurectionTime: 2
-    _recoveryStamina: 25
-    _runStamina: 25
-    _avoidanceStamina: 20
+    _recoveryStamina: 20
+    _runStamina: 30
+    _avoidanceStamina: 30
   _characterAnimationStruct:
     _idleAnimation: {fileID: 7400000, guid: f8c2d6a0ce3bc2d40b090cd67dd23862, type: 3}
     _walkAnimation: {fileID: 7400016, guid: df74f516f8958a24bab217e3603c71cd, type: 3}

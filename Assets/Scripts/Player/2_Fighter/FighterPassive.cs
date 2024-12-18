@@ -10,7 +10,7 @@ using UnityEngine;
 /// </summary>
 public class FighterPassive : MonoBehaviour, IPassive
 {
-    [SerializeField, Tooltip("パッシブによるHP回復量")]
+    [SerializeField, Tooltip("パッシブによるHP回復量( 1回毎に )")]
     private int _passiveHealValue = 2;
 
     public void Passive(CharacterBase characterBase)

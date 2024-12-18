@@ -2662,7 +2662,7 @@ GameObject:
   - component: {fileID: 4460776307409108312}
   - component: {fileID: 5421182098675606688}
   m_Layer: 6
-  m_Name: 2_Healer
+  m_Name: 3_Healer
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2699,7 +2699,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: f25bd9ae76f92e442b380385d364dd20, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -2826,14 +2826,22 @@ MonoBehaviour:
   WordCount: 0
   _interpolationDataSource: 0
   _characterStatusStruct:
-    _walkSpeed: 0.1
-    _runSpeed: 0.2
+    _walkSpeed: 1
+    _runSpeed: 2
     _avoidanceDistance: 5
-    _attackPower: 10
+    _attackPower: 5
     _attackLightMultiplier: 1
     _attackStrongMultiplier: 1.5
     _attackSpeed: 1
-    _defensePower: 10
+    _attackLight1HitboxDelay: 0.3
+    _attackLight1HitboxRange: 4
+    _attackLight2HitboxDelay: 0.5
+    _attackLight2HitboxRange: 4
+    _attackLight3HitboxDelay: 0.3
+    _attackLight3HitboxRange: 4
+    _attackStrongHitboxDelay: 0.6
+    _attackStrongHitboxRange: 4
+    _defensePower: 8
     _skillDuration: 5
     _skillCoolTime: 10
     _counterTime: 0.5
@@ -2871,7 +2879,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _healAreaRadius: 5
-  _healValue: 1
+  _healValue: 10
 --- !u!114 &4460776307409108312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2884,6 +2892,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39fba5fd6712a9c4bacb992c27150902, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ressurectionTimeShortening: 0.5
 --- !u!114 &5421182098675606688
 MonoBehaviour:
   m_ObjectHideFlags: 0

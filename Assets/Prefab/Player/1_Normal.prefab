@@ -1426,7 +1426,7 @@ GameObject:
   - component: {fileID: 2833035376307005735}
   - component: {fileID: 6304774326624272736}
   m_Layer: 6
-  m_Name: 0_Normal
+  m_Name: 1_Normal
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1590,16 +1590,24 @@ MonoBehaviour:
   WordCount: 0
   _interpolationDataSource: 0
   _characterStatusStruct:
-    _walkSpeed: 0.1
-    _runSpeed: 0.2
+    _walkSpeed: 1
+    _runSpeed: 2
     _avoidanceDistance: 5
     _attackPower: 10
     _attackLightMultiplier: 1
     _attackStrongMultiplier: 1.5
     _attackSpeed: 1
+    _attackLight1HitboxDelay: 0.2
+    _attackLight1HitboxRange: 2
+    _attackLight2HitboxDelay: 0.2
+    _attackLight2HitboxRange: 2
+    _attackLight3HitboxDelay: 0.2
+    _attackLight3HitboxRange: 2
+    _attackStrongHitboxDelay: 0.2
+    _attackStrongHitboxRange: 2
     _defensePower: 10
     _skillDuration: 0
-    _skillCoolTime: 10
+    _skillCoolTime: 5
     _counterTime: 0.5
     _skillPointUpperLimit: 100
     _ressurectionTime: 5
@@ -1634,6 +1642,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d693c5de262176741bbb007dca57a5cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _skillAttackMultiplier: 3
+  _skillAttacHitboxkDelay: 0.3
+  _skillAttackHitboxRange: 2
 --- !u!114 &2833035376307005735
 MonoBehaviour:
   m_ObjectHideFlags: 0
