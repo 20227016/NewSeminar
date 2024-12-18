@@ -1,6 +1,7 @@
 using Fusion;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System.Threading.Tasks;
 
 public class Ready : BaseRoom, IReady
 {
@@ -79,17 +80,48 @@ public class Ready : BaseRoom, IReady
 
                 _roomInfo.ChangeReady(participant.name);
                 ChangeText();
-
+                return;
             }
+            RPC_SceneMove();
 
         }
         else
         {
 
             Debug.Log("クライアント");
-
             _roomInfo.ChangeReady(participant.name);
             ChangeText();
+
+        }
+
+    }
+
+
+    /// <summary>
+    /// シーン移動
+    /// </summary>
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_SceneMove()
+    {
+
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(SceneUtility.GetBuildIndexByScenePath("Assets/Scenes/CharacterSelection.unity"), LoadSceneMode.Single);
+        LoadAwait(asyncLoad);
+
+    }
+
+
+    /// <summary>
+    /// シーンが読み込まれるまで待つ
+    /// </summary>
+    /// <param name="asyncLoad"></param>
+    private async void LoadAwait(AsyncOperation asyncLoad)
+    {
+
+        // 完了を待つ
+        while (!asyncLoad.isDone) 
+        {
+
+            await Task.Delay(1000);
 
         }
 
@@ -107,6 +139,9 @@ public class Ready : BaseRoom, IReady
         _textMemory.RPC_TextUpdate();
 
     }
+
+
+
 
 
 }
