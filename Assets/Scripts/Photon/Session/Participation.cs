@@ -5,6 +5,15 @@ using UnityEngine;
 public class Participation : BaseRoom, IRoomController
 {
 
+    public override void Spawned()
+    {
+        
+        base.Spawned();
+        // ロード時に消さない
+        DontDestroyOnLoad(this.gameObject);
+
+    }
+
     /// <summary>
     /// 参加者が増えたときにルーム管理に追加
     /// 呼び出し:ホストとクライアント

@@ -92,7 +92,7 @@ public class Ready : BaseRoom, IReady
                 ChangeText();
                 return;
             }
-            RPC_SceneMove();
+            _networkRunner.SetActiveScene("CharacterSelection");
 
         }
         else
@@ -105,20 +105,6 @@ public class Ready : BaseRoom, IReady
         }
 
     }
-
-
-    /// <summary>
-    /// シーン移動
-    /// </summary>
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_SceneMove()
-    {
-
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(SceneUtility.GetBuildIndexByScenePath("Assets/Scenes/CharacterSelection.unity"), LoadSceneMode.Single);
-        LoadAwait(asyncLoad);
-
-    }
-
 
     /// <summary>
     /// シーンが読み込まれるまで待つ

@@ -10,7 +10,7 @@ public class RoomInfo : NetworkBehaviour
 {
 
     [Networked]
-    public string RoomName { get; set; } = "Room1";
+    public string RoomName { get; set; } = "Room";
     // 現在のプレイヤー数[ネットワーク上で同期]
     [Networked]
     public int CurrentParticipantCount { get; set; } = 0;
@@ -203,7 +203,7 @@ public class RoomInfo : NetworkBehaviour
                 continue;
 
             }
-            break;
+            return false;
 
         }
         return true;

@@ -6,8 +6,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using System.Threading.Tasks;
+using UnityEngine.Events;
 
-public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
+public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
 {
 
     /// <summary>
@@ -27,7 +28,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     /// <summary>
     /// 接続をホストに解除された参加者
     /// </summary>
-    private List<PlayerRef> _disconnectPlayerRef = new ();
+    private List<PlayerRef> _disconnectPlayerRef = new();
 
     /// <summary>
     /// 部屋管理
@@ -37,7 +38,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     /// <summary>
     /// ホストに
     /// </summary>
-    private  IRoomController _iRoomController = default;
+    private IRoomController _iRoomController = default;
 
     /// <summary>
     /// メインカメラ
@@ -48,11 +49,13 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     /// インプットシステム
     /// </summary>
     private PlayerInput _playerInput = default;
-    
+
     /// <summary>
     /// ネットワークランナー
     /// </summary>
-    NetworkRunner _networkRunner = default;
+    private NetworkRunner _networkRunner = default;
+
+    private bool _isMySpawned = false;
 
     /// <summary>
     /// インプットステート
@@ -82,6 +85,13 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         {
             return _instance;
         }
+    }
+
+    public override void Spawned()
+    {
+        base.Spawned();
+        _isMySpawned = true;
+        Debug.Log("うまれた");
     }
 
     /// <summary>
@@ -249,8 +259,16 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         return new Vector2(direction.x, direction.z);
     }
 
-    public void OnInput(NetworkRunner runner, NetworkInput input)
+    public async void OnInput(NetworkRunner runner, NetworkInput input)
     {
+
+        while (_mainCamera == null)
+        {
+
+            await Task.Delay(1000);
+
+        }
+        Debug.Log($"{_mainCamera.gameObject.name}メインカメラ取得済み");
         // 入力をインスタンス化
         PlayerNetworkInput data = new()
         {
@@ -295,12 +313,15 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     public async void OnPlayerJoined(NetworkRunner runner, PlayerRef playerRef)
     {
 
-        while(!_networkRunner.IsRunning)
+
+
+        while (!_networkRunner.IsRunning　|| !_isMySpawned)
         {
 
             await Task.Delay(1000);
 
         }
+        Debug.Log($"ランナー状態{_networkRunner.IsRunning}");
         Debug.Log($"Awake処理＿終了: {this.GetType().Name}クラス");
         Debug.Log($"プレイヤー参加処理＿開始: {this.GetType().Name}クラス");
         Debug.Log($"{_roomInfo.CurrentParticipantCount }人がすでに参加");
@@ -328,7 +349,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         else
         {
 
-            if(_roomInfo.CurrentParticipantCount >= _roomInfo.MaxParticipantCount)
+            if (_roomInfo.CurrentParticipantCount >= _roomInfo.MaxParticipantCount)
             {
 
                 Debug.Log($"最大人数の{_roomInfo.MaxParticipantCount}人に達したため参加できません");
@@ -340,7 +361,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             }
             Debug.Log($"クライアントオブジェクトを生成");
             participantsObj = runner.Spawn(_participantsPrefab, spawnPosition, Quaternion.identity);
-        
+
         }
         runner.SetPlayerObject(playerRef, participantsObj);
         // 参加人数を増やす
@@ -390,6 +411,32 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) { }
-    public void OnSceneLoadDone(NetworkRunner runner) { }
-    public void OnSceneLoadStart(NetworkRunner runner) { }
+
+    /// <summary>
+    /// シーン読み込み完了時に始まる
+    /// </summary>
+    /// <param name="runner"></param>
+    public void OnSceneLoadDone(NetworkRunner runner)
+    {
+
+        // 新たなシーンのカメラに切り替え
+        _mainCamera = Camera.main;
+        Debug.LogError("切り替わり時にカメラ確保");
+        _networkRunner.SetActiveScene(SceneManager.GetActiveScene().buildIndex);
+        Debug.LogError($"{SceneManager.GetActiveScene().name}シーンのオブジェクトをスポーン");
+
+    }
+
+    /// <summary>
+    /// シーン読み込み開始時に始まる
+    /// </summary>
+    /// <param name="runner"></param>
+    public void OnSceneLoadStart(NetworkRunner runner)
+    {
+
+        
+       
+
+    }
+
 }

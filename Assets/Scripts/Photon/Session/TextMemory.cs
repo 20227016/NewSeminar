@@ -51,7 +51,7 @@ public class TextMemory : NetworkBehaviour
     /// <summary>
     /// テキストの更新
     /// </summary>
-    [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
+    [Rpc(RpcSources.All,RpcTargets.All)]
     public void RPC_TextUpdate()
     {
 
