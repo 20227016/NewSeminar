@@ -1,5 +1,11 @@
 using UnityEngine;
 
+/// <summary>
+/// MagicBullet.cs
+/// 魔法陣を回転させる
+/// 作成日: 11/17
+/// 作成者: 石井直人 
+/// </summary>
 public class MagicBullet : MonoBehaviour
 {
     private Vector3 _targetScale = new Vector3(5f, 5f, 5f); // 最終的な大きさ
@@ -10,11 +16,6 @@ public class MagicBullet : MonoBehaviour
     private float _displayTime = 5f; // 表示時間
 
     private bool isMoving = false; // 移動状態フラグ
-
-    private void Start()
-    {
-        
-    }
 
     private void Update()
     {
