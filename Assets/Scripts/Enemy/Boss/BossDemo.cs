@@ -4,6 +4,8 @@ using UniRx;
 using System;
 using System.Collections.Generic;
 using Random = System.Random;
+using System.Collections;
+using System.Net.NetworkInformation;
 
 /// <summary>
 /// ボスエネミーの基盤
@@ -26,23 +28,28 @@ public class BossDemo : BaseEnemy
     [Tooltip("魔弾の生成許可")]
     [SerializeField] private bool isBulletGeneration = true;
 
-    private float _currentTimer = 0f; // 現在時間
-    private float _attackTransitionTime = 5f; // 攻撃移行時間
+    [SerializeField]
+    private float _currentTimer = 5f; // 現在時間
 
-    private Animator _animator;
+    private Animator _animator; // アニメーター
+
+    Transform _LaserBeam = default; // レーザービーム
 
     // ボスの行動パターン用.変数(最初はアイドル状態からスタート)
     // 1.アイドル
     // 2.攻撃
     // 3.ダウン
     // 4.死亡
-    private int _actionState = 1; // デバックで2にしてるだけ。本当は1からスタート。条件を付けて2にし、行動パターンを制御して(例.アイドルを5秒間繰り返すと2になる)
+    [SerializeField]
+    private int _actionState = 1;
 
     // ボスの攻撃パターン用.変数(抽選し、行動パターンを決める)
     // 1.羽の薙ぎ払い攻撃
     // 2.魔弾
     // 3.レーザー
+    [SerializeField]
     private int _currentAttack = default;
+    private int _currentLottery = default; // 現在の抽選目
 
     // 行動パターンを抽選し、その結果を配列に格納する
     private int[] _confirmedAttackState = new int[3];
@@ -50,11 +57,12 @@ public class BossDemo : BaseEnemy
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+        _LaserBeam = transform.Find("LaserBeam");
+        _LaserBeam.gameObject.SetActive(false);
     }
 
     private void Update()
     {
-
         // ボスの行動パターンステート
         switch(_actionState)
         {
@@ -69,23 +77,25 @@ public class BossDemo : BaseEnemy
 
             // 攻撃
             case 2:
-
-                // 攻撃パターンを抽選する
-                AttackState();
+                
+                // 抽選してなければ
+                if (_currentLottery == 0)
+                {
+                    // 攻撃パターンを抽選する
+                    AttackState();
+                }
 
                 // 抽選した攻撃パターンを変数に格納。順に実行する
-                for (int i = 0; i < _confirmedAttackState.Length; i++)
-                {
-                    _currentAttack = _confirmedAttackState[i];
-                    switch(_currentAttack)
+                _currentAttack = _confirmedAttackState[_currentLottery];
+
+                switch(_currentAttack)
                     {
                         case 1:
 
                             // 羽の薙ぎ払い攻撃
-                            MowingDownAttack();
+                            WingAttack();
 
                             break;
-
 
                         case 2:
 
@@ -93,7 +103,6 @@ public class BossDemo : BaseEnemy
                             MagicBulletAttack();
 
                             break;
-
 
                         case 3:
 
@@ -107,10 +116,14 @@ public class BossDemo : BaseEnemy
                             _currentAttack = 1;
                             break;
                     }
-                }
 
-                // すべての攻撃パターンを実行後、アイドルに戻る(こうしてるだけ、変えてもいい)
-                _actionState = 1;
+                _currentLottery++; // 次の攻撃へ
+
+                // 全ての攻撃をしたら抽選リセット
+                if (_currentLottery == _confirmedAttackState.Length)
+                {
+                    _currentLottery = 0;
+                }
 
                 break;
 
@@ -145,9 +158,22 @@ public class BossDemo : BaseEnemy
     private void IdleState()
     {
         print("アイドルなう");
-        
-        
-    }
+
+        if (IsAnimationFinished("Wing Slash Attack")
+            || IsAnimationFinished("MagicBullet")
+            || IsAnimationFinished("LaserBeam"))
+        {
+            _animator.SetInteger("TransitionNo", 0);
+            _LaserBeam.gameObject.SetActive(false); // 非アクティブ化
+            isBulletGeneration = true;
+        }
+
+        _currentTimer -= Time.deltaTime;
+        if (_currentTimer <= 0)
+        {
+            _actionState = 2;
+        }
+}
 
 　　/// <summary>
  　 /// アタック状態
@@ -155,21 +181,20 @@ public class BossDemo : BaseEnemy
     /// </summary>
     private void AttackState()
     {
-
         Random _random = new Random();
-        for (int i = 0; i < _confirmedAttackState.Length; i++)
+        for (_currentLottery = 0; _currentLottery < _confirmedAttackState.Length; _currentLottery++)
         {
-            _confirmedAttackState[i] = i + 1;
+            _confirmedAttackState[_currentLottery] = _currentLottery + 1;
         }
 
         Debug.Log("配列の初期状態: " + string.Join(", ", _confirmedAttackState));
 
         // シャッフル
-        for (int i = _confirmedAttackState.Length - 1; i > 0; i--)
+        for (_currentLottery = _confirmedAttackState.Length - 1; _currentLottery > 0; _currentLottery--)
         {
-            int j = _random.Next(i + 1);
-            int tmp = _confirmedAttackState[i];
-            _confirmedAttackState[i] = _confirmedAttackState[j];
+            int j = _random.Next(_currentLottery + 1);
+            int tmp = _confirmedAttackState[_currentLottery];
+            _confirmedAttackState[_currentLottery] = _confirmedAttackState[j];
             _confirmedAttackState[j] = tmp;
         }
 
@@ -179,9 +204,13 @@ public class BossDemo : BaseEnemy
     /// <summary>
     /// 羽の薙ぎ払い攻撃
     /// </summary>
-    private void MowingDownAttack()
+    private void WingAttack()
     {
         print("羽の薙ぎ払い攻撃を実行しました");
+
+        _animator.SetInteger("TransitionNo", 1);
+        _actionState = 1;
+        _currentTimer = 5f;
     }
 
     /// <summary>
@@ -191,6 +220,7 @@ public class BossDemo : BaseEnemy
     {
         print("魔弾攻撃を実行しました");
 
+        _animator.SetInteger("TransitionNo", 2);
         if (isBulletGeneration)
         {
             // 魔法弾を生成
@@ -200,7 +230,8 @@ public class BossDemo : BaseEnemy
             isBulletGeneration = false;
         }
 
-
+        _actionState = 1;
+        _currentTimer = 10f;
     }
 
     /// <summary>
@@ -209,6 +240,11 @@ public class BossDemo : BaseEnemy
     private void LaserAttack()
     {
         print("レーザー攻撃を実行しました");
+
+        _animator.SetInteger("TransitionNo", 3);
+        _LaserBeam.gameObject.SetActive(true);
+        _actionState = 1;
+        _currentTimer = 15f;
     }
 
     /// <summary>
@@ -225,5 +261,19 @@ public class BossDemo : BaseEnemy
     private void DeathState()
     {
         // 死亡状態の処理を書く
+    }
+
+    /// <summary>
+    /// アニメーションが終了しているかを確認する。
+    /// </summary>
+    /// <param name="animationName">確認するアニメーションの名前</param>
+    /// <returns>アニメーションが終了しているか</returns>
+    private bool IsAnimationFinished(string animationName)
+    {
+        // 現在のアニメーション状態を取得
+        AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+
+        // アニメーションが指定した名前かつ終了しているかを確認
+        return stateInfo.IsName(animationName) && stateInfo.normalizedTime >= 1.0f;
     }
 }
