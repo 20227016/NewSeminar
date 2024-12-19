@@ -1220,19 +1220,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: playerAvatarPrefab.RawGuidValue.Array.data[0]
-      value: -4267510503662075145
+      value: 1510796372287863664
       objectReference: {fileID: 0}
     - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: playerAvatarPrefab.RawGuidValue.Array.data[1]
-      value: -1473450001561217942
+      value: 2863700513122403978
       objectReference: {fileID: 0}
     - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: _participantsPrefab.RawGuidValue.Array.data[0]
-      value: -4267510503662075145
+      value: 1510796372287863664
       objectReference: {fileID: 0}
     - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: _participantsPrefab.RawGuidValue.Array.data[1]
-      value: -1473450001561217942
+      value: 2863700513122403978
       objectReference: {fileID: 0}
     - target: {fileID: 2436158963617984829, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: m_LocalPosition.x
