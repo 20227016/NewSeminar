@@ -2553,6 +2553,7 @@ GameObject:
   - component: {fileID: 4405098942096439548}
   - component: {fileID: 5064425199042777687}
   - component: {fileID: 8756446559984316052}
+  - component: {fileID: -7472982473302202369}
   m_Layer: 6
   m_Name: 2_Fighter
   m_TagString: Player
@@ -2701,6 +2702,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 3445011316690945724}
   - {fileID: 5008533909946906724}
+  - {fileID: -7472982473302202369}
   SimulationBehaviours: []
 --- !u!114 &5008533909946906724
 MonoBehaviour:
@@ -2802,6 +2804,38 @@ MonoBehaviour:
   _ignoreLayer:
     serializedVersion: 2
     m_Bits: 823
+--- !u!114 &-7472982473302202369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2789168958803033147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  Animator: {fileID: 1478857215670870914}
+  TotalWords: 7
+  SyncSettings: 95
+  FloatAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  TimeAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: 1061325578
+  WeightAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  StateHashes: 000000002afa8626a8b5caa32b1a167c79406955e67a3208b4204d212ab4b9ec691a8aefc888f3cc234b7b313c5953cd3539bb622f032d90e239d0544ea364a2e7e61f40f009c05ef96928f12ef6da87c250303504ee3433f1aa3a9affa1cb5b28a9b596363dea498ff9471e52defa6b192b589c9c0755b9f1f02455b08c1ccfcfb566d78ccf04bf2990c8da369e0d2693c1c143b1df6d68e80297e30b8e64f152539e7a3b70e7becde260375c5f20ede78f77b9e422fb400932c7fd968b165d0f9daf09291da9357291b9cb934ca0acc8c0b0526b7e0451efcb45ecd12f0dc8559a4c75258e442dbda3d3e99fdf4db407f2da70790a567f802a318905791056f588f2d73f7ec812eb432f4e393c3c8fc01c5b79de999b4d85158bb3eb8c0ec08f67df3b46fa07782211d683cea1b9df2a07d3ee34159e341fbe3ca75c803cfbd136685028a98107c93707955120ffeddb11b7f8b539534ce8fa4fde8680d13a387c1cc10c0c38f37b5f1adf22c8e5d7a8f9adc2d484eae38947f671fdf95179bab87a0e3c11b1863dc0c0aa20e23b68aa8ece26d07cc57de84f962a31ec77719c07225965eaa5325dd9f66526b8da42776bf4e86aa954b29ba0c2b66e5eab19eb91024e
+  TriggerHashes: 00000000137af922d3ef69172921e8bbcee8c913c1b9af2981247efb8929adcce8407e749e18af5a3d529f2a9d8fa9b92ae24fcac9e5c044bcdfedb1dcb703a13fb08c2f87a0c606fb65a51a2fd29ecb0b07a6eea65bbad51823006acea1b9dfbfae798a5ca9f60438dcc293dbdb4d1d8b8bf165688c7eeb9a5b3270568aebbe95953ebefdb3a30bc0d63660f176d5a9224bf82b6cde3d12fe0ab2899acd605493824525c5b3a0997ce27e4ab39febdb1129ef17
 --- !u!1 &2818942768633752699
 GameObject:
   m_ObjectHideFlags: 0

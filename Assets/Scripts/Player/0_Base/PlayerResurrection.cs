@@ -65,7 +65,6 @@ public class PlayerResurrection : IResurrection
                 Debug.Log("蘇生完了" + targetCharacter.name);
 
                 targetCharacter.ReceiveHeal((int)targetCharacter._characterStatusStruct._playerStatus.MaxHp);
-                targetCharacter._currentState = CharacterStateEnum.IDLE;
             }
 
             break;
