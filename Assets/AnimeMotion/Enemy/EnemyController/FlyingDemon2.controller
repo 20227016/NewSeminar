@@ -317,16 +317,16 @@ AnimatorStateMachine:
     m_Position: {x: 410, y: -60, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6223418398416264062}
-    m_Position: {x: 190, y: 0, z: 0}
+    m_Position: {x: 120, y: 10, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3068070885080244257}
-    m_Position: {x: 890, y: 100, z: 0}
+    m_Position: {x: 1020, y: -40, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -656523091577315645}
-    m_Position: {x: 890, y: -20, z: 0}
+    m_Position: {x: 790, y: 10, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 9174647455952411278}
-    m_Position: {x: 410, y: 80, z: 0}
+    m_Position: {x: 420, y: 110, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1508592151262328307}
     m_Position: {x: 660, y: 280, z: 0}
@@ -338,7 +338,7 @@ AnimatorStateMachine:
     m_Position: {x: 160, y: 270, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 9217491055595506667}
-    m_Position: {x: 630, y: 80, z: 0}
+    m_Position: {x: 600, y: 60, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -491,55 +491,55 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Attack3
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: DemonIdle_Normal
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Attack1
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Attack2
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: DemonRun_Fwd
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: UP_Frying
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Falling
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Damage
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer

@@ -110,9 +110,9 @@ public class StageBoss : BaseEnemy
 
                         // レーザー攻撃
                         LaserAttack();
-
+                        
                         break;
-
+                        
                     default:
                         print("ボスの攻撃パターンで例外を検知。自動敵に攻撃パターン1を選択します。");
                         _currentAttack = 1;
