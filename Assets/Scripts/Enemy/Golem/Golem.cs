@@ -42,6 +42,8 @@ public class Golem : BaseEnemy
 
     private Vector3 _randomTargetPos; // ランダム移動の目標位置
 
+    private bool isAttackInterval = default; // 連続攻撃をしない
+
     private float _downedTimer = 5f; // ダウンタイマー
     private float _stunnedTimer = default; // のけぞりタイマー
 
@@ -63,8 +65,16 @@ public class Golem : BaseEnemy
     private float _lookAroundTimer = 0f; // 周囲を見渡すためのタイマー
     private float _turnSpeed = 60f; // 回転速度 (度/秒)
 
+
+    // アニメーター変数
+    // TransitionNo.0 Idle
+    // TransitionNo.1 Running
+    // TransitionNo.2 Attack01
+    // TransitionNo.3 Attack02
+    // TransitionNo.4 Downed
+    // TransitionNo.5 Stunned
+    // TransitionNo.6 Die
     private Animator _animator;
-    private Renderer _golemRenderer; // 子オブジェクトのRendererを取得
 
     private void Awake()
     {
@@ -74,7 +84,6 @@ public class Golem : BaseEnemy
         BasicRaycast();
 
         _animator = GetComponent<Animator>();
-        _golemRenderer = transform.Find("Golem").GetComponent<Renderer>();
 
         _randomTargetPos = GenerateRandomPosition();
     }
@@ -105,7 +114,6 @@ public class Golem : BaseEnemy
         }
         // のけぞる
         else if (Input.GetKeyDown(KeyCode.S)
-            && _actionState != EnemyActionState.ATTACKING
             && _stunnedTimer <= 0)
         {
             _movementState = EnemyMovementState.STUNNED;
@@ -189,15 +197,18 @@ public class Golem : BaseEnemy
         {
             _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
             _actionState = EnemyActionState.SEARCHING;
+            isAttackInterval = false;
 
             // トリガーをセット
-            _animator.ResetTrigger("Attack01");
-            _animator.ResetTrigger("Attack02");
-            _animator.SetTrigger("Idle");
+            _animator.SetInteger("TransitionNo", 0);
         }
 
-        if (_lookAroundState != EnemyLookAroundState.NONE
-             && _actionState == EnemyActionState.SEARCHING)
+        if (_actionState != EnemyActionState.SEARCHING)
+        {
+            return;
+        }
+
+        if (_lookAroundState != EnemyLookAroundState.NONE)
         {
             switch (_lookAroundState)
             {
@@ -387,8 +398,10 @@ public class Golem : BaseEnemy
     /// </summary>
     private void EnemyRunning()
     {
-        _animator.ResetTrigger("Idle");
-        _animator.SetTrigger("Walk");
+        if (_actionState == EnemyActionState.SEARCHING)
+        {
+            _animator.SetInteger("TransitionNo", 1);
+        }
 
         // 前進速度
         moveSpeed = 5.0f;
@@ -410,6 +423,7 @@ public class Golem : BaseEnemy
         // 停止距離以内なら移動を停止
         if (distanceToTarget <= stopDistance)
         {
+            _movementState = EnemyMovementState.IDLE;  // 待機状態に戻す
             _actionState = EnemyActionState.ATTACKING;
             _attackingPlayer = null;
             return;
@@ -440,22 +454,26 @@ public class Golem : BaseEnemy
         // 攻撃アニメーションが終了したら待機に戻る
         if (IsAnimationFinished("Attack01") || IsAnimationFinished("Attack02"))
         {
-            _animator.ResetTrigger("Attack01");
-            _animator.ResetTrigger("Attack02");
-            _animator.SetTrigger("Idle");
+            _animator.SetInteger("TransitionNo", 0);
+            isAttackInterval = false;
         }
 
-        // トリガーをリセット
-        _animator.ResetTrigger("Walk");
+        if (isAttackInterval)
+        {
+            return;
+        }
+
+        isAttackInterval = true;
+
         // 攻撃アニメーションをランダムに選択
         int randomAttack = Random.Range(0, 2); // 0 または 1 を生成
         if (randomAttack == 0)
         {
-            _animator.SetTrigger("Attack01");
+            _animator.SetInteger("TransitionNo", 2);
         }
         else
         {
-            _animator.SetTrigger("Attack02");
+            _animator.SetInteger("TransitionNo", 3);
         }
 
         // プレイヤーがいたら攻撃を繰り返す
@@ -466,7 +484,7 @@ public class Golem : BaseEnemy
             return;
         }
 
-        _movementState = EnemyMovementState.IDLE;  // 待機状態に戻す
+        //_movementState = EnemyMovementState.IDLE;  // 待機状態に戻す
     }
 
     /// <summary>
@@ -488,23 +506,19 @@ public class Golem : BaseEnemy
         // ダウンが終了した場合、状態を戻す
         if (_downedTimer <= 0)
         {
-            _animator.ResetTrigger("Downed");
-            _animator.SetTrigger("Idle");
+            _animator.SetInteger("TransitionNo", 0);
 
             _movementState = EnemyMovementState.IDLE;
             _actionState = EnemyActionState.SEARCHING;
             _lookAroundState = EnemyLookAroundState.NONE;
+            isAttackInterval = false;
 
             _downedTimer = 5f;
             return;
         }
 
         // トリガーをセット
-        _animator.ResetTrigger("Idle");
-        _animator.ResetTrigger("Walk");
-        _animator.ResetTrigger("Attack01");
-        _animator.ResetTrigger("Attack02");
-        _animator.SetTrigger("Downed");
+        _animator.SetInteger("TransitionNo", 4);
 
         _downedTimer -= Time.deltaTime;
     }
@@ -512,24 +526,22 @@ public class Golem : BaseEnemy
     private void EnemyStunned()
     {
         // のけぞり終わったら状態遷移
-        if (IsAnimationFinished("GetHit"))
+        if (IsAnimationFinished("Stunned"))
         {
-            _animator.ResetTrigger("Stunned");
-            _animator.SetTrigger("Idle");
+            _animator.SetInteger("TransitionNo", 0);
 
             _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
 
             _movementState = EnemyMovementState.RUNNING;
             _actionState = EnemyActionState.SEARCHING;
             _lookAroundState = EnemyLookAroundState.NONE;
+            isAttackInterval = false;
 
             return;
         }
 
         // トリガーをセット
-        _animator.ResetTrigger("Idle");
-        _animator.ResetTrigger("Walk");
-        _animator.SetTrigger("Stunned");
+        _animator.SetInteger("TransitionNo", 5);
 
         // 次にのけぞるまでの時間をセット
         _stunnedTimer = 3f; 
@@ -541,35 +553,10 @@ public class Golem : BaseEnemy
     private IEnumerator EnemyDie(float fadeDuration)
     {
         // トリガーをセット
-        _animator.ResetTrigger("Idle");
-        _animator.ResetTrigger("Walk");
-        _animator.ResetTrigger("Attack01");
-        _animator.ResetTrigger("Attack02");
-        _animator.ResetTrigger("Downed");
-        _animator.SetTrigger("Die");
+        _animator.SetInteger("TransitionNo", 6);
 
-        // 透明化処理（未実装）
-        if (_golemRenderer == null) yield break;
-        Material material = _golemRenderer.material;
-        float fadeStep = 1f / fadeDuration;
-
-        for (float t = 0; t < 1f; t += Time.deltaTime * fadeStep)
-        {
-            if (material.HasProperty("_BaseColor")) // プロパティ名を確認
-            {
-                Color color = material.GetColor("_BaseColor");
-                color.a = Mathf.Lerp(1f, 0f, t); // 透明度を徐々に下げる
-                material.SetColor("_BaseColor", color);
-            }
-            else if (material.HasProperty("_TintColor")) // 他の候補プロパティ
-            {
-                Color color = material.GetColor("_TintColor");
-                color.a = Mathf.Lerp(1f, 0f, t);
-                material.SetColor("_TintColor", color);
-            }
-
-            yield return null;
-        }
+        // 秒後
+        yield return new WaitForSeconds(fadeDuration);
 
         // 完全に透明にした後、オブジェクトを非アクティブ化
         gameObject.SetActive(false);
