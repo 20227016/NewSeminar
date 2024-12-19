@@ -6401,6 +6401,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GolemPADefault
       objectReference: {fileID: 0}
+    - target: {fileID: 1706760125350986, guid: 7f22c0b4e4c94410932f144351dc151d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4191744185429214, guid: 7f22c0b4e4c94410932f144351dc151d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2
@@ -13457,13 +13461,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8246144369694048869, guid: 93b94039cf7541e8a7c9453819da38f0, type: 3}
+      propertyPath: _chargeTime
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3972964382682025698, guid: 93b94039cf7541e8a7c9453819da38f0, type: 3}
       propertyPath: m_Name
       value: EvilMagePADefault
-      objectReference: {fileID: 0}
-    - target: {fileID: 3972964382682025698, guid: 93b94039cf7541e8a7c9453819da38f0, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3972964382682190530, guid: 93b94039cf7541e8a7c9453819da38f0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -37231,6 +37235,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 18.57782
       objectReference: {fileID: 0}
+    - target: {fileID: 1535285584391757548, guid: 2f25d744ee9f4bc40815c9e035878b1b, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: d97d8a9af345c1d449cc80d254e32586, type: 2}
     - target: {fileID: 1540619409081525807, guid: 2f25d744ee9f4bc40815c9e035878b1b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -0.9458159
@@ -37622,6 +37630,10 @@ PrefabInstance:
     - target: {fileID: 5252765493520981548, guid: 2f25d744ee9f4bc40815c9e035878b1b, type: 3}
       propertyPath: m_Name
       value: Wraith
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252765493520981548, guid: 2f25d744ee9f4bc40815c9e035878b1b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5267595556984369914, guid: 2f25d744ee9f4bc40815c9e035878b1b, type: 3}
       propertyPath: m_Layer

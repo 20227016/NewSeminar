@@ -1136,9 +1136,8 @@ MonoBehaviour:
   _searchRadius: 30
   _targetTrans: {fileID: 0}
   _magicProjectilePrefab: {fileID: 810653205754761373, guid: f1fdc9886ac3a2842807fbff501d9ebe, type: 3}
-  _chargeTime: 1.5
+  _chargeTime: 1.3
   isCharging: 0
-  isCancelCharge: 0
 --- !u!1 &3972964382682025700
 GameObject:
   m_ObjectHideFlags: 0
@@ -2220,7 +2219,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3367314013316085171, guid: ebc35bc26e195ff43af54907faf1f6ac, type: 3}
       propertyPath: m_Name
-      value: Charge slash green
+      value: MagicCharge
       objectReference: {fileID: 0}
     - target: {fileID: 3534217756811399166, guid: ebc35bc26e195ff43af54907faf1f6ac, type: 3}
       propertyPath: playOnAwake
