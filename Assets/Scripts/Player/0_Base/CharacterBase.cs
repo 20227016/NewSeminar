@@ -118,16 +118,16 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected bool _isSkillCoolTime = default;
 
     // 現在の弱攻撃コンボ段階
-    protected int _attackLightComboCount = 1;
+    protected int _attackLightComboCount = default;
 
     // 攻撃受付不可状態
     protected bool _notAttackAccepted = default;
 
     // ステートリセット用トークンソース
-    private CancellationTokenSource _resetStateTokenSource;
+    private CancellationTokenSource _resetStateTokenSource = new();
 
     // 弱攻撃コンボ段階リセット用
-    private IDisposable _attackLightComboResetDisposable;
+    private IDisposable _attackLightComboResetDisposable = default;
 
     // 移動速度
     protected float _moveSpeed = default;
@@ -187,12 +187,12 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         if (Object.HasInputAuthority)
         {
-            // カメラを設定
+            // カメラをリンク
             Camera mainCamera = Camera.main;
             _cameraDirection = new CameraDirection(mainCamera.transform);
             _target.InitializeSetting(mainCamera);
 
-            // UIを設定
+            // UIをリンク
             GameObject canvas = GameObject.FindGameObjectWithTag("Canvas");
             PlayerUIPresenter playerUIPresenter = canvas.GetComponentInChildren<PlayerUIPresenter>();
             LockOnCursorPresenter lockOnCursorPresenter = canvas.GetComponentInChildren<LockOnCursorPresenter>();
@@ -240,23 +240,20 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // エフェクトを配列に格納
         _effects = new ParticleSystem[]
         {
-                _characterEffectStruct._attackLight1Effect,
-                _characterEffectStruct._attackLight2Effect,
-                _characterEffectStruct._attackLight3Effect,
-                _characterEffectStruct._attackStrongEffect,
-                _characterEffectStruct._skillEffect
+            _characterEffectStruct._attackLight1Effect,
+            _characterEffectStruct._attackLight2Effect,
+            _characterEffectStruct._attackLight3Effect,
+            _characterEffectStruct._attackStrongEffect,
+            _characterEffectStruct._skillEffect
         };
 
         for (int i = 0; i < _effects.Length; i++)
         {
             if (_effects[i] != null)
             {
-                // エフェクトをインスタンス化して親オブジェクトに設定
-                ParticleSystem effectInstance = Instantiate(_effects[i], transform.position, Quaternion.identity);
-                effectInstance.transform.SetParent(transform); // 現在のオブジェクトを親に設定
-                effectInstance.gameObject.name = _effects[i].name; // エフェクトの名前を設定
-                effectInstance.gameObject.SetActive(false); // 初期状態で非表示
-                _effects[i] = effectInstance; // インスタンスを配列に再格納
+                _effects[i] = Instantiate(_effects[i], transform.position, _effects[i].transform.rotation, transform);
+                _effects[i].name = _effects[i].name;
+                _effects[i].gameObject.SetActive(false);
             }
         }
 
@@ -460,7 +457,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         _currentState = CharacterStateEnum.ATTACK;
 
-        _playEffect.PlayEffect(_effects[_attackLightComboCount - 1], transform.position);
+        _playEffect.PlayEffect(_effects[_attackLightComboCount], transform.position + new Vector3(0, 1, 0));
 
         // 攻撃速度を適用
         _animator.speed = _characterStatusStruct._attackSpeed;
@@ -468,18 +465,16 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 弱攻撃の段階に応じたパラメータを取得
         (AnimationClip animation, float delay, float range) = GetAttackParameters(_attackLightComboCount);
 
-        _attackLightComboCount = (_attackLightComboCount % 3) + 1;
-
         // 攻撃処理
         _playerAttackLight.AttackLight(characterBase, attackPower, attackMultiplier, delay / _animator.speed, range);
 
         // アニメーション再生
         float animationDuration = _animation.PlayAnimation(_animator, animation) / _characterStatusStruct._attackSpeed;
 
-        // 弱攻撃段階リセットタイマー
+        // 連続攻撃リセットタイマー
         _attackLightComboResetDisposable?.Dispose();
         _attackLightComboResetDisposable = Observable.Timer(TimeSpan.FromSeconds(animationDuration + COMBO_RESET_TIME))
-            .Subscribe(_ => _attackLightComboCount = 1)
+            .Subscribe(_ => _attackLightComboCount = 0)
             .AddTo(this);
 
         // 攻撃受付不可状態
@@ -489,20 +484,23 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
            .AddTo(this);
 
         ResetState(animationDuration);
+
+        // 次の攻撃段階へ
+        _attackLightComboCount = (_attackLightComboCount + 1) % 3;
     }
 
     /// <summary>
-    /// 弱攻撃コンボ管理
+    /// 連続攻撃
     /// </summary>
-    /// <param name="attackLightComboCount">弱攻撃コンボ段階</param>
+    /// <param name="attackLightComboCount">攻撃段階</param>
     /// <returns></returns>
     private (AnimationClip, float, float) GetAttackParameters(int attackLightComboCount)
     {
         return attackLightComboCount switch
         {
-            1 => (_characterAnimationStruct._attackLightAnimation1, _characterStatusStruct._attackLight1HitboxDelay, _characterStatusStruct._attackLight1HitboxRange),
-            2 => (_characterAnimationStruct._attackLightAnimation2, _characterStatusStruct._attackLight2HitboxDelay, _characterStatusStruct._attackLight2HitboxRange),
-            3 => (_characterAnimationStruct._attackLightAnimation3, _characterStatusStruct._attackLight3HitboxDelay, _characterStatusStruct._attackLight3HitboxRange),
+            0 => (_characterAnimationStruct._attackLightAnimation1, _characterStatusStruct._attackLight1HitboxDelay, _characterStatusStruct._attackLight1HitboxRange),
+            1 => (_characterAnimationStruct._attackLightAnimation2, _characterStatusStruct._attackLight2HitboxDelay, _characterStatusStruct._attackLight2HitboxRange),
+            2 => (_characterAnimationStruct._attackLightAnimation3, _characterStatusStruct._attackLight3HitboxDelay, _characterStatusStruct._attackLight3HitboxRange),
             _ => (null, 0f, 0f),
         };
     }
@@ -520,12 +518,14 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             attackMultipiler,
             _characterStatusStruct._attackStrongHitboxDelay / _animator.speed,
             _characterStatusStruct._attackStrongHitboxRange);
-        _effects[1].gameObject.SetActive(true);
+
         _animator.speed = _characterStatusStruct._attackSpeed;
 
         float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._attackStrongAnimation) / _characterStatusStruct._attackSpeed;
-        _playEffect.PlayEffect(_effects[3], transform.position);
+        _playEffect.PlayEffect(_effects[3], transform.position + new Vector3(0, 1, 0));
         ResetState(animationDuration, () => _notAttackAccepted = false);
+
+        _networkedSkillPoint = 100f;
     }
 
 
@@ -537,6 +537,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     protected virtual void Avoidance(Transform transform)
     {
+        // 移動値0 or スタミナ切れ状態の時はリターン
         if (_moveDirection == Vector2.zero || _isOutOfStamina) return;
 
         _currentState = CharacterStateEnum.AVOIDANCE;
@@ -569,9 +570,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _skill.Skill(this, skillTime);
 
         float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._skillAnimation);
-        _playEffect.PlayEffect(_effects[4], transform.position);
-        Observable.Timer(TimeSpan.FromSeconds(0.5f))
-           .Subscribe(_ => ReceiveDamage(50));
+
+        _playEffect.PlayEffect(_effects[4],  transform.position + new Vector3(0, 1, 0));
 
         ResetState(animationDuration);
     }
@@ -600,15 +600,19 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         if(_networkedHP <= 0) return;
 
+        // 被弾時のリアクション
         float animationDuration;
-
         if (damage <= _characterStatusStruct._playerStatus.MaxHp / 2)
         {
+            // 怯み
             animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._damageReactionLightAnimation);
         }
         else
         {
+            // 吹っ飛び
             animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._damageReactionHeavyAnimation);
+            // ノックバック
+            _avoidance.Avoidance(transform, new Vector2(-transform.forward.x, -transform.forward.z), _characterStatusStruct._avoidanceDistance, animationDuration / 5);
         }
 
         ResetState(animationDuration);

@@ -14,12 +14,14 @@ public class TankCharacter : CharacterBase
     [SerializeField, Tooltip("ガード成功時のリアクションアニメーション")]
     private AnimationClip _blockReactionAnimation = default;
 
-    private ReactiveProperty<bool> _isBlockReactive = new ReactiveProperty<bool>(false);
+    // ガードフラグ
+    private ReactiveProperty<bool> _isBlockReactive = new(false);
 
     public override void Spawned()
     {
         base.Spawned();
 
+        // ガード中にアニメーション
         _isBlockReactive
             .DistinctUntilChanged()
             .Subscribe(isBlock =>
@@ -29,8 +31,10 @@ public class TankCharacter : CharacterBase
             .AddTo(this);
     }
 
+
     protected override void ProcessInput(PlayerNetworkInput input)
     {
+        // ガード解除入力
         if (_isBlockReactive.Value && input.IsAvoidance)
         {
             _currentState = CharacterStateEnum.IDLE;
@@ -44,14 +48,17 @@ public class TankCharacter : CharacterBase
         base.ProcessInput(input);
     }
 
+
     protected override void Avoidance(Transform transform)
     {
+        // 回避処理をガードに置き換える
         _currentState = CharacterStateEnum.AVOIDANCE;
 
         _isBlockReactive.Value = true;
 
         _passive.Passive(this);
     }
+
 
     public override void ReceiveDamage(int damageValue)
     {
@@ -74,21 +81,26 @@ public class TankCharacter : CharacterBase
             return;
         }
 
+        // ガード中なら盾受けアニメーションを再生
         if (_isBlockReactive.Value)
         {
             _animation.PlayAnimation(_animator, _blockReactionAnimation);
             return;
         }
 
+        // 被弾時のリアクション
         float animationDuration;
-
         if (damage <= _characterStatusStruct._playerStatus.MaxHp / 2)
         {
+            // 怯み
             animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._damageReactionLightAnimation);
         }
         else
         {
+            // 吹っ飛び
             animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._damageReactionHeavyAnimation);
+            // ノックバック
+            _avoidance.Avoidance(transform, new Vector2(-transform.forward.x, -transform.forward.z), _characterStatusStruct._avoidanceDistance, animationDuration / 5);
         }
 
         ResetState(animationDuration);

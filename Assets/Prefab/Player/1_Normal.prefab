@@ -1600,19 +1600,19 @@ MonoBehaviour:
     _attackStrongMultiplier: 1.5
     _attackSpeed: 1
     _attackLight1HitboxDelay: 0.2
-    _attackLight1HitboxRange: 2
+    _attackLight1HitboxRange: 3
     _attackLight2HitboxDelay: 0.2
-    _attackLight2HitboxRange: 2
+    _attackLight2HitboxRange: 3
     _attackLight3HitboxDelay: 0.2
-    _attackLight3HitboxRange: 2
+    _attackLight3HitboxRange: 3
     _attackStrongHitboxDelay: 0.2
-    _attackStrongHitboxRange: 2
+    _attackStrongHitboxRange: 3
     _defensePower: 10
     _skillDuration: 0
     _skillCoolTime: 5
     _counterTime: 0.5
     _skillPointUpperLimit: 100
-    _ressurectionTime: 5
+    _ressurectionTime: 10
     _recoveryStamina: 25
     _runStamina: 25
     _avoidanceStamina: 20
@@ -1632,11 +1632,11 @@ MonoBehaviour:
     _damageReactionHeavyAnimation: {fileID: 7400000, guid: c1d5e2eb31078e744a792fc216838df4, type: 3}
     _deathAnimation: {fileID: 7400000, guid: 0a205e82d4075b346b912ccfe0a0bfd2, type: 3}
   _characterEffectStruct:
-    _attackLight1Effect: {fileID: 4033287822461114141, guid: a164e676dbbd6e54587237e619372c98, type: 3}
-    _attackLight2Effect: {fileID: 4596544553357837919, guid: 8eb503696b886e04faff8fc0f480d473, type: 3}
-    _attackLight3Effect: {fileID: 4642848129145531053, guid: 3138a83bedbd6ad4481ba0b061da2eb6, type: 3}
-    _attackStrongEffect: {fileID: 3891973445508218817, guid: e190bf97c041e58448af6b043116cba0, type: 3}
-    _skillEffect: {fileID: 7151510144505425601, guid: 356cf4dca1465b54fabbb8cd9b1cd190, type: 3}
+    _attackLight1Effect: {fileID: 198761303573775654, guid: 0ada6e43d03fad448b13931d94dc8c6a, type: 3}
+    _attackLight2Effect: {fileID: 198761303573775654, guid: faad25fcc5099b94f8abf2541acf7bf3, type: 3}
+    _attackLight3Effect: {fileID: 198761303573775654, guid: ffe1175c8b8c06c46a14f981530fefad, type: 3}
+    _attackStrongEffect: {fileID: 198815321472276864, guid: 94decd378aa91b849aa2a118d3b9bb40, type: 3}
+    _skillEffect: {fileID: 198122840827383010, guid: 2bceb04b65a44f744b892e36f1fcacdf, type: 3}
   _currentState: 0
 --- !u!114 &4762466880810951508
 MonoBehaviour:
@@ -1650,9 +1650,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d693c5de262176741bbb007dca57a5cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skillAttackMultiplier: 3
-  _skillAttacHitboxkDelay: 0.3
-  _skillAttackHitboxRange: 2
+  _skillAttackMultiplier: 0.8
+  _skillAttackHitCount: 5
+  _skillAttackHitInterval: 0.05
+  _skillAttackHitboxRange: 25
+  _skillAttackHitboxDelay: 1
 --- !u!114 &2833035376307005735
 MonoBehaviour:
   m_ObjectHideFlags: 0

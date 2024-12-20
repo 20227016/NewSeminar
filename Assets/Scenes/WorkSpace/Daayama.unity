@@ -1220,11 +1220,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: playerAvatarPrefab.RawGuidValue.Array.data[0]
-      value: 1510796372287863664
+      value: -8905423163417540451
       objectReference: {fileID: 0}
     - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: playerAvatarPrefab.RawGuidValue.Array.data[1]
-      value: 2863700513122403978
+      value: -1307292089815617253
       objectReference: {fileID: 0}
     - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: _participantsPrefab.RawGuidValue.Array.data[0]
