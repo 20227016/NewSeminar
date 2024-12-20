@@ -1442,19 +1442,19 @@ MonoBehaviour:
     _attackStrongMultiplier: 1.5
     _attackSpeed: 1
     _attackLight1HitboxDelay: 0.3
-    _attackLight1HitboxRange: 2
+    _attackLight1HitboxRange: 3
     _attackLight2HitboxDelay: 0.3
-    _attackLight2HitboxRange: 2
+    _attackLight2HitboxRange: 3
     _attackLight3HitboxDelay: 0.3
-    _attackLight3HitboxRange: 2
+    _attackLight3HitboxRange: 3
     _attackStrongHitboxDelay: 0.3
-    _attackStrongHitboxRange: 2
+    _attackStrongHitboxRange: 3
     _defensePower: 15
     _skillDuration: 30
     _skillCoolTime: 30
     _counterTime: 0.5
     _skillPointUpperLimit: 100
-    _ressurectionTime: 2
+    _ressurectionTime: 10
     _recoveryStamina: 20
     _runStamina: 30
     _avoidanceStamina: 30
@@ -1473,6 +1473,12 @@ MonoBehaviour:
     _damageReactionLightAnimation: {fileID: 7400000, guid: 03d7bb31f4803fd45ae78430b375c9b8, type: 3}
     _damageReactionHeavyAnimation: {fileID: 7400000, guid: c1d5e2eb31078e744a792fc216838df4, type: 3}
     _deathAnimation: {fileID: 7400000, guid: 0a205e82d4075b346b912ccfe0a0bfd2, type: 3}
+  _characterEffectStruct:
+    _attackLight1Effect: {fileID: 198190562059387860, guid: d554a0f6411847c4aa461e68fa78fdd0, type: 3}
+    _attackLight2Effect: {fileID: 4596544553357837919, guid: 18af3c98a4a4b3a4397be98dc77d01ce, type: 3}
+    _attackLight3Effect: {fileID: 198415561904038508, guid: 794e664465f1a8641898ed04f3ad5199, type: 3}
+    _attackStrongEffect: {fileID: 198190562059387860, guid: 28d644a116ef72d4eb3bf73e2c4e3de2, type: 3}
+    _skillEffect: {fileID: 198104034376685886, guid: 7164e845c8af3ff4b8e1d381990c0c7d, type: 3}
   _currentState: 0
   _blockReactionAnimation: {fileID: 7400002, guid: 06b2d730cc61165409b7dfc816822cbc, type: 3}
 --- !u!114 &2544810034382573789
@@ -1499,7 +1505,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fc48ffcd734dfd46993e41d2caa777f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _guardMultiplier: 2
+  _guardMultiplier: 3
 --- !u!114 &2493756517466308921
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1534,7 +1540,7 @@ MonoBehaviour:
   WordCount: 0
   _interpolationDataSource: 0
   Animator: {fileID: 6586209926102636189}
-  TotalWords: 3
+  TotalWords: 5
   SyncSettings: 95
   FloatAccuracy:
     _value: 0
