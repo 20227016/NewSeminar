@@ -2,11 +2,10 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using System.Threading.Tasks;
-using UnityEngine.Events;
 
 public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
 {
@@ -100,7 +99,6 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
     private async void Awake()
     {
 
-        Debug.Log($"Awake処理＿開始: {this.GetType().Name}クラス");
         // インスタンスがあるかつ自分ではないとき
         if (_instance != null && _instance != this)
         {
@@ -108,16 +106,16 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
             return;
         }
         _instance = this;
-        // ロード時に消さない
-        DontDestroyOnLoad(this.gameObject);
+        Debug.Log($"Awake処理＿開始: {this.GetType().Name}クラス");
         /*　　　取得　　　*/
-        _mainCamera = Camera.main;
         _playerInput = this.GetComponent<PlayerInput>();
         _networkRunner = Instantiate(networkRunnerPrefab);
         // 関数登録
         RegisterInputActions(true);
+        SceneManager.sceneLoaded += OnSceneLoaded;
         // コールバック設定
         _networkRunner.AddCallbacks(this);
+        // セッション設定
         StartGameArgs startGameArgs = new StartGameArgs
         {
             // ゲームモード
@@ -132,6 +130,7 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
         // ランナースタート
         StartGameResult result = await _networkRunner.StartGame(startGameArgs);
         Debug.Log($"サーバー状態:{_networkRunner.IsServer}");
+        Debug.LogError($"サーバー状態:{_networkRunner.IsRunning}");
         if (_networkRunner.IsServer)
         {
 
@@ -142,6 +141,20 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
         {
 
             Debug.Log($"クライアント　で{startGameArgs}の設定通りにセッション開始");
+
+        }
+        Debug.Log($"Awake処理＿終了: {this.GetType().Name}クラス");
+
+    }
+
+    private void Start()
+    {
+
+        _roomInfo = GameObject.Find("Room").GetComponent<RoomInfo>();
+        if (_roomInfo == null)
+        {
+
+            Debug.LogError("ルーム管理情報が入っていません");
 
         }
 
@@ -171,22 +184,6 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
                 action.canceled -= HandleInput;
             }
         }
-    }
-
-    /// <summary>
-    /// 更新前処理
-    /// </summary>
-    private void Start()
-    {
-
-        _roomInfo = GameObject.Find("Room").GetComponent<RoomInfo>();
-        if (_roomInfo == null)
-        {
-
-            Debug.LogError("ルーム管理情報が入っていません");
-
-        }
-
     }
 
     /// <summary>
@@ -233,7 +230,9 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
 
             default:
                 break;
+
         }
+
     }
 
     /// <summary>
@@ -242,6 +241,7 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
     /// <returns>カメラの向きを基準にした移動方向</returns>
     private Vector3 GetMoveDirectionFromCamera()
     {
+
         // カメラの正面方向と右方向を取得
         Vector3 cameraForward = _mainCamera.transform.forward;
         Vector3 cameraRight = _mainCamera.transform.right;
@@ -257,6 +257,7 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
         // カメラ基準での移動方向を計算
         Vector3 direction = cameraForward * _moveInput.y + cameraRight * _moveInput.x;
         return new Vector2(direction.x, direction.z);
+
     }
 
     public async void OnInput(NetworkRunner runner, NetworkInput input)
@@ -268,7 +269,6 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
             await Task.Delay(1000);
 
         }
-        Debug.Log($"{_mainCamera.gameObject.name}メインカメラ取得済み");
         // 入力をインスタンス化
         PlayerNetworkInput data = new()
         {
@@ -281,12 +281,11 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
             IsResurrection = InputState["Resurrection"],
             IsAvoidance = InputState["Avoidance"],
         };
-
         // 入力を収集
         input.Set(data);
-
         // 入力を初期化
         ResetInput();
+
     }
 
     /// <summary>
@@ -313,8 +312,6 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
     public async void OnPlayerJoined(NetworkRunner runner, PlayerRef playerRef)
     {
 
-
-
         while (!_networkRunner.IsRunning　|| !_isMySpawned)
         {
 
@@ -322,8 +319,9 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
 
         }
         Debug.Log($"ランナー状態{_networkRunner.IsRunning}");
-        Debug.Log($"Awake処理＿終了: {this.GetType().Name}クラス");
+        Debug.Log($"スポーン状態{_isMySpawned}");
         Debug.Log($"プレイヤー参加処理＿開始: {this.GetType().Name}クラス");
+        Debug.Log($"{_roomInfo}");
         Debug.Log($"{_roomInfo.CurrentParticipantCount }人がすでに参加");
         // ホストで参加しているとき通る
         if (!runner.IsServer)
@@ -416,26 +414,51 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
     /// シーン読み込み完了時に始まる
     /// </summary>
     /// <param name="runner"></param>
-    public void OnSceneLoadDone(NetworkRunner runner)
-    {
-
-        // 新たなシーンのカメラに切り替え
-        _mainCamera = Camera.main;
-        Debug.LogError("切り替わり時にカメラ確保");
-        _networkRunner.SetActiveScene(SceneManager.GetActiveScene().buildIndex);
-        Debug.LogError($"{SceneManager.GetActiveScene().name}シーンのオブジェクトをスポーン");
-
-    }
+    public void OnSceneLoadDone(NetworkRunner runner) {}
 
     /// <summary>
     /// シーン読み込み開始時に始まる
     /// </summary>
     /// <param name="runner"></param>
-    public void OnSceneLoadStart(NetworkRunner runner)
+    public void OnSceneLoadStart(NetworkRunner runner){ }
+
+    /// <summary>
+    /// シーン開始時
+    /// </summary>
+    public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
 
-        
-       
+        Debug.LogError("移動完了");
+        // 新たなシーンのカメラに切り替え
+        _mainCamera = Camera.main;
+        // 参加者生成
+
+        // コンポーネントデストロイ
+
+        Debug.LogError("切り替わり時にカメラ確保");
+        _networkRunner.SetActiveScene(SceneManager.GetActiveScene().buildIndex);
+        _networkRunner.SetActiveScene("");
+        Debug.LogError($"{SceneManager.GetActiveScene().name}シーンのオブジェクトをスポーン");
+
+    }
+
+    void OnApplicationQuit()
+    {
+
+        Debug.LogError("退出処理");
+        if (_networkRunner.IsServer)
+        {
+
+            _networkRunner.Shutdown();
+
+        }
+        else
+        {
+
+            _networkRunner.Disconnect(_networkRunner.LocalPlayer);
+
+        }
+
 
     }
 

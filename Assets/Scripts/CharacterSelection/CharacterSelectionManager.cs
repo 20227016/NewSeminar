@@ -17,7 +17,7 @@ public class CharacterSelectionManager : NetworkBehaviour
 {
 
     // 現在選択しているキャラクター（共有する変数）
-    public static int CurrentSelectionCharacter { get; private set; } = 0;
+    public static int CurrentSelectionCharacter { get; private set; } = default;
 
     // 決定したキャラクター(共有するBool)
     public static bool _characterDecision { get; private set; } = false;
@@ -29,13 +29,22 @@ public class CharacterSelectionManager : NetworkBehaviour
     private List<GameObject> _characterModel = new List<GameObject>();
 
     [Networked]
-    private NetworkBool _tankChoice { get; set; } = false;
+    public NetworkBool _tankChoice { get; set; } = false;
     [Networked]
-    private NetworkBool _knightChoice { get; set; } = false;
+    public NetworkBool _knightChoice { get; set; } = false;
     [Networked]
-    private NetworkBool _healerChoice { get; set; } = false;
+    public NetworkBool _healerChoice { get; set; } = false;
     [Networked]
-    private NetworkBool _fighterChoice { get; set; } = false;
+    public NetworkBool _fighterChoice { get; set; } = false;
+
+
+
+    public override void Spawned()
+    {
+        base.Spawned();
+        Debug.Log("CharacterSelectionManagerがスポーンされました。");
+    }
+
 
     //キャラクター1のボタンにつける
     public void OnClick1()
@@ -49,7 +58,7 @@ public class CharacterSelectionManager : NetworkBehaviour
             // リストの1番目のオブジェクトを取得して制御
             GameObject secondObject = _characterModel[0];
             secondObject.SetActive(true);
-            print(CurrentSelectionCharacter);
+            print("タンク");
         }
 
     }
@@ -66,7 +75,7 @@ public class CharacterSelectionManager : NetworkBehaviour
             // リストの2番目のオブジェクトを取得して制御
             GameObject secondObject = _characterModel[1];
             secondObject.SetActive(true);
-            print(CurrentSelectionCharacter);
+            print("騎士");
         }
     }
 
@@ -82,7 +91,7 @@ public class CharacterSelectionManager : NetworkBehaviour
             // リストの3番目のオブジェクトを取得して制御
             GameObject secondObject = _characterModel[2];
             secondObject.SetActive(true);
-            print(CurrentSelectionCharacter);
+            print("ヒーラー");
         }
     }
 
@@ -98,7 +107,7 @@ public class CharacterSelectionManager : NetworkBehaviour
             // リストの4番目のオブジェクトを取得して制御
             GameObject secondObject = _characterModel[3];
             secondObject.SetActive(true);
-            print(CurrentSelectionCharacter);
+            print("ファイター");
         }
     }
 
