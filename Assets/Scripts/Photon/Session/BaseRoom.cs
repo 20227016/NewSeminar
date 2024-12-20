@@ -38,11 +38,12 @@ public class BaseRoom : NetworkBehaviour
             Debug.LogError($"自分についているネットワークランナーが見つかりません");
 
         }
+        Debug.LogError($"{this.gameObject}でルーム管理クラスが見つかりません");
         _roomInfo = GameObject.Find("Room").GetComponent<RoomInfo>();
         if (_roomInfo == null)
         {
 
-            Debug.LogError($"ルーム管理クラスが見つかりません");
+            Debug.LogError($"{this.gameObject}でルーム管理クラスが見つかりません");
 
         }
         // データ初期化

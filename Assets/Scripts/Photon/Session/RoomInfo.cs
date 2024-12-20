@@ -10,7 +10,7 @@ public class RoomInfo : NetworkBehaviour
 {
 
     [Networked]
-    public string RoomName { get; set; } = "Room";
+    public string RoomName { get; set; } = "Room(ya-ya-ya-ya-ya-)";
     // 現在のプレイヤー数[ネットワーク上で同期]
     [Networked]
     public int CurrentParticipantCount { get; set; } = 0;
@@ -21,7 +21,7 @@ public class RoomInfo : NetworkBehaviour
     /// <summary>
     /// 参加者の状態
     /// </summary>
-    private (string name, bool isRegistration , bool isReady)[] _nameInfos = new (string name, bool isRegistration, bool isReady)[] 
+    private (string name, bool isRegistration , bool isReady)[] _participationInfos = new (string name, bool isRegistration, bool isReady)[] 
                                                                              { ("名前1",false,false),("名前2", false,false),("名前3", false,false),("名前4",false,false) };
 
     /// <summary>
@@ -33,17 +33,17 @@ public class RoomInfo : NetworkBehaviour
     public int SetName(string name)
     {
 
-        for (int i = 0; i < _nameInfos.Length; i++)
+        for (int i = 0; i < _participationInfos.Length; i++)
         {
 
             // 名前が登録済みか
-            if (_nameInfos[i].isRegistration)
+            if (_participationInfos[i].isRegistration)
             {
 
                 continue;
 
             }
-            _nameInfos[i] = (name,true,_nameInfos[i].isReady);
+            _participationInfos[i] = (name,true,_participationInfos[i].isReady);
             // ヒエラルキー上にあるオブジェクトとそろえる
             int index = i + 1;
             return index;
@@ -61,11 +61,11 @@ public class RoomInfo : NetworkBehaviour
     {
 
         List<string> returnNames = new();
-        for (int i = 0; i < _nameInfos.Length; i++)
+        for (int i = 0; i < _participationInfos.Length; i++)
         {
 
             // 名前が一致するか
-            if (_nameInfos[i].name != name)
+            if (_participationInfos[i].name != name)
             {
 
                 continue;
@@ -73,12 +73,12 @@ public class RoomInfo : NetworkBehaviour
             }
             // ヒエラルキー上にあるオブジェクトとそろえる
             int index = i + 1;
-            _nameInfos[i] = ($"名前{index}", false, false);
+            _participationInfos[i] = ($"名前{index}", false, false);
             break;
 
         }
         Sort();
-        foreach ((string name, bool isRegistration, bool isReady) nameInfo in _nameInfos)
+        foreach ((string name, bool isRegistration, bool isReady) nameInfo in _participationInfos)
         {
 
             returnNames.Add(nameInfo.name);
@@ -95,21 +95,21 @@ public class RoomInfo : NetworkBehaviour
     {
 
         Debug.Log("ソート");
-        for (int i = 1; i < _nameInfos.Length; i++)
+        for (int i = 1; i < _participationInfos.Length; i++)
         {
 
             /*   今のインデックスが中身があるかつ前のインデックスが空の時に通る*/
-            if (!_nameInfos[i].isRegistration || _nameInfos[i - 1].isRegistration)
+            if (!_participationInfos[i].isRegistration || _participationInfos[i - 1].isRegistration)
             {
 
                 continue;
 
             }
             // 穴を埋める（１人ずつ通るので複数個所穴が開いていることはない）
-            _nameInfos[i - 1] = _nameInfos[i];
+            _participationInfos[i - 1] = _participationInfos[i];
             // ヒエラルキー上にあるオブジェクトとそろえる
             int index = i + 1;
-            _nameInfos[i] = ($"名前{index}", false, false);
+            _participationInfos[i] = ($"名前{index}", false, false);
 
         }
 
@@ -124,17 +124,17 @@ public class RoomInfo : NetworkBehaviour
     public int ReName(string newName, string targetName)
     {
 
-        for (int i = 0; i < _nameInfos.Length; i++)
+        for (int i = 0; i < _participationInfos.Length; i++)
         {
 
             // 名前が一致するか
-            if (_nameInfos[i].name != targetName)
+            if (_participationInfos[i].name != targetName)
             {
 
                 continue;
 
             }
-            _nameInfos[i].name = newName;
+            _participationInfos[i].name = newName;
             // ヒエラルキー上にあるオブジェクトとそろえる
             int index = i + 1;
             return index;
@@ -150,18 +150,18 @@ public class RoomInfo : NetworkBehaviour
     public void ChangeReady(string targetName)
     {
 
-        for (int i = 0; i < _nameInfos.Length; i++)
+        for (int i = 0; i < _participationInfos.Length; i++)
         {
 
             // 名前が一致するか
-            if (_nameInfos[i].name != targetName)
+            if (_participationInfos[i].name != targetName)
             {
 
                 continue;
 
             }
-            _nameInfos[i].isReady = !_nameInfos[i].isReady;
-            Debug.Log($"{_nameInfos[i].name}の準備を{_nameInfos[i].isReady}に");
+            _participationInfos[i].isReady = !_participationInfos[i].isReady;
+            Debug.Log($"{_participationInfos[i].name}の準備を{_participationInfos[i].isReady}に");
 
         }
 
@@ -171,7 +171,7 @@ public class RoomInfo : NetworkBehaviour
     {
 
         int num = default;
-        foreach ((string name, bool isRegistration, bool isReady) nameInfo in _nameInfos)
+        foreach ((string name, bool isRegistration, bool isReady) nameInfo in _participationInfos)
         {
 
             if (nameInfo.isReady)
@@ -197,7 +197,7 @@ public class RoomInfo : NetworkBehaviour
         for (int i = 0; i < CurrentParticipantCount; i++)
         {
 
-            if (_nameInfos[i].isReady)
+            if (_participationInfos[i].isReady)
             {
 
                 continue;

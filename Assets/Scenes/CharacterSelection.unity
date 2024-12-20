@@ -302,7 +302,6 @@ GameObject:
   - component: {fileID: 100780210}
   - component: {fileID: 100780209}
   - component: {fileID: 100780208}
-  - component: {fileID: 100780211}
   - component: {fileID: 100780212}
   m_Layer: 5
   m_Name: Character3
@@ -374,7 +373,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 100780211}
+      - m_Target: {fileID: 644168377}
         m_TargetAssemblyTypeName: CharacterSelectionManager, Assembly-CSharp
         m_MethodName: OnClick3
         m_Mode: 1
@@ -424,26 +423,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100780206}
   m_CullTransparentMesh: 1
---- !u!114 &100780211
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100780206}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60791a3fc3003d04db8aaf3a34e38173, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WordOffset: 0
-  WordCount: 0
-  _interpolationDataSource: 0
-  _characterModel:
-  - {fileID: 5583146360670182021}
-  - {fileID: 574474334503508753}
-  - {fileID: 1758640243}
-  - {fileID: 1878673367454097571}
 --- !u!114 &100780212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,10 +442,9 @@ MonoBehaviour:
   AoiPositionSource: {fileID: 0}
   Flags: 2561
   NetworkGuid:
-    RawGuidValue: 7926e3db111543fe928241745eb713b6
+    RawGuidValue: 5df47411ee65490cb8e929f87be964d4
   NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 100780211}
+  NetworkedBehaviours: []
   SimulationBehaviours: []
 --- !u!1 &148454269
 GameObject:
@@ -845,14 +823,15 @@ MonoBehaviour:
   AoiPositionSource: {fileID: 0}
   Flags: 2561
   NetworkGuid:
-    RawGuidValue: 729761ad26f7461eaadc10d07f2818c1
+    RawGuidValue: d5c3fb82ceeb46cf8ad07d90d1cb4181
   NestedObjects:
   - {fileID: 480208556}
   - {fileID: 1565984878}
   - {fileID: 100780212}
   - {fileID: 552174086}
   - {fileID: 1945544728}
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 644168377}
   SimulationBehaviours: []
 --- !u!1 &475253709
 GameObject:
@@ -971,7 +950,6 @@ GameObject:
   - component: {fileID: 480208554}
   - component: {fileID: 480208553}
   - component: {fileID: 480208552}
-  - component: {fileID: 480208555}
   - component: {fileID: 480208556}
   m_Layer: 5
   m_Name: Character1
@@ -1043,7 +1021,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 480208555}
+      - m_Target: {fileID: 644168377}
         m_TargetAssemblyTypeName: CharacterSelectionManager, Assembly-CSharp
         m_MethodName: OnClick1
         m_Mode: 1
@@ -1093,26 +1071,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 480208550}
   m_CullTransparentMesh: 1
---- !u!114 &480208555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 480208550}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60791a3fc3003d04db8aaf3a34e38173, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WordOffset: 0
-  WordCount: 0
-  _interpolationDataSource: 0
-  _characterModel:
-  - {fileID: 5583146360670182021}
-  - {fileID: 574474334503508753}
-  - {fileID: 1758640243}
-  - {fileID: 1878673367454097571}
 --- !u!114 &480208556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1132,10 +1090,9 @@ MonoBehaviour:
   AoiPositionSource: {fileID: 0}
   Flags: 2561
   NetworkGuid:
-    RawGuidValue: 15d27cb8af8c4adaaea37b8c1d1ee68c
+    RawGuidValue: 9729379e05d64220ae01bc6f8c0fc930
   NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 480208555}
+  NetworkedBehaviours: []
   SimulationBehaviours: []
 --- !u!1001 &512121871
 PrefabInstance:
@@ -1218,7 +1175,6 @@ GameObject:
   - component: {fileID: 552174084}
   - component: {fileID: 552174083}
   - component: {fileID: 552174082}
-  - component: {fileID: 552174085}
   - component: {fileID: 552174086}
   m_Layer: 5
   m_Name: Character4
@@ -1290,7 +1246,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 552174085}
+      - m_Target: {fileID: 644168377}
         m_TargetAssemblyTypeName: CharacterSelectionManager, Assembly-CSharp
         m_MethodName: OnClick4
         m_Mode: 1
@@ -1340,26 +1296,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 552174080}
   m_CullTransparentMesh: 1
---- !u!114 &552174085
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 552174080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60791a3fc3003d04db8aaf3a34e38173, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WordOffset: 0
-  WordCount: 0
-  _interpolationDataSource: 0
-  _characterModel:
-  - {fileID: 5583146360670182021}
-  - {fileID: 574474334503508753}
-  - {fileID: 1758640243}
-  - {fileID: 1878673367454097571}
 --- !u!114 &552174086
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1379,10 +1315,9 @@ MonoBehaviour:
   AoiPositionSource: {fileID: 0}
   Flags: 2561
   NetworkGuid:
-    RawGuidValue: 68ba4d87b9e74fb6940a3c9371ba585a
+    RawGuidValue: eceb87aa99c441eebc30ce49aeb72127
   NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 552174085}
+  NetworkedBehaviours: []
   SimulationBehaviours: []
 --- !u!1001 &632461177
 PrefabInstance:
@@ -1469,6 +1404,7 @@ GameObject:
   - component: {fileID: 644168373}
   - component: {fileID: 644168376}
   - component: {fileID: 644168375}
+  - component: {fileID: 644168377}
   m_Layer: 5
   m_Name: CharacterIcon
   m_TagString: Untagged
@@ -1542,6 +1478,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 644168372}
   m_CullTransparentMesh: 1
+--- !u!114 &644168377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 644168372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60791a3fc3003d04db8aaf3a34e38173, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  _characterModel:
+  - {fileID: 5583146360670182021}
+  - {fileID: 574474334503508753}
+  - {fileID: 1758640243}
+  - {fileID: 1878673367454097571}
+  __tankChoice:
+    _value: 0
+  __knightChoice:
+    _value: 0
+  __healerChoice:
+    _value: 0
+  __fighterChoice:
+    _value: 0
 --- !u!1 &932537129
 GameObject:
   m_ObjectHideFlags: 0
@@ -2534,7 +2498,6 @@ GameObject:
   - component: {fileID: 1565984876}
   - component: {fileID: 1565984875}
   - component: {fileID: 1565984874}
-  - component: {fileID: 1565984877}
   - component: {fileID: 1565984878}
   m_Layer: 5
   m_Name: Character2
@@ -2606,7 +2569,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1565984877}
+      - m_Target: {fileID: 644168377}
         m_TargetAssemblyTypeName: CharacterSelectionManager, Assembly-CSharp
         m_MethodName: OnClick2
         m_Mode: 1
@@ -2656,26 +2619,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1565984872}
   m_CullTransparentMesh: 1
---- !u!114 &1565984877
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1565984872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60791a3fc3003d04db8aaf3a34e38173, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WordOffset: 0
-  WordCount: 0
-  _interpolationDataSource: 0
-  _characterModel:
-  - {fileID: 5583146360670182021}
-  - {fileID: 574474334503508753}
-  - {fileID: 1758640243}
-  - {fileID: 1878673367454097571}
 --- !u!114 &1565984878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2695,10 +2638,9 @@ MonoBehaviour:
   AoiPositionSource: {fileID: 0}
   Flags: 2561
   NetworkGuid:
-    RawGuidValue: 80e5a72c98c045e1bab779c69acba3d3
+    RawGuidValue: 8d5d1166dbe64d2e9c8b54e4710446c2
   NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 1565984877}
+  NetworkedBehaviours: []
   SimulationBehaviours: []
 --- !u!1 &1587283033
 GameObject:
@@ -3196,6 +3138,14 @@ MonoBehaviour:
   - {fileID: 574474334503508753}
   - {fileID: 1758640243}
   - {fileID: 1878673367454097571}
+  __tankChoice:
+    _value: 0
+  __knightChoice:
+    _value: 0
+  __healerChoice:
+    _value: 0
+  __fighterChoice:
+    _value: 0
 --- !u!114 &1945544728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3215,7 +3165,7 @@ MonoBehaviour:
   AoiPositionSource: {fileID: 0}
   Flags: 2561
   NetworkGuid:
-    RawGuidValue: 36458f9cec3b448398e55260bbf8d41b
+    RawGuidValue: e04bcbc635b94d89914102f224f4fabe
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 1945544727}

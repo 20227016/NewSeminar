@@ -11,7 +11,7 @@ public class ReName : BaseRoom,IReName
     public async void RPC_ParticipantReName(string newName, NetworkObject participant)
     {
 
-        if (!_networkRunner.IsServer)
+        if (!_networkRunner.IsServer || newName == null)
         {
 
             return;
