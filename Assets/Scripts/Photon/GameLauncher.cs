@@ -6,28 +6,77 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UniRx;
 
-public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
+public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
 {
-    public static GameLauncher _instance;
 
-    [SerializeField]
-    private NetworkRunner networkRunnerPrefab;
+    /// <summary>
+    /// シングルトン
+    /// </summary>
+    public static GameLauncher _instance = default;
 
-    [SerializeField]
-    private NetworkPrefabRef comboCounterPrefab;
+    [SerializeField, Tooltip("ネットワークランナー")]
+    private NetworkRunner networkRunnerPrefab = default;
 
-    [SerializeField]
-    private NetworkPrefabRef playerAvatarPrefab;
+    [SerializeField, Tooltip("プレイヤーアバター")]
+    private NetworkPrefabRef _participantsPrefab = default;
 
     [SerializeField, Tooltip("プレイヤーのスポーン位置")]
     private Vector3 _playerSpawnPos = default;
 
-    private PlayerInput _playerInput = default;
+    /// <summary>
+    /// 接続をホストに解除された参加者
+    /// </summary>
+    private List<PlayerRef> _disconnectPlayerRef = new();
 
-    private Vector2 _moveInput = default;
+    /// <summary>
+    /// 部屋管理
+    /// </summary>
+    private RoomInfo _roomInfo = default;
 
+    /// <summary>
+    /// ホストに
+    /// </summary>
+    private IRoomController _iRoomController = default;
+
+    /// <summary>
+    /// メインカメラ
+    /// </summary>
     private Camera _mainCamera = default;
 
+    /// <summary>
+    /// インプットシステム
+    /// </summary>
+    private PlayerInput _playerInput = default;
+
+    /// <summary>
+    /// ネットワークランナー
+    /// </summary>
+    private NetworkRunner _networkRunner = default;
+
+    private bool _isMySpawned = false;
+
+    /// <summary>
+    /// インプットステート
+    /// </summary>
+    private readonly Dictionary<string, bool> InputState = new()
+    {
+        { "Run", false },
+        { "AttackLight", false },
+        { "AttackStrong", false },
+        { "Targetting", false },
+        { "Skill", false },
+        { "Resurrection", false },
+        { "Avoidance", false }
+    };
+
+    /// <summary>
+    /// 移動値
+    /// </summary>
+    private Vector2 _moveInput = default;
+
+    /// <summary>
+    /// シングルトン
+    /// </summary>
     public static GameLauncher Instance
     {
         get
