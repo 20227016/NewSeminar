@@ -44,6 +44,8 @@ public class BossDemo : BaseEnemy
 
     Transform _LaserBeam = default; // レーザービーム
 
+    private bool isStartAction = default;
+
     // ボスの行動パターン用.変数(最初はアイドル状態からスタート)
     // 1.アイドル
     // 2.攻撃
@@ -68,14 +70,17 @@ public class BossDemo : BaseEnemy
     private int _faintingState = 1;
 
     private Transform _child = default;
-    BoxCollider[] _boxColliders = default;
+    private BoxCollider[] _boxColliders = default;
 
     private GameObject _golem = default;
     private GameObject _evilMage = default;
+    private GameObject _fishman = default;
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+        _animator.SetInteger("TransitionNo", -1);
+
         _LaserBeam = transform.Find("LaserBeam");
         _LaserBeam.gameObject.SetActive(false);
 
@@ -90,12 +95,29 @@ public class BossDemo : BaseEnemy
         _golem.SetActive(false);
         _evilMage = GameObject.Find("EvilMagePADefault");
         _evilMage.SetActive(false);
+        _fishman = GameObject.Find("FishmanPADefault");
+        _fishman.SetActive(false);
     }
 
     private void Update()
     {
+        if (IsAnimationFinished("Appearance"))
+        {
+            _animator.SetInteger("TransitionNo", 0);
+        }
+
+        if (Input.GetKeyDown(KeyCode.A) && !isStartAction)
+        {
+            isStartAction = true;
+        }
+
+        if (!isStartAction)
+        {
+            return;
+        }
+
         // ボスの行動パターンステート
-        switch(_actionState)
+        switch (_actionState)
         {
 
             // アイドル
@@ -303,6 +325,7 @@ public class BossDemo : BaseEnemy
                 {
                     _golem.SetActive(true);
                     _evilMage.SetActive(true);
+                    _fishman.SetActive(true);
                     _summonTimer = 10.0f;
                     _faintingState = 2;           
                 }

@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Fusion;
-using Fusion.Sockets;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UniRx;
+using UnityEngine.SceneManagement;
 
 public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -44,11 +43,33 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             return;
         }
         _instance = this;
-        DontDestroyOnLoad(gameObject);
-
-        _mainCamera = Camera.main;
-        _playerInput = GetComponent<PlayerInput>();
+        Debug.Log($"Awake処理＿開始: {this.GetType().Name}クラス");
+        /*　　　取得　　　*/
+        _playerInput = this.GetComponent<PlayerInput>();
+        _networkRunner = Instantiate(networkRunnerPrefab);
+        // 関数登録
         RegisterInputActions(true);
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        // コールバック設定
+        _networkRunner.AddCallbacks(this);
+        // セッション設定
+        StartGameArgs startGameArgs = new StartGameArgs
+        {
+            // ゲームモード
+            GameMode = GameMode.AutoHostOrClient,
+            // セッション名
+            SessionName = "Room",
+            // ネットワーク上でのシーン遷移同期？
+            SceneManager = this.gameObject.AddComponent<NetworkSceneManagerDefault>(),
+            // セッション作成時に、現在のシーンに置かれたシーンオブジェクトをスポーンする
+            Scene = SceneManager.GetActiveScene().buildIndex,
+        };
+        // ランナースタート
+        StartGameResult result = await _networkRunner.StartGame(startGameArgs);
+        Debug.Log($"サーバー状態:{_networkRunner.IsServer}");
+        Debug.LogError($"サーバー状態:{_networkRunner.IsRunning}");
+        if (_networkRunner.IsServer)
+        {
 
         NetworkRunner networkRunner = Instantiate(networkRunnerPrefab);
         networkRunner.AddCallbacks(this);
@@ -63,8 +84,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         {
             SpawnComboCounter(networkRunner);
         }
-    }
-
     // ComboCounterを生成するメソッド
     private void SpawnComboCounter(NetworkRunner runner)
     {
@@ -94,17 +113,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             }
         }
     }
-
-    private readonly Dictionary<string, bool> InputStates = new()
-    {
-        { "Run", false },
-        { "AttackLight", false },
-        { "AttackStrong", false },
-        { "Targetting", false },
-        { "Skill", false },
-        { "Resurrection", false },
-        { "Avoidance", false }
-    };
 
     /// <summary>
     /// 入力管理メソッド
@@ -150,7 +158,9 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
             default:
                 break;
+
         }
+
     }
 
     /// <summary>
@@ -159,6 +169,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     /// <returns>カメラの向きを基準にした移動方向</returns>
     private Vector3 GetMoveDirectionFromCamera()
     {
+
         // カメラの正面方向と右方向を取得
         Vector3 cameraForward = _mainCamera.transform.forward;
         Vector3 cameraRight = _mainCamera.transform.right;
@@ -174,6 +185,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         // カメラ基準での移動方向を計算
         Vector3 direction = cameraForward * _moveInput.y + cameraRight * _moveInput.x;
         return new Vector2(direction.x, direction.z);
+
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
@@ -190,12 +202,11 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             IsResurrection = InputStates["Resurrection"],
             IsAvoidance = InputStates["Avoidance"],
         };
-
         // 入力を収集
         input.Set(data);
-
         // 入力を初期化
         ResetInput();
+
     }
 
     /// <summary>
@@ -252,6 +263,5 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) { }
-    public void OnSceneLoadDone(NetworkRunner runner) { }
-    public void OnSceneLoadStart(NetworkRunner runner) { }
+
 }

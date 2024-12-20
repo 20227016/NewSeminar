@@ -1,16 +1,10 @@
 using Fusion;
-using Fusion.Sockets;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public class NameMemory : NetworkBehaviour, INameMemory
 {
 
     [Networked]
-    public string Name { get; set; } = default;
+    public string Name { get; set; } = "";
 
     /// <summary>
     /// スポーンしたときに呼び出される
@@ -18,11 +12,12 @@ public class NameMemory : NetworkBehaviour, INameMemory
     public override void Spawned()
     {
 
+        base.Spawned();
         // 中身があるとき
         if (Name != "")
         {
 
-            this.name = Name;
+            this.gameObject.name = Name;
 
 
         }
@@ -36,7 +31,7 @@ public class NameMemory : NetworkBehaviour, INameMemory
     public void RPC_NameUpdate()
     {
 
-        this.name = Name;
+        this.gameObject.name = Name;
 
     }
 

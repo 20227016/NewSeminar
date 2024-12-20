@@ -7,6 +7,18 @@ public class Ready : BaseRoom, IReady
 {
 
     /// <summary>
+    /// 読み込みを完了した人数
+    /// </summary>
+    [Networked]
+    public int LoadCompletCount { get; set; } = 0;
+
+    /// <summary>
+    /// カウントし終えたかの巻子
+    /// </summary>
+    [Networked]
+    public bool _isCounted { get; set; } = false;
+
+    /// <summary>
     /// Readyオブジェクトのテキストメモリー
     /// </summary>
     private TextMemory _textMemory = default;
@@ -15,6 +27,13 @@ public class Ready : BaseRoom, IReady
     /// ルームの参加者人数が増えるまで待つ時間
     /// </summary>
     private const int _awaitTime = 1000;
+
+    /// <summary>
+    /// ロード状態が入る
+    /// </summary>
+    private AsyncOperation _asyncLoad = default;
+
+
 
     public override async void Spawned()
     {
@@ -28,6 +47,7 @@ public class Ready : BaseRoom, IReady
 
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
+
 
         if (_networkRunner.IsServer)
         {
@@ -75,7 +95,7 @@ public class Ready : BaseRoom, IReady
     /// <param name="isHost"></param>
     /// <param name="participant"></param>
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    private void RPC_ParticipantReady(bool isHost, NetworkObject participant)
+    public void RPC_ParticipantReady(bool isHost, NetworkObject participant)
     {
 
         if (isHost)
@@ -92,7 +112,8 @@ public class Ready : BaseRoom, IReady
                 ChangeText();
                 return;
             }
-            _networkRunner.SetActiveScene("CharacterSelection");
+            // シーン移動同期
+            RPC_LoadScene();
 
         }
         else
@@ -107,17 +128,87 @@ public class Ready : BaseRoom, IReady
     }
 
     /// <summary>
+    /// 次のシーン読み込み
+    /// </summary>
+    /// <returns></returns>
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_LoadScene()
+    {
+
+        // 非同期でシーンをロード
+        _asyncLoad = SceneManager.LoadSceneAsync("CharacterSelection");
+        // 自動でシーンがアクティブになるのを防ぐ
+        _asyncLoad.allowSceneActivation = false;
+        LoadAwait();
+
+    }
+
+    /// <summary>
     /// シーンが読み込まれるまで待つ
     /// </summary>
     /// <param name="asyncLoad"></param>
-    private async void LoadAwait(AsyncOperation asyncLoad)
+    private async void LoadAwait()
     {
 
         // 完了を待つ
-        while (!asyncLoad.isDone) 
+        while (true)
         {
 
-            await Task.Delay(1000);
+            await Task.Delay(1);
+            Debug.Log($"ロード進捗：{_asyncLoad.progress}");
+            // 読み込み進捗が90%になったときに読み込めたと変数に通知
+            if (_asyncLoad.progress >= 0.9f)
+            {
+
+                // カウント通知
+                RPC_LoadCompletNotice();
+                while(!_isCounted)
+                {
+
+                    await Task.Delay(1000);
+
+                }
+                RPC_LoadCheck();
+                break;
+
+            }
+
+        }
+
+    }
+
+    /// <summary>
+    /// ロードが完了したとき変数にカウント通知
+    /// </summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_LoadCompletNotice()
+    {
+
+        LoadCompletCount++;
+        _isCounted = true;
+        Debug.LogWarning($"{LoadCompletCount}ロード完了報告");
+
+    }
+
+    /// <summary>
+    /// 全員がロードを終えたか確認する
+    /// </summary>
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RPC_LoadCheck()
+    {
+
+        if (_networkRunner.IsServer)
+        {
+
+            _isCounted = false;
+
+        }
+        Debug.LogWarning($"全員がロード完了したかの確認 現在:ロード完了{LoadCompletCount}　ロード未完了{_roomInfo.CurrentParticipantCount} ");
+        if (LoadCompletCount >= _roomInfo.CurrentParticipantCount)
+        {
+            Debug.LogWarning("ロード完了");
+            // シーンをアクティブにする
+            _asyncLoad.allowSceneActivation = true;
 
         }
 
@@ -129,15 +220,16 @@ public class Ready : BaseRoom, IReady
     private void ChangeText()
     {
 
+        if (!_networkRunner.IsRunning)
+        {
+
+            return;
+
+        }
         // 準備完了人数
         int num = _roomInfo.ReadyGoCount();
         _textMemory.Character = $"準備完了({num}/{_roomInfo.CurrentParticipantCount})";
         _textMemory.RPC_TextUpdate();
 
     }
-
-
-
-
-
 }
