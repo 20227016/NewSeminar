@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Random = System.Random;
 using System.Collections;
 using System.Net.NetworkInformation;
+using Unity.VisualScripting;
 
 /// <summary>
 /// ボスエネミーの基盤
@@ -31,6 +32,14 @@ public class BossDemo : BaseEnemy
     [SerializeField]
     private float _currentTimer = 5f; // 現在時間
 
+    // アニメーター変数
+    // TransitionNo.0 Idle
+    // TransitionNo.1 WingAttack
+    // TransitionNo.2 MagicBullet
+    // TransitionNo.3 LaserBeam
+    // TransitionNo.4 Summon
+    // TransitionNo.5 Fainting
+    // TransitionNo.6 Heel
     private Animator _animator; // アニメーター
 
     Transform _LaserBeam = default; // レーザービーム
@@ -54,11 +63,33 @@ public class BossDemo : BaseEnemy
     // 行動パターンを抽選し、その結果を配列に格納する
     private int[] _confirmedAttackState = new int[3];
 
+    private float _summonTimer = default;
+    private bool isFaintg = false;
+    private int _faintingState = 1;
+
+    private Transform _child = default;
+    BoxCollider[] _boxColliders = default;
+
+    private GameObject _golem = default;
+    private GameObject _evilMage = default;
+
     private void Awake()
     {
         _animator = GetComponent<Animator>();
         _LaserBeam = transform.Find("LaserBeam");
         _LaserBeam.gameObject.SetActive(false);
+
+        _child = transform.Find("RigPelvis");
+        _boxColliders = _child.GetComponentsInChildren<BoxCollider>();
+        foreach (BoxCollider collider in _boxColliders)
+        {
+            collider.enabled = false;
+        }
+
+        _golem = GameObject.Find("GolemPADefault");
+        _golem.SetActive(false);
+        _evilMage = GameObject.Find("EvilMagePADefault");
+        _evilMage.SetActive(false);
     }
 
     private void Update()
@@ -157,13 +188,19 @@ public class BossDemo : BaseEnemy
     /// </summary>
     private void IdleState()
     {
-        if (IsAnimationFinished("Wing Slash Attack")
+        if (IsAnimationFinished("WingAttack")
             || IsAnimationFinished("MagicBullet")
-            || IsAnimationFinished("LaserBeam"))
+            || IsAnimationFinished("LaserBeam")
+            || IsAnimationFinished("Heel"))
         {
             _animator.SetInteger("TransitionNo", 0);
             _LaserBeam.gameObject.SetActive(false); // 非アクティブ化
             isBulletGeneration = true;
+
+            foreach (BoxCollider collider in _boxColliders)
+            {
+                collider.enabled = false;
+            }
         }
 
         _currentTimer -= Time.deltaTime;
@@ -171,7 +208,13 @@ public class BossDemo : BaseEnemy
         {
             _actionState = 2;
         }
-}
+
+        if (Input.GetKeyDown(KeyCode.D) && !isFaintg)
+        {
+            _LaserBeam.gameObject.SetActive(false);
+            _actionState = 3;
+        }
+    }
 
 　　/// <summary>
  　 /// アタック状態
@@ -207,6 +250,11 @@ public class BossDemo : BaseEnemy
         _animator.SetInteger("TransitionNo", 1);
         _actionState = 1;
         _currentTimer = 5f;
+
+        foreach (BoxCollider collider in _boxColliders)
+        {
+            collider.enabled = true;
+        }
     }
 
     /// <summary>
@@ -244,7 +292,38 @@ public class BossDemo : BaseEnemy
     /// </summary>
     private void FaintingState()
     {
-        // ダウン状態の処理を書く
+        isFaintg = true;
+
+        switch (_faintingState)
+        {
+            case 1:
+                _animator.SetInteger("TransitionNo", 4);
+
+                if (IsAnimationFinished("Summon"))
+                {
+                    _golem.SetActive(true);
+                    _evilMage.SetActive(true);
+                    _summonTimer = 10.0f;
+                    _faintingState = 2;           
+                }
+
+                break;
+
+            case 2:
+                _animator.SetInteger("TransitionNo", 5);
+                _summonTimer -= Time.deltaTime;
+                if (_summonTimer <= 0f)
+                {
+                    _faintingState = 3;
+                }
+                break;
+
+            case 3:
+                _animator.SetInteger("TransitionNo", 6);
+                _actionState = 1;
+                _faintingState = 1;
+                break;
+        }
     }
 
     /// <summary>

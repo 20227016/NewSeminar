@@ -31,24 +31,32 @@ public class EvilMage : BaseEnemy
     [SerializeField, Header("追いかけたいオブジェクトのトランスフォーム")]
     private Transform _targetTrans = default;
 
+    private bool isAttackInterval = default; // 連続攻撃をしない
+
     private float _downedTimer = 5f; // ダウンタイマー
     private float _stunnedTimer = default; // のけぞりタイマー
 
     private float _turnSpeed = 60f; // 回転速度 (度/秒)
 
+    // アニメーター変数
+    // TransitionNo.0 Idle
+    // TransitionNo.1 Attack
+    // TransitionNo.2 Downed
+    // TransitionNo.3 Stunned
+    // TransitionNo.4 Die
     private Animator _animator;
-    private Renderer _evilMageRenderer; // 子オブジェクトのRendererを取得
-    private ParticleSystem[] _evilMageEffects; // 子オブジェクトのParticleSystemを取得
+
+    private GameObject _magicCharge = default; // エフェクト本体を取得
+    private ParticleSystem[] _evilMageEffects = default; // 子オブジェクトのParticleSystemを取得
 
     [Header("魔法攻撃設定")]
     [Tooltip("発射する魔法弾のPrefab")]
     [SerializeField] private GameObject _magicProjectilePrefab;
 
     [Tooltip("魔法攻撃の溜め時間")]
-    [SerializeField] private float _chargeTime = 1.3f;
+    [SerializeField] private float _chargeTime = 1.5f;
 
     [SerializeField] private bool isCharging = default; // 溜め動作中かどうか
-    [SerializeField] private bool isCancelCharge = default; // 溜めをキャンセルするか
 
     private void Awake()
     {
@@ -56,7 +64,8 @@ public class EvilMage : BaseEnemy
         BasicRaycast();
 
         _animator = GetComponent<Animator>();
-        _evilMageRenderer = transform.Find("EvilMage").GetComponent<Renderer>();
+
+        _magicCharge = GameObject.Find("MagicCharge");
         _evilMageEffects = GetComponentsInChildren<ParticleSystem>();
     }
 
@@ -84,7 +93,6 @@ public class EvilMage : BaseEnemy
         {
             _movementState = EnemyMovementState.DOWNED;
             isCharging = false;
-            isCancelCharge = true;
         }
         // のけぞる
         else if (Input.GetKeyDown(KeyCode.S)
@@ -92,7 +100,6 @@ public class EvilMage : BaseEnemy
         {
             _movementState = EnemyMovementState.STUNNED;
             isCharging = false;
-            isCancelCharge = true;
         }
         // 倒れる
         else if (Input.GetKeyDown(KeyCode.D))
@@ -156,15 +163,15 @@ public class EvilMage : BaseEnemy
     private void EnemyIdle()
     {
         // アニメーションが終了したらサーチ状態に遷移
-        if (IsAnimationFinished("Attack01") || IsAnimationFinished("Attack02"))
+        if (IsAnimationFinished("Attack"))
         {
             _actionState = EnemyActionState.SEARCHING;
+            isAttackInterval = false;
             isCharging = false;
+            _chargeTime = 1.3f;
 
             // トリガーをセット
-            //_animator.ResetTrigger("Attack01");
-            _animator.ResetTrigger("Attack02");
-            _animator.SetTrigger("Idle");
+            _animator.SetInteger("TransitionNo", 0);
         }
     }
 
@@ -212,58 +219,46 @@ public class EvilMage : BaseEnemy
     private void EnemyAttacking()
     {
         _targetTrans = null;
+        _chargeTime -= Time.deltaTime;
 
-        // 攻撃中にアニメーションを設定
+        // 溜め時間の待機
+        if (_chargeTime <= 0 && isAttackInterval == false)
+        {
+            isAttackInterval = true;
+            
+            if (_magicProjectilePrefab == null)
+            {
+                Debug.LogWarning("魔法弾のPrefabまたは発射位置が設定されていません。");
+                return;
+            }
+
+            // 魔法弾を生成して発射
+            Instantiate(_magicProjectilePrefab, transform.position + transform.forward * 2.5f + Vector3.up * 0.75f, transform.rotation);
+        }
+
+        // アニメーションを設定
         if (!isCharging)
         {
             isCharging = true;
 
             // 溜め動作を開始
-            StartCoroutine(ChargeAndFire());
+            Charge();
         }
     }
 
     /// <summary>
-    /// 魔法弾を溜めた後に発射するコルーチン。
+    /// 魔法弾を溜めるアニメーション・エフェクトを再生
     /// </summary>
-    private IEnumerator ChargeAndFire()
+    private void Charge()
     {
         // 溜め&発射アニメーションを再生
-        _animator.ResetTrigger("Idle");
-        _animator.SetTrigger("Attack02");
+        _animator.SetInteger("TransitionNo", 1);
 
-        // 溜め中のエフェクトなどをここで再生可能
+        // 溜め中のエフェクトを再能
         foreach (var effect in _evilMageEffects)
         {
             effect.Play();
         }
-
-        // 溜め時間の待機
-        yield return new WaitForSeconds(_chargeTime);
-
-        // 魔法弾を生成して発射
-        FireMagicProjectile();
-    }
-
-    /// <summary>
-    /// 魔法弾を生成して発射する。
-    /// </summary>
-    private void FireMagicProjectile()
-    {
-        if (isCancelCharge)
-        {
-            isCancelCharge = false;
-            return;
-        }
-
-        if (_magicProjectilePrefab == null)
-        {
-            Debug.LogWarning("魔法弾のPrefabまたは発射位置が設定されていません。");
-            return;
-        }
-
-        // 魔法弾を生成
-        Instantiate(_magicProjectilePrefab, transform.position + transform.forward * 2.5f + Vector3.up * 0.75f, transform.rotation);
     }
 
     /// <summary>
@@ -274,21 +269,25 @@ public class EvilMage : BaseEnemy
         // ダウンが終了した場合、状態を戻す
         if (_downedTimer <= 0)
         {
-            _animator.ResetTrigger("Downed");
-            _animator.SetTrigger("Idle");
+            _animator.SetInteger("TransitionNo", 0);
 
             _movementState = EnemyMovementState.IDLE;
             _actionState = EnemyActionState.SEARCHING;
+
+            isAttackInterval = false;
+            _chargeTime = 1.4f;
+
+            _magicCharge.SetActive(true);
 
             _downedTimer = 5f;
             return;
         }
 
         // トリガーをセット
-        _animator.ResetTrigger("Idle");
-        //_animator.ResetTrigger("Attack01");
-        _animator.ResetTrigger("Attack02");
-        _animator.SetTrigger("Downed");
+        _animator.SetInteger("TransitionNo", 2);
+
+        // 攻撃エフェクト停止
+        _magicCharge.SetActive(false);
 
         _downedTimer -= Time.deltaTime;
     }
@@ -296,20 +295,26 @@ public class EvilMage : BaseEnemy
     private void EnemyStunned()
     {
         // のけぞり終わったら状態遷移
-        if (IsAnimationFinished("GetHit"))
+        if (IsAnimationFinished("Stunned"))
         {
-            _animator.ResetTrigger("Stunned");
-            _animator.SetTrigger("Idle");
+            _animator.SetInteger("TransitionNo", 0);
 
             _movementState = EnemyMovementState.IDLE;
             _actionState = EnemyActionState.SEARCHING;
+
+            isAttackInterval = false;
+            _chargeTime = 1.4f;
+
+            _magicCharge.SetActive(true);
 
             return;
         }
 
         // トリガーをセット
-        _animator.ResetTrigger("Idle");
-        _animator.SetTrigger("Stunned");
+        _animator.SetInteger("TransitionNo", 3);
+
+        // 攻撃エフェクト停止
+        _magicCharge.SetActive(false);
 
         // 次にのけぞるまでの時間をセット
         _stunnedTimer = 3f; 
@@ -321,34 +326,13 @@ public class EvilMage : BaseEnemy
     private IEnumerator EnemyDie(float fadeDuration)
     {
         // トリガーをセット
-        _animator.ResetTrigger("Idle");
-        //_animator.ResetTrigger("Attack01");
-        _animator.ResetTrigger("Attack02");
-        _animator.ResetTrigger("Downed");
-        _animator.SetTrigger("Die");
+        _animator.SetInteger("TransitionNo", 4);
 
-        // 透明化処理（未実装）
-        if (_evilMageRenderer == null) yield break;
-        Material material = _evilMageRenderer.material;
-        float fadeStep = 1f / fadeDuration;
+        // 攻撃エフェクト停止
+        _magicCharge.SetActive(false);
 
-        for (float t = 0; t < 1f; t += Time.deltaTime * fadeStep)
-        {
-            if (material.HasProperty("_BaseColor")) // プロパティ名を確認
-            {
-                Color color = material.GetColor("_BaseColor");
-                color.a = Mathf.Lerp(1f, 0f, t); // 透明度を徐々に下げる
-                material.SetColor("_BaseColor", color);
-            }
-            else if (material.HasProperty("_TintColor")) // 他の候補プロパティ
-            {
-                Color color = material.GetColor("_TintColor");
-                color.a = Mathf.Lerp(1f, 0f, t);
-                material.SetColor("_TintColor", color);
-            }
-
-            yield return null;
-        }
+        // 秒後
+        yield return new WaitForSeconds(fadeDuration);
 
         // 完全に透明にした後、オブジェクトを非アクティブ化
         gameObject.SetActive(false);

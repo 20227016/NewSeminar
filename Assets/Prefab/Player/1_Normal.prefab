@@ -1425,6 +1425,7 @@ GameObject:
   - component: {fileID: 4762466880810951508}
   - component: {fileID: 2833035376307005735}
   - component: {fileID: 6304774326624272736}
+  - component: {fileID: 6483237933338132474}
   m_Layer: 6
   m_Name: 1_Normal
   m_TagString: Player
@@ -1573,6 +1574,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 6916163649973143881}
   - {fileID: 928529337336563799}
+  - {fileID: 6483237933338132474}
   SimulationBehaviours: []
 --- !u!114 &928529337336563799
 MonoBehaviour:
@@ -1629,6 +1631,12 @@ MonoBehaviour:
     _damageReactionLightAnimation: {fileID: 7400000, guid: 03d7bb31f4803fd45ae78430b375c9b8, type: 3}
     _damageReactionHeavyAnimation: {fileID: 7400000, guid: c1d5e2eb31078e744a792fc216838df4, type: 3}
     _deathAnimation: {fileID: 7400000, guid: 0a205e82d4075b346b912ccfe0a0bfd2, type: 3}
+  _characterEffectStruct:
+    _attackLight1Effect: {fileID: 4033287822461114141, guid: a164e676dbbd6e54587237e619372c98, type: 3}
+    _attackLight2Effect: {fileID: 4596544553357837919, guid: 8eb503696b886e04faff8fc0f480d473, type: 3}
+    _attackLight3Effect: {fileID: 4642848129145531053, guid: 3138a83bedbd6ad4481ba0b061da2eb6, type: 3}
+    _attackStrongEffect: {fileID: 3891973445508218817, guid: e190bf97c041e58448af6b043116cba0, type: 3}
+    _skillEffect: {fileID: 7151510144505425601, guid: 356cf4dca1465b54fabbb8cd9b1cd190, type: 3}
   _currentState: 0
 --- !u!114 &4762466880810951508
 MonoBehaviour:
@@ -1675,6 +1683,38 @@ MonoBehaviour:
   _ignoreLayer:
     serializedVersion: 2
     m_Bits: 823
+--- !u!114 &6483237933338132474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1877988490393578206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  Animator: {fileID: 6236969221784064739}
+  TotalWords: 4
+  SyncSettings: -1
+  FloatAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  TimeAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: 1061325578
+  WeightAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  StateHashes: 00000000ed001c2f6f4f50aa2afa8626a8b5caa32ab4b9ec691a8aeff2af3fa99644ee5246fa07782211d68322ff2dfdfd18c5dc98ae24644749cc450e9e2313d179cb32ad0b478d72ecafac252114d510d1cc863c11b1863dc0c0aad07cc57de84f962a31ec77719c072259fdf95179bab87a0e20e23b68aa8ece26b539534ce8fa4fde
+  TriggerHashes: 0000000077906d249497e2aa0a974866139e8d6c808e49003d529f2abcdfedb195953ebed2c76fdd9e18af5a
 --- !u!1 &1937563792966552275
 GameObject:
   m_ObjectHideFlags: 0

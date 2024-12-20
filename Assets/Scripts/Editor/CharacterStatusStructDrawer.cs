@@ -7,7 +7,7 @@ public class CharacterStatusStructDrawer : PropertyDrawer
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         // 開閉可能なFoldout
-        property.isExpanded = EditorGUI.Foldout(new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight), property.isExpanded, "キャラクターステータス");
+        property.isExpanded = EditorGUI.Foldout(new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight), property.isExpanded, "ステータス設定");
 
         if (!property.isExpanded)
             return;
@@ -73,7 +73,12 @@ public class CharacterStatusStructDrawer : PropertyDrawer
 
     private float DrawLabel(Rect position, string label)
     {
-        EditorGUI.LabelField(position, label, EditorStyles.boldLabel);
+        // ラベルに太文字スタイルを適用
+        GUIStyle boldLabelStyle = new GUIStyle(EditorStyles.label)
+        {
+            fontStyle = FontStyle.Bold // 太文字に設定
+        };
+        EditorGUI.LabelField(position, label, boldLabelStyle);
         return position.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
     }
 

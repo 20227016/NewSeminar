@@ -8,10 +8,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/WorkSpace/Daayama.unity
     guid: 09479c056aa2f6f47985082339cea4d7
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Title.unity
     guid: 7bf11c6f7a97f6b40b130b863edec629
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/CharacterSelection.unity
     guid: cc4bd820586803e47aeba52f9ae07de7
   m_configObjects: {}

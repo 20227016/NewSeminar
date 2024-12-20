@@ -59,6 +59,12 @@ public class HealerSkill : MonoBehaviour, ISkill
         // 当たったプレイヤーを回復
         foreach (Collider collider in hitColliders)
         {
+            CharacterBase characterBase = collider.GetComponent<CharacterBase>();
+            if(characterBase._currentState == CharacterStateEnum.DEATH)
+            {
+                return;
+            }
+
             IReceiveHeal target = collider.GetComponent<IReceiveHeal>();
 
             if (target != null)
