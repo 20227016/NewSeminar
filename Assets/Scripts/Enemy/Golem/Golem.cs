@@ -65,7 +65,6 @@ public class Golem : BaseEnemy
     private float _lookAroundTimer = 0f; // 周囲を見渡すためのタイマー
     private float _turnSpeed = 60f; // 回転速度 (度/秒)
 
-
     // アニメーター変数
     // TransitionNo.0 Idle
     // TransitionNo.1 Running

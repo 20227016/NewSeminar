@@ -101,7 +101,7 @@ public class LaserBeam : MonoBehaviour
             //ADD THIS IF YOU WANNT TO USE LASERS IN 2D: RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.forward, MaxLength);       
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, MaxLength, layerMask))//CHANGE THIS IF YOU WANT TO USE LASERRS IN 2D: if (hit.collider != null)
             {
-                // 当たった場合の処理
+                // ビームが当たった場合の処理
                 //End laser position if collides with object
                 Laser.SetPosition(1, hit.point);
 
@@ -127,10 +127,15 @@ public class LaserBeam : MonoBehaviour
                 {
                     hit.collider.GetComponent<HittedObject>().TakeDamage(damageOverTime * Time.deltaTime);
                 }*/
+
+                // BoxCollider のサイズと位置を更新
+                float distance = Vector3.Distance(transform.position, hit.point);
+                _laserCollider.size = new Vector3(_laserCollider.size.x, _laserCollider.size.y, distance);
+                _laserCollider.center = new Vector3(0, 0, distance / 2f);
             }
             else
             {
-                // 何も当たらない場合の処理
+                // ビームが何も当たらない場合の処理
                 //End laser position if doesn't collide with object
                 var EndPos = transform.position + transform.forward * MaxLength;
                 Laser.SetPosition(1, EndPos);
@@ -144,6 +149,10 @@ public class LaserBeam : MonoBehaviour
                 Length[2] = NoiseTextureLength * (Vector3.Distance(transform.position, EndPos));
                 //LaserSpeed[0] = (LaserStartSpeed[0] * 4) / (Vector3.Distance(transform.position, EndPos)); {DISABLED AFTER UPDATE}
                 //LaserSpeed[2] = (LaserStartSpeed[2] * 4) / (Vector3.Distance(transform.position, EndPos)); {DISABLED AFTER UPDATE}
+
+                // BoxCollider のサイズと位置を更新
+                _laserCollider.size = new Vector3(_laserCollider.size.x, _laserCollider.size.y, MaxLength);
+                _laserCollider.center = new Vector3(0, 0, MaxLength / 2f);
             }
             //Insurance against the appearance of a laser in the center of coordinates!
             if (Laser.enabled == false && LaserSaver == false)
