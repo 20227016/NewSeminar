@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
+public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
 
     /// <summary>
@@ -54,7 +54,10 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
     /// </summary>
     private NetworkRunner _networkRunner = default;
 
-    private bool _isMySpawned = false;
+    /// <summary>
+    /// スポーン状態
+    /// </summary>
+    //private bool _isMySpawned = false;
 
     /// <summary>
     /// インプットステート
@@ -86,12 +89,15 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    public override void Spawned()
-    {
-        base.Spawned();
-        _isMySpawned = true;
-        Debug.Log("うまれた");
-    }
+    //public override void Spawned()
+    //{
+
+    //    Debug.LogError("スポーン処理＿開始");
+    //    base.Spawned();
+    //    _isMySpawned = true;
+    //    Debug.LogError("スポーン処理＿開始");
+
+    //}
 
     /// <summary>
     /// 開始前処理
@@ -99,11 +105,14 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
     private async void Awake()
     {
 
+        DontDestroyOnLoad(this);
         // インスタンスがあるかつ自分ではないとき
         if (_instance != null && _instance != this)
         {
+
             Destroy(this.gameObject);
             return;
+
         }
         _instance = this;
         Debug.Log($"Awake処理＿開始: {this.GetType().Name}クラス");
@@ -130,7 +139,6 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
         // ランナースタート
         StartGameResult result = await _networkRunner.StartGame(startGameArgs);
         Debug.Log($"サーバー状態:{_networkRunner.IsServer}");
-        Debug.LogError($"サーバー状態:{_networkRunner.IsRunning}");
         if (_networkRunner.IsServer)
         {
 
@@ -312,14 +320,13 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
     public async void OnPlayerJoined(NetworkRunner runner, PlayerRef playerRef)
     {
 
-        while (!_networkRunner.IsRunning || !_isMySpawned)
+        while (!_networkRunner.IsRunning)
         {
 
             await Task.Delay(1000);
 
         }
         Debug.Log($"ランナー状態{_networkRunner.IsRunning}");
-        Debug.Log($"スポーン状態{_isMySpawned}");
         Debug.Log($"プレイヤー参加処理＿開始: {this.GetType().Name}クラス");
         Debug.Log($"{_roomInfo}");
         Debug.Log($"{_roomInfo.CurrentParticipantCount }人がすでに参加");
@@ -398,16 +405,79 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
 
     }
 
+    /// <summary>
+    /// プレイヤーの入力情報欠如時
+    /// </summary>
+    /// <param name="runner"></param>
+    /// <param name="player"></param>
+    /// <param name="input"></param>
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
+    /// <summary>
+    /// ネットワークランナーをシャットダウンしたとき
+    /// </summary>
+    /// <param name="runner"></param>
+    /// <param name="shutdownReason"></param>
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
+    /// <summary>
+    /// サーバーの接続成功時
+    /// 初期処理ユーザーへの通知など
+    /// </summary>
+    /// <param name="runner"></param>
     public void OnConnectedToServer(NetworkRunner runner) { }
+    /// <summary>
+    /// サーバーから切断されたとき
+    /// 切断または再接続処理
+    /// </summary>
+    /// <param name="runner"></param>
     public void OnDisconnectedFromServer(NetworkRunner runner) { }
+    /// <summary>
+    /// 新しい接続要求があったとき
+    /// 接続の承認または拒否
+    /// </summary>
+    /// <param name="runner"></param>
+    /// <param name="request"></param>
+    /// <param name="token"></param>
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
+    /// <summary>
+    /// 接続失敗時
+    /// エラーハンドリングやユーザーへの通知
+    /// </summary>
+    /// <param name="runner"></param>
+    /// <param name="remoteAddress"></param>
+    /// <param name="reason"></param>
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
+    /// <summary>
+    /// ユーザーが定義したメッセージ受信時
+    /// </summary>
+    /// <param name="runner"></param>
+    /// <param name="message"></param>
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
+    /// <summary>
+    /// セッションリスト更新時
+    /// 利用可能なセッション一覧を更新して、ユーザーに表示（何個もルームがあるときなど）
+    /// </summary>
+    /// <param name="runner"></param>
+    /// <param name="sessionList"></param>
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
+    /// <summary>
+    /// カスタム認証応答時
+    /// </summary>
+    /// <param name="runner"></param>
+    /// <param name="data"></param>
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
+    /// <summary>
+    /// ホスト変更時
+    /// </summary>
+    /// <param name="runner"></param>
+    /// <param name="hostMigrationToken"></param>
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
+    /// <summary>
+    /// 信頼性の高いデータを受信したとき
+    /// 重要なデータ処理
+    /// </summary>
+    /// <param name="runner"></param>
+    /// <param name="player"></param>
+    /// <param name="data"></param>
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) { }
 
     /// <summary>
@@ -425,20 +495,23 @@ public class GameLauncher : NetworkBehaviour, INetworkRunnerCallbacks
     /// <summary>
     /// シーン開始時
     /// </summary>
-    public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    public async void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
 
-        Debug.LogError("移動完了");
+       
+        while (!_networkRunner.IsRunning)
+        {
+
+            await Task.Delay(100);
+
+        }
         // 新たなシーンのカメラに切り替え
         _mainCamera = Camera.main;
-        // 参加者生成
-
-        // コンポーネントデストロイ
-
-        Debug.LogError("切り替わり時にカメラ確保");
+        Debug.Log("切り替わり時にカメラ確保");
         _networkRunner.SetActiveScene(SceneManager.GetActiveScene().buildIndex);
-        _networkRunner.SetActiveScene("");
-        Debug.LogError($"{SceneManager.GetActiveScene().name}シーンのオブジェクトをスポーン");
+        //_networkRunner.SetActiveScene("");
+        Debug.Log($"{SceneManager.GetActiveScene().buildIndex}&{SceneManager.GetActiveScene().name}シーンのオブジェクトをスポーン");
+        Debug.Log("移動完了処理＿終了");
 
     }
 

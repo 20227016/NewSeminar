@@ -1,5 +1,8 @@
 using Fusion;
 
+/// <summary>
+/// 名前を変更するためのインターフェース
+/// </summary>
 public interface IReName
 {
 
