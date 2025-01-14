@@ -173,12 +173,12 @@ public class NetworkDebugStart : Fusion.Behaviour {
 
     if (_initialScenePath == null) {
       if (String.IsNullOrEmpty(InitialScenePath)) {
-        var currentScene = SceneManager.GetActiveScene();
+        var currentScene = SceneManager2.GetActiveScene();
         if (currentScene.IsValid()) {
           _initialScenePath = currentScene.path;
         } else {
           // Last fallback is the first entry in the build settings
-          _initialScenePath = SceneManager.GetSceneByBuildIndex(0).path;
+          _initialScenePath = SceneManager2.GetSceneByBuildIndex(0).path;
         }
         InitialScenePath = _initialScenePath;
       } else {
@@ -232,8 +232,8 @@ public class NetworkDebugStart : Fusion.Behaviour {
   }
 
   protected bool TryGetSceneRef(out SceneRef sceneRef) {
-    var activeScene = SceneManager.GetActiveScene();
-    if (activeScene.buildIndex < 0 || activeScene.buildIndex >= SceneManager.sceneCountInBuildSettings) {
+    var activeScene = SceneManager2.GetActiveScene();
+    if (activeScene.buildIndex < 0 || activeScene.buildIndex >= SceneManager2.sceneCountInBuildSettings) {
       sceneRef = default;
       return false;
     } else {
@@ -391,7 +391,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
       }
     }
 
-    SceneManager.LoadSceneAsync(_initialScenePath);
+    SceneManager2.LoadSceneAsync(_initialScenePath);
     // Destroy our DontDestroyOnLoad objects to finish the reset
     Destroy(RunnerPrefab.gameObject);
     Destroy(gameObject);
@@ -415,7 +415,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
 
     CurrentStage = Stage.StartingUp;
 
-    var currentScene = SceneManager.GetActiveScene();
+    var currentScene = SceneManager2.GetActiveScene();
 
     // must have a runner
     if (!RunnerPrefab) {
@@ -586,7 +586,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
   void DisplayAddToSceneButtonIfNeeded() {
     if (Application.isPlaying)
       return;
-    var currentScene = SceneManager.GetActiveScene();
+    var currentScene = SceneManager2.GetActiveScene();
     if (currentScene.TryGetSceneIndexInBuildSettings(out var _) == false) {
       GUILayout.Space(4);
       var clicked = BehaviourEditorUtils.DrawWarnButton(new GUIContent("Add Scene To Settings", "Will add current scene to Unity Build Settings list."), MessageType.Warning);
