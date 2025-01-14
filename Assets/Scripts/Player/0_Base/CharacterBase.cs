@@ -251,7 +251,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         {
             if (_effects[i] != null)
             {
-                _effects[i] = Instantiate(_effects[i], transform.position, _effects[i].transform.rotation, transform);
+                Vector3 prefabLocalPosition = _effects[i].transform.localPosition;
+                _effects[i] = Instantiate(_effects[i], transform.position + prefabLocalPosition, _effects[i].transform.rotation, transform);
                 _effects[i].name = _effects[i].name;
                 _effects[i].gameObject.SetActive(false);
             }
@@ -319,7 +320,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             {
                 // スタミナ切れ時は回復速度が半減
                 float recoveryRate = _isOutOfStamina ? 2.0f : 1.0f;
-                _networkedStamina += _characterStatusStruct._recoveryStamina * STAMINA_UPDATE_INTERVAL / recoveryRate ;
+                _networkedStamina += _characterStatusStruct._recoveryStamina * STAMINA_UPDATE_INTERVAL / recoveryRate;
             })
             .AddTo(this);
     }
@@ -367,7 +368,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             return;
         }
 
-        if(_currentState != CharacterStateEnum.ATTACK)
+        if (_currentState != CharacterStateEnum.ATTACK)
         {
             // 移動処理
             MoveManagement(input);
@@ -456,8 +457,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     public virtual void AttackLight(CharacterBase characterBase, float attackPower, float attackMultiplier)
     {
         _currentState = CharacterStateEnum.ATTACK;
-
-        _playEffect.PlayEffect(_effects[_attackLightComboCount], transform.position + new Vector3(0, 1, 0));
+        _playEffect.PlayEffect(_effects[_attackLightComboCount], _effects[_attackLightComboCount].transform.position);
 
         // 攻撃速度を適用
         _animator.speed = _characterStatusStruct._attackSpeed;
@@ -522,7 +522,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _animator.speed = _characterStatusStruct._attackSpeed;
 
         float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._attackStrongAnimation) / _characterStatusStruct._attackSpeed;
-        _playEffect.PlayEffect(_effects[3], transform.position + new Vector3(0, 1, 0));
+        _playEffect.PlayEffect(_effects[3], _effects[3].transform.position);
         ResetState(animationDuration, () => _notAttackAccepted = false);
 
         _networkedSkillPoint = 100f;
@@ -552,7 +552,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     }
 
 
-    protected virtual void Skill(CharacterBase characterBase, float skillTime, float skillCoolTime) 
+    protected virtual void Skill(CharacterBase characterBase, float skillTime, float skillCoolTime)
     {
         // クールタイム中ならリターン
         if (_isSkillCoolTime) return;
@@ -571,7 +571,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._skillAnimation);
 
-        _playEffect.PlayEffect(_effects[4],  transform.position + new Vector3(0, 1, 0));
+        _playEffect.PlayEffect(_effects[4], _effects[4].transform.position);
 
         ResetState(animationDuration);
     }
@@ -598,7 +598,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 現在HPから最終ダメージを引く
         _networkedHP = Mathf.Clamp(_networkedHP - damageValue, 0, _characterStatusStruct._playerStatus.MaxHp);
 
-        if(_networkedHP <= 0) return;
+        if (_networkedHP <= 0) return;
 
         // 被弾時のリアクション
         float animationDuration;
@@ -636,11 +636,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// <summary>
     /// 自分の攻撃がヒットしたときの処理
     /// </summary>
-    public virtual void AttackHit(int damage) 
+    public virtual void AttackHit(int damage)
     {
         // スキルポイントを与ダメージを参照してチャージする
         float chargeSkillPoint = damage / 2;
-        _networkedSkillPoint = Mathf.Clamp(_networkedSkillPoint+ chargeSkillPoint, 0, _characterStatusStruct._skillPointUpperLimit);
+        _networkedSkillPoint = Mathf.Clamp(_networkedSkillPoint + chargeSkillPoint, 0, _characterStatusStruct._skillPointUpperLimit);
     }
 
 

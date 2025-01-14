@@ -208,15 +208,15 @@ namespace Fusion {
 
     [System.Diagnostics.Conditional("FUSION_NETWORK_SCENE_MANAGER_TRACE")]
     protected void LogTrace(string msg) {
-      Log.Debug($"[NetworkSceneManager] {(this != null ? this.name : "<destroyed>")}: {msg}");
+      //Log.Debug($"[NetworkSceneManager] {(this != null ? this.name : "<destroyed>")}: {msg}");
     }
 
     protected void LogError(string msg) {
-      Log.Error($"[NetworkSceneManager] {(this != null ? this.name : "<destroyed>")}: {msg}");
+      //Log.Error($"[NetworkSceneManager] {(this != null ? this.name : "<destroyed>")}: {msg}");
     }
 
     protected void LogWarn(string msg) {
-      Log.Warn($"[NetworkSceneManager] {(this != null ? this.name : "<destroyed>")}: {msg}");
+      //Log.Warn($"[NetworkSceneManager] {(this != null ? this.name : "<destroyed>")}: {msg}");
     }
 
 

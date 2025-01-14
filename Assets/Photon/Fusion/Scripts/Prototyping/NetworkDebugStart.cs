@@ -474,7 +474,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
       }
 
       if (serverTask.IsFaulted) {
-        Log.Debug($"Unable to start server: {serverTask.Exception}");
+        //Log.Debug($"Unable to start server: {serverTask.Exception}");
 
         ShutdownAll();
         yield break;
@@ -556,8 +556,8 @@ public class NetworkDebugStart : Fusion.Behaviour {
     }
 
     if (clientsStartTask.IsFaulted) {
-      Debug.LogWarning(clientsStartTask.Exception);
-    }
+            Debug.LogWarning(clientsStartTask.Exception);
+        }
 
     CurrentStage = Stage.AllConnected;
   }
@@ -566,7 +566,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
     
     var sceneManager = runner.GetComponents(typeof(MonoBehaviour)).OfType<INetworkSceneManager>().FirstOrDefault();
     if (sceneManager == null) {
-      Debug.Log($"NetworkRunner does not have any component implementing {nameof(INetworkSceneManager)} interface, adding {nameof(NetworkSceneManagerDefault)}.", runner);
+      //Debug.Log($"NetworkRunner does not have any component implementing {nameof(INetworkSceneManager)} interface, adding {nameof(NetworkSceneManagerDefault)}.", runner);
       sceneManager = runner.gameObject.AddComponent<NetworkSceneManagerDefault>();
     }
 
