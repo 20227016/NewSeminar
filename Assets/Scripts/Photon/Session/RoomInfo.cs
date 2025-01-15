@@ -21,8 +21,16 @@ public class RoomInfo : NetworkBehaviour
     /// <summary>
     /// 参加者の状態
     /// </summary>
-    private (string name, bool isRegistration , bool isReady)[] _participationInfos = new (string name, bool isRegistration, bool isReady)[] 
+    private (string name, bool isRegistration, bool isReady)[] _participationInfos = new (string name, bool isRegistration, bool isReady)[]
                                                                              { ("名前1",false,false),("名前2", false,false),("名前3", false,false),("名前4",false,false) };
+
+    public override void Spawned()
+    {
+
+        base.Spawned();
+        //DontDestroyOnLoad(this.gameObject);
+
+    }
 
     /// <summary>
     /// 名前をセットしセットしたインデックスを補正した値を返す
@@ -43,7 +51,7 @@ public class RoomInfo : NetworkBehaviour
                 continue;
 
             }
-            _participationInfos[i] = (name,true,_participationInfos[i].isReady);
+            _participationInfos[i] = (name, true, _participationInfos[i].isReady);
             // ヒエラルキー上にあるオブジェクトとそろえる
             int index = i + 1;
             return index;
@@ -84,7 +92,7 @@ public class RoomInfo : NetworkBehaviour
             returnNames.Add(nameInfo.name);
 
         }
-        return returnNames.ToArray() ;
+        return returnNames.ToArray();
 
     }
 
@@ -167,26 +175,6 @@ public class RoomInfo : NetworkBehaviour
 
     }
 
-    public int ReadyGoCount()
-    {
-
-        int num = default;
-        foreach ((string name, bool isRegistration, bool isReady) nameInfo in _participationInfos)
-        {
-
-            if (nameInfo.isReady)
-            {
-
-                num++;
-
-            }
-
-        }
-
-        return num;
-
-    }
-
     /// <summary>
     /// 出撃できるかの確認
     /// </summary>
@@ -209,5 +197,27 @@ public class RoomInfo : NetworkBehaviour
         return true;
 
     }
+
+    public int ReadyGoCount()
+    {
+
+        int num = default;
+        foreach ((string name, bool isRegistration, bool isReady) nameInfo in _participationInfos)
+        {
+
+            if (nameInfo.isReady)
+            {
+
+                num++;
+
+            }
+
+        }
+
+        return num;
+
+    }
+
+
 
 }

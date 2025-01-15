@@ -123,7 +123,7 @@ namespace Fusion.Assistants {
     public static void AddPlayerSpawner() { AddPlayerSpawner(null); }
     public static PlayerSpawnerPrototype AddPlayerSpawner(GameObject addTo) {
       if (addTo == null) {
-        if (Selection.activeGameObject != null && Selection.activeGameObject.scene == SceneManager.GetActiveScene()) {
+        if (Selection.activeGameObject != null && Selection.activeGameObject.scene == SceneManager2.GetActiveScene()) {
           addTo = Selection.activeGameObject;
         } else {
           addTo = new GameObject("Prototype Player Spawner");
@@ -146,7 +146,7 @@ namespace Fusion.Assistants {
 
     [MenuItem("Fusion/GameObject/Setup/Add Current Scene To Build Settings", false, FusionAssistants.PRIORITY_LOW)]
     [MenuItem("GameObject/Fusion/Setup/Add Current Scene To Build Settings", false, FusionAssistants.PRIORITY)]
-    public static void AddCurrentSceneToSettings() { DirtyAndSaveScene(SceneManager.GetActiveScene()); }
+    public static void AddCurrentSceneToSettings() { DirtyAndSaveScene(SceneManager2.GetActiveScene()); }
     public static void DirtyAndSaveScene(Scene scene) {
 
       UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(scene);

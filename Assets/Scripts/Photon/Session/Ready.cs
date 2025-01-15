@@ -13,10 +13,10 @@ public class Ready : BaseRoom, IReady
     public int LoadCompletCount { get; set; } = 0;
 
     /// <summary>
-    /// カウントし終えたかの巻子
+    /// ロードを終えたかのフラグ
     /// </summary>
     [Networked]
-    public bool _isCounted { get; set; } = false;
+    public bool _isLoadComplete { get; set; } = false;
 
     /// <summary>
     /// Readyオブジェクトのテキストメモリー
@@ -67,10 +67,7 @@ public class Ready : BaseRoom, IReady
 
         Debug.Log($"{_roomInfo}準備");
         await GetRoomAwait();
-        Debug.Log($"ルーム確保");
-        Debug.Log($"{_networkRunner}ランナー");
-        Debug.Log($"{_networkRunner.IsServer}サーバー");
-        bool isHost = default;
+        bool isHost = false;
         if (_networkRunner.IsServer)
         {
 
@@ -136,7 +133,7 @@ public class Ready : BaseRoom, IReady
     {
 
         // 非同期でシーンをロード
-        _asyncLoad = SceneManager.LoadSceneAsync("CharacterSelection");
+        _asyncLoad = SceneManager2.LoadSceneAsync("CharacterSelection");
         // 自動でシーンがアクティブになるのを防ぐ
         _asyncLoad.allowSceneActivation = false;
         LoadAwait();
@@ -162,7 +159,8 @@ public class Ready : BaseRoom, IReady
 
                 // カウント通知
                 RPC_LoadCompletNotice();
-                while(!_isCounted)
+                // ラグ考慮のループ
+                while(!_isLoadComplete)
                 {
 
                     await Task.Delay(1000);
@@ -185,7 +183,7 @@ public class Ready : BaseRoom, IReady
     {
 
         LoadCompletCount++;
-        _isCounted = true;
+        _isLoadComplete = true;
         Debug.LogWarning($"{LoadCompletCount}ロード完了報告");
 
     }
@@ -200,10 +198,10 @@ public class Ready : BaseRoom, IReady
         if (_networkRunner.IsServer)
         {
 
-            _isCounted = false;
+            _isLoadComplete = false;
 
         }
-        Debug.LogWarning($"全員がロード完了したかの確認 現在:ロード完了{LoadCompletCount}　ロード未完了{_roomInfo.CurrentParticipantCount} ");
+        Debug.LogWarning($"全員がロード完了したかの確認 現在:ロード完了{LoadCompletCount}　参加人数{_roomInfo.CurrentParticipantCount} ");
         if (LoadCompletCount >= _roomInfo.CurrentParticipantCount)
         {
             Debug.LogWarning("ロード完了");

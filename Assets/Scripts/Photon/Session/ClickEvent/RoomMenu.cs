@@ -16,7 +16,7 @@ public class RoomMenu : MonoBehaviour
     private NetworkRunner _networkRunner = default;
 
     /// <summary>
-    /// 自分のネットオブジェクト
+    /// ローカルにおける参加者オブジェクト
     /// </summary>
     private NetworkObject _myParticipantObj = default;
 
@@ -49,12 +49,12 @@ public class RoomMenu : MonoBehaviour
     public void ReName()
     {
 
-        // 自分のセッションのプレイヤーレフ
+        // セッションに紐づけているプレイヤーレフ
         PlayerRef playerRef = _networkRunner.LocalPlayer;
-        // 自分のセッションの参加者オブジェクト
+        // 参加者オブジェクトを取得
         _myParticipantObj = _networkRunner.GetPlayerObject(playerRef);
         string newName = _nameInputField.text;
-        Debug.LogError($"プレイヤーレフとの関連オブジェ{_myParticipantObj}");
+        Debug.LogError($"プレイヤーレフとの関連づけられているオブジェクト{_myParticipantObj}");
         IReName iRename = _myParticipantObj.GetComponent<IReName>();
         if (iRename == null)
         {
@@ -72,9 +72,9 @@ public class RoomMenu : MonoBehaviour
     public void Ready()
     {
 
-        // 自分のセッションのプレイヤーレフ
+        // セッションに紐づけているプレイヤーレフ
         PlayerRef playerRef = _networkRunner.LocalPlayer;
-        // 自分のセッションの参加者オブジェクト
+        // 参加者オブジェクトを取得
         _myParticipantObj = _networkRunner.GetPlayerObject(playerRef);
         Debug.Log($"{_myParticipantObj.name}呼び出したオブジェクト");
         IReady iReady = _myParticipantObj.GetComponent<IReady>();

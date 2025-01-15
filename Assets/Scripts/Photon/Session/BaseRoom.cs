@@ -38,7 +38,6 @@ public class BaseRoom : NetworkBehaviour
             Debug.LogError($"自分についているネットワークランナーが見つかりません");
 
         }
-        Debug.LogError($"{this.gameObject}でルーム管理クラスが見つかりません");
         _roomInfo = GameObject.Find("Room").GetComponent<RoomInfo>();
         if (_roomInfo == null)
         {
@@ -50,7 +49,6 @@ public class BaseRoom : NetworkBehaviour
         _roomInfo.RoomName = _roomInfo.RoomName;
         _roomInfo.MaxParticipantCount = _roomInfo.MaxParticipantCount;
         _roomInfo.CurrentParticipantCount = _roomInfo.CurrentParticipantCount;
-
 
     }
 

@@ -43,7 +43,7 @@ namespace Fusion {
 #endif
       {
 
-        var op = SceneManager.LoadSceneAsync(scenePath, parameters);
+        var op = SceneManager2.LoadSceneAsync(scenePath, parameters);
         Assert.Check(op);
 
         bool alreadyHandled = false;
@@ -56,9 +56,9 @@ namespace Fusion {
             loaded(scene);
           }
         };
-        SceneManager.sceneLoaded += sceneLoadedHandler;
+        SceneManager2.sceneLoaded += sceneLoadedHandler;
         op.completed += _ => {
-          SceneManager.sceneLoaded -= sceneLoadedHandler;
+          SceneManager2.sceneLoaded -= sceneLoadedHandler;
         };
 
         return op;
@@ -66,7 +66,7 @@ namespace Fusion {
     }
 
     protected virtual YieldInstruction UnloadSceneAsync(Scene scene) {
-      return SceneManager.UnloadSceneAsync(scene);
+      return SceneManager2.UnloadSceneAsync(scene);
     }
 
     protected override IEnumerator SwitchScene(SceneRef prevScene, SceneRef newScene, FinishedLoadingDelegate finished) {
@@ -79,7 +79,7 @@ namespace Fusion {
 
     protected virtual IEnumerator SwitchSceneMultiplePeer(SceneRef prevScene, SceneRef newScene, FinishedLoadingDelegate finished) {
 
-      Scene activeScene = SceneManager.GetActiveScene();
+      Scene activeScene = SceneManager2.GetActiveScene();
 
       bool canTakeOverActiveScene = prevScene == default && IsScenePathOrNameEqual(activeScene, newScene);
 
@@ -89,12 +89,12 @@ namespace Fusion {
       var sceneToUnload = Runner.MultiplePeerUnityScene;
       var tempSceneSpawnedPrefabs = Runner.IsMultiplePeerSceneTemp ? sceneToUnload.GetRootGameObjects() : Array.Empty<GameObject>();
 
-      if (canTakeOverActiveScene && NetworkRunner.GetRunnerForScene(activeScene) == null && SceneManager.sceneCount > 1) {
+      if (canTakeOverActiveScene && NetworkRunner.GetRunnerForScene(activeScene) == null && SceneManager2.sceneCount > 1) {
         LogTrace("Going to attempt to unload the initial scene as it needs a separate Physics stage");
         yield return UnloadSceneAsync(activeScene);
       }
 
-      if (SceneManager.sceneCount == 1 && tempSceneSpawnedPrefabs.Length == 0) {
+      if (SceneManager2.sceneCount == 1 && tempSceneSpawnedPrefabs.Length == 0) {
         // can load non-additively, stuff will simply get unloaded
         LogTrace($"Only one scene remained, going to load non-additively");
         loadSceneParameters.loadSceneMode = LoadSceneMode.Single;
@@ -127,7 +127,7 @@ namespace Fusion {
           LogTrace($"Temp scene has {tempSceneSpawnedPrefabs.Length} spawned prefabs, need to move them to the loaded scene.");
           foreach (var go in tempSceneSpawnedPrefabs) {
             Assert.Check(go.GetComponent<NetworkObject>(), $"Expected {nameof(NetworkObject)} on a GameObject spawned on the temp scene {tempScene.name}");
-            SceneManager.MoveGameObjectToScene(go, loadedScene);
+            SceneManager2.MoveGameObjectToScene(go, loadedScene);
           }
         }
         LogTrace($"Unloading temp scene {tempScene}");
@@ -140,7 +140,7 @@ namespace Fusion {
     protected virtual IEnumerator SwitchSceneSinglePeer(SceneRef prevScene, SceneRef newScene, FinishedLoadingDelegate finished) {
 
       Scene loadedScene;
-      Scene activeScene = SceneManager.GetActiveScene();
+      Scene activeScene = SceneManager2.GetActiveScene();
 
       bool canTakeOverActiveScene = prevScene == default && IsScenePathOrNameEqual(activeScene, newScene);
 
