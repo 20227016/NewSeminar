@@ -33,13 +33,15 @@ public class BossDemo : BaseEnemy
     private float _currentTimer = 5f; // 現在時間
 
     // アニメーター変数
-    // TransitionNo.0 Idle
-    // TransitionNo.1 WingAttack
-    // TransitionNo.2 MagicBullet
-    // TransitionNo.3 LaserBeam
-    // TransitionNo.4 Summon
-    // TransitionNo.5 Fainting
-    // TransitionNo.6 Heel
+    // TransitionNo.-2 Appearance
+    // TransitionNo.-1 Roar
+    // TransitionNo.0  Idle
+    // TransitionNo.1  WingAttack
+    // TransitionNo.2  MagicBullet
+    // TransitionNo.3  LaserBeam
+    // TransitionNo.4  Summon
+    // TransitionNo.5  Fainting
+    // TransitionNo.6  Heel
     private Animator _animator; // アニメーター
 
     Transform _LaserBeam = default; // レーザービーム
@@ -79,7 +81,7 @@ public class BossDemo : BaseEnemy
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        _animator.SetInteger("TransitionNo", -1);
+        _animator.SetInteger("TransitionNo", -2);
 
         _LaserBeam = transform.Find("LaserBeam");
         _LaserBeam.gameObject.SetActive(false);
@@ -102,6 +104,11 @@ public class BossDemo : BaseEnemy
     private void Update()
     {
         if (IsAnimationFinished("Appearance"))
+        {
+            _animator.SetInteger("TransitionNo", -1);
+        }
+
+        if (IsAnimationFinished("Roar"))
         {
             _animator.SetInteger("TransitionNo", 0);
         }
