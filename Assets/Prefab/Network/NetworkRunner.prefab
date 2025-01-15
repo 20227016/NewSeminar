@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 186056830105851063}
   - component: {fileID: 5701922471170824758}
   m_Layer: 0
-  m_Name: NR
+  m_Name: NetworkRunner
   m_TagString: Runner
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
