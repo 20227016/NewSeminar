@@ -133,7 +133,7 @@ public class Ready : BaseRoom, IReady
     {
 
         // 非同期でシーンをロード
-        _asyncLoad = SceneManager.LoadSceneAsync("CharacterSelection");
+        _asyncLoad = SceneManager2.LoadSceneAsync("CharacterSelection");
         // 自動でシーンがアクティブになるのを防ぐ
         _asyncLoad.allowSceneActivation = false;
         LoadAwait();
