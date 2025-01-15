@@ -713,7 +713,6 @@ GameObject:
   - component: {fileID: 298091913}
   - component: {fileID: 298091912}
   - component: {fileID: 298091911}
-  - component: {fileID: 298091915}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -804,35 +803,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &298091915
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 298091910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObjectInterest: 1
-  DefaultInterestGroups: []
-  DestroyWhenStateAuthorityLeaves: 0
-  AllowStateAuthorityOverride: 1
-  AoiPositionSource: {fileID: 0}
-  Flags: 2561
-  NetworkGuid:
-    RawGuidValue: d5c3fb82ceeb46cf8ad07d90d1cb4181
-  NestedObjects:
-  - {fileID: 480208556}
-  - {fileID: 1565984878}
-  - {fileID: 100780212}
-  - {fileID: 552174086}
-  - {fileID: 1945544728}
-  NetworkedBehaviours:
-  - {fileID: 644168377}
-  SimulationBehaviours: []
 --- !u!1 &475253709
 GameObject:
   m_ObjectHideFlags: 0
@@ -1490,22 +1460,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60791a3fc3003d04db8aaf3a34e38173, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WordOffset: 0
-  WordCount: 0
-  _interpolationDataSource: 0
   _characterModel:
   - {fileID: 5583146360670182021}
   - {fileID: 574474334503508753}
   - {fileID: 1758640243}
   - {fileID: 1878673367454097571}
-  __tankChoice:
-    _value: 0
-  __knightChoice:
-    _value: 0
-  __healerChoice:
-    _value: 0
-  __fighterChoice:
-    _value: 0
+  _playerData: {fileID: -4791656329460386236, guid: c067203a9301f3043a8f65fe1d2c415e, type: 3}
 --- !u!1 &932537129
 GameObject:
   m_ObjectHideFlags: 0
@@ -2804,6 +2764,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1717431221
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2850777806730104807, guid: c067203a9301f3043a8f65fe1d2c415e, type: 3}
+      propertyPath: m_Name
+      value: PlayerData
+      objectReference: {fileID: 0}
+    - target: {fileID: 8321512618610902976, guid: c067203a9301f3043a8f65fe1d2c415e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2356.7842
+      objectReference: {fileID: 0}
+    - target: {fileID: 8321512618610902976, guid: c067203a9301f3043a8f65fe1d2c415e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 333.9889
+      objectReference: {fileID: 0}
+    - target: {fileID: 8321512618610902976, guid: c067203a9301f3043a8f65fe1d2c415e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -7.7017994
+      objectReference: {fileID: 0}
+    - target: {fileID: 8321512618610902976, guid: c067203a9301f3043a8f65fe1d2c415e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8321512618610902976, guid: c067203a9301f3043a8f65fe1d2c415e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8321512618610902976, guid: c067203a9301f3043a8f65fe1d2c415e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8321512618610902976, guid: c067203a9301f3043a8f65fe1d2c415e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8321512618610902976, guid: c067203a9301f3043a8f65fe1d2c415e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8321512618610902976, guid: c067203a9301f3043a8f65fe1d2c415e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8321512618610902976, guid: c067203a9301f3043a8f65fe1d2c415e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c067203a9301f3043a8f65fe1d2c415e, type: 3}
 --- !u!1 &1758640243 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 702386668866066201, guid: 4379d34cd3aa24e4fa88708caa839763, type: 3}
@@ -3130,22 +3147,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60791a3fc3003d04db8aaf3a34e38173, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WordOffset: 0
-  WordCount: 0
-  _interpolationDataSource: 0
   _characterModel:
   - {fileID: 5583146360670182021}
   - {fileID: 574474334503508753}
   - {fileID: 1758640243}
   - {fileID: 1878673367454097571}
-  __tankChoice:
-    _value: 0
-  __knightChoice:
-    _value: 0
-  __healerChoice:
-    _value: 0
-  __fighterChoice:
-    _value: 0
+  _playerData: {fileID: 0}
 --- !u!114 &1945544728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3167,8 +3174,7 @@ MonoBehaviour:
   NetworkGuid:
     RawGuidValue: e04bcbc635b94d89914102f224f4fabe
   NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 1945544727}
+  NetworkedBehaviours: []
   SimulationBehaviours: []
 --- !u!4 &1948634156 stripped
 Transform:
@@ -21636,3 +21642,4 @@ SceneRoots:
   - {fileID: 932537133}
   - {fileID: 171010147}
   - {fileID: 1028828557}
+  - {fileID: 1717431221}

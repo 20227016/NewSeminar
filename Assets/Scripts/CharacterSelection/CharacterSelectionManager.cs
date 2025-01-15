@@ -1,9 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Fusion;
-using UnityEngine.UI;
-using System;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// キャラクター選択画面制御用スクリプト
@@ -13,7 +10,7 @@ using System;
 /// 3 ヒーラー
 /// 4 ファイター
 /// </summary>
-public class CharacterSelectionManager : NetworkBehaviour
+public class CharacterSelectionManager : MonoBehaviour
 {
 
     // 現在選択しているキャラクター（共有する変数）
@@ -28,22 +25,13 @@ public class CharacterSelectionManager : NetworkBehaviour
     [SerializeField,Tooltip("キャラクターモデルを格納")]
     private List<GameObject> _characterModel = new List<GameObject>();
 
-    [Networked]
-    public NetworkBool _tankChoice { get; set; } = false;
-    [Networked]
-    public NetworkBool _knightChoice { get; set; } = false;
-    [Networked]
-    public NetworkBool _healerChoice { get; set; } = false;
-    [Networked]
-    public NetworkBool _fighterChoice { get; set; } = false;
+    public bool _tankChoice { get; set; } = false;
+    public bool _knightChoice { get; set; } = false;
+    public bool _healerChoice { get; set; } = false;
+    public bool _fighterChoice { get; set; } = false;
 
-
-
-    public override void Spawned()
-    {
-        base.Spawned();
-        Debug.Log("CharacterSelectionManagerがスポーンされました。");
-    }
+    [SerializeField]
+    private PlayerData _playerData = default;
 
 
     //キャラクター1のボタンにつける
@@ -99,7 +87,7 @@ public class CharacterSelectionManager : NetworkBehaviour
     public void OnClick4()
     {
 
-        if ((CurrentSelectionCharacter != 4) && (!_characterDecision) && (_fighterChoice))
+        if ((CurrentSelectionCharacter != 4) && (!_characterDecision) && (!_fighterChoice))
         {
             DeleteCharacter();
             CurrentSelectionCharacter = 4;
@@ -136,7 +124,23 @@ public class CharacterSelectionManager : NetworkBehaviour
                 break;
         }
         print("決定されたキャラクター "+_confirmedSelectionCharacter);
+
+        SetPlayerData();
+
+        SceneManager.LoadScene("Main");
     }
+
+    private void SetPlayerData()
+    {
+        var playerData = FindObjectOfType<PlayerData>();
+        if (playerData == null)
+        {
+            playerData = Instantiate(_playerData);
+        }
+        playerData.SetPlayerNumber(_confirmedSelectionCharacter);
+    }
+
+
 
     /// <summary>
     /// すべてのオブジェクトを非表示にする
