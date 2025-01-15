@@ -121,7 +121,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         _networkRunner = Instantiate(networkRunnerPrefab);
         // 関数登録
         RegisterInputActions(true);
-        SceneManager2.sceneLoaded += OnSceneLoaded;
+
         // コールバック設定
         _networkRunner.AddCallbacks(this);
         // セッション設定
@@ -134,7 +134,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             // ネットワーク上でのシーン遷移同期？
             SceneManager = this.gameObject.AddComponent<NetworkSceneManagerDefault>(),
             // セッション作成時に、現在のシーンに置かれたシーンオブジェクトをスポーンする
-            Scene = SceneManager2.GetActiveScene().buildIndex,
+
         };
         // ランナースタート
         StartGameResult result = await _networkRunner.StartGame(startGameArgs);
@@ -508,9 +508,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         // 新たなシーンのカメラに切り替え
         _mainCamera = Camera.main;
         Debug.Log("切り替わり時にカメラ確保");
-        _networkRunner.SetActiveScene(SceneManager2.GetActiveScene().buildIndex);
-        //_networkRunner.SetActiveScene("");
-        Debug.Log($"{SceneManager2.GetActiveScene().buildIndex}&{SceneManager2.GetActiveScene().name}シーンのオブジェクトをスポーン");
+
         Debug.Log("移動完了処理＿終了");
 
     }
