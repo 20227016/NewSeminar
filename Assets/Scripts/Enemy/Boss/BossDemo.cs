@@ -66,6 +66,7 @@ public class BossDemo : BaseEnemy
 
     // 行動パターンを抽選し、その結果を配列に格納する
     private int[] _confirmedAttackState = new int[3];
+    private int _lastValue = default;
 
     private float _summonTimer = default;
     private bool isFaintg = false;
@@ -111,29 +112,31 @@ public class BossDemo : BaseEnemy
         if (IsAnimationFinished("Roar"))
         {
             _animator.SetInteger("TransitionNo", 0);
-        }
-
-        if (Input.GetKeyDown(KeyCode.A) && !isStartAction)
-        {
             isStartAction = true;
         }
 
+        // ムービー後に行動開始
         if (!isStartAction)
         {
             return;
         }
 
+        // 召喚&ダウンテスト
+        if (Input.GetKeyDown(KeyCode.D) && !isFaintg)
+        {
+            _LaserBeam.gameObject.SetActive(false);
+            _actionState = 3;
+        }
+
         // ボスの行動パターンステート
         switch (_actionState)
         {
-
             // アイドル
             case 1:
 
                 IdleState();
 
                 break;
-
 
             // 攻撃
             case 2:
@@ -187,7 +190,6 @@ public class BossDemo : BaseEnemy
 
                 break;
 
-
 　　　　　　// ダウン
             case 3:
 
@@ -195,7 +197,6 @@ public class BossDemo : BaseEnemy
                 FaintingState();
 
                 break;
-
 
             // 死亡
             case 4:
@@ -237,16 +238,10 @@ public class BossDemo : BaseEnemy
         {
             _actionState = 2;
         }
-
-        if (Input.GetKeyDown(KeyCode.D) && !isFaintg)
-        {
-            _LaserBeam.gameObject.SetActive(false);
-            _actionState = 3;
-        }
     }
 
-　　/// <summary>
- 　 /// アタック状態
+    /// <summary>
+    /// アタック状態
     /// ボスの攻撃パターンを抽選する
     /// </summary>
     private void AttackState()
@@ -257,16 +252,20 @@ public class BossDemo : BaseEnemy
             _confirmedAttackState[_currentLottery] = _currentLottery + 1;
         }
 
-        // Debug.Log("配列の初期状態: " + string.Join(", ", _confirmedAttackState));
-
-        // シャッフル
-        for (_currentLottery = _confirmedAttackState.Length - 1; _currentLottery > 0; _currentLottery--)
+        // 攻撃パターンをシャッフルし、前回の配列の最後と次の配列の最初が同じ値にならないようにする
+        do
         {
-            int j = _random.Next(_currentLottery + 1);
-            int tmp = _confirmedAttackState[_currentLottery];
-            _confirmedAttackState[_currentLottery] = _confirmedAttackState[j];
-            _confirmedAttackState[j] = tmp;
-        }
+            for (_currentLottery = _confirmedAttackState.Length - 1; _currentLottery > 0; _currentLottery--)
+            {
+                int j = _random.Next(_currentLottery + 1);
+                int tmp = _confirmedAttackState[_currentLottery];
+                _confirmedAttackState[_currentLottery] = _confirmedAttackState[j];
+                _confirmedAttackState[j] = tmp;
+            }
+
+        } while (_confirmedAttackState[0] == _lastValue);
+
+        _lastValue = _confirmedAttackState[^1]; // 前回の配列の最後の値
 
         // Debug.Log("シャッフル後の配列: " + string.Join(", ", _confirmedAttackState));
     }
