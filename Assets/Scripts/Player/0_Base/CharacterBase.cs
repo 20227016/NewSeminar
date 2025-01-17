@@ -683,4 +683,10 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _currentState = CharacterStateEnum.DEATH;
         _animation.PlayAnimation(_animator, _characterAnimationStruct._deathAnimation);
     }
+
+    public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data)
+    {
+        // 必要なら送信されたデータを処理
+        Debug.Log($"プレイヤー {player} が参加しました");
+    }
 }

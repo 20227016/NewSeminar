@@ -1,6 +1,8 @@
+using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UniRx;
 
 /// <summary>
 /// キャラクター選択画面制御用スクリプト
@@ -14,15 +16,12 @@ public class CharacterSelectionManager : MonoBehaviour
 {
 
     // 現在選択しているキャラクター（共有する変数）
-    public static int CurrentSelectionCharacter { get; private set; } = default;
+    public int _currentSelectionCharacter = default;
 
     // 決定したキャラクター(共有するBool)
-    public static bool _characterDecision { get; private set; } = false;
+    public ReactiveProperty<bool> _characterDecision = new();
 
-    // 確定選択しているキャラクター
-    private int _confirmedSelectionCharacter { get; set; } = default;
-
-    [SerializeField,Tooltip("キャラクターモデルを格納")]
+    [SerializeField, Tooltip("キャラクターモデルを格納")]
     private List<GameObject> _characterModel = new List<GameObject>();
 
     public bool _tankChoice { get; set; } = false;
@@ -30,18 +29,22 @@ public class CharacterSelectionManager : MonoBehaviour
     public bool _healerChoice { get; set; } = false;
     public bool _fighterChoice { get; set; } = false;
 
-    [SerializeField]
-    private PlayerData _playerData = default;
 
+    public void Start()
+    {
+        _currentSelectionCharacter = 0;
+        _characterDecision.Value = false;
+
+    }
 
     //キャラクター1のボタンにつける
     public void OnClick1()
     {
 
-        if((CurrentSelectionCharacter != 1) && (!_characterDecision) && (!_tankChoice))
+        if ((_currentSelectionCharacter != 1) && (!_characterDecision.Value) && (!_tankChoice))
         {
             DeleteCharacter();
-            CurrentSelectionCharacter = 1;
+            _currentSelectionCharacter = 1;
 
             // リストの1番目のオブジェクトを取得して制御
             GameObject secondObject = _characterModel[0];
@@ -55,10 +58,10 @@ public class CharacterSelectionManager : MonoBehaviour
     public void OnClick2()
     {
 
-        if ((CurrentSelectionCharacter != 2) && (!_characterDecision) && (!_knightChoice))
+        if ((_currentSelectionCharacter != 2) && (!_characterDecision.Value) && (!_knightChoice))
         {
             DeleteCharacter();
-            CurrentSelectionCharacter = 2;
+            _currentSelectionCharacter = 2;
 
             // リストの2番目のオブジェクトを取得して制御
             GameObject secondObject = _characterModel[1];
@@ -70,11 +73,11 @@ public class CharacterSelectionManager : MonoBehaviour
     //キャラクター3のボタンにつける
     public void OnClick3()
     {
-        if ((CurrentSelectionCharacter != 3) && (!_characterDecision) && (!_healerChoice))
+        if ((_currentSelectionCharacter != 3) && (!_characterDecision.Value) && (!_healerChoice))
         {
 
             DeleteCharacter();
-            CurrentSelectionCharacter = 3;
+            _currentSelectionCharacter = 3;
 
             // リストの3番目のオブジェクトを取得して制御
             GameObject secondObject = _characterModel[2];
@@ -87,10 +90,10 @@ public class CharacterSelectionManager : MonoBehaviour
     public void OnClick4()
     {
 
-        if ((CurrentSelectionCharacter != 4) && (!_characterDecision) && (!_fighterChoice))
+        if ((_currentSelectionCharacter != 4) && (!_characterDecision.Value) && (!_fighterChoice))
         {
             DeleteCharacter();
-            CurrentSelectionCharacter = 4;
+            _currentSelectionCharacter = 4;
 
             // リストの4番目のオブジェクトを取得して制御
             GameObject secondObject = _characterModel[3];
@@ -100,11 +103,10 @@ public class CharacterSelectionManager : MonoBehaviour
     }
 
     // 選択しているキャラクターを確定する
-    public void ConfirmedOnClick()
+    public void Decision()
     {
-        _characterDecision = true;
-        _confirmedSelectionCharacter = CurrentSelectionCharacter;
-        switch(_confirmedSelectionCharacter)
+        _characterDecision.Value = true;
+        switch (_currentSelectionCharacter)
         {
             // タンク
             case 1:
@@ -123,24 +125,9 @@ public class CharacterSelectionManager : MonoBehaviour
                 _fighterChoice = true;
                 break;
         }
-        print("決定されたキャラクター "+_confirmedSelectionCharacter);
 
-        SetPlayerData();
 
-        SceneManager.LoadScene("Main");
     }
-
-    private void SetPlayerData()
-    {
-        var playerData = FindObjectOfType<PlayerData>();
-        if (playerData == null)
-        {
-            playerData = Instantiate(_playerData);
-        }
-        playerData.SetPlayerNumber(_confirmedSelectionCharacter);
-    }
-
-
 
     /// <summary>
     /// すべてのオブジェクトを非表示にする
