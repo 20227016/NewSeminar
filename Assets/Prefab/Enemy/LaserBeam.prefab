@@ -43875,7 +43875,7 @@ Transform:
   m_GameObject: {fileID: 6785042678754513397}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6, y: 2, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -43932,11 +43932,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageOverTime: 30
   HitEffect: {fileID: 2597454763765045970}
-  HitOffset: 0
-  useLaserRotation: 0
   MaxLength: 30
-  MainTextureLength: 1
-  NoiseTextureLength: 1
 --- !u!120 &2841758216294040163
 LineRenderer:
   serializedVersion: 2
