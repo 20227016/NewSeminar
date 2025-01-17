@@ -42,6 +42,7 @@ public class BossDemo : BaseEnemy
     // TransitionNo.4  Summon
     // TransitionNo.5  Fainting
     // TransitionNo.6  Heel
+    // TransitionNo.7  Die
     private Animator _animator; // アニメーター
 
     Transform _LaserBeam = default; // レーザービーム
@@ -122,10 +123,25 @@ public class BossDemo : BaseEnemy
         }
 
         // 召喚&ダウンテスト
-        if (Input.GetKeyDown(KeyCode.D) && !isFaintg)
+        if (Input.GetKeyDown(KeyCode.S) && !isFaintg)
         {
+            foreach (BoxCollider collider in _boxColliders)
+            {
+                collider.enabled = false;
+            }
             _LaserBeam.gameObject.SetActive(false);
             _actionState = 3;
+        }
+
+        // 死ぬテスト
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            foreach (BoxCollider collider in _boxColliders)
+            {
+                collider.enabled = false;
+            }
+            _LaserBeam.gameObject.SetActive(false);
+            _actionState = 4;
         }
 
         // ボスの行動パターンステート
@@ -360,7 +376,7 @@ public class BossDemo : BaseEnemy
     /// </summary>
     private void DeathState()
     {
-        // 死亡状態の処理を書く
+        _animator.SetInteger("TransitionNo", 7);
     }
 
     /// <summary>
