@@ -5,6 +5,7 @@ using Fusion.Sockets;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UniRx;
+using Cysharp.Threading.Tasks;
 
 public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -35,9 +36,11 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     private Camera _mainCamera = default;
 
-    [Networked]
-    private int _playerSelectNumber { get; set; } = default;
+    [SerializeField]
+    private GameObject characterSelectionPrefab;
 
+    [SerializeField]
+    private NetworkPrefabRef _player;
 
     private async void Awake()
     {
@@ -53,6 +56,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             GameMode = GameMode.AutoHostOrClient,
             SceneManager = networkRunner.GetComponent<NetworkSceneManagerDefault>()
         });
+
         // ここでComboCounterを生成
         if (networkRunner.IsServer)
         {
@@ -192,7 +196,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         // 入力を初期化
         ResetInput();
     }
-
     /// <summary>
     /// 入力初期化メソッド
     /// </summary>
@@ -208,47 +211,54 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             }
         }
     }
-
-    // プレイヤーが参加した時の処理
-    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
+    public async void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         if (!runner.IsServer)
         {
             return;
         }
 
-        var playerData = FindObjectOfType<PlayerData>();
-
-        _playerSelectNumber = playerData.GetPlayerNumber();
-
-        Debug.Log(_playerSelectNumber);
-
         var spawnPosition = new Vector3(_playerSpawnPos.x + UnityEngine.Random.Range(0, 10), _playerSpawnPos.y, _playerSpawnPos.z);
 
-        NetworkPrefabRef networkPrefabRef = default;
-        switch (_playerSelectNumber)
+        // プレイヤー本体を生成
+        var playerObject = runner.Spawn(_player, spawnPosition, Quaternion.identity, player);
+        runner.SetPlayerObject(player, playerObject);
+
+        Debug.Log(playerObject);
+
+        PlayerData playerData = playerObject.GetComponent<PlayerData>();
+        Debug.Log(playerData);
+
+        // キャラクター選択が決定されるまで待機
+        while (!playerData.GetCharacterDecision())
         {
-            case 1:
-                networkPrefabRef = playerAvatarPrefab1;
-                break;
-
-            case 2:
-                networkPrefabRef = playerAvatarPrefab2;
-                break;
-
-            case 3:
-                networkPrefabRef = playerAvatarPrefab3;
-                break;
-
-            case 4:
-                networkPrefabRef = playerAvatarPrefab4;
-                break;
+            Debug.Log("待機");
+            await UniTask.Yield(); // 毎フレーム待機
         }
 
-        var avatar = runner.Spawn(networkPrefabRef, spawnPosition, Quaternion.identity, player);
-        runner.SetPlayerObject(player, avatar);
-    }
+        var characterSelection = playerData._characterSelectionManager;
+        playerData.SetPlayerNumber(characterSelection._currentSelectionCharacter);
 
+        Debug.Log(characterSelection._currentSelectionCharacter);
+
+        // キャラクター選択に基づいてアバターを生成
+        NetworkPrefabRef networkPrefabRef = playerData.GetPlayerNumber() switch
+        {
+            1 => playerAvatarPrefab1,
+            2 => playerAvatarPrefab2,
+            3 => playerAvatarPrefab3,
+            4 => playerAvatarPrefab4,
+            _ => playerAvatarPrefab1,
+        };
+
+        // アバターを生成してプレイヤーオブジェクトの子に設定
+        var avatarObject = runner.Spawn(networkPrefabRef, spawnPosition, Quaternion.identity, player);
+        
+        runner.SetPlayerObject(player, avatarObject);
+
+        avatarObject.transform.SetParent(playerObject.transform);
+        //playerData.Create(runner, playerData.GetPlayerNumber(), player);
+    }
     // プレイヤーが退出した時の処理
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
@@ -262,7 +272,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             runner.Despawn(avatar);
         }
     }
-
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
     public void OnConnectedToServer(NetworkRunner runner) { }
@@ -274,13 +283,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) { }
-
-    public void OnSceneLoadDone(NetworkRunner runner) 
-    {
-    }
-
-    public void OnSceneLoadStart(NetworkRunner runner) 
-    {
-
-    }
+    public void OnSceneLoadDone(NetworkRunner runner)  { }
+    public void OnSceneLoadStart(NetworkRunner runner) {}
 }
