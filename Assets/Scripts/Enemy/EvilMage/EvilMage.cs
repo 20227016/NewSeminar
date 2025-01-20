@@ -418,6 +418,7 @@ public class EvilMage : BaseEnemy
         _targetTrans = closestObject;
     }
 
+    /*
     /// <summary>
     /// 検索範囲をシーンビューに表示します（常に）。
     /// </summary>
@@ -436,4 +437,5 @@ public class EvilMage : BaseEnemy
             Gizmos.DrawLine(transform.position, _targetTrans.position);
         }
     }
+    */
 }

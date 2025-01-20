@@ -256,35 +256,6 @@ public class Golem : BaseEnemy
         return false; // 障害物なし
     }
 
-    /*
-    /// <summary>
-    /// GizmosでBoxCastの範囲を可視化
-    /// </summary>
-    private void OnDrawGizmos()
-    {
-        if (_movementState != EnemyMovementState.WALKING)
-            return;
-
-        // BoxCastの設定
-        Vector3 boxSize = new Vector3(3.0f, 1.0f, 0.5f); // 幅、高さ、奥行き
-        Vector3 origin = transform.position + Vector3.up * 0.5f; // ゴーレムの少し上から発射
-        Vector3 direction = (_randomTargetPos - transform.position).normalized; // 移動方向
-        Quaternion rotation = Quaternion.LookRotation(direction); // ゴーレムの向きに合わせる
-        float distance = 3.0f; // 判定の距離
-
-        // Gizmosの色を設定
-        Gizmos.color = Color.red;
-
-        // 始点から終点までの移動を線形補間して範囲を描画
-        for (float i = 0; i <= 1.0f; i += 0.1f)
-        {
-            Vector3 interpolatedPosition = origin + direction * distance * i;
-            Gizmos.matrix = Matrix4x4.TRS(interpolatedPosition, rotation, Vector3.one);
-            Gizmos.DrawWireCube(Vector3.zero, boxSize);
-        }
-    }
-    */
-
     /// <summary>
     /// 歩行状態：移動後、見渡し状態へ移行
     /// </summary>
