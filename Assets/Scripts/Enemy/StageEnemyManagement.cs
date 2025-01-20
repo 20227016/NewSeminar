@@ -17,6 +17,9 @@ public class StageEnemyManagement : MonoBehaviour
 
     private Subject<Unit> OnAllEnemiesDefeated = new Subject<Unit>();
 
+    [SerializeField, Tooltip("転送ポータル格納用")]
+    private GameObject _transferPortal = default;
+
     [SerializeField,Tooltip("このリストにはステージに設置したエネミーのオブジェクトをいれてください")]
     private List<GameObject> enemyOBJ = new List<GameObject>();
 
@@ -106,6 +109,7 @@ public class StageEnemyManagement : MonoBehaviour
         {
             print("エネミーが全滅しました");
             OnAllEnemiesDefeated.OnNext(Unit.Default);
+            _transferPortal.SetActive(true);
             _hasExecuted = true;
         }
     }

@@ -123,6 +123,46 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &633354098 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3503045671804485010, guid: 62ecae6c37c13cb449cf9b758f46358b, type: 3}
+  m_PrefabInstance: {fileID: 1951069782}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &633354101 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6892151882075831637, guid: 62ecae6c37c13cb449cf9b758f46358b, type: 3}
+  m_PrefabInstance: {fileID: 1951069782}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 633354098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4e41cbe013fc84488db79e022dc550e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &633354102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 633354098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 1
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 2561
+  NetworkGuid:
+    RawGuidValue: 05b7eb1c8c3342b687ba0bb53856f347
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 633354101}
+  SimulationBehaviours: []
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,31 +257,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &782890966
+--- !u!1 &845412553 stripped
 GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 7560647582222639000, guid: 62ecae6c37c13cb449cf9b758f46358b, type: 3}
+  m_PrefabInstance: {fileID: 1951069782}
   m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 782890969}
-  - component: {fileID: 782890968}
-  - component: {fileID: 782890967}
-  m_Layer: 0
-  m_Name: bosws
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &782890967
+--- !u!114 &845412554 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1129662908958112071, guid: 62ecae6c37c13cb449cf9b758f46358b, type: 3}
+  m_PrefabInstance: {fileID: 1951069782}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845412553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38b30f5b9a0565a4cac63f74e513a244, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &845412560
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 782890966}
+  m_GameObject: {fileID: 845412553}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
@@ -252,55 +290,13 @@ MonoBehaviour:
   DestroyWhenStateAuthorityLeaves: 0
   AllowStateAuthorityOverride: 1
   AoiPositionSource: {fileID: 0}
-  Flags: 2561
+  Flags: 133633
   NetworkGuid:
-    RawGuidValue: e1e2572067f5417d8e9364bc0bbee211
+    RawGuidValue: 7e5beb238d6d4ec786a1c58821a7f16f
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 845412554}
   SimulationBehaviours: []
---- !u!114 &782890968
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 782890966}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30a007d78ad34a741bea1bdb46b410b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ignoreLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  _enemyStatusStruct:
-    _hp: 0
-    _attackPower: 0
-    _attackPowerSpeed: 0
-    _moveSpeed: 0
-    _diffencePower: 0
-    _attackCoolTime: 0
-    _attackDelayTime: 0
-    _downedTime: 0
-  _tags: []
-  _magicBullet: {fileID: 0}
-  _bulletChargeTime: 1.3
-  isBulletGeneration: 1
---- !u!4 &782890969
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 782890966}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.0767403, y: 0.39681053, z: 5.2995386}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,10 +445,18 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: df0ad7c9f6345884d80ba1a83a99b45a, type: 2}
+    - target: {fileID: 5198176799384880286, guid: 62ecae6c37c13cb449cf9b758f46358b, type: 3}
+      propertyPath: _transferPortal
+      value: 
+      objectReference: {fileID: 845412553}
     - target: {fileID: 6159469589617059810, guid: 62ecae6c37c13cb449cf9b758f46358b, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 6b8686abf45747e49b90402d181f468c, type: 2}
+    - target: {fileID: 7560647582222639000, guid: 62ecae6c37c13cb449cf9b758f46358b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7884689884213430917, guid: 62ecae6c37c13cb449cf9b758f46358b, type: 3}
       propertyPath: m_Convex
       value: 0
@@ -468,8 +472,16 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 5311629373058191290, guid: 62ecae6c37c13cb449cf9b758f46358b, type: 3}
+    - {fileID: 1540955064575297633, guid: 62ecae6c37c13cb449cf9b758f46358b, type: 3}
+    - {fileID: 2477787232499609797, guid: 62ecae6c37c13cb449cf9b758f46358b, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7560647582222639000, guid: 62ecae6c37c13cb449cf9b758f46358b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 845412560}
+    - targetCorrespondingSourceObject: {fileID: 3503045671804485010, guid: 62ecae6c37c13cb449cf9b758f46358b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 633354102}
   m_SourcePrefab: {fileID: 100100000, guid: 62ecae6c37c13cb449cf9b758f46358b, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
@@ -478,4 +490,3 @@ SceneRoots:
   - {fileID: 963194228}
   - {fileID: 705507995}
   - {fileID: 1951069782}
-  - {fileID: 782890969}
