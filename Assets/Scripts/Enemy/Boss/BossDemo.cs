@@ -221,7 +221,7 @@ public class BossDemo : BaseEnemy
             case 4:
 
                 // Ç∆ÇËÇ†Ç¶Ç∏îÒï\é¶Ç…Ç∑ÇÍÇŒOK
-                DeathState();
+                StartCoroutine(DeathState(3f));
 
                 break;
 
@@ -378,9 +378,13 @@ public class BossDemo : BaseEnemy
     /// <summary>
     /// éÄñSèÛë‘
     /// </summary>
-    private void DeathState()
+    private IEnumerator DeathState(float fadeDuration)
     {
         _animator.SetInteger("TransitionNo", 7);
+
+        yield return new WaitForSeconds(fadeDuration);
+
+        gameObject.SetActive(false);
     }
 
     /// <summary>

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1655195898162611949}
   - component: {fileID: -4509091571678886427}
   - component: {fileID: -9015437316352564296}
+  - component: {fileID: -1081335549286348559}
   m_Layer: 0
   m_Name: FireMagic
   m_TagString: Untagged
@@ -102,7 +103,36 @@ MonoBehaviour:
   speed: 10
   lifeTime: 5
   damage: 10
-  _fireTornadoPrefab: {fileID: 8805658474712963746, guid: a0e8baacaf56e284ebdb27dc35788cf6, type: 3}
+--- !u!114 &-1081335549286348559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810653205754761373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1710889294, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  InterpolationSpace: 0
+  InterpolationTarget: {fileID: 0}
+  InterpolateErrorCorrection: 1
+  InterpolatedErrorCorrectionSettings:
+    MinRate: 3.3
+    MaxRate: 10
+    PosBlendStart: 0.25
+    PosBlendEnd: 1
+    PosMinCorrection: 0.025
+    PosTeleportDistance: 2
+    RotBlendStart: 0.1
+    RotBlendEnd: 0.5
+    RotTeleportRadians: 1.5
+  UseLegacySharedModeInterpolation: 0
+  TargetInterpolationDelay: 0.03
 --- !u!1 &946275186078110714
 GameObject:
   m_ObjectHideFlags: 0
