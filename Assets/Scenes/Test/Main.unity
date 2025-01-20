@@ -1238,6 +1238,11 @@ MonoBehaviour:
   characterSelectionPrefab: {fileID: 2212699943117680185, guid: 91cc15d7bca2ca04cb549706d94f4161, type: 3}
   _player:
     RawGuidValue: ea9ebd305099e114091516c919b9c7bb
+  _playerAvatar:
+  - RawGuidValue: 9d48f6d9d09469841bb1dc48c590dbed
+  - RawGuidValue: 70bb2aca4b6df7148ac6c3b371e8bd27
+  - RawGuidValue: df50a45c106cf4b4baf9f07b565c30f8
+  - RawGuidValue: f742f9a1cec1c6c46a14a5be07418deb
 --- !u!1001 &86471027816174235
 PrefabInstance:
   m_ObjectHideFlags: 0
