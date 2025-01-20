@@ -79,6 +79,7 @@ public class BossDemo : BaseEnemy
     private GameObject _golem = default;
     private GameObject _evilMage = default;
     private GameObject _fishman = default;
+    private GameObject _demon = default;
 
     private void Awake()
     {
@@ -100,7 +101,9 @@ public class BossDemo : BaseEnemy
         _evilMage = GameObject.Find("EvilMagePADefault");
         _evilMage.SetActive(false);
         _fishman = GameObject.Find("FishmanPADefault");
-        _fishman.SetActive(false);
+        _fishman.SetActive(false); 
+        _demon = GameObject.Find("FylingDemonPAMaskTint");
+        _demon.SetActive(false);
     }
 
     private void Update()
@@ -348,6 +351,7 @@ public class BossDemo : BaseEnemy
                     _golem.SetActive(true);
                     _evilMage.SetActive(true);
                     _fishman.SetActive(true);
+                    _demon.SetActive(true);
                     _summonTimer = 10.0f;
                     _faintingState = 2;           
                 }

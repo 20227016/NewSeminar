@@ -24,8 +24,6 @@ public class FireMagic : MonoBehaviour
     private float _elapsedTime = 0f; // 経過時間
     private bool _isActive = true;  // アクティブ状態を管理
 
-    [SerializeField] private GameObject _fireTornadoPrefab = default;
-
     /// <summary>
     /// 初期化処理
     /// </summary>
@@ -74,19 +72,9 @@ public class FireMagic : MonoBehaviour
             // プレイヤーのダメージ処理を呼び出す（仮の例）
             Debug.Log($"Hit {other.gameObject.name}, dealt {damage} damage.");
         }
-        // ステージに当たったら
         else if (other.gameObject.layer == 8)
         {
-            // 衝突点を取得
-            if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, Mathf.Infinity))
-            {
-                // 炎の竜巻を生成
-                Instantiate(
-                    _fireTornadoPrefab,
-                    hit.point,              // 衝突した表面の位置
-                    Quaternion.Euler(0, 0, 0) // 回転を (0, 0, 0) に固定
-                );
-            }
+
         }
         else
         {
