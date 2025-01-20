@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UniRx;
 using Cysharp.Threading.Tasks;
+using System.Collections;
 
 public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -41,6 +42,10 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     [SerializeField]
     private NetworkPrefabRef _player;
+
+    public PlayerRef _playerRef = default;
+
+    public NetworkPrefabRef[] _playerAvatar = default;
 
     private async void Awake()
     {
@@ -211,31 +216,89 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             }
         }
     }
-    public async void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
+    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         if (!runner.IsServer)
         {
             return;
         }
 
+        Debug.Log("プレイヤー入室" + player);
+
         var spawnPosition = new Vector3(_playerSpawnPos.x + UnityEngine.Random.Range(0, 10), _playerSpawnPos.y, _playerSpawnPos.z);
 
         // プレイヤー本体を生成
         var playerObject = runner.Spawn(_player, spawnPosition, Quaternion.identity, player);
         runner.SetPlayerObject(player, playerObject);
-
-        Debug.Log(playerObject);
-
         PlayerData playerData = playerObject.GetComponent<PlayerData>();
-        Debug.Log(playerData);
+        //playerData._onCharacterDecision.Subscribe(_ => playerData.Create(runner, player));
+        //playerData._onCharacterDecision.Subscribe(_ => CharacterSpawn(runner, playerData, spawnPosition, player));
 
-        // キャラクター選択が決定されるまで待機
-        while (!playerData.GetCharacterDecision())
-        {
-            Debug.Log("待機");
-            await UniTask.Yield(); // 毎フレーム待機
-        }
+        //// キャラクター選択が決定されるまで待機
+        //while (!playerData.GetCharacterDecision())
+        //{
+        //    Debug.Log("待機");
+        //    await UniTask.Yield(); // 毎フレーム待機
+        //}
 
+        StartCoroutine(AvatorSpawn(playerData, runner, player, spawnPosition));
+
+        //var characterSelection = playerData._characterSelectionManager;
+        //playerData.SetPlayerNumber(characterSelection._currentSelectionCharacter);
+
+        //Debug.Log(characterSelection._currentSelectionCharacter);
+
+        //// キャラクター選択に基づいてアバターを生成
+        //NetworkPrefabRef networkPrefabRef = playerData.GetPlayerNumber() switch
+        //{
+        //    1 => playerAvatarPrefab1,
+        //    2 => playerAvatarPrefab2,
+        //    3 => playerAvatarPrefab3,
+        //    4 => playerAvatarPrefab4,
+        //    _ => playerAvatarPrefab1,
+        //};
+
+        //// アバターを生成してプレイヤーオブジェクトの子に設定
+        //var avatarObject = runner.Spawn(networkPrefabRef, spawnPosition, Quaternion.identity, player);
+
+        //runner.SetPlayerObject(player, avatarObject);
+
+        //avatarObject.transform.SetParent(playerObject.transform);
+        //playerData.Create(runner, playerData.GetPlayerNumber(), player);
+    }
+
+    //private void CharacterSpawn(NetworkRunner runner, PlayerData playerData, Vector3 spawnPosition, PlayerRef player)
+    //{
+    //    var characterSelection = playerData._characterSelectionManager;
+    //    playerData.SetPlayerNumber(characterSelection._currentSelectionCharacter);
+
+    //    Debug.Log(characterSelection._currentSelectionCharacter);
+
+    //    // キャラクター選択に基づいてアバターを生成
+    //    NetworkPrefabRef networkPrefabRef = playerData.GetPlayerNumber() switch
+    //    {
+    //        1 => playerAvatarPrefab1,
+    //        2 => playerAvatarPrefab2,
+    //        3 => playerAvatarPrefab3,
+    //        4 => playerAvatarPrefab4,
+    //        _ => playerAvatarPrefab1,
+    //    };
+
+    //    // アバターを生成してプレイヤーオブジェクトの子に設定
+    //    var avatarObject = runner.Spawn(networkPrefabRef, spawnPosition, Quaternion.identity, player);
+
+    //    runner.SetPlayerObject(player, avatarObject);
+    //}
+
+    public IEnumerator AvatorSpawn(PlayerData playerData, NetworkRunner runner, PlayerRef player, Vector3 spawnPosition)
+    {
+        Debug.Log(player + "あああああ");
+        //while (!playerData.GetCharacterDecision())
+        //{
+        //    Debug.Log("待機");
+        //    yield return null;
+        //}
+        yield return new WaitForSeconds(3f);
         var characterSelection = playerData._characterSelectionManager;
         playerData.SetPlayerNumber(characterSelection._currentSelectionCharacter);
 
@@ -253,12 +316,30 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
         // アバターを生成してプレイヤーオブジェクトの子に設定
         var avatarObject = runner.Spawn(networkPrefabRef, spawnPosition, Quaternion.identity, player);
-        
-        runner.SetPlayerObject(player, avatarObject);
 
-        avatarObject.transform.SetParent(playerObject.transform);
-        //playerData.Create(runner, playerData.GetPlayerNumber(), player);
+        runner.SetPlayerObject(player, avatarObject);
     }
+
+    //public void AvatarSpawn(NetworkRunner runner, PlayerRef playerRef, int avatarNumber)
+    //{
+    //    // キャラクター選択に基づいてアバターを生成
+    //    NetworkPrefabRef networkPrefabRef = avatarNumber switch
+    //    {
+    //        1 => playerAvatarPrefab1,
+    //        2 => playerAvatarPrefab2,
+    //        3 => playerAvatarPrefab3,
+    //        4 => playerAvatarPrefab4,
+    //        _ => playerAvatarPrefab1,
+    //    };
+
+    //    var spawnPosition = new Vector3(_playerSpawnPos.x + UnityEngine.Random.Range(0, 10), _playerSpawnPos.y, _playerSpawnPos.z);
+    //    var a = runner.Spawn(networkPrefabRef, spawnPosition, Quaternion.identity, playerRef);
+    //    runner.SetPlayerObject(playerRef, a);
+    //    Debug.Log(playerRef);
+    //    Debug.Log(a.name);
+    //}
+
+
     // プレイヤーが退出した時の処理
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
