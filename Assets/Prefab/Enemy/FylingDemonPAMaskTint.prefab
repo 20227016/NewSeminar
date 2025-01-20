@@ -1162,8 +1162,8 @@ MonoBehaviour:
   _stateSwitchInterval: 3
   _attackStateSwitchInterval: 2
   _targetTrans: {fileID: 0}
-  _searchRadius: 10
-  _attackRange: 3
+  _searchRadius: 30
+  _attackRange: 5
   _warkRange: 3
   _damageRange: 1
   _targetLayer: 6

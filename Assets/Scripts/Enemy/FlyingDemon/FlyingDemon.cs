@@ -37,10 +37,10 @@ public class FlyingDemon : BaseEnemy
     private Transform _targetTrans = default;
 
     [Tooltip("検索範囲の半径を指定します")]
-    [SerializeField] private float _searchRadius = 10f; // 検索範囲（半径）
+    [SerializeField] private float _searchRadius = 30f; // 検索範囲（半径）
 
     [SerializeField, Tooltip("攻撃範囲")]
-    private float _attackRange = 3.0f;
+    private float _attackRange = 5.0f;
 
     [SerializeField, Tooltip("歩くスピード")]
     private float _warkRange = 3.0f;
@@ -331,6 +331,7 @@ public class FlyingDemon : BaseEnemy
         }
     }
 
+    /*
     /// <summary>
     /// 検索範囲をシーンビューに表示します（円柱形）。
     /// </summary>
@@ -356,6 +357,7 @@ public class FlyingDemon : BaseEnemy
             Gizmos.DrawLine(transform.position, _targetTrans.position);
         }
     }
+    */
 
     /// <summary>
     /// 攻撃範囲をチェックし、範囲内にプレイヤーが入った場合攻撃状態に切り替える
