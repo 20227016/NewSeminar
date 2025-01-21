@@ -43,7 +43,7 @@ public class FlyingDemon : BaseEnemy
     private float _attackRange = 5.0f;
 
     [SerializeField, Tooltip("歩くスピード")]
-    private float _warkRange = 3.0f;
+    private float _walkRange = 3.0f;
 
     [SerializeField, Tooltip("ダメージを受ける時間")]
     private float _damageRange = 1.0f;
@@ -71,21 +71,17 @@ public class FlyingDemon : BaseEnemy
     // TransitionNo.7 Downed
     // TransitionNo.8 Stunned 
     // TransitionNo.9 Die
-    Animator _animator;
+    private Animator _animator;
 
-    BoxCollider _boxCollider;
+    private BoxCollider _boxCollider;
 
-    private float speed = 5f;     // 移動速度
+    private float _speed = 5f;     // 上下移動速度
 
-    public GameObject fireballPrefab; // 炎の球のPrefab
-    public Transform firePoint; // 射出位置
-    public float fireballSpeed = 10f; // 炎の球の速度
+    [SerializeField]  private GameObject _fireballPrefab; // 炎の球のPrefab
+    [SerializeField]  private Transform _firePoint; // 射出位置
 
     private void Awake()
     {
-        // Raycastをつかうための基本設定をしてくれる関数
-        BasicRaycast();
-
         _animator = GetComponent<Animator>();
         _boxCollider = GetComponentInChildren<BoxCollider>();
 
@@ -97,15 +93,6 @@ public class FlyingDemon : BaseEnemy
     /// </summary>
     protected void Update()
     {
-        /* 
-         * レイキャストの中心点を自動で更新してくれる
-         * これで、レイキャストを常に自分の前から打ってくれる
-         * つまり、何かない場合（発生位置を変えたい等）かえなくてOK
-         * 変えたかったら聞いてくれたらその都度説明する
-         * これ以外にもサイズ、方向等を変えるメソッドもある
-        */
-        SetPostion();
-        SetDirection();
         CheckAttackRange();
 
         if (Input.GetKeyDown(KeyCode.S))
@@ -133,39 +120,28 @@ public class FlyingDemon : BaseEnemy
             // 待機
             case EnemyMovementState.IDLE:
 
-                ideling();
+                Ideling();
 
                 break;
 
             // 歩く（巡回）
             case EnemyMovementState.WALKING:
 
-                warking();
+                Walking();
 
                 break;
 
             // 追跡
             case EnemyMovementState.RUNNING:
 
-                running();
-
-                break;
-
-            // 降りる（降下）
-            case EnemyMovementState.FALLING:
-
-                break;
-
-            //飛ぶ　（上昇）
-            case EnemyMovementState.FRYING:
-
+                Running();
 
                 break;
 
             //ダメージ(受けたとき)
             case EnemyMovementState.STUNNED:
 
-                enemyDamage();
+                EnemyDamage();
 
                 return;
 
@@ -181,7 +157,7 @@ public class FlyingDemon : BaseEnemy
                 // Y座標が0.7を下回ったら停止
                 if (transform.position.y > 0.7f)
                 {
-                    transform.position -= speed * Time.deltaTime * transform.up * 2;
+                    transform.position -= _speed * Time.deltaTime * transform.up * 2;
                 }
 
                 StartCoroutine(EnemyDie(3f));
@@ -206,37 +182,242 @@ public class FlyingDemon : BaseEnemy
             case EnemyActionState.ATTACKING:
 
                 _boxCollider.enabled = true;
-                playerAttack();
+                PlayerAttack();
 
                 break;
         }
     }
 
     /// <summary>
-    /// レイキャスト設定
+    /// アイドル状態の処理
     /// </summary>
-    private void RayCastSetting()
+    private void Ideling()
     {
-        //例キャスト初期設定
-        BasicRaycast();
+        if (_actionState == EnemyActionState.ATTACKING)
+        {
+            return;
+        }
 
-        // 中心点を取得
-        _boxCastStruct._originPos = this.transform.position;
-
-        // 自分のスケール(x)を取得
-        float squareSize = transform.localScale.x;
-
-        // BoxCastを正方形のサイズにする
-        _boxCastStruct._size = new Vector2(squareSize, squareSize);
+        if (IsAnimationFinished("Attack01") || IsAnimationFinished("Attack02") || IsAnimationFinished("Fire"))
+        {
+            _animator.SetInteger("TransitionNo", 0);
+        }
     }
 
     /// <summary>
-    /// レイキャストの距離(探索範囲)
+    /// 移動状態を切り替える
     /// </summary>
-    protected override void SetDistance()
+    private void SwitchMovementState()
     {
-        base.SetDistance();
-        _boxCastStruct._distance = _searchRadius;
+        if (_actionState == EnemyActionState.ATTACKING)
+        {
+            return;
+        }
+
+        if (_movementState == EnemyMovementState.IDLE)
+        {
+            _movementState = EnemyMovementState.WALKING;
+        }
+        else if (_movementState == EnemyMovementState.WALKING)
+        {
+            _movementState = EnemyMovementState.IDLE;
+            _animator.SetInteger("TransitionNo", 6);
+        }
+    }
+
+    /// <summary>
+    /// ランダムな位置を生成する
+    /// </summary>
+    private Vector3 GenerateRandomPosition()
+    {
+        //float range = 7.5f; // ランダム移動範囲
+        Vector3 randomOffset = new Vector3(
+            Random.Range(-5, 16),
+            0f,
+            Random.Range(-5, 16)
+        );
+        return randomOffset; // 現在位置を基準にランダムな位置を生成
+    }
+
+    /*
+    /// <summary>
+    /// ランダム移動の目標位置への線を表示
+    /// </summary>
+    private void OnDrawGizmos()
+    {
+        if (_randomTargetPos != Vector3.zero)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, _randomTargetPos); // 現在位置から目標位置への線を表示
+            Gizmos.DrawSphere(_randomTargetPos, 0.2f); // 目標位置を球で表示
+        }
+    }*/
+
+    /// <summary>
+    /// 移動処理
+    /// </summary>
+    private void Walking()
+    {
+        _actionState = EnemyActionState.SEARCHING;
+
+        _animator.SetInteger("TransitionNo", 1);
+        //Debug.Log("巡回中");
+
+        _walkRange = 2.5f;
+
+        // 現在の位置
+        Vector3 currentPosition = transform.position;
+
+        // ターゲット位置 (_randomTargetPosのy座標を現在のy座標に固定)
+        Vector3 targetPosition = new Vector3(_randomTargetPos.x, currentPosition.y, _randomTargetPos.z);
+
+        // 移動
+        transform.position = Vector3.MoveTowards(currentPosition, targetPosition, _walkRange * Time.deltaTime);
+
+        Vector3 direction = (_randomTargetPos - transform.position).normalized;
+        if (direction != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(direction);
+        }
+
+        // 目標地点到達
+        if (Vector2.Distance(
+        new Vector2(transform.position.x, transform.position.z),
+        new Vector2(_randomTargetPos.x, _randomTargetPos.z)) < 0.1f)
+        {
+            _movementState = EnemyMovementState.IDLE;
+            _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
+        }
+    }
+
+    /// <summary>
+    /// 追跡処理
+    /// </summary>
+    private void Running()
+    {
+        if (_targetTrans == null)
+        {
+            return;
+        }
+
+        _attackAction = true;
+        _animator.SetInteger("TransitionNo", 2);
+
+        // 前進速度
+        _walkRange = 5.0f;
+
+        // 現在の高さを維持する
+        Vector3 currentPosition = transform.position;
+        Vector3 targetPosition = _targetTrans.position;
+
+        targetPosition.y = currentPosition.y; // ゴーレムの高さを固定
+
+        // プレイヤーの最後の位置に向かって移動
+        transform.position = Vector3.MoveTowards(
+            currentPosition,
+            targetPosition,
+            _walkRange * Time.deltaTime
+        );
+    }
+
+    /// <summary>
+    /// 攻撃範囲をチェックし、範囲内にプレイヤーが入った場合攻撃状態に切り替える
+    /// </summary>
+    private void CheckAttackRange()
+    {
+        if (_targetTrans != null)
+        {
+            float distanceToTarget = Vector3.Distance(transform.position, _targetTrans.position);
+
+            if (distanceToTarget <= _attackRange && transform.position.y <= 0.0f)
+            {
+                _actionState = EnemyActionState.ATTACKING;
+            }
+            else
+            {
+                if (!_attackEnd)
+                {
+                    return;
+                }
+
+                _actionState = EnemyActionState.SEARCHING;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 攻撃処理
+    /// </summary>
+    private void PlayerAttack()
+    {
+        if (IsAnimationFinished("Attack01") || IsAnimationFinished("Attack02"))
+        {
+            _animator.SetInteger("TransitionNo", 0);
+            _attackEnd = true;
+            _actionState = EnemyActionState.SEARCHING;
+        }
+
+        _movementState = EnemyMovementState.IDLE;
+
+        if (_attackStateTimer >= _attackStateSwitchInterval)
+        {
+            _attackAction = true;
+            _attackStateTimer = 0f;
+        }
+
+        _attackStateTimer += Time.deltaTime;
+
+        if (!_attackAction)
+        {
+            return;
+        }
+
+        int randomAttack = Random.Range(0, 2);
+        switch (randomAttack)
+        {
+            case 0:
+                _animator.SetInteger("TransitionNo", 4);
+
+                break;
+
+            case 1:
+                _animator.SetInteger("TransitionNo", 5);
+
+                break;
+        }
+        _attackAction = false;
+        _attackEnd = false;
+    }
+
+    /// <summary>
+    /// ダメージを受けた処理
+    /// </summary>
+    private void EnemyDamage()
+    {
+        if (IsAnimationFinished("Stunned"))
+        {
+            _movementState = EnemyMovementState.IDLE;
+
+            _animator.SetInteger("TransitionNo", 0);
+            return;
+        }
+
+        _animator.SetInteger("TransitionNo", 7);
+    }
+
+    /// <summary>
+    /// 倒れる
+    /// </summary>
+    private IEnumerator EnemyDie(float fadeDuration)
+    {
+        // トリガーをセット
+        _animator.SetInteger("TransitionNo", 9);
+
+        // 秒後
+        yield return new WaitForSeconds(fadeDuration);
+
+        // 完全に透明にした後、オブジェクトを非アクティブ化
+        gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -264,7 +445,6 @@ public class FlyingDemon : BaseEnemy
             transform.LookAt(lookPosition);
         }
     }
-
 
     /// </summary>
     //プレイヤーを見つけたら追跡開始
@@ -318,7 +498,7 @@ public class FlyingDemon : BaseEnemy
                 return;
             }
             // 一定距離内だと降下する
-            transform.position -= speed * Time.deltaTime * transform.up;
+            transform.position -= _speed * Time.deltaTime * transform.up;
         }
         else
         {
@@ -327,7 +507,7 @@ public class FlyingDemon : BaseEnemy
                 return;
             }
             // 一定距離離れると上昇する
-            transform.position += speed * Time.deltaTime * transform.up;
+            transform.position += _speed * Time.deltaTime * transform.up;
         }
     }
 
@@ -356,215 +536,7 @@ public class FlyingDemon : BaseEnemy
             Gizmos.color = Color.red;
             Gizmos.DrawLine(transform.position, _targetTrans.position);
         }
-    }
-    */
-
-    /// <summary>
-    /// 攻撃範囲をチェックし、範囲内にプレイヤーが入った場合攻撃状態に切り替える
-    /// </summary>
-    private void CheckAttackRange()
-    {
-        if (_targetTrans != null)
-        {
-            float distanceToTarget = Vector3.Distance(transform.position, _targetTrans.position);
-
-            if (distanceToTarget <= _attackRange && transform.position.y <= 0.0f)
-            {
-                _actionState = EnemyActionState.ATTACKING;
-            }
-            else
-            {
-                if (!_attackEnd)
-                {
-                    return;
-                }
-
-                _actionState = EnemyActionState.SEARCHING;
-            }
-        }
-    }
-
-    /// <summary>
-    /// 移動状態を切り替える
-    /// </summary>
-    private void SwitchMovementState()
-    {
-        if (_actionState == EnemyActionState.ATTACKING)
-        {
-            return;
-        }
-
-        if (_movementState == EnemyMovementState.IDLE)
-        {
-            _movementState = EnemyMovementState.WALKING;
-        }
-        else if (_movementState == EnemyMovementState.WALKING)
-        {
-            _movementState = EnemyMovementState.IDLE;
-            _animator.SetInteger("TransitionNo", 6);
-        }
-    }
-
-    private void ideling()
-    {
-        if (_actionState == EnemyActionState.ATTACKING)
-        {
-            return;
-        }
-
-        if (IsAnimationFinished("Attack01") || IsAnimationFinished("Attack02") || IsAnimationFinished("Fire"))
-        {
-            _animator.SetInteger("TransitionNo", 0);
-        }
-    }
-
-    private void running()
-    {
-        if (_targetTrans == null)
-        {
-            return;
-        }
-
-        _attackAction = true;
-        _animator.SetInteger("TransitionNo", 2);
-
-        //Debug.Log("追跡中");
-
-        // 前進速度
-        _warkRange = 5.0f;
-
-        // 現在の高さを維持する
-        Vector3 currentPosition = transform.position;
-        Vector3 targetPosition = _targetTrans.position;
-
-        targetPosition.y = currentPosition.y; // ゴーレムの高さを固定
-        // プレイヤーの最後の位置までの距離を計算
-        float distanceToTarget = Vector3.Distance(currentPosition, targetPosition);
-
-        // プレイヤーの最後の位置に向かって移動
-        transform.position = Vector3.MoveTowards(
-            currentPosition,
-            targetPosition,
-            _warkRange * Time.deltaTime
-        );
-    }
-
-    private void playerAttack()
-    {
-        if (IsAnimationFinished("Attack01") || IsAnimationFinished("Attack02"))
-        {
-            _animator.SetInteger("TransitionNo", 0);
-            _attackEnd = true;
-            _actionState = EnemyActionState.SEARCHING;
-        }
-
-        _movementState = EnemyMovementState.IDLE;
-
-        if (_attackStateTimer >= _attackStateSwitchInterval)
-        {
-            _attackAction = true;
-            _attackStateTimer = 0f;
-        }
-
-        _attackStateTimer += Time.deltaTime;
-
-        if (!_attackAction)
-        {
-            return;
-        }
-
-        int randomAttack = Random.Range(0, 2);
-        switch (randomAttack)
-        {
-            case 0:
-                _animator.SetInteger("TransitionNo", 4);
-
-                break;
-
-            case 1:
-                _animator.SetInteger("TransitionNo", 5);
-
-                break;
-        }
-        _attackAction = false;
-        _attackEnd = false;
-    }
-
-    private void warking()
-    {
-        _actionState = EnemyActionState.SEARCHING;
-
-        _animator.SetInteger("TransitionNo", 1);
-        //Debug.Log("巡回中");
-
-        _warkRange = 2.5f;
-
-        // 現在の位置
-        Vector3 currentPosition = transform.position;
-
-        // ターゲット位置 (_randomTargetPosのy座標を現在のy座標に固定)
-        Vector3 targetPosition = new Vector3(_randomTargetPos.x, currentPosition.y, _randomTargetPos.z);
-
-        // 移動
-        transform.position = Vector3.MoveTowards(currentPosition, targetPosition, _warkRange * Time.deltaTime);
-
-        Vector3 direction = (_randomTargetPos - transform.position).normalized;
-        if (direction != Vector3.zero)
-        {
-            transform.rotation = Quaternion.LookRotation(direction);
-        }
-
-        // 目標地点到達
-        if (Vector2.Distance(
-        new Vector2(transform.position.x, transform.position.z),
-        new Vector2(_randomTargetPos.x, _randomTargetPos.z)
-    ) < 0.1f)
-        {
-            _movementState = EnemyMovementState.IDLE;
-            _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
-        }
-    }
-
-    /// <summary>
-    /// ランダムな位置を生成する
-    /// </summary>
-    private Vector3 GenerateRandomPosition()
-    {
-        //float range = 7.5f; // ランダム移動範囲
-        Vector3 randomOffset = new Vector3(
-            Random.Range(-5, 16),
-            0f,
-            Random.Range(-5, 16)
-        );
-        return randomOffset; // 現在位置を基準にランダムな位置を生成
-    }
-
-    /*
-    /// <summary>
-    /// ランダム移動の目標位置への線を表示
-    /// </summary>
-    private void OnDrawGizmos()
-    {
-        if (_randomTargetPos != Vector3.zero)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, _randomTargetPos); // 現在位置から目標位置への線を表示
-            Gizmos.DrawSphere(_randomTargetPos, 0.2f); // 目標位置を球で表示
-        }
     }*/
-
-    private void enemyDamage()
-    {
-        if (IsAnimationFinished("Stunned"))
-        {
-            _movementState = EnemyMovementState.IDLE;
-
-            _animator.SetInteger("TransitionNo", 0);
-            return;
-        }
-
-        _animator.SetInteger("TransitionNo", 7);
-    }
 
     /// <summary>
     /// アニメーションが終了しているかを確認する。
@@ -580,30 +552,18 @@ public class FlyingDemon : BaseEnemy
         return stateInfo.IsName(animationName) && stateInfo.normalizedTime >= 1.0f;
     }
 
+    /// <summary>
+    /// アニメーションをトリガーに炎球を発射
+    /// </summary>
     private void FirebulletInstantiate()
     {
         // ターゲット方向を計算
-        Vector3 directionToTarget = (_targetTrans.position - firePoint.position).normalized;
+        Vector3 directionToTarget = (_targetTrans.position - _firePoint.position).normalized;
 
         // ターゲット方向に回転を設定
         Quaternion rotationToTarget = Quaternion.LookRotation(directionToTarget);
 
         // 炎の球を生成
-        Instantiate(fireballPrefab, firePoint.position, rotationToTarget);
-    }
-
-    /// <summary>
-    /// 倒れる
-    /// </summary>
-    private IEnumerator EnemyDie(float fadeDuration)
-    {
-        // トリガーをセット
-        _animator.SetInteger("TransitionNo", 9);
-
-        // 秒後
-        yield return new WaitForSeconds(fadeDuration);
-
-        // 完全に透明にした後、オブジェクトを非アクティブ化
-        gameObject.SetActive(false);
+        Instantiate(_fireballPrefab, _firePoint.position, rotationToTarget);
     }
 }
