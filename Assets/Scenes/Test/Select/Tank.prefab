@@ -221,7 +221,6 @@ MonoBehaviour:
   WordOffset: 0
   WordCount: 0
   _interpolationDataSource: 0
-  _characterSelectionManager: {fileID: 0}
   _playerAvatar: []
 --- !u!114 &-1971493915030146910
 MonoBehaviour:

@@ -16,19 +16,25 @@ public class CharacterSelectionManager : MonoBehaviour
 {
 
     // 現在選択しているキャラクター（共有する変数）
-    public int _currentSelectionCharacter = default;
+    private int _currentSelectionCharacter = default;
 
     // 決定したキャラクター(共有するBool)
-    public ReactiveProperty<bool> _characterDecision = new();
+    private ReactiveProperty<bool> _characterDecision = new();
 
     [SerializeField, Tooltip("キャラクターモデルを格納")]
     private List<GameObject> _characterModel = new List<GameObject>();
+
+    private PlayerData _player = default;
 
     public bool _tankChoice { get; set; } = false;
     public bool _knightChoice { get; set; } = false;
     public bool _healerChoice { get; set; } = false;
     public bool _fighterChoice { get; set; } = false;
 
+    public void SetPlayer(PlayerData playerData)
+    {
+        _player = playerData;
+    }
 
     public void Start()
     {
@@ -126,7 +132,24 @@ public class CharacterSelectionManager : MonoBehaviour
                 break;
         }
 
+        _player.RPC_SetAvatarNumber(_currentSelectionCharacter);
+        _player.RPC_ActiveAvatar();
 
+        // シーン内の全てのPlayerDataコンポーネントを取得
+        var allPlayerData = FindObjectsOfType<PlayerData>();
+
+        if (allPlayerData == null)
+        {
+            return;
+        }
+
+        foreach (var playerData in allPlayerData)
+        {
+            Debug.Log("入った");
+            playerData.RPC_ActiveAvatar();
+        }
+
+        this.gameObject.SetActive(false);
     }
 
     /// <summary>
