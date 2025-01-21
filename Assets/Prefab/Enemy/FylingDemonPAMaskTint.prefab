@@ -1166,14 +1166,13 @@ MonoBehaviour:
   _targetTrans: {fileID: 0}
   _searchRadius: 30
   _attackRange: 5
-  _warkRange: 3
+  _walkRange: 3
   _damageRange: 1
   _targetLayer: 6
   _attackAction: 1
   _attackEnd: 1
-  fireballPrefab: {fileID: 8446527596219986189, guid: f5ed9388adec780478315416392e5285, type: 3}
-  firePoint: {fileID: 1134332420552616042}
-  fireballSpeed: 10
+  _fireballPrefab: {fileID: 8446527596219986189, guid: f5ed9388adec780478315416392e5285, type: 3}
+  _firePoint: {fileID: 1134332420552616042}
 --- !u!114 &-3959943354764073091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1234,7 +1233,7 @@ MonoBehaviour:
     _value: 0
     _inverse: 0
     _hash: -814817977
-  StateHashes: 00000000bea86a9c1bec8d23b4eae2f9e6b09dd0edb25a4ff72360a557e353d64d72693cf1a6ecf8a3fc93d1ef25ef3fac8bdc3c1656489255f87b91855035e50173e30a2b1a167c7940695537b935014e73a6a7e94d9dd8aae3aedb
+  StateHashes: 00000000bea86a9c1bec8d236bd5a32d398fdc04edb25a4ff72360a557e353d64d72693cf1a6ecf8a3fc93d1ef25ef3fac8bdc3c1656489255f87b91855035e50173e30a2b1a167c7940695537b935014e73a6a7e94d9dd8aae3aedb
   TriggerHashes: 00000000
 --- !u!1 &1134332420552193124
 GameObject:

@@ -69,6 +69,7 @@ public class BossDemo : BaseEnemy
     private int[] _confirmedAttackState = new int[3];
     private int _lastValue = default;
 
+    private int _hp = 100;
     private float _summonTimer = default;
     private bool isFaintg = false;
     private int _faintingState = 1;
@@ -128,12 +129,7 @@ public class BossDemo : BaseEnemy
         // 召喚&ダウンテスト
         if (Input.GetKeyDown(KeyCode.S) && !isFaintg)
         {
-            foreach (BoxCollider collider in _boxColliders)
-            {
-                collider.enabled = false;
-            }
-            _LaserBeam.gameObject.SetActive(false);
-            _actionState = 3;
+            _hp = 50;
         }
 
         // 死ぬテスト
@@ -243,12 +239,17 @@ public class BossDemo : BaseEnemy
             || IsAnimationFinished("Heel"))
         {
             _animator.SetInteger("TransitionNo", 0);
+
             _LaserBeam.gameObject.SetActive(false); // 非アクティブ化
             isBulletGeneration = true;
-
             foreach (BoxCollider collider in _boxColliders)
             {
                 collider.enabled = false;
+            }
+
+            if (_hp <= 50 && !isFaintg)
+            {
+                _actionState = 3;
             }
         }
 
