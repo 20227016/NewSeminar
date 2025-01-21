@@ -156,6 +156,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// </summary>
     public override void Spawned()
     {
+        Debug.Log("生成");
         // 値の初期化
         InitialValues();
 
@@ -439,6 +440,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         {
             _animation.BoolAnimation(_animator, _characterAnimationStruct._runAnimation, true);
         }
+
+        Debug.Log(_networkedStamina);
 
         // 移動を実行
         Move(_playerTransform, _moveDirection, _moveSpeed, _rigidbody, _currentState);
