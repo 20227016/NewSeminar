@@ -19,7 +19,7 @@ public class CharacterSelectionManager : MonoBehaviour
     private int _currentSelectionCharacter = default;
 
     // 決定したキャラクター(共有するBool)
-    private ReactiveProperty<bool> _characterDecision = new();
+    private bool _characterDecision = new();
 
     [SerializeField, Tooltip("キャラクターモデルを格納")]
     private List<GameObject> _characterModel = new List<GameObject>();
@@ -31,23 +31,11 @@ public class CharacterSelectionManager : MonoBehaviour
     public bool _healerChoice { get; set; } = false;
     public bool _fighterChoice { get; set; } = false;
 
-    public void SetPlayer(PlayerData playerData)
-    {
-        _player = playerData;
-    }
-
-    public void Start()
-    {
-        _currentSelectionCharacter = 0;
-        _characterDecision.Value = false;
-
-    }
-
     //キャラクター1のボタンにつける
     public void OnClick1()
     {
 
-        if ((_currentSelectionCharacter != 1) && (!_characterDecision.Value) && (!_tankChoice))
+        if ((_currentSelectionCharacter != 1) && (!_characterDecision) && (!_tankChoice))
         {
             DeleteCharacter();
             _currentSelectionCharacter = 1;
@@ -64,7 +52,7 @@ public class CharacterSelectionManager : MonoBehaviour
     public void OnClick2()
     {
 
-        if ((_currentSelectionCharacter != 2) && (!_characterDecision.Value) && (!_knightChoice))
+        if ((_currentSelectionCharacter != 2) && (!_characterDecision) && (!_knightChoice))
         {
             DeleteCharacter();
             _currentSelectionCharacter = 2;
@@ -79,7 +67,7 @@ public class CharacterSelectionManager : MonoBehaviour
     //キャラクター3のボタンにつける
     public void OnClick3()
     {
-        if ((_currentSelectionCharacter != 3) && (!_characterDecision.Value) && (!_healerChoice))
+        if ((_currentSelectionCharacter != 3) && (!_characterDecision) && (!_healerChoice))
         {
 
             DeleteCharacter();
@@ -96,7 +84,7 @@ public class CharacterSelectionManager : MonoBehaviour
     public void OnClick4()
     {
 
-        if ((_currentSelectionCharacter != 4) && (!_characterDecision.Value) && (!_fighterChoice))
+        if ((_currentSelectionCharacter != 4) && (!_characterDecision) && (!_fighterChoice))
         {
             DeleteCharacter();
             _currentSelectionCharacter = 4;
@@ -111,7 +99,8 @@ public class CharacterSelectionManager : MonoBehaviour
     // 選択しているキャラクターを確定する
     public void Decision()
     {
-        _characterDecision.Value = true;
+        _characterDecision = true;
+
         switch (_currentSelectionCharacter)
         {
             // タンク
@@ -133,23 +122,26 @@ public class CharacterSelectionManager : MonoBehaviour
         }
 
         _player.RPC_SetAvatarNumber(_currentSelectionCharacter);
-        _player.RPC_ActiveAvatar();
 
-        // シーン内の全てのPlayerDataコンポーネントを取得
-        var allPlayerData = FindObjectsOfType<PlayerData>();
+        // シーン内の全てのPlayerを取得
+        PlayerData[] allPlayerData = FindObjectsOfType<PlayerData>();
 
         if (allPlayerData == null)
         {
             return;
         }
 
-        foreach (var playerData in allPlayerData)
+        foreach (PlayerData playerData in allPlayerData)
         {
-            Debug.Log("入った");
             playerData.RPC_ActiveAvatar();
         }
 
         this.gameObject.SetActive(false);
+    }
+
+    public void SetPlayer(PlayerData playerData)
+    {
+        _player = playerData;
     }
 
     /// <summary>
