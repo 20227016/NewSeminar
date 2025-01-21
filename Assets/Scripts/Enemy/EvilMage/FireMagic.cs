@@ -71,18 +71,15 @@ public class FireMagic : MonoBehaviour
         {
             // プレイヤーのダメージ処理を呼び出す（仮の例）
             Debug.Log($"Hit {other.gameObject.name}, dealt {damage} damage.");
+
+            // 衝突後に非アクティブ化
+            Deactivate();
         }
         else if (other.gameObject.layer == 8)
         {
-
+            // 衝突後に非アクティブ化
+            Deactivate();
         }
-        else
-        {
-            return;
-        }
-
-        // 衝突後に非アクティブ化
-        Deactivate();
     }
 
     /// <summary>

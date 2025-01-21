@@ -13,11 +13,11 @@ using System.Collections;
 
 public class FireTornado : MonoBehaviour
 {
-    [Tooltip("魔法弾の生存時間")]
+    [Tooltip("炎の竜巻の生存時間")]
     [SerializeField] private float lifeTime = 5f;
 
-    [Tooltip("魔法弾のダメージ")]
-    [SerializeField] private float damage = 10f;
+    [Tooltip("炎の竜巻のダメージ")]
+    [SerializeField] private float damage = 20f;
 
     private float _elapsedTime = 0f; // 経過時間
     private bool _isActive = true;  // アクティブ状態を管理
@@ -34,6 +34,22 @@ public class FireTornado : MonoBehaviour
         if (_elapsedTime >= lifeTime)
         {
             Deactivate();
+        }
+    }
+
+    /// <summary>
+    /// 他のオブジェクトと衝突した際の処理。
+    /// </summary>
+    /// <param name="collision">衝突情報</param>
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!_isActive) return;
+
+        // ダメージを与える処理（例: プレイヤーなど特定のレイヤーの場合）
+        if (other.CompareTag("Player")) // プレイヤーに対してダメージを与える
+        {
+            // プレイヤーのダメージ処理を呼び出す（仮の例）
+            Debug.Log($"Hit {other.gameObject.name}, dealt {damage} damage.");
         }
     }
 

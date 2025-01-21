@@ -3,23 +3,23 @@ using UnityEngine;
 using System.Collections;
 
 /// <summary>
-/// FireMagic.cs
+/// FireBullet.cs
 /// クラス説明
-/// 魔法弾制御
+/// 火球制御
 /// 
-/// 作成日: 12/11
+/// 作成日: 1/17
 /// 作成者: 石井直人
 /// </summary>
 public class FireBullet : MonoBehaviour
 {
-    [Tooltip("魔法弾の速度")]
-    [SerializeField] private float speed = 10f;
+    [Tooltip("火球の速度")]
+    [SerializeField] private float speed = 7.5f;
 
-    [Tooltip("魔法弾の生存時間")]
+    [Tooltip("火球の生存時間")]
     [SerializeField] private float lifeTime = 5f;
 
-    [Tooltip("魔法弾のダメージ")]
-    [SerializeField] private float damage = 10f;
+    [Tooltip("火球のダメージ")]
+    [SerializeField] private float damage = 15f;
 
     private float _elapsedTime = 0f; // 経過時間
     private bool _isActive = true;  // アクティブ状態を管理
@@ -43,7 +43,7 @@ public class FireBullet : MonoBehaviour
     }
 
     /// <summary>
-    /// 毎フレーム、魔法弾を移動させる。
+    /// 毎フレーム、火球を移動させる。
     /// </summary>
     private void Update()
     {
@@ -68,16 +68,16 @@ public class FireBullet : MonoBehaviour
     {
         if (!_isActive) return;
 
-        // ステージに当たったら
-        else if (other.gameObject.layer == 8)
+        // ダメージを与える処理（例: プレイヤーなど特定のレイヤーの場合）
+        if (other.CompareTag("Player")) // プレイヤーに対してダメージを与える
         {
-            // ダメージを与える処理（例: プレイヤーなど特定のレイヤーの場合）
-            if (other.CompareTag("Player")) // プレイヤーに対してダメージを与える
-            {
-                // プレイヤーのダメージ処理を呼び出す（仮の例）
-                Debug.Log($"Hit {other.gameObject.name}, dealt {damage} damage.");
-            }
+            // プレイヤーのダメージ処理を呼び出す（仮の例）
+            Debug.Log($"Hit {other.gameObject.name}, dealt {damage} damage.");
+        }
 
+        // ステージに当たったら
+        if (other.gameObject.layer == 8)
+        {
             // 衝突点を取得
             if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, Mathf.Infinity))
             {
@@ -88,18 +88,14 @@ public class FireBullet : MonoBehaviour
                     Quaternion.Euler(0, 0, 0) // 回転を (0, 0, 0) に固定
                 );
             }
-        }
-        else
-        {
-            return;
-        }
 
-        // 衝突後に非アクティブ化
-        Deactivate();
+            // 衝突後に非アクティブ化
+            Deactivate();
+        }
     }
 
     /// <summary>
-    /// 魔法弾を非アクティブ化する。
+    /// 火球を非アクティブ化する。
     /// </summary>
     private void Deactivate()
     {
@@ -109,7 +105,7 @@ public class FireBullet : MonoBehaviour
     }
 
     /// <summary>
-    /// 魔法弾を再利用する際の初期化処理。
+    /// 火球を再利用する際の初期化処理。
     /// </summary>
     public void Initialize(Vector3 position, Quaternion rotation)
     {
