@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using UniRx;
+using Fusion;
 
 /// <summary>
 /// StageEnemyManagement.cs
@@ -15,12 +16,14 @@ using UniRx;
 public class StageEnemyManagement : MonoBehaviour
 {
 
+    private NetworkRunner _runner = default;
+
     private Subject<Unit> OnAllEnemiesDefeated = new Subject<Unit>();
 
-    [SerializeField, Tooltip("転送ポータル格納用")]
-    private GameObject _transferPortal = default;
+    [Networked, SerializeField, Tooltip("転送ポータル格納用")]
+    private GameObject _transferPortal { get; set; } = default;
 
-    [SerializeField,Tooltip("このリストにはステージに設置したエネミーのオブジェクトをいれてください")]
+    [SerializeField, Tooltip("このリストにはステージに設置したエネミーのオブジェクトをいれてください")]
     private List<GameObject> enemyOBJ = new List<GameObject>();
 
     private int _enemyObjCount = default;
@@ -105,7 +108,7 @@ public class StageEnemyManagement : MonoBehaviour
 
     private void OnAllObjectHidden()
     {
-        if(!_hasExecuted)
+        if (!_hasExecuted)
         {
             print("エネミーが全滅しました");
             OnAllEnemiesDefeated.OnNext(Unit.Default);
