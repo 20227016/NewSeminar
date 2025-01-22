@@ -10,23 +10,14 @@ using System.Collections;
 
 public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
-    [SerializeField]
-    private NetworkRunner networkRunnerPrefab;
+    [SerializeField, Tooltip("ネットワークランナープレハブ")]
+    private NetworkRunner _networkRunnerPrefab = default;
 
-    [SerializeField]
-    private NetworkPrefabRef comboCounterPrefab;
+    [SerializeField, Tooltip("コンボカウンタープレハブ")]
+    private NetworkPrefabRef _comboCounterPrefab = default;
 
-    [SerializeField]
-    private NetworkPrefabRef playerAvatarPrefab1;
-
-    [SerializeField]
-    private NetworkPrefabRef playerAvatarPrefab2;
-
-    [SerializeField]
-    private NetworkPrefabRef playerAvatarPrefab3;
-
-    [SerializeField]
-    private NetworkPrefabRef playerAvatarPrefab4;
+    [SerializeField, Tooltip("プレイヤープレハブ")]
+    private NetworkPrefabRef _playerPrefab = default;
 
     [SerializeField, Tooltip("プレイヤーのスポーン位置")]
     private Vector3 _playerSpawnPos = default;
@@ -37,11 +28,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     private Camera _mainCamera = default;
 
-    [SerializeField]
-    private GameObject characterSelectionPrefab;
-
-    [SerializeField]
-    private NetworkPrefabRef _player;
 
     private async void Awake()
     {
@@ -49,7 +35,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         _playerInput = GetComponent<PlayerInput>();
         RegisterInputActions(true);
 
-        NetworkRunner networkRunner = Instantiate(networkRunnerPrefab);
+        NetworkRunner networkRunner = Instantiate(_networkRunnerPrefab);
         networkRunner.AddCallbacks(this);
 
         StartGameResult result = await networkRunner.StartGame(new StartGameArgs
@@ -68,9 +54,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     // ComboCounterを生成するメソッド
     private void SpawnComboCounter(NetworkRunner runner)
     {
-        // プレイヤーの位置などを指定してComboCounterを生成します
-        Vector3 spawnPosition = new Vector3(0, 0, 0); // 必要に応じて調整
-        runner.Spawn(comboCounterPrefab, spawnPosition, Quaternion.identity);
+        runner.Spawn(_comboCounterPrefab, Vector3.zero, Quaternion.identity);
     }
 
     private void RegisterInputActions(bool isRegister)
@@ -213,32 +197,32 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
+    /// <summary>
+    /// プレイヤーが参加したときの処理
+    /// </summary>
+    /// <param name="runner"></param>
+    /// <param name="player"></param>
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-
-        var spawnPosition = new Vector3(_playerSpawnPos.x + UnityEngine.Random.Range(0, 10), _playerSpawnPos.y, _playerSpawnPos.z);
-
-        // プレイヤー本体を生成
-        var playerObject = runner.Spawn(_player, spawnPosition, Quaternion.identity, player);
-
-        runner.SetPlayerObject(player, playerObject);
-
-        // シーン内の全てのPlayerDataコンポーネントを取得
-        var allPlayerData = FindObjectsOfType<PlayerData>();
-
-        if (allPlayerData == null)
+        if (!runner.IsServer)
         {
             return;
         }
 
-        foreach (var playerData in allPlayerData)
-        {
-            Debug.Log("入った");
-            playerData.RPC_ActiveAvatar();
-        }
+        Vector3 spawnPosition = new Vector3(_playerSpawnPos.x + UnityEngine.Random.Range(0, 10), _playerSpawnPos.y, _playerSpawnPos.z);
+
+        // プレイヤーを生成
+        NetworkObject playerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
+
+        runner.SetPlayerObject(player, playerObject);
+
     }
 
-    // プレイヤーが退出した時の処理
+    /// <summary>
+    /// プレイヤーが退出した時の処理
+    /// </summary>
+    /// <param name="runner"></param>
+    /// <param name="player"></param>
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         if (!runner.IsServer)
