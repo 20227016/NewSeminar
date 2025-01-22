@@ -10,25 +10,35 @@ public class NormalStageTransfer : NetworkBehaviour
     // テレポート内のプレイヤーを管理するリスト
     private List<GameObject> _playersInPortal = new List<GameObject>();
 
-    [SerializeField]
     private StageEnemyManagement _enemyManagement = default; // 敵管理クラス
 
     [Networked]
     private bool _clearNormalStage { get; set; } = false;
 
     // 必要なプレイヤー数
-    [Networked, SerializeField, Tooltip("ノーマルステージにテレポートするために必要な人数")]
+    [Networked,Tooltip("ノーマルステージにテレポートするために必要な人数")]
     private int _normalStageRequiredPlayers { get; set; }= 4; // 必要なプレイヤー数
 
-    [SerializeField, Tooltip("ノーマルステージのテレポート座標")]
+    private GameObject _normalTeleportPosition = default;
+    private GameObject _bossTeleportPosition = default;
+
+    [Tooltip("ノーマルステージのテレポート座標")]
     private Transform _normalStageteleportPos = default;
 
-    [SerializeField, Tooltip("ボスステージのテレポート座標")]
+    [Tooltip("ボスステージのテレポート座標")]
     private Transform _bossStageteleportPos = default;
 
     public override void Spawned()
     {
-           // 敵全滅を待つ
+
+        _enemyManagement = FindObjectOfType<StageEnemyManagement>();
+        _normalTeleportPosition = GameObject.Find("NormalTeleportPosition");
+        _bossTeleportPosition = GameObject.Find("BossTeleportPosition");
+
+        _normalStageteleportPos = _normalTeleportPosition.transform;
+        _bossStageteleportPos = _bossTeleportPosition.transform;
+
+        // 敵全滅を待つ
         Observable.CombineLatest(
             _enemyManagement.AllEnemiesDefeated
         )
