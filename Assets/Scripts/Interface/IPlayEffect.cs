@@ -4,5 +4,7 @@ using UnityEngine;
 
 public interface IPlayEffect
 {
-    void PlayEffect(ParticleSystem particleSystem, Vector3 playPosition);
+    void RPC_PlayEffect(ParticleSystem particleSystem, Vector3 playPosition);
+
+    void RPC_LoopEffect(ParticleSystem particleSystem, Vector3 playPosition, float effectDuration);
 }

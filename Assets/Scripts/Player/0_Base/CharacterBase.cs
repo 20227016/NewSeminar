@@ -48,7 +48,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     // エフェクト設定
     public CharacterEffectStruct _characterEffectStruct = default;
-
     protected ParticleSystem[] _effects = default;
 
     // ステート
@@ -218,7 +217,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _rigidbody = GetComponentInParent<Rigidbody>();
     }
 
-
     /// <summary>
     /// 数値等の初期設定
     /// </summary>
@@ -252,8 +250,16 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         {
             if (_effects[i] != null)
             {
-                _effects[i] = Instantiate(_effects[i], transform.position, _effects[i].transform.rotation, transform);
+                // プレハブの位置（ローカル座標）を取得
+                Vector3 prefabLocalPosition = _effects[i].transform.localPosition;
+
+                // プレハブの位置に基づいてインスタンス化する
+                _effects[i] = Instantiate(_effects[i], transform.position + prefabLocalPosition, _effects[i].transform.rotation, transform);
+
+                // インスタンスの名前を設定（任意）
                 _effects[i].name = _effects[i].name;
+
+                // インスタンスを非アクティブにする
                 _effects[i].gameObject.SetActive(false);
             }
         }
@@ -441,8 +447,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             _animation.BoolAnimation(_animator, _characterAnimationStruct._runAnimation, true);
         }
 
-        Debug.Log(_networkedStamina);
-
         // 移動を実行
         Move(_playerTransform, _moveDirection, _moveSpeed, _rigidbody, _currentState);
     }
@@ -460,7 +464,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         _currentState = CharacterStateEnum.ATTACK;
 
-        _playEffect.PlayEffect(_effects[_attackLightComboCount], transform.position + new Vector3(0, 1, 0));
+        _playEffect.RPC_PlayEffect(_effects[_attackLightComboCount], _effects[_attackLightComboCount].transform.position);
 
         // 攻撃速度を適用
         _animator.speed = _characterStatusStruct._attackSpeed;
@@ -525,7 +529,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _animator.speed = _characterStatusStruct._attackSpeed;
 
         float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._attackStrongAnimation) / _characterStatusStruct._attackSpeed;
-        _playEffect.PlayEffect(_effects[3], transform.position + new Vector3(0, 1, 0));
+
+        _playEffect.RPC_PlayEffect(_effects[3], _effects[3].transform.position);
+
         ResetState(animationDuration, () => _notAttackAccepted = false);
 
         _networkedSkillPoint = 100f;
@@ -570,11 +576,13 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 発動後スキルポイントを０に
         _networkedSkillPoint = 0f;
 
+        _networkedHP -= 50f;
+
         _skill.Skill(this, skillTime);
 
         float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._skillAnimation);
 
-        _playEffect.PlayEffect(_effects[4],  transform.position + new Vector3(0, 1, 0));
+        _playEffect.RPC_LoopEffect(_effects[4], _effects[4].transform.position, _characterStatusStruct._skillDuration);
 
         ResetState(animationDuration);
     }
