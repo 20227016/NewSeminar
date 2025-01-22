@@ -2,8 +2,6 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UniRx;
-using System.Linq;
 
 public class PlayerData : NetworkBehaviour
 {

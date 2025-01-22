@@ -1,8 +1,5 @@
-using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UniRx;
 
 /// <summary>
 /// キャラクター選択画面制御用スクリプト
@@ -122,7 +119,7 @@ public class CharacterSelectionManager : MonoBehaviour
         }
 
         _player.RPC_SetAvatarNumber(_currentSelectionCharacter);
-
+        _player.RPC_ActiveAvatar();
         // シーン内の全てのPlayerを取得
         PlayerData[] allPlayerData = FindObjectsOfType<PlayerData>();
 
