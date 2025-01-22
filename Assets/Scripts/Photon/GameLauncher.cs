@@ -28,6 +28,11 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     private Camera _mainCamera = default;
 
+    [SerializeField]
+    private NetworkPrefabRef _portal = default;
+
+    [SerializeField]
+    private Vector3 _portalPosition = new Vector3(-8, 6, -9);
 
     private async void Awake()
     {
@@ -47,14 +52,17 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         // ここでComboCounterを生成
         if (networkRunner.IsServer)
         {
-            SpawnComboCounter(networkRunner);
+            InitialSpawn(networkRunner);
         }
+
     }
 
     // ComboCounterを生成するメソッド
-    private void SpawnComboCounter(NetworkRunner runner)
+    private void InitialSpawn(NetworkRunner runner)
     {
         runner.Spawn(_comboCounterPrefab, Vector3.zero, Quaternion.identity);
+
+        runner.Spawn(_portal, _portalPosition, Quaternion.Euler(90,0,0));
     }
 
     private void RegisterInputActions(bool isRegister)
