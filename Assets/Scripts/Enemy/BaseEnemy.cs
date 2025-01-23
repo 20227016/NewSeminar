@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using System;
+using Fusion;
 
 /// <summary>
 /// BaseEnemy.cs
@@ -13,7 +14,7 @@ using System;
 /// 作成日: /
 /// 作成者: 
 /// </summary>
-public abstract class BaseEnemy : MonoBehaviour,IReceiveDamage
+public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
 {
 
     [SerializeField, Header("無視するレイヤー")]

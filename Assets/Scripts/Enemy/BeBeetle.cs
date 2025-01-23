@@ -20,8 +20,6 @@ public class BeBeetle : BaseEnemy
     // UniTaskキャンセルトークン
     private CancellationTokenSource _cancellatToken = default;
 
-    [SerializeField, Tooltip("ゲームマネージャー格納用")]
-    private GameManager _gameManager = default;
 
     [SerializeField, Header("自分のアニメーター")]
     private Animator _myAnimator = default;
@@ -48,8 +46,6 @@ public class BeBeetle : BaseEnemy
     // 自分が当たった位置を取得
     private Vector3 _hitAttackPos = default;
 
-    // ゲームが開始されているか
-    private bool _startGame = false;
     // 攻撃中か
     private bool _isAttack = false;
     // ダウン中か
@@ -58,32 +54,13 @@ public class BeBeetle : BaseEnemy
     private bool _isDeath = false;
 
     /// <summary>
-    /// ゲーム開始を購読
+    /// 生成されたときの初期処理
     /// </summary>
-    private void Awake()
+    public override void Spawned()
     {
-        // ゲーム開始イベントを購読
-        _gameManager.GameStart.Subscribe(_ => StartGame());
+        StartLogic();
     }
 
-    /// <summary>
-    ///  ゲーム開始処理
-    /// </summary>
-    private void StartGame()
-    {
-        print("GameInitializerからゲーム開始処理を受け取りました。ビービートル起動");
-        _startGame = true;
-        if(_startGame)
-        {
-            // 毎フレームの更新処理をUniRxで行う
-            Observable.EveryUpdate()
-                .Subscribe(_ => UpdateLogic())
-                .AddTo(this);
-
-            // 疑似スタートメソッド
-            StartLogic();
-        }
-    }
 
     /// <summary>
     /// 初期処理
@@ -104,7 +81,7 @@ public class BeBeetle : BaseEnemy
     /// <summary>
     /// 更新処理
     /// </summary>
-    protected void UpdateLogic()
+    private void Update()
     {
 
         print(_movementState);
