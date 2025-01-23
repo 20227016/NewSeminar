@@ -32,7 +32,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkPrefabRef _portal = default;
 
     [SerializeField]
-    private Vector3 _portalPosition = new Vector3(-8, 6, -9);
+    private GameObject _portalPosition = default;
 
     private async void Awake()
     {
@@ -62,7 +62,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     {
         runner.Spawn(_comboCounterPrefab, Vector3.zero, Quaternion.identity);
 
-        runner.Spawn(_portal, _portalPosition, Quaternion.Euler(90,0,0));
+        runner.Spawn(_portal, _portalPosition.transform.position, Quaternion.Euler(90,0,0));
     }
 
     private void RegisterInputActions(bool isRegister)
