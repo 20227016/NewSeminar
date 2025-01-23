@@ -96,6 +96,11 @@ public class FlyingDemon : BaseEnemy
     /// </summary>
     protected void Update()
     {
+        if (_targetTrans == null)
+        {
+            return;
+        }
+
         CheckAttackRange();
 
         if (Input.GetKeyDown(KeyCode.S))
@@ -298,11 +303,6 @@ public class FlyingDemon : BaseEnemy
     /// </summary>
     private void Running()
     {
-        if (_targetTrans == null)
-        {
-            return;
-        }
-
         _attackAction = true;
         _animator.SetInteger("TransitionNo", 2);
 
