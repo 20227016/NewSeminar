@@ -73,7 +73,8 @@ public class BossDemo : BaseEnemy
     private int _lastValue = default;
 
     // ボスの体力
-    private int _hp = 100;
+    [Networked]
+    private int HP { get; set; } = default;
 
     private float _summonTimer = default;
     private bool isFaintg = false;
@@ -134,17 +135,17 @@ public class BossDemo : BaseEnemy
         // 召喚&ダウンテスト
         if (Input.GetKeyDown(KeyCode.S) && !isFaintg)
         {
-            _hp = 50;
+            HP = 50;
         }
 
         // 死ぬテスト
         if (Input.GetKeyDown(KeyCode.D))
         {
-            _hp = 0;
+            HP = 0;
         }
 
         // 体力が0になったら死ぬ
-        if (_hp <= 0)
+        if (HP <= 0)
         {
             _actionState = 4;
         }
@@ -253,7 +254,7 @@ public class BossDemo : BaseEnemy
                 collider.enabled = false;
             }
 
-            if (_hp <= 50 && !isFaintg)
+            if (HP <= 50 && !isFaintg)
             {
                 _actionState = 3;
             }
@@ -397,6 +398,12 @@ public class BossDemo : BaseEnemy
 
         yield return new WaitForSeconds(fadeDuration);
 
+        RPC_Death();
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_Death()
+    {
         gameObject.SetActive(false);
     }
 
