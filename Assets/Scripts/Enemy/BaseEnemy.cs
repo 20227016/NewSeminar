@@ -143,14 +143,14 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
 
         }
         // 攻撃力に攻撃倍率を渡して渡す
-        receiveDamage.ReceiveDamage((int)(_enemyStatusStruct._attackPower * _currentAttackMultiplier));
+        receiveDamage.RPC_ReceiveDamage((int)(_enemyStatusStruct._attackPower * _currentAttackMultiplier));
     }
 
     /// <summary>
     /// ダメージ処理
     /// </summary>
     /// <param name="damegeValue">ダメージ</param>
-    public void ReceiveDamage(int damegeValue)
+    public void RPC_ReceiveDamage(int damegeValue)
     {
 
         _enemyStatusStruct._hp -= damegeValue - _enemyStatusStruct._diffencePower;

@@ -70,7 +70,7 @@ public class NormalSkill : MonoBehaviour, ISkill
                                 int damage = Mathf.FloorToInt(characterBase._characterStatusStruct._attackPower * _skillAttackMultiplier * comboMultiplier);
 
                                 // 相手にダメージを与える
-                                target.ReceiveDamage(damage);
+                                target.RPC_ReceiveDamage(damage);
 
                                 // 攻撃がヒットしたことをプレイヤー側に通知
                                 characterBase.AttackHit(damage);
