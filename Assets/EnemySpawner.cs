@@ -14,16 +14,16 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField, Tooltip("ネットワークランナープレハブ")]
     private NetworkRunner _networkRunnerPrefab = default;
 
-    //[SerializeField]
-    //private NetworkObject _bossEnemyOBJ = default;
+    [SerializeField]
+    private NetworkObject _bossEnemyOBJ = default;
 
-    //[SerializeField]
-    //private Transform _bossStartPos = default;
+    [SerializeField]
+    private Transform _bossStartPos = default;
 
 
     private void Awake()
     {
-
+        print("初期処理したよ");
         NetworkRunner networkRunner = Instantiate(_networkRunnerPrefab);
         networkRunner.AddCallbacks(this);
         // ここでComboCounterを生成
@@ -36,7 +36,8 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     // ComboCounterを生成するメソッド(スポナー専用)
     private void InitialSpawn(NetworkRunner runner)
     {
-        //runner.Spawn(_bossEnemyOBJ, _bossStartPos.position,Quaternion.identity);
+        print("ボス生成した");
+        runner.Spawn(_bossEnemyOBJ, _bossStartPos.position, Quaternion.identity);
 
     }
 
