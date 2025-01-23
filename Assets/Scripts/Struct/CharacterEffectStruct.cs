@@ -1,16 +1,17 @@
 using UnityEngine;
+using Fusion;
 
 [System.Serializable]
 public struct CharacterEffectStruct
 {
 
-    public ParticleSystem _attackLight1Effect;
+    public NetworkObject _attackLight1Effect;
 
-    public ParticleSystem _attackLight2Effect;
+    public NetworkObject _attackLight2Effect;
 
-    public ParticleSystem _attackLight3Effect;
+    public NetworkObject _attackLight3Effect;
 
-    public ParticleSystem _attackStrongEffect;
+    public NetworkObject _attackStrongEffect;
 
-    public ParticleSystem _skillEffect;
+    public NetworkObject _skillEffect;
 }

@@ -4,9 +4,6 @@ using Fusion;
 using Fusion.Sockets;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UniRx;
-using Cysharp.Threading.Tasks;
-using System.Collections;
 
 public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -22,17 +19,16 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField, Tooltip("プレイヤーのスポーン位置")]
     private Vector3 _playerSpawnPos = default;
 
+    // インプットシステム
     private PlayerInput _playerInput = default;
 
+    // 移動入力方向
     private Vector2 _moveInput = default;
 
+    // メインカメラ
     private Camera _mainCamera = default;
 
     [SerializeField]
-    private NetworkPrefabRef _portal = default;
-
-    [SerializeField]
-    private GameObject _portalPosition = default;
 
     private async void Awake()
     {
@@ -52,17 +48,15 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         // ここでComboCounterを生成
         if (networkRunner.IsServer)
         {
-            InitialSpawn(networkRunner);
+            SpawnComboCounter(networkRunner);
         }
-
     }
 
     // ComboCounterを生成するメソッド
-    private void InitialSpawn(NetworkRunner runner)
+    private void SpawnComboCounter(NetworkRunner runner)
     {
         runner.Spawn(_comboCounterPrefab, Vector3.zero, Quaternion.identity);
 
-        runner.Spawn(_portal, _portalPosition.transform.position, Quaternion.Euler(90,0,0));
     }
 
     private void RegisterInputActions(bool isRegister)
@@ -104,10 +98,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     /// <param name="context">入力アクション</param>
     private void HandleInput(InputAction.CallbackContext context)
     {
-
         switch (context.action.name)
         {
-
             case "Move":
                 _moveInput = context.ReadValue<Vector2>();
                 break;

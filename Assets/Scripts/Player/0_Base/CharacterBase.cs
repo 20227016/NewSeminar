@@ -48,7 +48,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     // エフェクト設定
     public CharacterEffectStruct _characterEffectStruct = default;
-    protected ParticleSystem[] _effects = default;
+
+    protected NetworkObject[] _effects = default;
 
     // ステート
     protected CharacterStateEnum _characterStateEnum = default;
@@ -61,7 +62,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected ReactiveProperty<float> _currentHP = new ReactiveProperty<float>();
 
     [Networked(OnChanged = nameof(OnNetworkedHPChanged))]
-    protected float _networkedHP { get; set; }
+    protected float _networkedHP { get; set; } = 100f;
 
     private static void OnNetworkedHPChanged(Changed<CharacterBase> changed)
     {
@@ -74,7 +75,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected ReactiveProperty<float> _currentStamina = new ReactiveProperty<float>();
 
     [Networked(OnChanged = nameof(OnNetworkedStaminaChanged))]
-    protected float _networkedStamina { get; set; }
+    protected float _networkedStamina { get; set; } = 100f;
 
     private static void OnNetworkedStaminaChanged(Changed<CharacterBase> changed)
     {
@@ -87,7 +88,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected ReactiveProperty<float> _currentSkillPoint = new ReactiveProperty<float>();
 
     [Networked(OnChanged = nameof(OnNetworkedSkillPointChanged))]
-    protected float _networkedSkillPoint { get; set; }
+    protected float _networkedSkillPoint { get; set; } = 100f;
 
     private static void OnNetworkedSkillPointChanged(Changed<CharacterBase> changed)
     {
@@ -236,8 +237,21 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _currentSkillPoint.Value = 0f;
         _networkedSkillPoint = _currentSkillPoint.Value;
 
+        InstanceEffect();
+
+        // 死亡判定
+        _currentHP
+            .Where(_ => _ <= 0)
+            .Subscribe(_ => Death());
+
+        StaminaManagement();
+    }
+
+
+    public void InstanceEffect()
+    {
         // エフェクトを配列に格納
-        _effects = new ParticleSystem[]
+        _effects = new NetworkObject[]
         {
             _characterEffectStruct._attackLight1Effect,
             _characterEffectStruct._attackLight2Effect,
@@ -263,15 +277,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
                 _effects[i].gameObject.SetActive(false);
             }
         }
-
-        // 死亡判定
-        _currentHP
-            .Where(_ => _ <= 0)
-            .Subscribe(_ => Death());
-
-        StaminaManagement();
     }
-
 
     /// <summary>
     /// スタミナ管理
@@ -357,7 +363,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// <param name="input">入力情報</param>
     protected virtual void ProcessInput(PlayerNetworkInput input)
     {
-
         // Run状態を切り替える
         if (input.IsRunning)
         {
@@ -418,6 +423,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// <param name="input">収集した入力情報</param>
     protected virtual void MoveManagement(PlayerNetworkInput input)
     {
+
         // 入力情報を移動方向に格納
         _moveDirection = input.MoveDirection;
 
@@ -464,7 +470,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         _currentState = CharacterStateEnum.ATTACK;
 
-        _playEffect.RPC_PlayEffect(_effects[_attackLightComboCount], _effects[_attackLightComboCount].transform.position);
+        if (Object.HasInputAuthority)
+        {
+            _playEffect.RPC_PlayEffect(_effects[_attackLightComboCount], _effects[_attackLightComboCount].transform.position);
+        }
+            
 
         // 攻撃速度を適用
         _animator.speed = _characterStatusStruct._attackSpeed;
@@ -530,7 +540,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._attackStrongAnimation) / _characterStatusStruct._attackSpeed;
 
-        _playEffect.RPC_PlayEffect(_effects[3], _effects[3].transform.position);
+        if (Object.HasInputAuthority)
+        {
+            _playEffect.RPC_PlayEffect(_effects[3], _effects[3].transform.position);
+        }
+            
 
         ResetState(animationDuration, () => _notAttackAccepted = false);
 
@@ -582,7 +596,10 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._skillAnimation);
 
-        _playEffect.RPC_LoopEffect(_effects[4], _effects[4].transform.position, _characterStatusStruct._skillDuration);
+        if (Object.HasInputAuthority)
+        {
+            _playEffect.RPC_LoopEffect(_effects[4], _effects[4].transform.position, _characterStatusStruct._skillDuration);
+        }
 
         ResetState(animationDuration);
     }
@@ -638,6 +655,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         if (_networkedHP <= 0 && healValue > 0)
         {
             float animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._reviveAnimation);
+
             ResetState(animationDuration);
         }
         _networkedHP = Mathf.Clamp(_networkedHP + healValue, 0, _characterStatusStruct._playerStatus.MaxHp);
@@ -651,6 +669,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         // スキルポイントを与ダメージを参照してチャージする
         float chargeSkillPoint = damage / 2;
+
         _networkedSkillPoint = Mathf.Clamp(_networkedSkillPoint+ chargeSkillPoint, 0, _characterStatusStruct._skillPointUpperLimit);
     }
 
@@ -691,7 +710,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected virtual void Death()
     {
         _resetStateTokenSource?.Cancel();
+
         _currentState = CharacterStateEnum.DEATH;
+
         _animation.PlayAnimation(_animator, _characterAnimationStruct._deathAnimation);
     }
 
