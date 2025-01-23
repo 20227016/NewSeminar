@@ -461,7 +461,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected virtual void Move(Transform transform, Vector2 moveDirection, float moveSpeed, Rigidbody rigidbody, CharacterStateEnum characterState)
     {
         _currentState = characterState;
-
         _move.Move(transform, moveDirection, moveSpeed, rigidbody);
     }
 
@@ -475,7 +474,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             _playEffect.RPC_PlayEffect(_effects[_attackLightComboCount], _effects[_attackLightComboCount].transform.position);
         }
             
-
         // 攻撃速度を適用
         _animator.speed = _characterStatusStruct._attackSpeed;
 
@@ -496,6 +494,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         // 攻撃受付不可状態
         _notAttackAccepted = true;
+
         Observable.Timer(TimeSpan.FromSeconds(animationDuration * ATTACK_ACCEPTED_TIME))
            .Subscribe(_ => _notAttackAccepted = false)
            .AddTo(this);
@@ -590,8 +589,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 発動後スキルポイントを０に
         _networkedSkillPoint = 0f;
 
-        _networkedHP -= 50f;
-
         _skill.Skill(this, skillTime);
 
         float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._skillAnimation);
@@ -610,11 +607,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _resurrection.Resurrection(transform, ressurectionTime);
     }
 
-
-    public virtual void ReceiveDamage(int damageValue)
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public virtual void RPC_ReceiveDamage(int damageValue)
     {
-        if (!Object.HasStateAuthority) return;
-
         // 被弾中は無敵
         if (_currentState == CharacterStateEnum.DAMAGE_REACTION) return;
 
@@ -646,11 +641,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         ResetState(animationDuration);
     }
 
-
-    public virtual void ReceiveHeal(int healValue)
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public virtual void RPC_ReceiveHeal(int healValue)
     {
-        if (!Object.HasStateAuthority) return;
-
         // HPが0の状態から回復処理をしたい場合は蘇生
         if (_networkedHP <= 0 && healValue > 0)
         {
@@ -716,9 +709,4 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _animation.PlayAnimation(_animator, _characterAnimationStruct._deathAnimation);
     }
 
-    public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data)
-    {
-        // 必要なら送信されたデータを処理
-        Debug.Log($"プレイヤー {player} が参加しました");
-    }
 }

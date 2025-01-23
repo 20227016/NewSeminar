@@ -18,6 +18,7 @@ public class PlayerResurrection : IResurrection
 
     public async void Resurrection(Transform thisTransform, float resurrectionTime)
     {
+        Debug.Log("あ");
         // 前の処理が残っていればキャンセル
         _cancellationTokenSource?.Cancel();
 
@@ -30,6 +31,7 @@ public class PlayerResurrection : IResurrection
 
         foreach (RaycastHit hit in hits)
         {
+            Debug.Log("い");
             // 自分を除外
             if (hit.collider.transform == thisTransform)
             {
@@ -39,11 +41,15 @@ public class PlayerResurrection : IResurrection
             // 対象のキャラクターの CharacterBase を取得
             CharacterBase targetCharacter = hit.collider.transform.GetComponent<CharacterBase>();
 
+            Debug.Log("う");
+
             // CharacterBase が null であれば処理を中断
             if (targetCharacter == null)
             {
                 return;
             }
+
+            Debug.Log("え");
 
             // 対象のキャラクターがDEATH状態か確認
             if (targetCharacter._currentState == CharacterStateEnum.DEATH)
@@ -53,7 +59,8 @@ public class PlayerResurrection : IResurrection
                 try
                 {
                     // (resurrectinTime * 1000)ミリ秒待機
-                    await UniTask.Delay((int)(resurrectionTime * 1000), cancellationToken: _cancellationTokenSource.Token);
+                    //await UniTask.Delay((int)(resurrectionTime * 1000), cancellationToken: _cancellationTokenSource.Token);
+                    await UniTask.Delay((int)(resurrectionTime), cancellationToken: _cancellationTokenSource.Token);
                 }
                 catch (OperationCanceledException)
                 {
@@ -64,7 +71,7 @@ public class PlayerResurrection : IResurrection
                 // 蘇生完了の処理
                 Debug.Log("蘇生完了" + targetCharacter.name);
 
-                targetCharacter.ReceiveHeal((int)targetCharacter._characterStatusStruct._playerStatus.MaxHp);
+                targetCharacter.RPC_ReceiveHeal((int)targetCharacter._characterStatusStruct._playerStatus.MaxHp);
             }
 
             break;
@@ -81,7 +88,7 @@ public class PlayerResurrection : IResurrection
         return new BoxCastStruct
         {
             _originPos = transform.position,
-            _size = transform.localScale,
+            _size = transform.localScale * 3,
             _direction = transform.forward,
             _quaternion = Quaternion.identity,
             _layerMask = 1 << 6

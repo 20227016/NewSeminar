@@ -60,7 +60,7 @@ public class TankCharacter : CharacterBase
     }
 
 
-    public override void ReceiveDamage(int damageValue)
+    public override void RPC_ReceiveDamage(int damageValue)
     {
         if (!Object.HasStateAuthority) return;
 
