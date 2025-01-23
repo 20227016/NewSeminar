@@ -68646,6 +68646,7 @@ GameObject:
   - component: {fileID: 4895772533199642}
   - component: {fileID: 198926107242498482}
   - component: {fileID: 199301719493183394}
+  - component: {fileID: -5820966933152248588}
   m_Layer: 0
   m_Name: Fighter 4
   m_TagString: Untagged
@@ -73557,6 +73558,29 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &-5820966933152248588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1893033738566276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 1
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 2305
+  NetworkGuid:
+    RawGuidValue: 6d28c5706f3d9d24ba4d7f67284d7a23
+  NestedObjects: []
+  NetworkedBehaviours: []
+  SimulationBehaviours: []
 --- !u!1 &1987985734801252
 GameObject:
   m_ObjectHideFlags: 0

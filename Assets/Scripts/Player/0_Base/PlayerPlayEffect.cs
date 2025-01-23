@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class PlayerPlayEffect : IPlayEffect
 {
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public void RPC_PlayEffect(ParticleSystem particleSystem, Vector3 playPosition)
+    public void RPC_PlayEffect(NetworkObject particleSystem, Vector3 playPosition)
     {
         // エフェクトの再生位置を設定
         particleSystem.transform.position = playPosition;
@@ -13,11 +12,12 @@ public class PlayerPlayEffect : IPlayEffect
         particleSystem.gameObject.SetActive(true);
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public async void RPC_LoopEffect(ParticleSystem particleSystem, Vector3 playPosition, float effectDuration)
+    public async void RPC_LoopEffect(NetworkObject particleObject, Vector3 playPosition, float effectDuration)
     {
         // エフェクトの再生位置を設定
-        particleSystem.transform.position = playPosition;
+        particleObject.transform.position = playPosition;
+
+        ParticleSystem particleSystem = particleObject.GetComponent<ParticleSystem>();
 
         // 再生時間を取得
         float particleDuration = particleSystem.main.duration + particleSystem.main.startLifetime.constantMax;
@@ -26,13 +26,12 @@ public class PlayerPlayEffect : IPlayEffect
         int loopCount = Mathf.FloorToInt(effectDuration / particleDuration);
 
         // ループを無効にして最初の再生
-        particleSystem.gameObject.SetActive(true);
+        particleObject.gameObject.SetActive(true);
 
         // 非同期でループ処理を実行
         await RPC_PlayEffectLoop(particleSystem, loopCount, particleDuration);
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
     private async UniTask RPC_PlayEffectLoop(ParticleSystem particleSystem, int loopCount, float particleDuration)
     {
         for (int i = 1; i < loopCount; i++) 

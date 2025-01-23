@@ -2760,11 +2760,11 @@ MonoBehaviour:
     _damageReactionHeavyAnimation: {fileID: 7400000, guid: c1d5e2eb31078e744a792fc216838df4, type: 3}
     _deathAnimation: {fileID: 7400000, guid: d828de0f312bb9d4aa3a85bdf39ce798, type: 3}
   _characterEffectStruct:
-    _attackLight1Effect: {fileID: 2698726992813747836, guid: e902c77dbcdf8e14ab8477bbf3d20507, type: 3}
-    _attackLight2Effect: {fileID: 2698726992813747836, guid: 41247e8f463f7be4a9707b1b5809917d, type: 3}
-    _attackLight3Effect: {fileID: 2698726992813747836, guid: f17223a78a9263c4693e7aac7059025e, type: 3}
-    _attackStrongEffect: {fileID: 198926107242498482, guid: 6d28c5706f3d9d24ba4d7f67284d7a23, type: 3}
-    _skillEffect: {fileID: 4589665228372871730, guid: d823765285d095e4eb2045aa7c9708e0, type: 3}
+    _attackLight1Effect: {fileID: -2745114274870017817, guid: e902c77dbcdf8e14ab8477bbf3d20507, type: 3}
+    _attackLight2Effect: {fileID: -6744561954501064095, guid: 41247e8f463f7be4a9707b1b5809917d, type: 3}
+    _attackLight3Effect: {fileID: 8179596486899178368, guid: f17223a78a9263c4693e7aac7059025e, type: 3}
+    _attackStrongEffect: {fileID: -5820966933152248588, guid: 6d28c5706f3d9d24ba4d7f67284d7a23, type: 3}
+    _skillEffect: {fileID: -4820907608964509799, guid: d823765285d095e4eb2045aa7c9708e0, type: 3}
   _currentState: 0
 --- !u!114 &4405098942096439548
 MonoBehaviour:
