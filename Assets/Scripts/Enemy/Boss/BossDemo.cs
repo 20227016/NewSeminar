@@ -19,6 +19,9 @@ using Unity.VisualScripting;
 /// </summary>
 public class BossDemo : BaseEnemy
 {
+    [Tooltip("翼のダメージ")]
+    [SerializeField] private float _damage = 10f;
+
     [Header("魔弾攻撃設定")]
     [Tooltip("発射する魔弾のPrefab")]
     [SerializeField] private GameObject _magicBullet;
@@ -400,5 +403,19 @@ public class BossDemo : BaseEnemy
 
         // アニメーションが指定した名前かつ終了しているかを確認
         return stateInfo.IsName(animationName) && stateInfo.normalizedTime >= 1.0f;
+    }
+
+    /// <summary>
+    /// 他のオブジェクトと衝突した際の処理。
+    /// </summary>
+    /// <param name="collision">衝突情報</param>
+    public override void OnTriggerEnter(Collider other)
+    {
+        // ダメージを与える処理（例: プレイヤーなど特定のレイヤーの場合）
+        if (other.CompareTag("Player")) // プレイヤーに対してダメージを与える
+        {
+            // プレイヤーのダメージ処理を呼び出す（仮の例）
+            Debug.Log($"Wing Hit {other.gameObject.name}, dealt {_damage} damage.");
+        }
     }
 }

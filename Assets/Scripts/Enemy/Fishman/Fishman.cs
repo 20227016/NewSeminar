@@ -42,6 +42,9 @@ public class Fishman : BaseEnemy
 
     private Vector3 _randomTargetPos; // ランダム移動の目標位置
 
+    [Tooltip("物理攻撃ダメージ")]
+    [SerializeField] private float _damage = 10f;
+
     private bool isAttackInterval = default; // 連続攻撃をしない
 
     private float _downedTimer = 5f; // ダウンタイマー
@@ -641,6 +644,20 @@ public class Fishman : BaseEnemy
             // ヒットしなかった場合
             _targetTrans = null;
             // Debug.Log("プレイヤーもステージも検出されませんでした。");
+        }
+    }
+
+    /// <summary>
+    /// 他のオブジェクトと衝突した際の処理。
+    /// </summary>
+    /// <param name="collision">衝突情報</param>
+    public override void OnTriggerEnter(Collider other)
+    {
+        // ダメージを与える処理（例: プレイヤーなど特定のレイヤーの場合）
+        if (other.CompareTag("Player")) // プレイヤーに対してダメージを与える
+        {
+            // プレイヤーのダメージ処理を呼び出す（仮の例）
+            Debug.Log($"FishmanAttack Hit {other.gameObject.name}, dealt {_damage} damage.");
         }
     }
 }

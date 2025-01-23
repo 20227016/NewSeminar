@@ -8,6 +8,9 @@ using UnityEngine;
 /// </summary>
 public class MagicBullet : MonoBehaviour
 {
+    [Tooltip("魔弾のダメージ")]
+    [SerializeField] private float _damage = 30f;
+
     private Vector3 _targetScale = new Vector3(5f, 5f, 5f); // 最終的な大きさ
     private float _scaleSpeed = 2f; // 大きくなる速度
     private float _moveSpeed = 5f; // 飛ぶ速度
@@ -43,6 +46,20 @@ public class MagicBullet : MonoBehaviour
             {
                 gameObject.SetActive(false);
             }
+        }
+    }
+
+    /// <summary>
+    /// 他のオブジェクトと衝突した際の処理。
+    /// </summary>
+    /// <param name="collision">衝突情報</param>
+    private void OnTriggerEnter(Collider other)
+    {
+        // ダメージを与える処理（例: プレイヤーなど特定のレイヤーの場合）
+        if (other.CompareTag("Player")) // プレイヤーに対してダメージを与える
+        {
+            // プレイヤーのダメージ処理を呼び出す（仮の例）
+            Debug.Log($"MagicBullet Hit {other.gameObject.name}, dealt {_damage} damage.");
         }
     }
 }

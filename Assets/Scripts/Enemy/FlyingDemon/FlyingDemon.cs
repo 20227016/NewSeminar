@@ -54,6 +54,9 @@ public class FlyingDemon : BaseEnemy
 
     private Vector3 _randomTargetPos; // ランダム移動の目標位置
 
+    [Tooltip("物理攻撃ダメージ")]
+    [SerializeField] private float _damage = 10f;
+
     [SerializeField]
     private bool _attackAction = true;
 
@@ -565,5 +568,19 @@ public class FlyingDemon : BaseEnemy
 
         // 炎の球を生成
         Instantiate(_fireballPrefab, _firePoint.position, rotationToTarget);
+    }
+
+    /// <summary>
+    /// 他のオブジェクトと衝突した際の処理。
+    /// </summary>
+    /// <param name="collision">衝突情報</param>
+    public override void OnTriggerEnter(Collider other)
+    {
+        // ダメージを与える処理（例: プレイヤーなど特定のレイヤーの場合）
+        if (other.CompareTag("Player")) // プレイヤーに対してダメージを与える
+        {
+            // プレイヤーのダメージ処理を呼び出す（仮の例）
+            Debug.Log($"DemonAttack Hit {other.gameObject.name}, dealt {_damage} damage.");
+        }
     }
 }
