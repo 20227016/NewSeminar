@@ -56,7 +56,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     // 現在のステート
     [HideInInspector]
-    public CharacterStateEnum _currentState = default;
+    public CharacterStateEnum _currentState { get; set; } = default;
 
     // HP ---------------------------------------------------------------------------------
     protected ReactiveProperty<float> _currentHP = new ReactiveProperty<float>();
@@ -601,9 +601,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         ResetState(animationDuration);
     }
 
-
     protected virtual void Resurrection(Transform transform, float ressurectionTime)
     {
+        Debug.Log("蘇生させるよ");
         _resurrection.Resurrection(transform, ressurectionTime);
     }
 
@@ -641,10 +641,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         ResetState(animationDuration);
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
     public virtual void RPC_ReceiveHeal(int healValue)
     {
-        // HPが0の状態から回復処理をしたい場合は蘇生
+        // HPが0の状態から回復処理をした場合は蘇生
         if (_networkedHP <= 0 && healValue > 0)
         {
             float animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._reviveAnimation);

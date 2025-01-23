@@ -32,6 +32,7 @@ public class PlayerResurrection : IResurrection
         foreach (RaycastHit hit in hits)
         {
             Debug.Log("い");
+
             // 自分を除外
             if (hit.collider.transform == thisTransform)
             {
@@ -49,8 +50,6 @@ public class PlayerResurrection : IResurrection
                 return;
             }
 
-            Debug.Log("え");
-
             // 対象のキャラクターがDEATH状態か確認
             if (targetCharacter._currentState == CharacterStateEnum.DEATH)
             {
@@ -58,7 +57,7 @@ public class PlayerResurrection : IResurrection
 
                 try
                 {
-                    // (resurrectinTime * 1000)ミリ秒待機
+                    // (resurrectionTime * 1000)ミリ秒待機
                     //await UniTask.Delay((int)(resurrectionTime * 1000), cancellationToken: _cancellationTokenSource.Token);
                     await UniTask.Delay((int)(resurrectionTime), cancellationToken: _cancellationTokenSource.Token);
                 }
