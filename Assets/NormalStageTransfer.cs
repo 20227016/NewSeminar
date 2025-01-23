@@ -16,8 +16,8 @@ public class NormalStageTransfer : NetworkBehaviour
     private bool _clearNormalStage { get; set; } = false;
 
     // 必要なプレイヤー数
-    [Networked,Tooltip("ノーマルステージにテレポートするために必要な人数")]
-    private int _normalStageRequiredPlayers { get; set; }= 4; // 必要なプレイヤー数
+    [Networked, Tooltip("ノーマルステージにテレポートするために必要な人数")]
+    private int _normalStageRequiredPlayers { get; set; } = 2; // 必要なプレイヤー数
 
     private GameObject _normalTeleportPosition = default;
     private GameObject _bossTeleportPosition = default;
@@ -61,10 +61,12 @@ public class NormalStageTransfer : NetworkBehaviour
         // 必要人数が揃ったら全員をテレポート
         if ((_playersInPortal.Count >= _normalStageRequiredPlayers) && (!_clearNormalStage))
         {
+            print("ただのテレポート");
             NormalTeleportAllPlayers();
         }
         else if ((_playersInPortal.Count >= _normalStageRequiredPlayers) && (_clearNormalStage))
         {
+            print("ボステレポート、成功");
             BossTeleportAllPlayers();
         }
     }
@@ -103,16 +105,21 @@ public class NormalStageTransfer : NetworkBehaviour
         // ボスステージにテレポート
         foreach (GameObject player in _playersInPortal)
         {
-            if (_normalStageRequiredPlayers != 1)
-            {
-                player.transform.position = _bossStageteleportPos.position;
-                print($"{player.name} をボスステージに途中参加としてテレポートしました");
-            }
+
+            player.transform.position = _bossStageteleportPos.position;
+            print($"{player.name} をボスステージに途中参加としてテレポートしました");
+
         }
     }
 
 
     private void HandleAllEnemiesDefeated()
+    {
+        RPC_AllEnemiesDefeated();
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_AllEnemiesDefeated()
     {
         _clearNormalStage = true;
         print("敵全滅の通知を受け取りました" + _clearNormalStage);
