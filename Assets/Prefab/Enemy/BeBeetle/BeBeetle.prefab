@@ -493,6 +493,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a74752561f061ef4b8eea50cecbbfa91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
   ignoreLayer:
     serializedVersion: 2
     m_Bits: 183
@@ -506,7 +509,6 @@ MonoBehaviour:
     _attackDelayTime: 3
     _downedTime: 3
   _tags: []
-  _gameManager: {fileID: 0}
   _myAnimator: {fileID: 6803895053991833810}
   _searchRange: 100
   _attackMultiplier1: 1
@@ -565,6 +567,7 @@ MonoBehaviour:
     RawGuidValue: 0aabfed02eb59374691f2a2f90b23435
   NestedObjects: []
   NetworkedBehaviours:
+  - {fileID: 4370006175813528616}
   - {fileID: 3555301089148164077}
   SimulationBehaviours: []
 --- !u!1 &6523506010039407047

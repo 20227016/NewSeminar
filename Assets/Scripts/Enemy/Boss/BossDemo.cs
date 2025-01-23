@@ -72,7 +72,9 @@ public class BossDemo : BaseEnemy
     private int[] _confirmedAttackState = new int[3];
     private int _lastValue = default;
 
+    // ボスの体力
     private int _hp = 100;
+
     private float _summonTimer = default;
     private bool isFaintg = false;
     private int _faintingState = 1;
@@ -138,11 +140,12 @@ public class BossDemo : BaseEnemy
         // 死ぬテスト
         if (Input.GetKeyDown(KeyCode.D))
         {
-            foreach (BoxCollider collider in _boxColliders)
-            {
-                collider.enabled = false;
-            }
-            _LaserBeam.gameObject.SetActive(false);
+            _hp = 0;
+        }
+
+        // 体力が0になったら死ぬ
+        if (_hp <= 0)
+        {
             _actionState = 4;
         }
 
@@ -168,8 +171,8 @@ public class BossDemo : BaseEnemy
 
                 // 抽選した攻撃パターンを変数に格納。順に実行する
                 _currentAttack = _confirmedAttackState[_currentLottery];
-
-                switch(_currentAttack)
+                _currentAttack = 1;
+                switch (_currentAttack)
                     {
                         case 1:
 
@@ -384,6 +387,12 @@ public class BossDemo : BaseEnemy
     /// </summary>
     private IEnumerator DeathState(float fadeDuration)
     {
+        foreach (BoxCollider collider in _boxColliders)
+        {
+            collider.enabled = false;
+        }
+        _LaserBeam.gameObject.SetActive(false);
+
         _animator.SetInteger("TransitionNo", 7);
 
         yield return new WaitForSeconds(fadeDuration);
