@@ -45,12 +45,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4683a7b1a0225e49adf8d7e1dbb5db0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkRunnerPrefab: {fileID: 2398789667054413817, guid: 7d2bbb37f0570514684b499e2a4fb9d6, type: 3}
-  comboCounterPrefab:
+  _networkRunnerPrefab: {fileID: 5701922471170824758, guid: 7d2bbb37f0570514684b499e2a4fb9d6, type: 3}
+  _comboCounterPrefab:
     RawGuidValue: 5b5d9af90a3574d4bb59ad0d1e7e309b
-  playerAvatarPrefab:
-    RawGuidValue: 7aa176f9b434008428b39d9c5adc47c4
+  _playerPrefab:
+    RawGuidValue: ea9ebd305099e114091516c919b9c7bb
   _playerSpawnPos: {x: 0, y: 0, z: 0}
+  _portal: {fileID: 1751012669339039604, guid: 0be3f3d8fb82f2a4491adba8a94b5834, type: 3}
+  _portalPosition: {x: -8, y: 6, z: -9}
 --- !u!114 &5050406778293680978
 MonoBehaviour:
   m_ObjectHideFlags: 0
