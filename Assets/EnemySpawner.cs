@@ -14,6 +14,12 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField, Tooltip("ネットワークランナープレハブ")]
     private NetworkRunner _networkRunnerPrefab = default;
 
+    [SerializeField]
+    private NetworkObject _bossEnemyOBJ = default;
+
+    [SerializeField]
+    private Transform _bossStartPos = default;
+
 
     private void Awake()
     {
@@ -31,8 +37,8 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     private void InitialSpawn(NetworkRunner runner)
     {
         //runner.Spawn(_comboCounterPrefab, Vector3.zero, Quaternion.identity);
-
-        //runner.Spawn();
+        print("ボスを生成しました");
+        runner.Spawn(_bossEnemyOBJ, _bossStartPos.position,Quaternion.identity);
 
     }
 
