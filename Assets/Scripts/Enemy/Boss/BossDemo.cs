@@ -168,8 +168,8 @@ public class BossDemo : BaseEnemy
 
                 // 抽選した攻撃パターンを変数に格納。順に実行する
                 _currentAttack = _confirmedAttackState[_currentLottery];
-
-                switch(_currentAttack)
+                _currentAttack = 1;
+                switch (_currentAttack)
                     {
                         case 1:
 
