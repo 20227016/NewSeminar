@@ -13,13 +13,13 @@ using System.Collections;
 public class FireBullet : MonoBehaviour
 {
     [Tooltip("火球の速度")]
-    [SerializeField] private float speed = 7.5f;
+    [SerializeField] private float _speed = 7.5f;
 
     [Tooltip("火球の生存時間")]
-    [SerializeField] private float lifeTime = 5f;
+    [SerializeField] private float _lifeTime = 5f;
 
     [Tooltip("火球のダメージ")]
-    [SerializeField] private float damage = 15f;
+    [SerializeField] private float _damage = 15f;
 
     private float _elapsedTime = 0f; // 経過時間
     private bool _isActive = true;  // アクティブ状態を管理
@@ -50,11 +50,11 @@ public class FireBullet : MonoBehaviour
         if (!_isActive) return;
 
         // 前方に移動させる
-        transform.position += transform.forward * speed * Time.deltaTime;
+        transform.position += transform.forward * _speed * Time.deltaTime;
 
         // 寿命を超えた場合、非アクティブ化
         _elapsedTime += Time.deltaTime;
-        if (_elapsedTime >= lifeTime)
+        if (_elapsedTime >= _lifeTime)
         {
             Deactivate();
         }
@@ -72,7 +72,7 @@ public class FireBullet : MonoBehaviour
         if (other.CompareTag("Player")) // プレイヤーに対してダメージを与える
         {
             // プレイヤーのダメージ処理を呼び出す（仮の例）
-            Debug.Log($"Hit {other.gameObject.name}, dealt {damage} damage.");
+            Debug.Log($"FireBullet Hit {other.gameObject.name}, dealt {_damage} damage.");
         }
 
         // ステージに当たったら
