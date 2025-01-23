@@ -45,6 +45,9 @@ public class LaserBeam : MonoBehaviour
 
     private float _activationTimer = 3f; // レーザー発射ラグ
 
+    [Tooltip("ビームのダメージ")]
+    [SerializeField] private float _damage = 10f;
+
     /// <summary>
     /// 初期化
     /// </summary>
@@ -97,7 +100,7 @@ public class LaserBeam : MonoBehaviour
         {
             Laser.SetPosition(0, transform.position);
             RaycastHit hit; //DELETE THIS IF YOU WANT USE LASERS IN 2D
-            int layerMask = ~LayerMask.GetMask("UI"); // 自分のレイヤーを無視するマスク
+            int layerMask = ~LayerMask.GetMask("Player", "UI"); // 自分のレイヤーを無視するマスク
             //ADD THIS IF YOU WANNT TO USE LASERS IN 2D: RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.forward, MaxLength);       
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, MaxLength, layerMask))//CHANGE THIS IF YOU WANT TO USE LASERRS IN 2D: if (hit.collider != null)
             {
@@ -187,6 +190,20 @@ public class LaserBeam : MonoBehaviour
             {
                 if (AllPs.isPlaying) AllPs.Stop();
             }
+        }
+    }
+
+    /// <summary>
+    /// 他のオブジェクトと衝突した際の処理。
+    /// </summary>
+    /// <param name="collision">衝突情報</param>
+    private void OnTriggerEnter(Collider other)
+    {
+        // ダメージを与える処理（例: プレイヤーなど特定のレイヤーの場合）
+        if (other.CompareTag("Player")) // プレイヤーに対してダメージを与える
+        {
+            // プレイヤーのダメージ処理を呼び出す（仮の例）
+            Debug.Log($"LaserBeam Hit {other.gameObject.name}, dealt {_damage} damage.");
         }
     }
 }

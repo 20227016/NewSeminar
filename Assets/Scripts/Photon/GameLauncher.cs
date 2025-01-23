@@ -29,7 +29,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private Camera _mainCamera = default;
 
     [SerializeField]
-    private NetworkObject _portal = default;
 
     private async void Awake()
     {
@@ -57,6 +56,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private void SpawnComboCounter(NetworkRunner runner)
     {
         runner.Spawn(_comboCounterPrefab, Vector3.zero, Quaternion.identity);
+
     }
 
     private void RegisterInputActions(bool isRegister)
