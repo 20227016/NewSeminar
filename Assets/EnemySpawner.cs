@@ -21,20 +21,27 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     private Transform _bossStartPos = default;
 
 
-    private void Awake()
+    private async void Awake()
     {
         print("初期処理したよ");
         NetworkRunner networkRunner = Instantiate(_networkRunnerPrefab);
         networkRunner.AddCallbacks(this);
+
+        StartGameResult result = await networkRunner.StartGame(new StartGameArgs
+        {
+            GameMode = GameMode.AutoHostOrClient,
+            SceneManager = networkRunner.GetComponent<NetworkSceneManagerDefault>()
+        });
+
         // ここでComboCounterを生成
         if (networkRunner.IsServer)
         {
-            InitialSpawn(networkRunner);
+            SpawnComboCounter(networkRunner);
         }
     }
 
     // ComboCounterを生成するメソッド(スポナー専用)
-    private void InitialSpawn(NetworkRunner runner)
+    private void SpawnComboCounter(NetworkRunner runner)
     {
         print("ボス生成した");
         runner.Spawn(_bossEnemyOBJ, _bossStartPos.position, Quaternion.identity);
