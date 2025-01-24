@@ -16,7 +16,7 @@ public class NormalStageTransfer : NetworkBehaviour
     private bool _clearNormalStage { get; set; } = false;
 
     // 必要なプレイヤー数
-    [Networked, Tooltip("ノーマルステージにテレポートするために必要な人数")]
+    [Networked, SerializeField,Tooltip("ノーマルステージにテレポートするために必要な人数")]
     private int _normalStageRequiredPlayers { get; set; } = 2; // 必要なプレイヤー数
 
     private GameObject _normalTeleportPosition = default;

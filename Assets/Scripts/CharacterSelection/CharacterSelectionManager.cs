@@ -120,6 +120,8 @@ public class CharacterSelectionManager : MonoBehaviour
 
         _player.RPC_SetAvatarNumber(_currentSelectionCharacter);
         _player.RPC_ActiveAvatar();
+        this.gameObject.SetActive(false);
+
         // ƒV[ƒ““à‚Ì‘S‚Ä‚ÌPlayer‚ğæ“¾
         PlayerData[] allPlayerData = FindObjectsOfType<PlayerData>();
 
@@ -133,7 +135,7 @@ public class CharacterSelectionManager : MonoBehaviour
             playerData.RPC_ActiveAvatar();
         }
 
-        this.gameObject.SetActive(false);
+        
     }
 
     public void SetPlayer(PlayerData playerData)

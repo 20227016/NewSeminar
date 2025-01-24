@@ -28,6 +28,7 @@ public class PlayerData : NetworkBehaviour
     {
 
         _playerAvatar[_avatarNumber - 1].SetActive(true);
+        Debug.Log(_playerAvatar[_avatarNumber - 1].name);
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]

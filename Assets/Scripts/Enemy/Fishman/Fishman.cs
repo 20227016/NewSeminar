@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using System.Collections;
+using Fusion;
 
 /// <summary>
 /// Fishman.cs
@@ -11,10 +12,6 @@ using System.Collections;
 /// </summary>
 public class Fishman : BaseEnemy
 {
-    // ここでEnemを作成。
-    // なぜEnemが2つあるかというと、走りながら攻撃するため（他にもあるけど...）
-    // 一つだと、移動しながら何かをすることができないから、二つ作ってます。説明下手すぎごめん
-    // 状態を追加したい場合、パブリックでEnemを設定しているので、Enemパブリッククラス(そういうスクリプトがある)に追加すれば使えます。多分
     [SerializeField]
     private EnemyMovementState _movementState = EnemyMovementState.IDLE;
 
@@ -81,6 +78,7 @@ public class Fishman : BaseEnemy
     // TransitionNo.6 Stunned
     // TransitionNo.7 Die
     private Animator _animator;
+
 
     private void Awake()
     {
@@ -531,6 +529,13 @@ public class Fishman : BaseEnemy
 
         // 秒後
         yield return new WaitForSeconds(fadeDuration);
+
+        RPC_EnemyDie();
+    }
+
+    [Rpc(RpcSources.All , RpcTargets.All)]
+    private void RPC_EnemyDie()
+    {
 
         // 完全に透明にした後、オブジェクトを非アクティブ化
         gameObject.SetActive(false);
