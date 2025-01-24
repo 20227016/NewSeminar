@@ -94,6 +94,8 @@ public class FlyingDemon : BaseEnemy
     /// </summary>
     protected void Update()
     {
+        PlayerSearch();
+
         if (_targetTrans == null)
         {
             return;
@@ -179,7 +181,6 @@ public class FlyingDemon : BaseEnemy
 
                 _boxCollider.enabled = false;
 
-                PlayerSearch();
                 PlayerLook();
 
                 break;
@@ -492,6 +493,11 @@ public class FlyingDemon : BaseEnemy
         }
 
         _targetTrans = closestObject;
+
+        if (_targetTrans == null)
+        {
+            return;
+        }
 
         float distanceToTarget = Vector3.Distance(transform.position, _targetTrans.position);
 
