@@ -7,6 +7,7 @@ using Random = System.Random;
 using System.Collections;
 using System.Net.NetworkInformation;
 using Unity.VisualScripting;
+using UnityEngine.UI;
 
 /// <summary>
 /// ボスエネミーの基盤
@@ -19,9 +20,6 @@ using Unity.VisualScripting;
 /// </summary>
 public class BossDemo : BaseEnemy
 {
-    [Tooltip("翼のダメージ")]
-    [SerializeField] private float _damage = 10f;
-
     [Header("魔弾攻撃設定")]
     [Tooltip("発射する魔弾のPrefab")]
     [SerializeField] private GameObject _magicBullet;
@@ -72,9 +70,14 @@ public class BossDemo : BaseEnemy
     private int[] _confirmedAttackState = new int[3];
     private int _lastValue = default;
 
+
     // ボスの体力
+    private int HP = 100; // デバッグ用
+    /*
     [Networked]
-    private int HP { get; set; } = default;
+    private int HP { get; set; } = 100;
+    */
+    [SerializeField] private Slider _hpBar; // HPバー
 
     private float _summonTimer = default;
     private bool isFaintg = false;
@@ -88,10 +91,21 @@ public class BossDemo : BaseEnemy
     private GameObject _fishman = default;
     private GameObject _demon = default;
 
+    [SerializeField] private float _detectionRadius = 40f; // 検知範囲
+    [SerializeField] private LayerMask _playerLayer; // プレイヤーを検知するためのレイヤーマスク
+
+    private bool isPlayerNearby = false; // プレイヤーが範囲内にいるかどうか
+
+    private GameObject _movieCamera = default;
+    private GameObject _roar = default;
+    private GameObject _circle = default;
+    private GameObject _text = default;
+    private GameObject _bar = default;
+
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        _animator.SetInteger("TransitionNo", -2);
+        _animator.SetInteger("TransitionNo", -3);
 
         _LaserBeam = transform.Find("LaserBeam");
         _LaserBeam.gameObject.SetActive(false);
@@ -111,10 +125,28 @@ public class BossDemo : BaseEnemy
         _fishman.SetActive(false); 
         _demon = GameObject.Find("FylingDemonPAMaskTint");
         _demon.SetActive(false);
+
+        _movieCamera = GameObject.Find("MovieCamera");
+        _movieCamera.SetActive(false);
+        _roar = GameObject.Find("RoarEffects");
+        _roar.SetActive(false);
+        _circle = GameObject.Find("Magic circle Enemy");
+        _circle.SetActive(false);
+        _text = GameObject.Find("BossNameText");
+        _text.SetActive(false);
+        _bar = GameObject.Find("BossHP_Bar");
+        _bar.SetActive(false);
     }
 
     private void Update()
     {
+        if (!isPlayerNearby)
+        {
+            // プレイヤーが範囲内にいるかどうかをチェック
+            CheckForPlayers();
+            return;
+        }
+
         if (IsAnimationFinished("Appearance"))
         {
             _animator.SetInteger("TransitionNo", -1);
@@ -132,10 +164,12 @@ public class BossDemo : BaseEnemy
             return;
         }
 
-        // 召喚&ダウンテスト
-        if (Input.GetKeyDown(KeyCode.S) && !isFaintg)
+        _hpBar.value = HP;
+
+        // ダメージテスト
+        if (Input.GetKeyDown(KeyCode.S))
         {
-            HP = 50;
+            HP -= 20;
         }
 
         // 死ぬテスト
@@ -172,7 +206,7 @@ public class BossDemo : BaseEnemy
 
                 // 抽選した攻撃パターンを変数に格納。順に実行する
                 _currentAttack = _confirmedAttackState[_currentLottery];
-                _currentAttack = 1;
+
                 switch (_currentAttack)
                     {
                         case 1:
@@ -254,6 +288,7 @@ public class BossDemo : BaseEnemy
                 collider.enabled = false;
             }
 
+            // 召喚&ダウンテスト
             if (HP <= 50 && !isFaintg)
             {
                 _actionState = 3;
@@ -422,16 +457,31 @@ public class BossDemo : BaseEnemy
     }
 
     /// <summary>
-    /// 他のオブジェクトと衝突した際の処理。
+    /// プレイヤーが範囲内にいるかどうかを検知
     /// </summary>
-    /// <param name="collision">衝突情報</param>
-    public override void OnTriggerEnter(Collider other)
+    private void CheckForPlayers()
     {
-        // ダメージを与える処理（例: プレイヤーなど特定のレイヤーの場合）
-        if (other.CompareTag("Player")) // プレイヤーに対してダメージを与える
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, _detectionRadius, _playerLayer);
+
+        if (hitColliders.Length > 0)
         {
-            // プレイヤーのダメージ処理を呼び出す（仮の例）
-            Debug.Log($"Wing Hit {other.gameObject.name}, dealt {_damage} damage.");
+            // プレイヤーが1人以上範囲内にいる
+            isPlayerNearby = true;
+            _movieCamera.SetActive(true);
+            _roar.SetActive(true);
+            _circle.SetActive(true);
+            _text.SetActive(true);
+            _bar.SetActive(true);
+            _animator.SetInteger("TransitionNo", -2);
         }
+    }
+
+    /// <summary>
+    /// 検知範囲をシーンビューで可視化
+    /// </summary>
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, _detectionRadius);
     }
 }
