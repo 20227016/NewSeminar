@@ -14,31 +14,22 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField, Tooltip("ネットワークランナープレハブ")]
     private NetworkRunner _networkRunnerPrefab = default;
 
-    [SerializeField]
-    private NetworkObject _bossEnemyOBJ = default;
 
-    [SerializeField]
-    private Transform _bossStartPos = default;
+    [SerializeField, Tooltip("エネミーのプレハブリスト")]
+    private List<NetworkObject> _enemyPrefabs = new List<NetworkObject>();
+
+    [SerializeField, Tooltip("エネミーのスポーン位置リスト")]
+    private List<Transform> _enemyStartPositions = new List<Transform>();
 
 
     private void Start()
     {
-        
-        //NetworkRunner networkRunner = Instantiate(_networkRunnerPrefab);
-        //networkRunner.AddCallbacks(this);
-
-        //StartGameResult result = await networkRunner.StartGame(new StartGameArgs
-        //{
-        //    GameMode = GameMode.AutoHostOrClient,
-        //    SceneManager = networkRunner.GetComponent<NetworkSceneManagerDefault>()
-        //});
 
         GameLauncher gameLauncher = FindObjectOfType<GameLauncher>();
         NetworkRunner networkRunner = gameLauncher.NetworkRunner;
         Debug.Log(networkRunner);
 
         gameLauncher.StartGameSubject.Subscribe(_ => InitialSpawn(networkRunner));
-        print("初期処理したよ");
     }
 
     // ComboCounterを生成するメソッド(スポナー専用)
@@ -47,8 +38,13 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (runner.IsServer)
         {
 
-            print("ボス生成した");
-            runner.Spawn(_bossEnemyOBJ, _bossStartPos.position, Quaternion.identity);
+            for (int i = 0; i < _enemyPrefabs.Count; i++)
+            {
+                
+                // ボスをスポーン
+                runner.Spawn(_enemyPrefabs[i], _enemyStartPositions[i].position, Quaternion.identity);
+                print($"エネミー {i} をスポーンしました");
+            }
         }
     }
 
