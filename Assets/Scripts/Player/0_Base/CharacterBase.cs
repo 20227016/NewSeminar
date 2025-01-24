@@ -149,6 +149,10 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected IAnimation _animation = new PlayerAnima();
     protected IPlayEffect _playEffect = new PlayerPlayEffect();
 
+    public PlayerUIPresenter _playerUIPresenter = default;
+
+    private bool _isFirstSetModel = true;
+
     #endregion
 
     /// <summary>
@@ -197,8 +201,55 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             GameObject canvas = GameObject.FindGameObjectWithTag("Canvas");
             PlayerUIPresenter playerUIPresenter = canvas.GetComponentInChildren<PlayerUIPresenter>();
             LockOnCursorPresenter lockOnCursorPresenter = canvas.GetComponentInChildren<LockOnCursorPresenter>();
-            playerUIPresenter.SetModel(this.gameObject);
+            playerUIPresenter.SetMyModel(this.gameObject);
             lockOnCursorPresenter.SetModel(this.gameObject);
+            
+        }
+        _playerUIPresenter = FindObjectOfType<PlayerUIPresenter>();
+
+        RPC_SetAllyHPBar(this);
+
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RPC_SetAllyHPBar(CharacterBase character)
+    {
+        // シーン内の全てのPlayerを取得
+        CharacterBase[] allCharacters = FindObjectsOfType<CharacterBase>();
+
+        if (allCharacters == null || allCharacters.Length == 0)
+        {
+            Debug.Log("キャラクターモデルが見つかりませんでした。");
+            return;
+        }
+
+        for (int i = 0; i < allCharacters.Length; i++)
+        {
+            CharacterBase characterBase = allCharacters[i];
+
+            if (characterBase == this)
+            {
+                Debug.Log("自分自身をスキップ");
+                continue;
+            }
+
+            Debug.Log("キャラクター: " + characterBase.name);
+
+            // PlayerUIPresenterにモデルを設定
+            character._playerUIPresenter.SetAllyModel(characterBase, _isFirstSetModel);
+
+            Debug.Log("モデルセット: " + characterBase.name + ", isFirstSetModel: " + _isFirstSetModel);
+
+            // 最後のキャラクターであれば_isFirstSetModelをtrueにする
+            if (i == allCharacters.Length - 1)
+            {
+                _isFirstSetModel = true;
+                Debug.Log("最後のキャラクターです。_isFirstSetModelをtrueに設定しました。");
+            }
+            else
+            {
+                _isFirstSetModel = false;
+            }
         }
     }
 
@@ -242,7 +293,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 死亡判定
         _currentHP
             .Where(_ => _ <= 0)
-            .Subscribe(_ => Death());
+            .Subscribe(_ => RPC_Death());
 
         StaminaManagement();
     }
@@ -603,7 +654,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     protected virtual void Resurrection(Transform transform, float ressurectionTime)
     {
-        Debug.Log("蘇生させるよ");
+        Debug.Log("蘇生させるよ" + this.gameObject.name);
         _resurrection.Resurrection(transform, ressurectionTime);
     }
 
@@ -699,7 +750,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// <summary>
     /// 死亡処理
     /// </summary>
-    protected virtual void Death()
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    protected virtual void RPC_Death()
     {
         _resetStateTokenSource?.Cancel();
 

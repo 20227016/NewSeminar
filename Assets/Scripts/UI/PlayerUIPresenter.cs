@@ -18,7 +18,8 @@ public class PlayerUIPresenter : MonoBehaviour
     private PlayerUIViews _playerUIViews = new PlayerUIViews();
 
     [SerializeField, Tooltip("HPゲージ")]
-    private Slider _hpGauge = default;
+    private Slider[] _hpGauges = default;
+
 
     [SerializeField, Tooltip("スタミナゲージ")]
     private Slider _staminaGauge = default;
@@ -29,22 +30,38 @@ public class PlayerUIPresenter : MonoBehaviour
     [SerializeField, Tooltip("ゲージ変動アニメーション速度")]
     private float _animationSpeed = 10f;
 
+    private int _modelCount = 1;
+
     /// <summary>
     /// UIにモデルをセットする
     /// </summary>
     /// <param name="player">セットするプレイヤー</param>
-    public void SetModel(GameObject player)
+    public void SetMyModel(GameObject player)
     {
         // キャラクターをセット
         CharacterBase thisPlayer = player.GetComponentInChildren<CharacterBase>();
 
-        // HPの更新購読
-        thisPlayer.CurrentHP.Subscribe(value => _playerUIViews.UpdateGauge(_hpGauge, value, _animationSpeed));
+        // HP1の更新購読
+        thisPlayer.CurrentHP.Subscribe(value => _playerUIViews.UpdateGauge(_hpGauges[0], value, _animationSpeed));
 
         // スタミナの更新購読
         thisPlayer.CurrentStamina.Subscribe(value => _playerUIViews.UpdateGauge(_staminaGauge, value, _animationSpeed));
 
         // スキルポイントの更新購読
         thisPlayer.CurrentSkillPoint.Subscribe(value => _playerUIViews.UpdateGauge(_skillPointGauge, value, _animationSpeed));
+    }
+
+    public void SetAllyModel(CharacterBase character, bool isFirst)
+    {
+        if (isFirst)
+        {
+            _modelCount = 1;
+        }
+
+        _hpGauges[_modelCount].gameObject.SetActive(true);
+
+        character.CurrentHP.Subscribe(value => _playerUIViews.UpdateGauge(_hpGauges[_modelCount], value, _animationSpeed));
+
+        _modelCount++;
     }
 }

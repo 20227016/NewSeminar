@@ -34,7 +34,7 @@ public class PlayerResurrection : IResurrection
             Debug.Log("い");
 
             // 自分を除外
-            if (hit.collider.transform == thisTransform)
+            if (hit.collider.transform.name == thisTransform.name)
             {
                 return;
             }
@@ -47,6 +47,7 @@ public class PlayerResurrection : IResurrection
             // CharacterBase が null であれば処理を中断
             if (targetCharacter == null)
             {
+                Debug.Log("NOTプレイヤー");
                 return;
             }
 
