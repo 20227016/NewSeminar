@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using System;
 using UniRx;
+using Fusion;
 
 /// <summary>
 /// EnemyTest.cs
@@ -46,6 +47,9 @@ public class BeBeetle : BaseEnemy
     // 自分が当たった位置を取得
     private Vector3 _hitAttackPos = default;
 
+    [Networked]
+    private int HP { get; set; } = default;
+
     // 攻撃中か
     private bool _isAttack = false;
     // ダウン中か
@@ -58,6 +62,7 @@ public class BeBeetle : BaseEnemy
     /// </summary>
     public override void Spawned()
     {
+        print("ビービートル起動");
         StartLogic();
     }
 

@@ -4,6 +4,7 @@ using Fusion;
 using Fusion.Sockets;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UniRx;
 
 public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -33,6 +34,14 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     public GameObject _portalPosition = default;
 
+    private NetworkRunner _networkRunner = default;
+
+    private Subject<Unit> _startGameSubject = new();
+
+    public Subject<Unit> StartGameSubject { get => _startGameSubject; set => _startGameSubject = value; }
+
+    public NetworkRunner NetworkRunner { get => _networkRunner; set => _networkRunner = value; }
+
     private async void Awake()
     {
         _mainCamera = Camera.main;
@@ -41,12 +50,15 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
         NetworkRunner networkRunner = Instantiate(_networkRunnerPrefab);
         networkRunner.AddCallbacks(this);
+        NetworkRunner = networkRunner;
 
         StartGameResult result = await networkRunner.StartGame(new StartGameArgs
         {
             GameMode = GameMode.AutoHostOrClient,
             SceneManager = networkRunner.GetComponent<NetworkSceneManagerDefault>()
         });
+
+        _startGameSubject.OnNext(Unit.Default);
 
         // ここでComboCounterを生成
         if (networkRunner.IsServer)

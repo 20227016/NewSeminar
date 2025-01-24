@@ -21,31 +21,35 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     private Transform _bossStartPos = default;
 
 
-    private async void Awake()
+    private void Start()
     {
+        
+        //NetworkRunner networkRunner = Instantiate(_networkRunnerPrefab);
+        //networkRunner.AddCallbacks(this);
+
+        //StartGameResult result = await networkRunner.StartGame(new StartGameArgs
+        //{
+        //    GameMode = GameMode.AutoHostOrClient,
+        //    SceneManager = networkRunner.GetComponent<NetworkSceneManagerDefault>()
+        //});
+
+        GameLauncher gameLauncher = FindObjectOfType<GameLauncher>();
+        NetworkRunner networkRunner = gameLauncher.NetworkRunner;
+        Debug.Log(networkRunner);
+
+        gameLauncher.StartGameSubject.Subscribe(_ => InitialSpawn(networkRunner));
         print("初期処理したよ");
-        NetworkRunner networkRunner = Instantiate(_networkRunnerPrefab);
-        networkRunner.AddCallbacks(this);
-
-        StartGameResult result = await networkRunner.StartGame(new StartGameArgs
-        {
-            GameMode = GameMode.AutoHostOrClient,
-            SceneManager = networkRunner.GetComponent<NetworkSceneManagerDefault>()
-        });
-
-        // ここでComboCounterを生成
-        if (networkRunner.IsServer)
-        {
-            SpawnComboCounter(networkRunner);
-        }
     }
 
     // ComboCounterを生成するメソッド(スポナー専用)
-    private void SpawnComboCounter(NetworkRunner runner)
+    private void InitialSpawn(NetworkRunner runner)
     {
-        print("ボス生成した");
-        runner.Spawn(_bossEnemyOBJ, _bossStartPos.position, Quaternion.identity);
+        if (runner.IsServer)
+        {
 
+            print("ボス生成した");
+            runner.Spawn(_bossEnemyOBJ, _bossStartPos.position, Quaternion.identity);
+        }
     }
 
 
@@ -71,23 +75,13 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     /// </summary>
     /// <param name="runner"></param>
     /// <param name="player"></param>
-    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
-    {
-        throw new NotImplementedException();
-    }
+    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
 
     /// <summary>
     /// プレイヤーが退出した時の処理
     /// </summary>
     /// <param name="runner"></param>
     /// <param name="player"></param>
-    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void OnInput(NetworkRunner runner, NetworkInput input)
-    {
-        throw new NotImplementedException();
-    }
+    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
+    public void OnInput(NetworkRunner runner, NetworkInput input) { }
 }
