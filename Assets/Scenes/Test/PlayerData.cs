@@ -26,6 +26,7 @@ public class PlayerData : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void RPC_ActiveAvatar()
     {
+
         _playerAvatar[_avatarNumber - 1].SetActive(true);
     }
 

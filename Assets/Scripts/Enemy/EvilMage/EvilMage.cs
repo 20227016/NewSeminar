@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using System.Collections;
+using Fusion;
 
 /// <summary>
 /// EvilMage.cs
@@ -11,24 +12,19 @@ using System.Collections;
 /// </summary>
 public class EvilMage : BaseEnemy
 {
-    // ここでEnemを作成。
-    // なぜEnemが2つあるかというと、走りながら攻撃するため（他にもあるけど...）
-    // 一つだと、移動しながら何かをすることができないから、二つ作ってます。説明下手すぎごめん
-    // 状態を追加したい場合、パブリックでEnemを設定しているので、Enemパブリッククラス(そういうスクリプトがある)に追加すれば使えます。多分
-    [SerializeField]
+
     private EnemyMovementState _movementState = EnemyMovementState.IDLE;
 
-    [SerializeField]
     private EnemyActionState _actionState = EnemyActionState.SEARCHING;
 
     [Header("検索対象の設定")]
     [Tooltip("検索対象となるレイヤー番号を指定します")]
-    [SerializeField] private int _targetLayer = 6; // 対象のレイヤー番号
+    private int _targetLayer = 6; // 対象のレイヤー番号
 
     [Tooltip("検索範囲の半径を指定します")]
-    [SerializeField] private float _searchRadius = 30f; // 検索範囲（半径）
+    private float _searchRadius = 30f; // 検索範囲（半径）
 
-    [SerializeField, Header("追いかけたいオブジェクトのトランスフォーム")]
+    [Header("追いかけたいオブジェクトのトランスフォーム")]
     private Transform _targetTrans = default;
 
     private bool isAttackInterval = default; // 連続攻撃をしない
@@ -54,9 +50,9 @@ public class EvilMage : BaseEnemy
     [SerializeField] private GameObject _magicProjectilePrefab;
 
     [Tooltip("魔法攻撃の溜め時間")]
-    [SerializeField] private float _chargeTime = 1.5f;
+    private float _chargeTime = 1.5f;
 
-    [SerializeField] private bool isCharging = default; // 溜め動作中かどうか
+    private bool isCharging = default; // 溜め動作中かどうか
 
     private void Awake()
     {
@@ -225,7 +221,7 @@ public class EvilMage : BaseEnemy
         if (_chargeTime <= 0 && isAttackInterval == false)
         {
             isAttackInterval = true;
-            
+
             if (_magicProjectilePrefab == null)
             {
                 Debug.LogWarning("魔法弾のPrefabまたは発射位置が設定されていません。");
@@ -291,7 +287,7 @@ public class EvilMage : BaseEnemy
 
         _downedTimer -= Time.deltaTime;
     }
-    
+
     private void EnemyStunned()
     {
         // のけぞり終わったら状態遷移
@@ -317,7 +313,7 @@ public class EvilMage : BaseEnemy
         _magicCharge.SetActive(false);
 
         // 次にのけぞるまでの時間をセット
-        _stunnedTimer = 3f; 
+        _stunnedTimer = 3f;
     }
 
     /// <summary>
@@ -325,6 +321,7 @@ public class EvilMage : BaseEnemy
     /// </summary>
     private IEnumerator EnemyDie(float fadeDuration)
     {
+
         // トリガーをセット
         _animator.SetInteger("TransitionNo", 4);
 
@@ -334,8 +331,15 @@ public class EvilMage : BaseEnemy
         // 秒後
         yield return new WaitForSeconds(fadeDuration);
 
+        RPC_EnemyDie();
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_EnemyDie()
+    {
+        print("エネミー死亡");
         // 完全に透明にした後、オブジェクトを非アクティブ化
-        gameObject.SetActive(false);
+        this.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -417,25 +421,4 @@ public class EvilMage : BaseEnemy
         // 最も近いオブジェクトをプロパティに保存
         _targetTrans = closestObject;
     }
-
-    /*
-    /// <summary>
-    /// 検索範囲をシーンビューに表示します（常に）。
-    /// </summary>
-    private void OnDrawGizmos()
-    {
-        // Gizmosの色を設定
-        Gizmos.color = Color.green;
-
-        // 検索範囲を描画（ワイヤフレームの球）
-        Gizmos.DrawWireSphere(transform.position, _searchRadius);
-
-        // 最も近いオブジェクトが存在する場合、線を描画
-        if (_targetTrans != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, _targetTrans.position);
-        }
-    }
-    */
 }
