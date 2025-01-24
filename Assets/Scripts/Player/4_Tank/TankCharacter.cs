@@ -1,3 +1,4 @@
+using Fusion;
 using UniRx;
 using UnityEngine;
 
@@ -59,7 +60,7 @@ public class TankCharacter : CharacterBase
         _passive.Passive(this);
     }
 
-
+    [Rpc(RpcSources.All, RpcTargets.All)]
     public override void RPC_ReceiveDamage(int damageValue)
     {
         if (!Object.HasStateAuthority) return;
@@ -77,7 +78,7 @@ public class TankCharacter : CharacterBase
 
         if (_networkedHP <= 0)
         {
-            Death();
+            RPC_Death();
             return;
         }
 
