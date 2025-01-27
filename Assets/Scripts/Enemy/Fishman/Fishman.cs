@@ -87,6 +87,9 @@ public class Fishman : BaseEnemy
         // Raycast‚ğ‚Â‚©‚¤‚½‚ß‚ÌŠî–{İ’è‚ğ‚µ‚Ä‚­‚ê‚éŠÖ”
         BasicRaycast();
 
+        // HPUI‚Ì‰Šú‰»
+        RPC_UpdateHPBar();
+
         _harpoon = GameObject.Find("Harpoon");
         _boxCollider = _harpoon.GetComponent<BoxCollider>();
         _boxCollider.enabled = false;

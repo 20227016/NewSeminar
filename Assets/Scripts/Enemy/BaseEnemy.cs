@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using System;
 using Fusion;
+using UnityEngine.UI;
 
 /// <summary>
 /// BaseEnemy.cs
@@ -23,6 +24,14 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     protected EnemyStatusStruct _enemyStatusStruct = default;
     [SerializeField, Header("無視するレイヤー")]
     protected List<string> _tags = new List<string>();
+
+
+    // 敵UI関連
+    [SerializeField,Tooltip("敵のHPバー")]
+    private GameObject _hpBarUI;
+    [SerializeField,Tooltip("UIのHPバー(Imageコンポーネント)")]
+    private Slider _hpBarFill;
+
 
     // UniTaskキャンセルトークン
     // private CancellationTokenSource _cancellatToken = default;
@@ -150,11 +159,44 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     /// ダメージ処理
     /// </summary>
     /// <param name="damegeValue">ダメージ</param>
+    [Rpc(RpcSources.All, RpcTargets.All)]
     public void RPC_ReceiveDamage(int damegeValue)
     {
+        print("ダメージを受けました" + damegeValue);
 
+        // ダメージ処理
         _enemyStatusStruct._hp -= damegeValue - _enemyStatusStruct._diffencePower;
+        print(_enemyStatusStruct._hp);
+        // HPUIの更新
+        RPC_UpdateHPBar();
+        if (_enemyStatusStruct._hp <= 0)
+        {
+            RPC_EnemyDeath();
+        }
+    }
 
+    /// <summary>
+    /// 現在のHPとUIの同期処理
+    /// </summary>
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    protected void RPC_UpdateHPBar()
+    {
+        // HPバーを同期
+        if (_hpBarFill != null)
+        {
+            print("敵のUIと現在のHPを同期させました。UI同期は成功です");
+            _hpBarFill.value = (float)_enemyStatusStruct._hp;
+        }
+    }
+
+    /// <summary>
+    /// 全エネミーの死亡処理(共通)
+    /// </summary>
+    [Rpc(RpcSources.All,RpcTargets.All)]
+    protected void RPC_EnemyDeath()
+    {
+        print("死亡処理実行(共通)");
+        this.gameObject.SetActive(false);
     }
 
 }

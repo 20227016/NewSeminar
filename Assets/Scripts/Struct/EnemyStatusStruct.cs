@@ -1,8 +1,8 @@
 [System.Serializable]
 public struct EnemyStatusStruct
 {
-    
-    public int _hp; // Å‘åHP
+    public int _maxHp; // Å‘åHP
+    public int _hp; // Œ»İHP
     public int _attackPower; // UŒ‚—Í
     public int _attackPowerSpeed; // UŒ‚‘¬“x
     public int _moveSpeed; // ˆÚ“®‘¬“x
