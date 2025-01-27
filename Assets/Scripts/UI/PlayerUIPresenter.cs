@@ -1,13 +1,12 @@
-
 using UnityEngine;
 using UniRx;
 using UnityEngine.UI;
+using System.Collections.Generic;
 using TMPro;
 
 /// <summary>
 /// PlayerUIPresenter.cs
-/// クラス説明
-///
+/// プレイヤーのHP、スタミナ、スキルポイントなどをUIに反映するクラス。
 ///
 /// 作成日: 9/10
 /// 作成者: 山田智哉
@@ -17,9 +16,14 @@ public class PlayerUIPresenter : MonoBehaviour
     // Viewクラス
     private PlayerUIViews _playerUIViews = new PlayerUIViews();
 
+    [SerializeField, Tooltip("プレイヤーUIイメージ")]
+    private Image[] _playerUIImages = default;
+
+    [SerializeField, Tooltip("名前")]
+    private TextMeshProUGUI[] _nameTexts = default;
+
     [SerializeField, Tooltip("HPゲージ")]
     private Slider[] _hpGauges = default;
-
 
     [SerializeField, Tooltip("スタミナゲージ")]
     private Slider _staminaGauge = default;
@@ -30,38 +34,97 @@ public class PlayerUIPresenter : MonoBehaviour
     [SerializeField, Tooltip("ゲージ変動アニメーション速度")]
     private float _animationSpeed = 10f;
 
-    private int _modelCount = 1;
+    // 追跡用リスト（登録済みのプレイヤーキャラクター）
+    private readonly List<CharacterBase> _registeredAllyModels = new();
 
     /// <summary>
-    /// UIにモデルをセットする
+    /// 自分自身のモデルをUIに設定する
     /// </summary>
-    /// <param name="player">セットするプレイヤー</param>
+    /// <param name="player">自分のプレイヤーオブジェクト</param>
     public void SetMyModel(GameObject player)
     {
         // キャラクターをセット
         CharacterBase thisPlayer = player.GetComponentInChildren<CharacterBase>();
 
         // HP1の更新購読
-        thisPlayer.CurrentHP.Subscribe(value => _playerUIViews.UpdateGauge(_hpGauges[0], value, _animationSpeed));
+        thisPlayer.CurrentHP.Subscribe(value =>
+            _playerUIViews.UpdateGauge(_hpGauges[0], value, _animationSpeed));
 
         // スタミナの更新購読
-        thisPlayer.CurrentStamina.Subscribe(value => _playerUIViews.UpdateGauge(_staminaGauge, value, _animationSpeed));
+        thisPlayer.CurrentStamina.Subscribe(value =>
+            _playerUIViews.UpdateGauge(_staminaGauge, value, _animationSpeed));
 
         // スキルポイントの更新購読
-        thisPlayer.CurrentSkillPoint.Subscribe(value => _playerUIViews.UpdateGauge(_skillPointGauge, value, _animationSpeed));
+        thisPlayer.CurrentSkillPoint.Subscribe(value =>
+            _playerUIViews.UpdateGauge(_skillPointGauge, value, _animationSpeed));
+
+        // 名前を設定
+        PlayerData playerData = thisPlayer.GetComponentInParent<PlayerData>();
+        _nameTexts[0].text = playerData._avatarName;
+
+        // UIを有効化
+        _playerUIImages[0].gameObject.SetActive(true);
     }
 
-    public void SetAllyModel(CharacterBase character, bool isFirst)
+    /// <summary>
+    /// 仲間のモデルをUIに設定する
+    /// </summary>
+    /// <param name="character">設定するキャラクター</param>
+    /// <param name="modelCount">UIに割り当てるゲージのインデックス</param>
+    public void SetAllyModel(CharacterBase character, int modelCount)
     {
-        if (isFirst)
+        // すでに登録済みの場合はスキップ
+        if (_registeredAllyModels.Contains(character))
         {
-            _modelCount = 1;
+            return;
         }
 
-        _hpGauges[_modelCount].gameObject.SetActive(true);
+        // 新規登録
+        _registeredAllyModels.Add(character);
 
-        character.CurrentHP.Subscribe(value => _playerUIViews.UpdateGauge(_hpGauges[_modelCount], value, _animationSpeed));
+        // HPの更新購読
+        character.CurrentHP.Subscribe(value =>
+            _playerUIViews.UpdateGauge(_hpGauges[modelCount], value, _animationSpeed));
 
-        _modelCount++;
+        // 名前を設定
+        PlayerData playerData = character.GetComponentInParent<PlayerData>();
+        _nameTexts[modelCount].text = playerData._avatarName;
+
+        // UIを有効化
+        _playerUIImages[modelCount].gameObject.SetActive(true);
+    }
+
+    /// <summary>
+    /// 全ての登録をクリアする
+    /// </summary>
+    public void ClearAllyModels()
+    {
+        // 登録リストをクリア
+        _registeredAllyModels.Clear();
+
+        // UIゲージを初期化（非表示化）
+        foreach (var hpGauge in _hpGauges)
+        {
+            hpGauge.gameObject.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// 登録済みのモデル数を取得
+    /// </summary>
+    /// <returns>登録済みのモデル数</returns>
+    public int GetAllyModelCount()
+    {
+        return _registeredAllyModels.Count;
+    }
+
+    /// <summary>
+    /// 指定のキャラクターが登録済みかを確認
+    /// </summary>
+    /// <param name="character">確認するキャラクター</param>
+    /// <returns>登録済みならtrue</returns>
+    public bool IsAllyModelSet(CharacterBase character)
+    {
+        return _registeredAllyModels.Contains(character);
     }
 }

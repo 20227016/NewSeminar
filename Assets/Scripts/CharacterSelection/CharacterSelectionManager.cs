@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// キャラクター選択画面制御用スクリプト
@@ -12,16 +14,22 @@ using UnityEngine;
 public class CharacterSelectionManager : MonoBehaviour
 {
 
+    [SerializeField, Tooltip("キャラクターモデル")]
+    private List<GameObject> _characterModel = new List<GameObject>();
+
+    [SerializeField, Tooltip("名前入力フィールド")]
+    private TMP_InputField _nameInputField = default;
+
+    [SerializeField, Tooltip("警告文")]
+    private TextMeshProUGUI _warningText = default;
+
     // 現在選択しているキャラクター（共有する変数）
     private int _currentSelectionCharacter = default;
 
     // 決定したキャラクター(共有するBool)
     private bool _characterDecision = new();
 
-    [SerializeField, Tooltip("キャラクターモデルを格納")]
-    private List<GameObject> _characterModel = new List<GameObject>();
-
-    private PlayerData _player = default;
+    private PlayerData _playerData = default;
 
     public bool _tankChoice { get; set; } = false;
     public bool _knightChoice { get; set; } = false;
@@ -31,7 +39,6 @@ public class CharacterSelectionManager : MonoBehaviour
     //キャラクター1のボタンにつける
     public void OnClick1()
     {
-
         if ((_currentSelectionCharacter != 1) && (!_characterDecision) && (!_tankChoice))
         {
             DeleteCharacter();
@@ -40,15 +47,12 @@ public class CharacterSelectionManager : MonoBehaviour
             // リストの1番目のオブジェクトを取得して制御
             GameObject secondObject = _characterModel[0];
             secondObject.SetActive(true);
-            print("タンク");
         }
-
     }
 
     //キャラクター2のボタンにつける
     public void OnClick2()
     {
-
         if ((_currentSelectionCharacter != 2) && (!_characterDecision) && (!_knightChoice))
         {
             DeleteCharacter();
@@ -57,7 +61,6 @@ public class CharacterSelectionManager : MonoBehaviour
             // リストの2番目のオブジェクトを取得して制御
             GameObject secondObject = _characterModel[1];
             secondObject.SetActive(true);
-            print("騎士");
         }
     }
 
@@ -66,21 +69,18 @@ public class CharacterSelectionManager : MonoBehaviour
     {
         if ((_currentSelectionCharacter != 3) && (!_characterDecision) && (!_healerChoice))
         {
-
             DeleteCharacter();
             _currentSelectionCharacter = 3;
 
             // リストの3番目のオブジェクトを取得して制御
             GameObject secondObject = _characterModel[2];
             secondObject.SetActive(true);
-            print("ヒーラー");
         }
     }
 
     //キャラクター4のボタンにつける
     public void OnClick4()
     {
-
         if ((_currentSelectionCharacter != 4) && (!_characterDecision) && (!_fighterChoice))
         {
             DeleteCharacter();
@@ -89,14 +89,19 @@ public class CharacterSelectionManager : MonoBehaviour
             // リストの4番目のオブジェクトを取得して制御
             GameObject secondObject = _characterModel[3];
             secondObject.SetActive(true);
-            print("ファイター");
         }
     }
 
     // 選択しているキャラクターを確定する
     public void Decision()
     {
-        _characterDecision = true;
+        // 名前が入力されていない場合はリターン
+        if (string.IsNullOrWhiteSpace(_nameInputField.text))
+        {
+            _warningText.text = "名前を入力してください";
+            _warningText.gameObject.SetActive(true);
+            return;
+        }
 
         switch (_currentSelectionCharacter)
         {
@@ -116,10 +121,19 @@ public class CharacterSelectionManager : MonoBehaviour
             case 4:
                 _fighterChoice = true;
                 break;
+            // 選択されてないとき
+            default:
+                _warningText.text = "キャラクターを選択してください";
+                _warningText.gameObject.SetActive(true);
+                return;
         }
+        _characterDecision = true;
 
-        _player.RPC_SetAvatarNumber(_currentSelectionCharacter);
-        _player.RPC_ActiveAvatar();
+        // アバター情報をセットし、他プレイヤーに通知
+        _playerData.RPC_SetAvatarInfo(_currentSelectionCharacter, _nameInputField.text);
+        _playerData.RPC_ActiveAvatar();
+
+        // 選択画面を非表示
         this.gameObject.SetActive(false);
 
         // シーン内の全てのPlayerを取得
@@ -130,17 +144,20 @@ public class CharacterSelectionManager : MonoBehaviour
             return;
         }
 
+        // 全プレイヤーに入室を通知
         foreach (PlayerData playerData in allPlayerData)
         {
             playerData.RPC_ActiveAvatar();
         }
-
-        
     }
 
+    /// <summary>
+    /// 操作プレイヤーをセット
+    /// </summary>
+    /// <param name="playerData">操作プレイヤーの情報</param>
     public void SetPlayer(PlayerData playerData)
     {
-        _player = playerData;
+        _playerData = playerData;
     }
 
     /// <summary>
@@ -148,11 +165,18 @@ public class CharacterSelectionManager : MonoBehaviour
     /// </summary>
     private void DeleteCharacter()
     {
-
         foreach (GameObject obj in _characterModel)
         {
             obj.SetActive(false);
         }
     }
 
+    public void ActiveUI()
+    {
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(true);
+            _warningText.gameObject.SetActive(false);
+        }
+    }
 }
