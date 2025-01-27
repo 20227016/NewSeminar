@@ -54,7 +54,7 @@ public class EvilMage : BaseEnemy
 
     private bool isCharging = default; // 溜め動作中かどうか
 
-    private void Awake()
+    public override void Spawned()
     {
         // Raycastをつかうための基本設定をしてくれる関数
         BasicRaycast();

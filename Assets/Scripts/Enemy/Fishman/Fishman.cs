@@ -80,7 +80,7 @@ public class Fishman : BaseEnemy
     private Animator _animator;
 
 
-    private void Awake()
+    public override void Spawned()
     {
         _searchRange = 20f;
 

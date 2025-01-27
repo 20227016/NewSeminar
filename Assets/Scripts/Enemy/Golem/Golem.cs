@@ -75,7 +75,7 @@ public class Golem : BaseEnemy
     // TransitionNo.6 Die
     private Animator _animator;
 
-    private void Awake()
+    public override void Spawned()
     {
         _searchRange = 20f;
 
@@ -96,6 +96,8 @@ public class Golem : BaseEnemy
     /// </summary>
     protected void Update()
     {
+        //print(_movementState);
+
         /* 
          * レイキャストの中心点を自動で更新してくれsる
          * これで、レイキャストを常に自分の前から打ってくれる
@@ -166,6 +168,7 @@ public class Golem : BaseEnemy
             // 死亡
             case EnemyMovementState.DIE:
 
+                print("ゴーレム死亡ステートに変更");
                 StartCoroutine(EnemyDie(3f));
 
                 return;
@@ -671,6 +674,7 @@ public class Golem : BaseEnemy
     /// </summary>
     protected override void OnDeath()
     {
+        print("ゴーレム死亡");
         _movementState = EnemyMovementState.DIE;
     }
 }
