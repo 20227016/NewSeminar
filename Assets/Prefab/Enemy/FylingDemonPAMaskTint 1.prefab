@@ -2104,9 +2104,9 @@ GameObject:
   - component: {fileID: 5451026373617028844}
   - component: {fileID: 8949063262203398093}
   - component: {fileID: -5848866120006282970}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FylingDemonPAMaskTint 1
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

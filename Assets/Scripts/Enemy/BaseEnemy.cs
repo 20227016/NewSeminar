@@ -47,6 +47,11 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
 
     protected float _currentAttackMultiplier = 1;
 
+    public override void Spawned()
+    {
+        base.Spawned();
+    }
+
     private void OnDrawGizmos()
     {
 

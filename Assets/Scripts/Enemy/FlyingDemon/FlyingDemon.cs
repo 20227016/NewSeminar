@@ -90,7 +90,7 @@ public class FlyingDemon : BaseEnemy
     [SerializeField] private GameObject _fireballPrefab; // 炎の球のPrefab
     [SerializeField] private Transform _firePoint; // 射出位置
 
-    private void Awake()
+    public override void Spawned()
     {
         _animator = GetComponent<Animator>();
         _boxCollider = GetComponentInChildren<BoxCollider>();

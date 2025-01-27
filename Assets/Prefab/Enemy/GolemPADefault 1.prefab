@@ -1167,9 +1167,9 @@ GameObject:
   - component: {fileID: 7998241454581096943}
   - component: {fileID: 7426712748565669130}
   - component: {fileID: -8942968707704838194}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GolemPADefault 1
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
