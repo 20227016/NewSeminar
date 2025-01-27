@@ -59,9 +59,6 @@ public class EvilMage : BaseEnemy
         // Raycastをつかうための基本設定をしてくれる関数
         BasicRaycast();
 
-        // HPUIの初期化
-        //RPC_UpdateHPBar();
-
         _animator = GetComponent<Animator>();
 
         _magicCharge = GameObject.Find("MagicCharge");
@@ -423,5 +420,13 @@ public class EvilMage : BaseEnemy
 
         // 最も近いオブジェクトをプロパティに保存
         _targetTrans = closestObject;
+    }
+
+    /// <summary>
+    /// HPが0以下になったら呼ばれる処理(Base参照)
+    /// </summary>
+    protected override void OnDeath()
+    {
+        _movementState = EnemyMovementState.DIE;
     }
 }

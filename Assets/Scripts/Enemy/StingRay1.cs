@@ -532,4 +532,13 @@ public class StingRay1 : BaseEnemy
         // アニメーションが指定した名前かつ終了しているかを確認
         return stateInfo.IsName(animationName) && stateInfo.normalizedTime >= 1.0f;
     }
+
+
+    /// <summary>
+    /// HPが0以下になったら呼ばれる処理(Base参照)
+    /// </summary>
+    protected override void OnDeath()
+    {
+        _movementState = EnemyMovementState.DIE;
+    }
 }

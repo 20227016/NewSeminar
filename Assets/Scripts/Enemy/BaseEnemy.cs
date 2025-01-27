@@ -171,7 +171,7 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
         RPC_UpdateHPBar();
         if (_enemyStatusStruct._hp <= 0)
         {
-            RPC_EnemyDeath();
+            OnDeath();
         }
     }
 
@@ -190,13 +190,9 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     }
 
     /// <summary>
-    /// 全エネミーの死亡処理(共通)
+    /// エネミーの死亡処理(具体的な処理は個別で設定)
     /// </summary>
-    [Rpc(RpcSources.All,RpcTargets.All)]
-    protected void RPC_EnemyDeath()
-    {
-        print("死亡処理実行(共通)");
-        this.gameObject.SetActive(false);
-    }
+    protected abstract void OnDeath();
+
 
 }

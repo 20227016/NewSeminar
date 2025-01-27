@@ -668,4 +668,12 @@ public class Fishman : BaseEnemy
             Debug.Log($"FishmanAttack Hit {other.gameObject.name}, dealt {_damage} damage.");
         }
     }
+
+    /// <summary>
+    /// HP‚ª0ˆÈ‰º‚É‚È‚Á‚½‚çŒÄ‚Î‚ê‚éˆ—(BaseQÆ)
+    /// </summary>
+    protected override void OnDeath()
+    {
+        _movementState = EnemyMovementState.DIE;
+    }
 }

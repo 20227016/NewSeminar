@@ -136,6 +136,14 @@ public class ClawWolf : BaseEnemy
 
     }
 
+    /// <summary>
+    /// HPが0以下になったら呼ばれる処理(Base参照)
+    /// </summary>
+    protected override void OnDeath()
+    {
+        _movementState = EnemyMovementState.DIE;
+    }
+
 }
 
 
