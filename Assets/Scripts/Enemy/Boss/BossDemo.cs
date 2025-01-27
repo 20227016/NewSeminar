@@ -70,7 +70,6 @@ public class BossDemo : BaseEnemy
     private int[] _confirmedAttackState = new int[3];
     private int _lastValue = default;
 
-
     // ボスの体力
     private int HP = 100; // デバッグ用
     /*
@@ -165,6 +164,7 @@ public class BossDemo : BaseEnemy
 
         _hpBar.value = HP;
 
+        /*
         // ダメージテスト
         if (Input.GetKeyDown(KeyCode.S))
         {
@@ -176,12 +176,14 @@ public class BossDemo : BaseEnemy
         {
             HP = 0;
         }
+        */
 
         // 体力が0になったら死ぬ
         if (HP <= 0)
         {
             _actionState = 4;
         }
+
 
         // ボスの行動パターンステート
         switch (_actionState)
@@ -355,9 +357,14 @@ public class BossDemo : BaseEnemy
         if (isBulletGeneration)
         {
             // 魔法弾を生成
-            Vector3 position = new Vector3(6f, 6f, 15f); // 位置 (x6, y6, z15)
-            Quaternion rotation = Quaternion.Euler(0f, -180f, 0f); // 向き (Y軸を -180° 回転)
-            Instantiate(_magicBullet, position, rotation);
+            // 現在の位置 + 前方向に距離を加算して生成位置を計算
+            Vector3 spawnPosition = transform.position + transform.forward * 2f + transform.up * 6f;
+
+            // 現在の回転を維持
+            Quaternion spawnRotation = transform.rotation;
+
+            // オブジェクトを生成
+            Instantiate(_magicBullet, spawnPosition, spawnRotation);
             isBulletGeneration = false;
         }
 
