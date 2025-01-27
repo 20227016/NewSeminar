@@ -802,17 +802,22 @@ MonoBehaviour:
   _tags: []
   _movementState: 0
   _actionState: 0
-  _stateSwitchInterval: 3
+  _walkStateSwitchInterval: 3
   _attackStateSwitchInterval: 2
   _targetTrans: {fileID: 0}
-  _searchRadius: 30
-  _attackRange: 5
+  _searchRadius: 50
+  _stopDistance: 3
+  _attackRange: 4
+  _trackingRange: 7
   _walkRange: 3
   _damageRange: 1
   _targetLayer: 6
+  _randomRange: 10
   _damage: 10
   _attackAction: 1
   _attackEnd: 1
+  _riseLimit: 5
+  _speed: 5
   _fireballPrefab: {fileID: 8446527596219986189, guid: f5ed9388adec780478315416392e5285, type: 3}
   _firePoint: {fileID: 3681380152862436687}
 --- !u!54 &8648331562457862337

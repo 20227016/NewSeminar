@@ -20,14 +20,14 @@ public class FlyingDemon : BaseEnemy
     private EnemyActionState _actionState = EnemyActionState.SEARCHING;
 
     [SerializeField]
-    private float _stateSwitchInterval = 3.0f; // 状態切り替え間隔
+    private float _walkStateSwitchInterval = 3.0f; // 移動状態切り替え間隔
 
-    private float _stateTimer = 0.0f; // 状態管理用タイマー
+    private float _walkStateTimer = 0.0f; // 移動状態管理用タイマー
 
     [SerializeField]
-    private float _attackStateSwitchInterval = 2.0f; // 状態切り替え間隔
+    private float _attackStateSwitchInterval = 2.0f; // 攻撃状態切り替え間隔
 
-    private float _attackStateTimer = 0.0f; // 状態管理用タイマー
+    private float _attackStateTimer = 0.0f; // 攻撃状態管理用タイマー
 
     private float _searchHeight = default;
 
@@ -35,10 +35,15 @@ public class FlyingDemon : BaseEnemy
     private Transform _targetTrans = default;
 
     [Tooltip("検索範囲の半径を指定します")]
-    [SerializeField] private float _searchRadius = 30f; // 検索範囲（半径）
+    [SerializeField] private float _searchRadius = 50f; // 検索範囲（半径）
+
+    [SerializeField] private float _stopDistance = 3.0f; // プレイヤーの手前で止まる距離
 
     [SerializeField, Tooltip("攻撃範囲")]
-    private float _attackRange = 5.0f;
+    private float _attackRange = 4.0f;
+
+    [SerializeField, Tooltip("追跡範囲")]
+    private float _trackingRange = 7.0f;
 
     [SerializeField, Tooltip("歩くスピード")]
     private float _walkRange = 3.0f;
@@ -50,7 +55,9 @@ public class FlyingDemon : BaseEnemy
     [Tooltip("検索対象となるレイヤー番号を指定します")]
     [SerializeField] private int _targetLayer = 6; // 対象のレイヤー番号
 
+    private Vector3 _startPosition; // 開始時の位置を保持
     private Vector3 _randomTargetPos; // ランダム移動の目標位置
+    [SerializeField] private float _randomRange = 10f; // ランダム移動範囲（±X軸, Z軸）
 
     [Tooltip("物理攻撃ダメージ")]
     [SerializeField] private float _damage = 10f;
@@ -76,17 +83,26 @@ public class FlyingDemon : BaseEnemy
 
     private BoxCollider _boxCollider;
 
-    private float _speed = 5f;     // 上下移動速度
+    private float _startY; // 開始時のY座標を保持
+    [SerializeField] private float _riseLimit = 5f;    // 上昇範囲（Y軸方向の上限）
+    [SerializeField] private float _speed = 5f;     // 上下移動速度
 
-    [SerializeField]  private GameObject _fireballPrefab; // 炎の球のPrefab
-    [SerializeField]  private Transform _firePoint; // 射出位置
+    [SerializeField] private GameObject _fireballPrefab; // 炎の球のPrefab
+    [SerializeField] private Transform _firePoint; // 射出位置
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
         _boxCollider = GetComponentInChildren<BoxCollider>();
 
+        // 現在の位置をスタート地点として記録
+        _startPosition = transform.position;
+
+        // 初期のランダムターゲットを生成
         _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
+
+        // 開始時のY座標を記録
+        _startY = transform.position.y;
     }
 
     /// <summary>
@@ -114,13 +130,13 @@ public class FlyingDemon : BaseEnemy
         }
 
         // 状態管理タイマーの更新
-        _stateTimer += Time.deltaTime;
+        _walkStateTimer += Time.deltaTime;
 
         // 状態を切り替えるタイミングになったら切り替える
-        if (_stateTimer >= _stateSwitchInterval && _movementState != EnemyMovementState.DIE)
+        if (_walkStateTimer >= _walkStateSwitchInterval && _movementState != EnemyMovementState.DIE)
         {
             SwitchMovementState();
-            _stateTimer = 0.0f; // タイマーをリセット
+            _walkStateTimer = 0.0f; // タイマーをリセット
         }
 
         switch (_movementState)
@@ -237,13 +253,12 @@ public class FlyingDemon : BaseEnemy
     /// </summary>
     private Vector3 GenerateRandomPosition()
     {
-        //float range = 7.5f; // ランダム移動範囲
         Vector3 randomOffset = new Vector3(
-            Random.Range(-5, 16),
+            Random.Range(-_randomRange, _randomRange),
             0f,
-            Random.Range(-5, 16)
+            Random.Range(-_randomRange, _randomRange)
         );
-        return randomOffset; // 現在位置を基準にランダムな位置を生成
+        return _startPosition + randomOffset; // 現在位置を基準にランダムな位置を生成
     }
 
     /*
@@ -258,7 +273,8 @@ public class FlyingDemon : BaseEnemy
             Gizmos.DrawLine(transform.position, _randomTargetPos); // 現在位置から目標位置への線を表示
             Gizmos.DrawSphere(_randomTargetPos, 0.2f); // 目標位置を球で表示
         }
-    }*/
+    }
+    */
 
     /// <summary>
     /// 移動処理
@@ -302,7 +318,11 @@ public class FlyingDemon : BaseEnemy
     /// </summary>
     private void Running()
     {
-        _attackAction = true;
+        if (!_attackEnd)
+        {
+            return;
+        }
+
         _animator.SetInteger("TransitionNo", 2);
 
         // 前進速度
@@ -312,14 +332,27 @@ public class FlyingDemon : BaseEnemy
         Vector3 currentPosition = transform.position;
         Vector3 targetPosition = _targetTrans.position;
 
-        targetPosition.y = currentPosition.y; // ゴーレムの高さを固定
+        targetPosition.y = currentPosition.y; // 高さを固定
 
-        // プレイヤーの最後の位置に向かって移動
-        transform.position = Vector3.MoveTowards(
-            currentPosition,
-            targetPosition,
-            _walkRange * Time.deltaTime
-        );
+        // ターゲットとの距離を計算
+        float distanceToTarget = Vector3.Distance(currentPosition, targetPosition);
+
+        if (distanceToTarget > _stopDistance)
+        {
+            // プレイヤーの最後の位置に向かって移動
+            transform.position = Vector3.MoveTowards(
+                currentPosition,
+                targetPosition,
+                _walkRange * Time.deltaTime
+            );
+        }
+
+        // 移動方向に向きを変更
+        Vector3 direction = (targetPosition - currentPosition).normalized;
+        if (direction != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(direction);
+        }
     }
 
     /// <summary>
@@ -331,7 +364,7 @@ public class FlyingDemon : BaseEnemy
         {
             float distanceToTarget = Vector3.Distance(transform.position, _targetTrans.position);
 
-            if (distanceToTarget <= _attackRange && transform.position.y <= 0.0f)
+            if (distanceToTarget <= _attackRange && transform.position.y <= _startY)
             {
                 _actionState = EnemyActionState.ATTACKING;
             }
@@ -373,7 +406,7 @@ public class FlyingDemon : BaseEnemy
         {
             return;
         }
-
+        print(_attackAction);
         int randomAttack = Random.Range(0, 2);
         switch (randomAttack)
         {
@@ -501,12 +534,14 @@ public class FlyingDemon : BaseEnemy
 
         float distanceToTarget = Vector3.Distance(transform.position, _targetTrans.position);
 
-        if (distanceToTarget <= 7)
+
+        // 追跡範囲
+        if (distanceToTarget <= _trackingRange)
         {
             _movementState = EnemyMovementState.RUNNING;
 
-            // Y座標が0を下回ったら停止
-            if (transform.position.y < 0.0f)
+            // Y座標が初期値を下回ったら停止
+            if (transform.position.y < _startY)
             {
                 return;
             }
@@ -515,7 +550,7 @@ public class FlyingDemon : BaseEnemy
         }
         else
         {
-            if (transform.position.y > 5.0f)
+            if (transform.position.y > _startY + _riseLimit)
             {
                 return;
             }
