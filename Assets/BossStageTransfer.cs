@@ -11,7 +11,7 @@ public class BossStageTransfer : MonoBehaviour
 
     // 必要なプレイヤー数
     [SerializeField, Tooltip("ノーマルステージにテレポートするために必要な人数")]
-    private int _bossStageRequiredPlayers = 2; // 必要なプレイヤー数
+    private int _bossStageRequiredPlayers = 1; // 必要なプレイヤー数
 
     [SerializeField, Tooltip("ボスステージのテレポート座標")]
     private Transform _bossTeleportPos = default;
