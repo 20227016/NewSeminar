@@ -22,7 +22,7 @@ public class EvilMage : BaseEnemy
     private int _targetLayer = 6; // 対象のレイヤー番号
 
     [Tooltip("検索範囲の半径を指定します")]
-    private float _searchRadius = 30f; // 検索範囲（半径）
+    private float _searchRadius = 50f; // 検索範囲（半径）
 
     [Header("追いかけたいオブジェクトのトランスフォーム")]
     private Transform _targetTrans = default;
