@@ -110,7 +110,7 @@ public class BossDemo : BaseEnemy
         {
             collider.enabled = false;
         }
-
+        /*
         _golem = GameObject.Find("GolemPADefault");
         _golem.SetActive(false);
         _evilMage = GameObject.Find("EvilMagePADefault");
@@ -119,6 +119,7 @@ public class BossDemo : BaseEnemy
         _fishman.SetActive(false); 
         _demon = GameObject.Find("FylingDemonPAMaskTint");
         _demon.SetActive(false);
+        */
     }
 
     private void Update()
