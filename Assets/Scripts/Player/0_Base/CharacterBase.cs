@@ -151,8 +151,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     public PlayerUIPresenter _playerUIPresenter = default;
 
-    private bool _isFirstSetModel = true;
-
     #endregion
 
     /// <summary>
@@ -160,7 +158,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// </summary>
     public override void Spawned()
     {
-        Debug.Log("生成");
         // 値の初期化
         InitialValues();
 
@@ -203,17 +200,22 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             LockOnCursorPresenter lockOnCursorPresenter = canvas.GetComponentInChildren<LockOnCursorPresenter>();
             playerUIPresenter.SetMyModel(this.gameObject);
             lockOnCursorPresenter.SetModel(this.gameObject);
-            
+
+            _playerUIPresenter = FindObjectOfType<PlayerUIPresenter>();
         }
-        _playerUIPresenter = FindObjectOfType<PlayerUIPresenter>();
-
         RPC_SetAllyHPBar(this);
-
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void RPC_SetAllyHPBar(CharacterBase character)
     {
+        if (!Object.HasInputAuthority)
+        {
+            return;
+        }
+
+        int modelCount = _playerUIPresenter.GetAllyModelCount() + 1;
+
         // シーン内の全てのPlayerを取得
         CharacterBase[] allCharacters = FindObjectsOfType<CharacterBase>();
 
@@ -223,36 +225,20 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             return;
         }
 
-        for (int i = 0; i < allCharacters.Length; i++)
+        foreach (CharacterBase characterBase in allCharacters)
         {
-            CharacterBase characterBase = allCharacters[i];
-
-            if (characterBase == this)
+            if (characterBase == this || _playerUIPresenter.IsAllyModelSet(characterBase))
             {
-                Debug.Log("自分自身をスキップ");
+                // 自分自身または既に登録されているモデルはスキップ
                 continue;
             }
 
-            Debug.Log("キャラクター: " + characterBase.name);
-
             // PlayerUIPresenterにモデルを設定
-            character._playerUIPresenter.SetAllyModel(characterBase, _isFirstSetModel);
+            character._playerUIPresenter.SetAllyModel(characterBase, modelCount);
 
-            Debug.Log("モデルセット: " + characterBase.name + ", isFirstSetModel: " + _isFirstSetModel);
-
-            // 最後のキャラクターであれば_isFirstSetModelをtrueにする
-            if (i == allCharacters.Length - 1)
-            {
-                _isFirstSetModel = true;
-                Debug.Log("最後のキャラクターです。_isFirstSetModelをtrueに設定しました。");
-            }
-            else
-            {
-                _isFirstSetModel = false;
-            }
+            modelCount++;
         }
     }
-
 
     /// <summary>
     /// コンポーネントのキャッシュ
@@ -275,7 +261,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected virtual void InitialValues()
     {
         // 初期化
-        _currentState = CharacterStateEnum.IDLE;
         _playerTransform = this.transform;
         _moveSpeed = _characterStatusStruct._walkSpeed;
         _characterStatusStruct._playerStatus = new WrapperPlayerStatus();
@@ -288,6 +273,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _currentSkillPoint.Value = 0f;
         _networkedSkillPoint = _currentSkillPoint.Value;
 
+        _currentState = CharacterStateEnum.IDLE;
+
+        // エフェクトを設定
         InstanceEffect();
 
         // 死亡判定
@@ -295,6 +283,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             .Where(_ => _ <= 0)
             .Subscribe(_ => RPC_Death());
 
+        // スタミナ管理
         StaminaManagement();
     }
 

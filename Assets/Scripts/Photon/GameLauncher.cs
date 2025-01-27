@@ -5,6 +5,7 @@ using Fusion.Sockets;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UniRx;
+using System.Linq;
 
 public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -221,6 +222,13 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (!runner.IsServer)
         {
+            return;
+        }
+
+        // 現在のプレイヤー数を確認
+        if (runner.ActivePlayers.Count() > 4) // 最大4人まで
+        {
+            Debug.Log("最大参加人数に達しています。新しいプレイヤーを追加できません。");
             return;
         }
 

@@ -106,8 +106,13 @@ public class ComboCounter : NetworkBehaviour, IComboCounter
     /// </summary>
     public float GetComboMultiplier()
     {
-        // 10コンボ毎にコンボ倍率が0.1づつ上昇、最低等倍、最高2倍
-        float comboMultiplier = Mathf.Clamp(1 + (_networkComboCount / 100), 1, 2);
+        // コンボ数に応じた倍率計算
+        // 10コンボ毎に0.1倍上昇 (例: 0コンボ=1.0倍, 10コンボ=1.1倍, ..., 最大2.0倍)
+        float comboMultiplier = 1.0f + (_networkComboCount / 10) * 0.1f;
+
+        // 最小倍率: 1.0倍, 最大倍率: 2.0倍にクランプ
+        comboMultiplier = Mathf.Clamp(comboMultiplier, 1.0f, 2.0f);
+
         return comboMultiplier;
     }
 }
