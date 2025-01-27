@@ -96,12 +96,6 @@ public class BossDemo : BaseEnemy
 
     private bool isPlayerNearby = false; // プレイヤーが範囲内にいるかどうか
 
-    private GameObject _movieCamera = default;
-    private GameObject _roar = default;
-    private GameObject _circle = default;
-    private GameObject _text = default;
-    private GameObject _bar = default;
-
     private void Awake()
     {
         _animator = GetComponent<Animator>();
@@ -125,17 +119,6 @@ public class BossDemo : BaseEnemy
         _fishman.SetActive(false); 
         _demon = GameObject.Find("FylingDemonPAMaskTint");
         _demon.SetActive(false);
-
-        _movieCamera = GameObject.Find("MovieCamera");
-        _movieCamera.SetActive(false);
-        _roar = GameObject.Find("RoarEffects");
-        _roar.SetActive(false);
-        _circle = GameObject.Find("Magic circle Enemy");
-        _circle.SetActive(false);
-        _text = GameObject.Find("BossNameText");
-        _text.SetActive(false);
-        _bar = GameObject.Find("BossHP_Bar");
-        _bar.SetActive(false);
     }
 
     private void Update()
@@ -467,11 +450,6 @@ public class BossDemo : BaseEnemy
         {
             // プレイヤーが1人以上範囲内にいる
             isPlayerNearby = true;
-            _movieCamera.SetActive(true);
-            _roar.SetActive(true);
-            _circle.SetActive(true);
-            _text.SetActive(true);
-            _bar.SetActive(true);
             _animator.SetInteger("TransitionNo", -2);
         }
     }
