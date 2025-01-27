@@ -5,10 +5,10 @@ using Fusion;
 
 /// <summary>
 /// FlyingDemon.cs
-/// ƒf[ƒ‚ƒ“‚Ìs“®ƒƒWƒbƒN‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
-/// ˆÚ“®‚âUŒ‚‚È‚ÇA‚³‚Ü‚´‚Ü‚Èó‘Ô‚É‰‚¶‚½“®‚«‚ğ§Œä‚·‚éB
-/// ì¬“ú: /
-/// ì¬Ò: –k\“VÆ
+/// ãƒ‡ãƒ¼ãƒ¢ãƒ³ã®è¡Œå‹•ãƒ­ã‚¸ãƒƒã‚¯ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
+/// ç§»å‹•ã‚„æ”»æ’ƒãªã©ã€ã•ã¾ã–ã¾ãªçŠ¶æ…‹ã«å¿œã˜ãŸå‹•ãã‚’åˆ¶å¾¡ã™ã‚‹ã€‚
+/// ä½œæˆæ—¥: /
+/// ä½œæˆè€…: åŒ—æ§‹å¤©å“‰
 /// </summary>
 public class FlyingDemon : BaseEnemy
 {
@@ -20,39 +20,46 @@ public class FlyingDemon : BaseEnemy
     private EnemyActionState _actionState = EnemyActionState.SEARCHING;
 
     [SerializeField]
-    private float _stateSwitchInterval = 3.0f; // ó‘ÔØ‚è‘Ö‚¦ŠÔŠu
+    private float _walkStateSwitchInterval = 3.0f; // ç§»å‹•çŠ¶æ…‹åˆ‡ã‚Šæ›¿ãˆé–“éš”
 
-    private float _stateTimer = 0.0f; // ó‘ÔŠÇ——pƒ^ƒCƒ}[
+    private float _walkStateTimer = 0.0f; // ç§»å‹•çŠ¶æ…‹ç®¡ç†ç”¨ã‚¿ã‚¤ãƒãƒ¼
 
     [SerializeField]
-    private float _attackStateSwitchInterval = 2.0f; // ó‘ÔØ‚è‘Ö‚¦ŠÔŠu
+    private float _attackStateSwitchInterval = 2.0f; // æ”»æ’ƒçŠ¶æ…‹åˆ‡ã‚Šæ›¿ãˆé–“éš”
 
-    private float _attackStateTimer = 0.0f; // ó‘ÔŠÇ——pƒ^ƒCƒ}[
+    private float _attackStateTimer = 0.0f; // æ”»æ’ƒçŠ¶æ…‹ç®¡ç†ç”¨ã‚¿ã‚¤ãƒãƒ¼
 
     private float _searchHeight = default;
 
-    [SerializeField, Header("’Ç‚¢‚©‚¯‚½‚¢ƒIƒuƒWƒFƒNƒg‚Ìƒgƒ‰ƒ“ƒXƒtƒH[ƒ€")]
+    [SerializeField, Header("è¿½ã„ã‹ã‘ãŸã„ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ")]
     private Transform _targetTrans = default;
 
-    [Tooltip("ŒŸõ”ÍˆÍ‚Ì”¼Œa‚ğw’è‚µ‚Ü‚·")]
-    [SerializeField] private float _searchRadius = 30f; // ŒŸõ”ÍˆÍi”¼Œaj
+    [Tooltip("æ¤œç´¢ç¯„å›²ã®åŠå¾„ã‚’æŒ‡å®šã—ã¾ã™")]
+    [SerializeField] private float _searchRadius = 50f; // æ¤œç´¢ç¯„å›²ï¼ˆåŠå¾„ï¼‰
 
-    [SerializeField, Tooltip("UŒ‚”ÍˆÍ")]
-    private float _attackRange = 5.0f;
+    [SerializeField] private float _stopDistance = 3.0f; // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ‰‹å‰ã§æ­¢ã¾ã‚‹è·é›¢
 
-    [SerializeField, Tooltip("•à‚­ƒXƒs[ƒh")]
+    [SerializeField, Tooltip("æ”»æ’ƒç¯„å›²")]
+    private float _attackRange = 4.0f;
+
+    [SerializeField, Tooltip("è¿½è·¡ç¯„å›²")]
+    private float _trackingRange = 7.0f;
+
+    [SerializeField, Tooltip("æ­©ãã‚¹ãƒ”ãƒ¼ãƒ‰")]
     private float _walkRange = 3.0f;
 
-    [SerializeField, Tooltip("ƒ_ƒ[ƒW‚ğó‚¯‚éŠÔ")]
+    [SerializeField, Tooltip("ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ã‚‹æ™‚é–“")]
     private float _damageRange = 1.0f;
 
-    [Header("ŒŸõ‘ÎÛ‚Ìİ’è")]
-    [Tooltip("ŒŸõ‘ÎÛ‚Æ‚È‚éƒŒƒCƒ„[”Ô†‚ğw’è‚µ‚Ü‚·")]
-    [SerializeField] private int _targetLayer = 6; // ‘ÎÛ‚ÌƒŒƒCƒ„[”Ô†
+    [Header("æ¤œç´¢å¯¾è±¡ã®è¨­å®š")]
+    [Tooltip("æ¤œç´¢å¯¾è±¡ã¨ãªã‚‹ãƒ¬ã‚¤ãƒ¤ãƒ¼ç•ªå·ã‚’æŒ‡å®šã—ã¾ã™")]
+    [SerializeField] private int _targetLayer = 6; // å¯¾è±¡ã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ç•ªå·
 
-    private Vector3 _randomTargetPos; // ƒ‰ƒ“ƒ_ƒ€ˆÚ“®‚Ì–Ú•WˆÊ’u
+    private Vector3 _startPosition; // é–‹å§‹æ™‚ã®ä½ç½®ã‚’ä¿æŒ
+    private Vector3 _randomTargetPos; // ãƒ©ãƒ³ãƒ€ãƒ ç§»å‹•ã®ç›®æ¨™ä½ç½®
+    [SerializeField] private float _randomRange = 10f; // ãƒ©ãƒ³ãƒ€ãƒ ç§»å‹•ç¯„å›²ï¼ˆÂ±Xè»¸, Zè»¸ï¼‰
 
-    [Tooltip("•¨—UŒ‚ƒ_ƒ[ƒW")]
+    [Tooltip("ç‰©ç†æ”»æ’ƒãƒ€ãƒ¡ãƒ¼ã‚¸")]
     [SerializeField] private float _damage = 10f;
 
     [SerializeField]
@@ -61,7 +68,7 @@ public class FlyingDemon : BaseEnemy
     [SerializeField]
     private bool _attackEnd = true;
 
-    // ƒAƒjƒ[ƒ^[•Ï”
+    // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼å¤‰æ•°
     // TransitionNo.0 Idle
     // TransitionNo.1 Walk
     // TransitionNo.2 Running
@@ -76,27 +83,31 @@ public class FlyingDemon : BaseEnemy
 
     private BoxCollider _boxCollider;
 
-    private float _speed = 5f;     // ã‰ºˆÚ“®‘¬“x
+    private float _startY; // é–‹å§‹æ™‚ã®Yåº§æ¨™ã‚’ä¿æŒ
+    [SerializeField] private float _riseLimit = 5f;    // ä¸Šæ˜‡ç¯„å›²ï¼ˆYè»¸æ–¹å‘ã®ä¸Šé™ï¼‰
+    [SerializeField] private float _speed = 5f;     // ä¸Šä¸‹ç§»å‹•é€Ÿåº¦
 
-    [SerializeField]  private GameObject _fireballPrefab; // ‰Š‚Ì‹…‚ÌPrefab
-    [SerializeField]  private Transform _firePoint; // ËoˆÊ’u
+    [SerializeField] private GameObject _fireballPrefab; // ç‚ã®çƒã®Prefab
+    [SerializeField] private Transform _firePoint; // å°„å‡ºä½ç½®
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
         _boxCollider = GetComponentInChildren<BoxCollider>();
 
-        // HPUI‚Ì‰Šú‰»
-        RPC_UpdateHPBar();
+        _randomTargetPos = GenerateRandomPosition(); // ãƒ©ãƒ³ãƒ€ãƒ ãªä½ç½®ã‚’ç”Ÿæˆ
 
-        _randomTargetPos = GenerateRandomPosition(); // ƒ‰ƒ“ƒ_ƒ€‚ÈˆÊ’u‚ğ¶¬
+        // é–‹å§‹æ™‚ã®Yåº§æ¨™ã‚’è¨˜éŒ²
+        _startY = transform.position.y;
     }
 
     /// <summary>
-    /// XVˆ—
+    /// æ›´æ–°å‡¦ç†
     /// </summary>
     protected void Update()
     {
+        PlayerSearch();
+
         if (_targetTrans == null)
         {
             return;
@@ -114,40 +125,40 @@ public class FlyingDemon : BaseEnemy
             _movementState = EnemyMovementState.DIE;
         }
 
-        // ó‘ÔŠÇ—ƒ^ƒCƒ}[‚ÌXV
-        _stateTimer += Time.deltaTime;
+        // çŠ¶æ…‹ç®¡ç†ã‚¿ã‚¤ãƒãƒ¼ã®æ›´æ–°
+        _walkStateTimer += Time.deltaTime;
 
-        // ó‘Ô‚ğØ‚è‘Ö‚¦‚éƒ^ƒCƒ~ƒ“ƒO‚É‚È‚Á‚½‚çØ‚è‘Ö‚¦‚é
-        if (_stateTimer >= _stateSwitchInterval && _movementState != EnemyMovementState.DIE)
+        // çŠ¶æ…‹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã«ãªã£ãŸã‚‰åˆ‡ã‚Šæ›¿ãˆã‚‹
+        if (_walkStateTimer >= _walkStateSwitchInterval && _movementState != EnemyMovementState.DIE)
         {
             SwitchMovementState();
-            _stateTimer = 0.0f; // ƒ^ƒCƒ}[‚ğƒŠƒZƒbƒg
+            _walkStateTimer = 0.0f; // ã‚¿ã‚¤ãƒãƒ¼ã‚’ãƒªã‚»ãƒƒãƒˆ
         }
 
         switch (_movementState)
         {
-            // ‘Ò‹@
+            // å¾…æ©Ÿ
             case EnemyMovementState.IDLE:
 
                 Ideling();
 
                 break;
 
-            // •à‚­i„‰ñj
+            // æ­©ãï¼ˆå·¡å›ï¼‰
             case EnemyMovementState.WALKING:
 
                 Walking();
 
                 break;
 
-            // ’ÇÕ
+            // è¿½è·¡
             case EnemyMovementState.RUNNING:
 
                 Running();
 
                 break;
 
-            //ƒ_ƒ[ƒW(ó‚¯‚½‚Æ‚«)
+            //ãƒ€ãƒ¡ãƒ¼ã‚¸(å—ã‘ãŸã¨ã)
             case EnemyMovementState.STUNNED:
 
                 EnemyDamage();
@@ -155,15 +166,15 @@ public class FlyingDemon : BaseEnemy
                 return;
 
 
-            // ƒ_ƒEƒ“(ƒuƒŒƒCƒNó‘Ô)
+            // ãƒ€ã‚¦ãƒ³(ãƒ–ãƒ¬ã‚¤ã‚¯çŠ¶æ…‹)
             case EnemyMovementState.DOWNED:
 
                 break;
 
-            // €–S
+            // æ­»äº¡
             case EnemyMovementState.DIE:
 
-                // YÀ•W‚ª0.7‚ğ‰º‰ñ‚Á‚½‚ç’â~
+                // Yåº§æ¨™ãŒ0.7ã‚’ä¸‹å›ã£ãŸã‚‰åœæ­¢
                 if (transform.position.y > 0.7f)
                 {
                     transform.position -= _speed * Time.deltaTime * transform.up * 2;
@@ -177,17 +188,16 @@ public class FlyingDemon : BaseEnemy
         switch (_actionState)
         {
 
-            // ƒT[ƒ`
+            // ã‚µãƒ¼ãƒ
             case EnemyActionState.SEARCHING:
 
                 _boxCollider.enabled = false;
 
-                PlayerSearch();
                 PlayerLook();
 
                 break;
 
-            // UŒ‚
+            // æ”»æ’ƒ
             case EnemyActionState.ATTACKING:
 
                 _boxCollider.enabled = true;
@@ -198,7 +208,7 @@ public class FlyingDemon : BaseEnemy
     }
 
     /// <summary>
-    /// ƒAƒCƒhƒ‹ó‘Ô‚Ìˆ—
+    /// ã‚¢ã‚¤ãƒ‰ãƒ«çŠ¶æ…‹ã®å‡¦ç†
     /// </summary>
     private void Ideling()
     {
@@ -214,7 +224,7 @@ public class FlyingDemon : BaseEnemy
     }
 
     /// <summary>
-    /// ˆÚ“®ó‘Ô‚ğØ‚è‘Ö‚¦‚é
+    /// ç§»å‹•çŠ¶æ…‹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
     /// </summary>
     private void SwitchMovementState()
     {
@@ -235,52 +245,52 @@ public class FlyingDemon : BaseEnemy
     }
 
     /// <summary>
-    /// ƒ‰ƒ“ƒ_ƒ€‚ÈˆÊ’u‚ğ¶¬‚·‚é
+    /// ãƒ©ãƒ³ãƒ€ãƒ ãªä½ç½®ã‚’ç”Ÿæˆã™ã‚‹
     /// </summary>
     private Vector3 GenerateRandomPosition()
     {
-        //float range = 7.5f; // ƒ‰ƒ“ƒ_ƒ€ˆÚ“®”ÍˆÍ
         Vector3 randomOffset = new Vector3(
-            Random.Range(-5, 16),
+            Random.Range(-_randomRange, _randomRange),
             0f,
-            Random.Range(-5, 16)
+            Random.Range(-_randomRange, _randomRange)
         );
-        return randomOffset; // Œ»İˆÊ’u‚ğŠî€‚Éƒ‰ƒ“ƒ_ƒ€‚ÈˆÊ’u‚ğ¶¬
+        return _startPosition + randomOffset; // ç¾åœ¨ä½ç½®ã‚’åŸºæº–ã«ãƒ©ãƒ³ãƒ€ãƒ ãªä½ç½®ã‚’ç”Ÿæˆ
     }
 
     /*
     /// <summary>
-    /// ƒ‰ƒ“ƒ_ƒ€ˆÚ“®‚Ì–Ú•WˆÊ’u‚Ö‚Ìü‚ğ•\¦
+    /// ãƒ©ãƒ³ãƒ€ãƒ ç§»å‹•ã®ç›®æ¨™ä½ç½®ã¸ã®ç·šã‚’è¡¨ç¤º
     /// </summary>
     private void OnDrawGizmos()
     {
         if (_randomTargetPos != Vector3.zero)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, _randomTargetPos); // Œ»İˆÊ’u‚©‚ç–Ú•WˆÊ’u‚Ö‚Ìü‚ğ•\¦
-            Gizmos.DrawSphere(_randomTargetPos, 0.2f); // –Ú•WˆÊ’u‚ğ‹…‚Å•\¦
+            Gizmos.DrawLine(transform.position, _randomTargetPos); // ç¾åœ¨ä½ç½®ã‹ã‚‰ç›®æ¨™ä½ç½®ã¸ã®ç·šã‚’è¡¨ç¤º
+            Gizmos.DrawSphere(_randomTargetPos, 0.2f); // ç›®æ¨™ä½ç½®ã‚’çƒã§è¡¨ç¤º
         }
-    }*/
+    }
+    */
 
     /// <summary>
-    /// ˆÚ“®ˆ—
+    /// ç§»å‹•å‡¦ç†
     /// </summary>
     private void Walking()
     {
         _actionState = EnemyActionState.SEARCHING;
 
         _animator.SetInteger("TransitionNo", 1);
-        //Debug.Log("„‰ñ’†");
+        //Debug.Log("å·¡å›ä¸­");
 
         _walkRange = 2.5f;
 
-        // Œ»İ‚ÌˆÊ’u
+        // ç¾åœ¨ã®ä½ç½®
         Vector3 currentPosition = transform.position;
 
-        // ƒ^[ƒQƒbƒgˆÊ’u (_randomTargetPos‚ÌyÀ•W‚ğŒ»İ‚ÌyÀ•W‚ÉŒÅ’è)
+        // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆä½ç½® (_randomTargetPosã®yåº§æ¨™ã‚’ç¾åœ¨ã®yåº§æ¨™ã«å›ºå®š)
         Vector3 targetPosition = new Vector3(_randomTargetPos.x, currentPosition.y, _randomTargetPos.z);
 
-        // ˆÚ“®
+        // ç§»å‹•
         transform.position = Vector3.MoveTowards(currentPosition, targetPosition, _walkRange * Time.deltaTime);
 
         Vector3 direction = (_randomTargetPos - transform.position).normalized;
@@ -289,43 +299,60 @@ public class FlyingDemon : BaseEnemy
             transform.rotation = Quaternion.LookRotation(direction);
         }
 
-        // –Ú•W’n“_“’B
+        // ç›®æ¨™åœ°ç‚¹åˆ°é”
         if (Vector2.Distance(
         new Vector2(transform.position.x, transform.position.z),
         new Vector2(_randomTargetPos.x, _randomTargetPos.z)) < 0.1f)
         {
             _movementState = EnemyMovementState.IDLE;
-            _randomTargetPos = GenerateRandomPosition(); // ƒ‰ƒ“ƒ_ƒ€‚ÈˆÊ’u‚ğ¶¬
+            _randomTargetPos = GenerateRandomPosition(); // ãƒ©ãƒ³ãƒ€ãƒ ãªä½ç½®ã‚’ç”Ÿæˆ
         }
     }
 
     /// <summary>
-    /// ’ÇÕˆ—
+    /// è¿½è·¡å‡¦ç†
     /// </summary>
     private void Running()
     {
-        _attackAction = true;
+        if (!_attackEnd)
+        {
+            return;
+        }
+
         _animator.SetInteger("TransitionNo", 2);
 
-        // ‘Oi‘¬“x
+        // å‰é€²é€Ÿåº¦
         _walkRange = 5.0f;
 
-        // Œ»İ‚Ì‚‚³‚ğˆÛ‚·‚é
+        // ç¾åœ¨ã®é«˜ã•ã‚’ç¶­æŒã™ã‚‹
         Vector3 currentPosition = transform.position;
         Vector3 targetPosition = _targetTrans.position;
 
-        targetPosition.y = currentPosition.y; // ƒS[ƒŒƒ€‚Ì‚‚³‚ğŒÅ’è
+        targetPosition.y = currentPosition.y; // é«˜ã•ã‚’å›ºå®š
 
-        // ƒvƒŒƒCƒ„[‚ÌÅŒã‚ÌˆÊ’u‚ÉŒü‚©‚Á‚ÄˆÚ“®
-        transform.position = Vector3.MoveTowards(
-            currentPosition,
-            targetPosition,
-            _walkRange * Time.deltaTime
-        );
+        // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¨ã®è·é›¢ã‚’è¨ˆç®—
+        float distanceToTarget = Vector3.Distance(currentPosition, targetPosition);
+
+        if (distanceToTarget > _stopDistance)
+        {
+            // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æœ€å¾Œã®ä½ç½®ã«å‘ã‹ã£ã¦ç§»å‹•
+            transform.position = Vector3.MoveTowards(
+                currentPosition,
+                targetPosition,
+                _walkRange * Time.deltaTime
+            );
+        }
+
+        // ç§»å‹•æ–¹å‘ã«å‘ãã‚’å¤‰æ›´
+        Vector3 direction = (targetPosition - currentPosition).normalized;
+        if (direction != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(direction);
+        }
     }
 
     /// <summary>
-    /// UŒ‚”ÍˆÍ‚ğƒ`ƒFƒbƒN‚µA”ÍˆÍ“à‚ÉƒvƒŒƒCƒ„[‚ª“ü‚Á‚½ê‡UŒ‚ó‘Ô‚ÉØ‚è‘Ö‚¦‚é
+    /// æ”»æ’ƒç¯„å›²ã‚’ãƒã‚§ãƒƒã‚¯ã—ã€ç¯„å›²å†…ã«ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒå…¥ã£ãŸå ´åˆæ”»æ’ƒçŠ¶æ…‹ã«åˆ‡ã‚Šæ›¿ãˆã‚‹
     /// </summary>
     private void CheckAttackRange()
     {
@@ -333,7 +360,7 @@ public class FlyingDemon : BaseEnemy
         {
             float distanceToTarget = Vector3.Distance(transform.position, _targetTrans.position);
 
-            if (distanceToTarget <= _attackRange && transform.position.y <= 0.0f)
+            if (distanceToTarget <= _attackRange && transform.position.y <= _startY)
             {
                 _actionState = EnemyActionState.ATTACKING;
             }
@@ -350,7 +377,7 @@ public class FlyingDemon : BaseEnemy
     }
 
     /// <summary>
-    /// UŒ‚ˆ—
+    /// æ”»æ’ƒå‡¦ç†
     /// </summary>
     private void PlayerAttack()
     {
@@ -375,7 +402,7 @@ public class FlyingDemon : BaseEnemy
         {
             return;
         }
-
+        print(_attackAction);
         int randomAttack = Random.Range(0, 2);
         switch (randomAttack)
         {
@@ -394,7 +421,7 @@ public class FlyingDemon : BaseEnemy
     }
 
     /// <summary>
-    /// ƒ_ƒ[ƒW‚ğó‚¯‚½ˆ—
+    /// ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ãŸå‡¦ç†
     /// </summary>
     private void EnemyDamage()
     {
@@ -410,14 +437,14 @@ public class FlyingDemon : BaseEnemy
     }
 
     /// <summary>
-    /// “|‚ê‚é
+    /// å€’ã‚Œã‚‹
     /// </summary>
     private IEnumerator EnemyDie(float fadeDuration)
     {
-        // ƒgƒŠƒK[‚ğƒZƒbƒg
+        // ãƒˆãƒªã‚¬ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
         _animator.SetInteger("TransitionNo", 9);
 
-        // •bŒã
+        // ç§’å¾Œ
         yield return new WaitForSeconds(fadeDuration);
 
         RPC_EnemyDie();
@@ -426,48 +453,48 @@ public class FlyingDemon : BaseEnemy
     [Rpc(RpcSources.All , RpcTargets.All)]
     private void RPC_EnemyDie()
     {
-        // Š®‘S‚É“§–¾‚É‚µ‚½ŒãAƒIƒuƒWƒFƒNƒg‚ğ”ñƒAƒNƒeƒBƒu‰»
+        // å®Œå…¨ã«é€æ˜ã«ã—ãŸå¾Œã€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’éã‚¢ã‚¯ãƒ†ã‚£ãƒ–åŒ–
         gameObject.SetActive(false);
     }
 
     /// <summary>
-    /// Lookatİ’è
-    /// ‚±‚±‚Å‚ÍA
-    ///    [SerializeField, Header("’Ç‚¢‚©‚¯‚½‚¢ƒIƒuƒWƒFƒNƒg‚Ìƒgƒ‰ƒ“ƒXƒtƒH[ƒ€")]
+    /// Lookatè¨­å®š
+    /// ã“ã“ã§ã¯ã€
+    ///    [SerializeField, Header("è¿½ã„ã‹ã‘ãŸã„ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ")]
     ///    private Transform _objTrans = default;
-    /// ‚Ì’†‚É“ü‚ê‚½ƒIƒuƒWƒFƒNƒg‚ğ‚¸‚Á‚ÆŒ©‚Â‚ß‘±‚¯‚éˆ—‚ª‘‚¢‚Ä‚ ‚é‚æ
-    /// ‚±‚ê‚Å•ûŒü‚Íæ“¾‚Å‚«‚é‚Ì‚ÅA‚ ‚Æ‚Í‘Oi‚·‚é‚¾‚¯‚ÅAã‹L‚ÅŠi”[‚µ‚½ƒIƒuƒWƒFƒNƒg‚ğ’Ç‚¤‚æ‚¤‚É‚È‚è‚Ü‚·(Player‚Æ‚©)
+    /// ã®ä¸­ã«å…¥ã‚ŒãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ãšã£ã¨è¦‹ã¤ã‚ç¶šã‘ã‚‹å‡¦ç†ãŒæ›¸ã„ã¦ã‚ã‚‹ã‚ˆ
+    /// ã“ã‚Œã§æ–¹å‘ã¯å–å¾—ã§ãã‚‹ã®ã§ã€ã‚ã¨ã¯å‰é€²ã™ã‚‹ã ã‘ã§ã€ä¸Šè¨˜ã§æ ¼ç´ã—ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’è¿½ã†ã‚ˆã†ã«ãªã‚Šã¾ã™(Playerã¨ã‹)
     /// </summary>
     private void PlayerLook()
     {
         if (_targetTrans != null)
         {
-            // ƒvƒŒƒCƒ„[‚ÌTransform‚ğæ“¾
+            // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®Transformã‚’å–å¾—
             Transform playerTrans = _targetTrans;
 
-            // ƒvƒŒƒCƒ„[‚ÌˆÊ’u‚ğæ“¾
+            // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ä½ç½®ã‚’å–å¾—
             Vector3 playerPosition = playerTrans.position;
 
-            // ƒvƒŒƒCƒ„[‚ÌY²‚ğ–³‹‚µ‚½ƒ^[ƒQƒbƒg‚ÌˆÊ’u‚ğŒvZ
+            // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®Yè»¸ã‚’ç„¡è¦–ã—ãŸã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ä½ç½®ã‚’è¨ˆç®—
             Vector3 lookPosition = new Vector3(playerPosition.x, transform.position.y, playerPosition.z);
 
-            // ƒvƒŒƒCƒ„[‚Ì•ûŒü‚ÉŒü‚­
+            // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹å‘ã«å‘ã
             transform.LookAt(lookPosition);
         }
     }
 
     /// </summary>
-    //ƒvƒŒƒCƒ„[‚ğŒ©‚Â‚¯‚½‚ç’ÇÕŠJn
-    //ƒvƒŒƒCƒ„[‚¶‚á‚È‚¢ê‡null
-    //’ÇÕ‚ğ‚±‚±‚É“ü‚ê‚Ä–½—ß”­“®‚Ì‡”Ô‚ğ•Ï‚¦‚Ä‚¢‚é
+    //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’è¦‹ã¤ã‘ãŸã‚‰è¿½è·¡é–‹å§‹
+    //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã˜ã‚ƒãªã„å ´åˆnull
+    //è¿½è·¡ã‚’ã“ã“ã«å…¥ã‚Œã¦å‘½ä»¤ç™ºå‹•ã®é †ç•ªã‚’å¤‰ãˆã¦ã„ã‚‹
 
     /// <summary>
-    /// ©•ª‚ğ’†S‚Æ‚µ‚½‰~’ŒŒ`‚Ìˆê’è”ÍˆÍ“à‚ÅAw’è‚ÌƒŒƒCƒ„[‚É‘®‚·‚éƒIƒuƒWƒFƒNƒg‚ğŒŸõ‚µA
-    /// Å‚à‹ß‚¢ƒIƒuƒWƒFƒNƒg‚ğ“Á’è‚µ‚Ü‚·B
+    /// è‡ªåˆ†ã‚’ä¸­å¿ƒã¨ã—ãŸå††æŸ±å½¢ã®ä¸€å®šç¯„å›²å†…ã§ã€æŒ‡å®šã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«å±ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æ¤œç´¢ã—ã€
+    /// æœ€ã‚‚è¿‘ã„ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç‰¹å®šã—ã¾ã™ã€‚
     /// </summary>
     private void PlayerSearch()
     {
-        // ‰~’Œ”ÍˆÍ‚ğƒJƒvƒZƒ‹‚Å‹ß—
+        // å††æŸ±ç¯„å›²ã‚’ã‚«ãƒ—ã‚»ãƒ«ã§è¿‘ä¼¼
         Vector3 capsuleBottom = transform.position - Vector3.up * (_searchHeight / 5f);
         Vector3 capsuleTop = transform.position + Vector3.up * (_searchHeight / 5f);
 
@@ -496,44 +523,51 @@ public class FlyingDemon : BaseEnemy
 
         _targetTrans = closestObject;
 
+        if (_targetTrans == null)
+        {
+            return;
+        }
+
         float distanceToTarget = Vector3.Distance(transform.position, _targetTrans.position);
 
-        if (distanceToTarget <= 7)
+
+        // è¿½è·¡ç¯„å›²
+        if (distanceToTarget <= _trackingRange)
         {
             _movementState = EnemyMovementState.RUNNING;
 
-            // YÀ•W‚ª0‚ğ‰º‰ñ‚Á‚½‚ç’â~
-            if (transform.position.y < 0.0f)
+            // Yåº§æ¨™ãŒåˆæœŸå€¤ã‚’ä¸‹å›ã£ãŸã‚‰åœæ­¢
+            if (transform.position.y < _startY)
             {
                 return;
             }
-            // ˆê’è‹——£“à‚¾‚Æ~‰º‚·‚é
+            // ä¸€å®šè·é›¢å†…ã ã¨é™ä¸‹ã™ã‚‹
             transform.position -= _speed * Time.deltaTime * transform.up;
         }
         else
         {
-            if (transform.position.y > 5.0f)
+            if (transform.position.y > _startY + _riseLimit)
             {
                 return;
             }
-            // ˆê’è‹——£—£‚ê‚é‚Æã¸‚·‚é
+            // ä¸€å®šè·é›¢é›¢ã‚Œã‚‹ã¨ä¸Šæ˜‡ã™ã‚‹
             transform.position += _speed * Time.deltaTime * transform.up;
         }
     }
 
     /*
     /// <summary>
-    /// ŒŸõ”ÍˆÍ‚ğƒV[ƒ“ƒrƒ…[‚É•\¦‚µ‚Ü‚·i‰~’ŒŒ`jB
+    /// æ¤œç´¢ç¯„å›²ã‚’ã‚·ãƒ¼ãƒ³ãƒ“ãƒ¥ãƒ¼ã«è¡¨ç¤ºã—ã¾ã™ï¼ˆå††æŸ±å½¢ï¼‰ã€‚
     /// </summary>
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
 
-        // ŒŸõ”ÍˆÍ‚Ì‰~’ŒŒ`‚ğ•\¦
+        // æ¤œç´¢ç¯„å›²ã®å††æŸ±å½¢ã‚’è¡¨ç¤º
         Vector3 bottomCenter = transform.position - Vector3.up * (_searchHeight / 2f);
         Vector3 topCenter = transform.position + Vector3.up * (_searchHeight / 2f);
 
-        // ƒJƒvƒZƒ‹‚Ì‰º‚Æã‚ğü‚ÅŒ‹‚Ô
+        // ã‚«ãƒ—ã‚»ãƒ«ã®ä¸‹ã¨ä¸Šã‚’ç·šã§çµã¶
         Gizmos.DrawWireSphere(bottomCenter, _searchRadius);
         Gizmos.DrawWireSphere(topCenter, _searchRadius);
         Gizmos.DrawLine(bottomCenter + Vector3.forward * _searchRadius, topCenter + Vector3.forward * _searchRadius);
@@ -549,44 +583,44 @@ public class FlyingDemon : BaseEnemy
     }*/
 
     /// <summary>
-    /// ƒAƒjƒ[ƒVƒ‡ƒ“‚ªI—¹‚µ‚Ä‚¢‚é‚©‚ğŠm”F‚·‚éB
+    /// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãŒçµ‚äº†ã—ã¦ã„ã‚‹ã‹ã‚’ç¢ºèªã™ã‚‹ã€‚
     /// </summary>
-    /// <param name="animationName">Šm”F‚·‚éƒAƒjƒ[ƒVƒ‡ƒ“‚Ì–¼‘O</param>
-    /// <returns>ƒAƒjƒ[ƒVƒ‡ƒ“‚ªI—¹‚µ‚Ä‚¢‚é‚©</returns>
+    /// <param name="animationName">ç¢ºèªã™ã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®åå‰</param>
+    /// <returns>ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãŒçµ‚äº†ã—ã¦ã„ã‚‹ã‹</returns>
     private bool IsAnimationFinished(string animationName)
     {
-        // Œ»İ‚ÌƒAƒjƒ[ƒVƒ‡ƒ“ó‘Ô‚ğæ“¾
+        // ç¾åœ¨ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³çŠ¶æ…‹ã‚’å–å¾—
         AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
 
-        // ƒAƒjƒ[ƒVƒ‡ƒ“‚ªw’è‚µ‚½–¼‘O‚©‚ÂI—¹‚µ‚Ä‚¢‚é‚©‚ğŠm”F
+        // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãŒæŒ‡å®šã—ãŸåå‰ã‹ã¤çµ‚äº†ã—ã¦ã„ã‚‹ã‹ã‚’ç¢ºèª
         return stateInfo.IsName(animationName) && stateInfo.normalizedTime >= 1.0f;
     }
 
     /// <summary>
-    /// ƒAƒjƒ[ƒVƒ‡ƒ“‚ğƒgƒŠƒK[‚É‰Š‹…‚ğ”­Ë
+    /// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ãƒˆãƒªã‚¬ãƒ¼ã«ç‚çƒã‚’ç™ºå°„
     /// </summary>
     private void FirebulletInstantiate()
     {
-        // ƒ^[ƒQƒbƒg•ûŒü‚ğŒvZ
+        // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆæ–¹å‘ã‚’è¨ˆç®—
         Vector3 directionToTarget = (_targetTrans.position - _firePoint.position).normalized;
 
-        // ƒ^[ƒQƒbƒg•ûŒü‚É‰ñ“]‚ğİ’è
+        // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆæ–¹å‘ã«å›è»¢ã‚’è¨­å®š
         Quaternion rotationToTarget = Quaternion.LookRotation(directionToTarget);
 
-        // ‰Š‚Ì‹…‚ğ¶¬
+        // ç‚ã®çƒã‚’ç”Ÿæˆ
         Instantiate(_fireballPrefab, _firePoint.position, rotationToTarget);
     }
 
     /// <summary>
-    /// ‘¼‚ÌƒIƒuƒWƒFƒNƒg‚ÆÕ“Ë‚µ‚½Û‚Ìˆ—B
+    /// ä»–ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨è¡çªã—ãŸéš›ã®å‡¦ç†ã€‚
     /// </summary>
-    /// <param name="collision">Õ“Ëî•ñ</param>
+    /// <param name="collision">è¡çªæƒ…å ±</param>
     public override void OnTriggerEnter(Collider other)
     {
-        // ƒ_ƒ[ƒW‚ğ—^‚¦‚éˆ—i—á: ƒvƒŒƒCƒ„[‚È‚Ç“Á’è‚ÌƒŒƒCƒ„[‚Ìê‡j
-        if (other.CompareTag("Player")) // ƒvƒŒƒCƒ„[‚É‘Î‚µ‚Äƒ_ƒ[ƒW‚ğ—^‚¦‚é
+        // ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ä¸ãˆã‚‹å‡¦ç†ï¼ˆä¾‹: ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãªã©ç‰¹å®šã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å ´åˆï¼‰
+        if (other.CompareTag("Player")) // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«å¯¾ã—ã¦ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ä¸ãˆã‚‹
         {
-            // ƒvƒŒƒCƒ„[‚Ìƒ_ƒ[ƒWˆ—‚ğŒÄ‚Ño‚·i‰¼‚Ì—áj
+            // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒ€ãƒ¡ãƒ¼ã‚¸å‡¦ç†ã‚’å‘¼ã³å‡ºã™ï¼ˆä»®ã®ä¾‹ï¼‰
             Debug.Log($"DemonAttack Hit {other.gameObject.name}, dealt {_damage} damage.");
         }
     }
