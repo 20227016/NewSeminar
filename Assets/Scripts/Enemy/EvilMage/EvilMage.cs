@@ -59,6 +59,9 @@ public class EvilMage : BaseEnemy
         // Raycastをつかうための基本設定をしてくれる関数
         BasicRaycast();
 
+        // HPUIの初期化
+        //RPC_UpdateHPBar();
+
         _animator = GetComponent<Animator>();
 
         _magicCharge = GameObject.Find("MagicCharge");
@@ -97,11 +100,11 @@ public class EvilMage : BaseEnemy
             _movementState = EnemyMovementState.STUNNED;
             isCharging = false;
         }
-        // 倒れる
-        else if (Input.GetKeyDown(KeyCode.D))
-        {
-            _movementState = EnemyMovementState.DIE;
-        }
+        //// 倒れる
+        //else if (Input.GetKeyDown(KeyCode.D))
+        //{
+        //    _movementState = EnemyMovementState.DIE;
+        //}
 
         switch (_movementState)
         {

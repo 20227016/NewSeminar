@@ -82,6 +82,9 @@ public class Golem : BaseEnemy
         // Raycastをつかうための基本設定をしてくれる関数
         BasicRaycast();
 
+        // HPUIの初期化
+        RPC_UpdateHPBar();
+
         _animator = GetComponent<Animator>();
 
         _randomTargetPos = GenerateRandomPosition();

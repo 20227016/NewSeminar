@@ -86,6 +86,9 @@ public class FlyingDemon : BaseEnemy
         _animator = GetComponent<Animator>();
         _boxCollider = GetComponentInChildren<BoxCollider>();
 
+        // HPUI‚Ì‰Šú‰»
+        RPC_UpdateHPBar();
+
         _randomTargetPos = GenerateRandomPosition(); // ƒ‰ƒ“ƒ_ƒ€‚ÈˆÊ’u‚ğ¶¬
     }
 

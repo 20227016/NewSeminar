@@ -22,7 +22,7 @@ public class PlayerAttackLight : IAttackLight
                 Vector3 attackDirection = characterBase.transform.forward; // 攻撃の方向
                 
                 // 指定した範囲内のコライダーを取得
-                Collider[] hitColliders = Physics.OverlapSphere(attackPosition, range, LayerMask.GetMask("Player"));
+                Collider[] hitColliders = Physics.OverlapSphere(attackPosition, range, LayerMask.GetMask("Enemy"));
 
                 if (hitColliders.Length <= 0) return;
 
