@@ -23,6 +23,18 @@ public class BossStart : MonoBehaviour
         _roar.SetActive(false);
         _circle = GameObject.Find("Magic circle Enemy");
         _circle.SetActive(false);
+
+        //Å@É{ÉXè¢ä´ë“Çø
+        StartCoroutine(Delay(5f));
+    }
+
+    /// <summary>
+    /// éÄñSèÛë‘
+    /// </summary>
+    private IEnumerator Delay(float fadeDuration)
+    {
+        yield return new WaitForSeconds(fadeDuration);
+
         _text = GameObject.Find("BossNameText");
         _text.SetActive(false);
         _bar = GameObject.Find("BossHP_Bar");

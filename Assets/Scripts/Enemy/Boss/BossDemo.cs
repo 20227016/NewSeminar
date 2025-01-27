@@ -119,7 +119,22 @@ public class BossDemo : BaseEnemy
         _fishman.SetActive(false); 
         _demon = GameObject.Find("FylingDemonPAMaskTint");
         _demon.SetActive(false);
-        */
+        */ 
+    }
+
+    /// <summary>
+    /// ƒXƒ|[ƒ“‚Ì”½“]‚ğ’¼‚·
+    /// </summary>
+    private void Start()
+    {
+        // Œ»İ‚Ì‰ñ“]‚ğæ“¾
+        Quaternion currentRotation = transform.rotation;
+
+        // Y²‚Å180‹‰ñ“]‚³‚¹‚é
+        Quaternion rotationY180 = Quaternion.Euler(0, 180, 0);
+
+        // ‰ñ“]‚ğ“K—p
+        transform.rotation = currentRotation * rotationY180;
     }
 
     private void Update()
@@ -375,10 +390,12 @@ public class BossDemo : BaseEnemy
 
                 if (IsAnimationFinished("Summon"))
                 {
+                    /*
                     _golem.SetActive(true);
                     _evilMage.SetActive(true);
                     _fishman.SetActive(true);
                     _demon.SetActive(true);
+                    */
                     _summonTimer = 10.0f;
                     _faintingState = 2;           
                 }
