@@ -71,7 +71,7 @@ public class BossDemo : BaseEnemy
     private int _lastValue = default;
 
     // ボスの体力
-    private int HP = 100; // デバッグ用
+    private int _hp = default;
     /*
     [Networked]
     private int HP { get; set; } = 100;
@@ -95,13 +95,13 @@ public class BossDemo : BaseEnemy
 
     private bool isPlayerNearby = false; // プレイヤーが範囲内にいるかどうか
 
+    /// <summary>
+    /// 初期化
+    /// </summary>
     private void Awake()
     {
         _animator = GetComponent<Animator>();
         _animator.SetInteger("TransitionNo", -3);
-
-        _LaserBeam = transform.Find("LaserBeam");
-        _LaserBeam.gameObject.SetActive(false);
 
         _child = transform.Find("RigPelvis");
         _boxColliders = _child.GetComponentsInChildren<BoxCollider>();
@@ -122,20 +122,22 @@ public class BossDemo : BaseEnemy
     }
 
     /// <summary>
-    /// スポーン時の反転を直す
+    /// Awakeで無理な初期化
     /// </summary>
     private void Start()
     {
-        // 現在の回転を取得
+        _LaserBeam = transform.Find("LaserBeam");
+        _LaserBeam.gameObject.SetActive(false);
+
+        // スポーン時の反転を直す
         Quaternion currentRotation = transform.rotation;
-
-        // Y軸で180°回転させる
         Quaternion rotationY180 = Quaternion.Euler(0, 180, 0);
-
-        // 回転を適用
         transform.rotation = currentRotation * rotationY180;
     }
 
+    /// <summary>
+    /// 更新
+    /// </summary>
     private void Update()
     {
         if (!isPlayerNearby)
@@ -162,28 +164,14 @@ public class BossDemo : BaseEnemy
             return;
         }
 
-        _hpBar.value = HP;
-
-        /*
-        // ダメージテスト
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            HP -= 20;
-        }
-
-        // 死ぬテスト
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            HP = 0;
-        }
-        */
+        _hp = _enemyStatusStruct._hp;
+        _hpBar.value = _hp;
 
         // 体力が0になったら死ぬ
-        if (HP <= 0)
+        if (_hp <= 0)
         {
             _actionState = 4;
         }
-
 
         // ボスの行動パターンステート
         switch (_actionState)
@@ -290,7 +278,7 @@ public class BossDemo : BaseEnemy
             }
 
             // 召喚&ダウンテスト
-            if (HP <= 50 && !isFaintg)
+            if (_hp <= _enemyStatusStruct._maxHp / 2 && !isFaintg)
             {
                 _actionState = 3;
             }
