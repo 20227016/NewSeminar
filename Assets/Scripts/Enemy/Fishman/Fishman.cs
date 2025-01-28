@@ -118,22 +118,22 @@ public class Fishman : BaseEnemy
         // のけぞるまでの時間
         _stunnedTimer -= Time.deltaTime;
 
-        // ダウン
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            _movementState = EnemyMovementState.DOWNED;
-        }
-        // のけぞる
-        else if (Input.GetKeyDown(KeyCode.S)
-            && _stunnedTimer <= 0)
-        {
-            _movementState = EnemyMovementState.STUNNED;
-        }
-        // 倒れる
-        else if (Input.GetKeyDown(KeyCode.D))
-        {
-            _movementState = EnemyMovementState.DIE;
-        }
+        //// ダウン
+        //if (Input.GetKeyDown(KeyCode.B))
+        //{
+        //    _movementState = EnemyMovementState.DOWNED;
+        //}
+        //// のけぞる
+        //else if (Input.GetKeyDown(KeyCode.S)
+        //    && _stunnedTimer <= 0)
+        //{
+        //    _movementState = EnemyMovementState.STUNNED;
+        //}
+        //// 倒れる
+        //else if (Input.GetKeyDown(KeyCode.D))
+        //{
+        //    _movementState = EnemyMovementState.DIE;
+        //}
 
         switch (_movementState)
         {
