@@ -84,19 +84,19 @@ public class EvilMage : BaseEnemy
         // のけぞるまでの時間
         _stunnedTimer -= Time.deltaTime;
 
-        // ダウン
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            _movementState = EnemyMovementState.DOWNED;
-            isCharging = false;
-        }
-        // のけぞる
-        else if (Input.GetKeyDown(KeyCode.S)
-            && _stunnedTimer <= 0)
-        {
-            _movementState = EnemyMovementState.STUNNED;
-            isCharging = false;
-        }
+        //// ダウン
+        //if (Input.GetKeyDown(KeyCode.B))
+        //{
+        //    _movementState = EnemyMovementState.DOWNED;
+        //    isCharging = false;
+        //}
+        //// のけぞる
+        //else if (Input.GetKeyDown(KeyCode.S)
+        //    && _stunnedTimer <= 0)
+        //{
+        //    _movementState = EnemyMovementState.STUNNED;
+        //    isCharging = false;
+        //}
         //// 倒れる
         //else if (Input.GetKeyDown(KeyCode.D))
         //{

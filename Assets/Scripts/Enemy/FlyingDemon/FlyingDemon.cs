@@ -115,15 +115,15 @@ public class FlyingDemon : BaseEnemy
 
         CheckAttackRange();
 
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            _movementState = EnemyMovementState.STUNNED;
-        }
+        //if (Input.GetKeyDown(KeyCode.S))
+        //{
+        //    _movementState = EnemyMovementState.STUNNED;
+        //}
 
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            _movementState = EnemyMovementState.DIE;
-        }
+        //if (Input.GetKeyDown(KeyCode.D))
+        //{
+        //    _movementState = EnemyMovementState.DIE;
+        //}
 
         // 状態管理タイマーの更新
         _walkStateTimer += Time.deltaTime;
@@ -630,6 +630,7 @@ public class FlyingDemon : BaseEnemy
     /// </summary>
     protected override void OnDeath()
     {
+        print("ドラゴン死亡" + _movementState);
         _movementState = EnemyMovementState.DIE;
     }
 }
