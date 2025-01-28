@@ -6076,7 +6076,7 @@ GameObject:
   - component: {fileID: 711736701}
   - component: {fileID: 711736700}
   - component: {fileID: 711736699}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12018,7 +12018,7 @@ GameObject:
   - component: {fileID: 1448186317}
   - component: {fileID: 1448186316}
   - component: {fileID: 1448186315}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13436,7 +13436,7 @@ GameObject:
   - component: {fileID: 1627160199}
   - component: {fileID: 1627160198}
   - component: {fileID: 1627160197}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16603,7 +16603,7 @@ GameObject:
   - component: {fileID: 1943309550}
   - component: {fileID: 1943309549}
   - component: {fileID: 1943309548}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -67635,7 +67635,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -1971493915030146910, guid: dfa1a5121d1b4564c89b3d841d30386a, type: 3}
       propertyPath: Flags
-      value: 2561
+      value: 133633
       objectReference: {fileID: 0}
     - target: {fileID: -1971493915030146910, guid: dfa1a5121d1b4564c89b3d841d30386a, type: 3}
       propertyPath: NetworkGuid.RawGuidValue.Array.data[0]
