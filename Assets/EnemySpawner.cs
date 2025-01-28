@@ -22,7 +22,9 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     
     private List<NetworkObject> _spawnedEnemies = new List<NetworkObject>();
+
     private Subject<Unit> OnAllEnemiesDefeated = new Subject<Unit>();
+    public IObservable<Unit> OnAllEnemiesDefeatedObservable => OnAllEnemiesDefeated;
 
     private void Start()
     {

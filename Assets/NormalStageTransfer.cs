@@ -5,12 +5,11 @@ using UniRx;
 
 public class NormalStageTransfer : NetworkBehaviour
 {
-    private NetworkRunner _runner = default;
 
     // テレポート内のプレイヤーを管理するリスト
     private List<GameObject> _playersInPortal = new List<GameObject>();
 
-    private StageEnemyManagement _enemyManagement = default; // 敵管理クラス
+    private EnemySpawner _enemySpawner = default; // 敵管理クラス
 
     [Networked]
     private bool _clearNormalStage { get; set; } = false;
@@ -31,19 +30,19 @@ public class NormalStageTransfer : NetworkBehaviour
     public override void Spawned()
     {
 
-        _enemyManagement = FindObjectOfType<StageEnemyManagement>();
+        _enemySpawner = FindObjectOfType<EnemySpawner>();
         _normalTeleportPosition = GameObject.Find("NormalTeleportPosition");
         _bossTeleportPosition = GameObject.Find("BossTeleportPosition");
 
         _normalStageteleportPos = _normalTeleportPosition.transform;
         _bossStageteleportPos = _bossTeleportPosition.transform;
 
-        // 敵全滅を待つ
-        Observable.CombineLatest(
-            _enemyManagement.AllEnemiesDefeated
-        )
-        .Subscribe(_ => HandleAllEnemiesDefeated())
-        .AddTo(this);
+        _enemySpawner.OnAllEnemiesDefeatedObservable.Subscribe(_ =>
+        {
+            // エネミー全滅時の処理を記述
+            Debug.Log("他のスクリプトでエネミー全滅イベントを受け取りました！");
+            HandleAllEnemiesDefeated();
+        }).AddTo(this);
     }
 
     /// <summary>
