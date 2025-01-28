@@ -2,22 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WingAttack : MonoBehaviour
+public class WingAttack : BaseEnemy
 {
     [Tooltip("翼のダメージ")]
     [SerializeField] private float _damage = 10f;
 
     /// <summary>
-    /// 他のオブジェクトと衝突した際の処理。
+    /// HPが0以下になったら呼ばれる処理(Base参照)
     /// </summary>
-    /// <param name="collision">衝突情報</param>
-    private void OnTriggerEnter(Collider other)
+    protected override void OnDeath()
     {
-        // ダメージを与える処理（例: プレイヤーなど特定のレイヤーの場合）
-        if (other.CompareTag("Player")) // プレイヤーに対してダメージを与える
-        {
-            // プレイヤーのダメージ処理を呼び出す（仮の例）
-            Debug.Log($"Wing Hit {other.gameObject.name}, dealt {_damage} damage.");
-        }
+
     }
 }

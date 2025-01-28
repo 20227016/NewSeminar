@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: -9015437316352564296}
   - component: {fileID: 1655195898162611949}
   - component: {fileID: -4509091571678886427}
+  - component: {fileID: 3826548128020998911}
   - component: {fileID: -1081335549286348559}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FireMagic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50,9 +51,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8e5d33f80a7aa64db9d40ab04b53737, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
-  lifeTime: 5
-  damage: 10
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  ignoreLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _enemyStatusStruct:
+    _maxHp: 10
+    _hp: 10
+    _attackPower: 10
+    _attackPowerSpeed: 0
+    _moveSpeed: 0
+    _diffencePower: 0
+    _attackCoolTime: 0
+    _attackDelayTime: 0
+    _downedTime: 0
+  _tags: []
+  _hpBarUI: {fileID: 0}
+  _hpBarFill: {fileID: 0}
+  _speed: 10
+  _lifeTime: 5
 --- !u!136 &1655195898162611949
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -103,6 +122,31 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &3826548128020998911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810653205754761373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 1
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 2305
+  NetworkGuid:
+    RawGuidValue: f1fdc9886ac3a2842807fbff501d9ebe
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: -9015437316352564296}
+  - {fileID: -1081335549286348559}
+  SimulationBehaviours: []
 --- !u!114 &-1081335549286348559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,7 +188,7 @@ GameObject:
   - component: {fileID: 235254309249933641}
   - component: {fileID: 4420561356836541808}
   - component: {fileID: 1947007046709555223}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Flash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5031,7 +5075,7 @@ GameObject:
   - component: {fileID: 6020594548593134625}
   - component: {fileID: 1403982319829324029}
   - component: {fileID: 934716185081561041}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BulletCore
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5125,7 +5169,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7711737907402458306}
   - component: {fileID: 132967655321842066}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -12,7 +12,6 @@ using Fusion;
 /// </summary>
 public class FlyingDemon : BaseEnemy
 {
-
     [SerializeField]
     private EnemyMovementState _movementState = EnemyMovementState.IDLE;
 
@@ -114,16 +113,6 @@ public class FlyingDemon : BaseEnemy
         }
 
         CheckAttackRange();
-
-        //if (Input.GetKeyDown(KeyCode.S))
-        //{
-        //    _movementState = EnemyMovementState.STUNNED;
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.D))
-        //{
-        //    _movementState = EnemyMovementState.DIE;
-        //}
 
         // 状態管理タイマーの更新
         _walkStateTimer += Time.deltaTime;
@@ -483,11 +472,6 @@ public class FlyingDemon : BaseEnemy
         }
     }
 
-    /// </summary>
-    //プレイヤーを見つけたら追跡開始
-    //プレイヤーじゃない場合null
-    //追跡をここに入れて命令発動の順番を変えている
-
     /// <summary>
     /// 自分を中心とした円柱形の一定範囲内で、指定のレイヤーに属するオブジェクトを検索し、
     /// 最も近いオブジェクトを特定します。
@@ -555,33 +539,6 @@ public class FlyingDemon : BaseEnemy
         }
     }
 
-    /*
-    /// <summary>
-    /// 検索範囲をシーンビューに表示します（円柱形）。
-    /// </summary>
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-
-        // 検索範囲の円柱形を表示
-        Vector3 bottomCenter = transform.position - Vector3.up * (_searchHeight / 2f);
-        Vector3 topCenter = transform.position + Vector3.up * (_searchHeight / 2f);
-
-        // カプセルの下と上を線で結ぶ
-        Gizmos.DrawWireSphere(bottomCenter, _searchRadius);
-        Gizmos.DrawWireSphere(topCenter, _searchRadius);
-        Gizmos.DrawLine(bottomCenter + Vector3.forward * _searchRadius, topCenter + Vector3.forward * _searchRadius);
-        Gizmos.DrawLine(bottomCenter - Vector3.forward * _searchRadius, topCenter - Vector3.forward * _searchRadius);
-        Gizmos.DrawLine(bottomCenter + Vector3.right * _searchRadius, topCenter + Vector3.right * _searchRadius);
-        Gizmos.DrawLine(bottomCenter - Vector3.right * _searchRadius, topCenter - Vector3.right * _searchRadius);
-
-        if (_targetTrans != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, _targetTrans.position);
-        }
-    }*/
-
     /// <summary>
     /// アニメーションが終了しているかを確認する。
     /// </summary>
@@ -609,20 +566,6 @@ public class FlyingDemon : BaseEnemy
 
         // 炎の球を生成
         Instantiate(_fireballPrefab, _firePoint.position, rotationToTarget);
-    }
-
-    /// <summary>
-    /// 他のオブジェクトと衝突した際の処理。
-    /// </summary>
-    /// <param name="collision">衝突情報</param>
-    public override void OnTriggerEnter(Collider other)
-    {
-        // ダメージを与える処理（例: プレイヤーなど特定のレイヤーの場合）
-        if (other.CompareTag("Player")) // プレイヤーに対してダメージを与える
-        {
-            // プレイヤーのダメージ処理を呼び出す（仮の例）
-            Debug.Log($"DemonAttack Hit {other.gameObject.name}, dealt {_damage} damage.");
-        }
     }
 
     /// <summary>

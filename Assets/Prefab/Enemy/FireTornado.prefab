@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1569830033226552472}
   - component: {fileID: 1766038588146954961}
   - component: {fileID: 7959229898812278190}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: TornadoExterior
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 3074938459323627314}
   - component: {fileID: 2465602110269386800}
   - component: {fileID: 3767358030966402255}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Explosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5007,7 +5007,7 @@ GameObject:
   - component: {fileID: 447994783603481538}
   - component: {fileID: 5159882575769179091}
   - component: {fileID: 8194716017563371762}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5090,7 +5090,7 @@ GameObject:
   - component: {fileID: 5912116724361636407}
   - component: {fileID: 7761934211454015907}
   - component: {fileID: 3518834093085846463}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ShockWave
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9976,7 +9976,7 @@ GameObject:
   - component: {fileID: 4219696107183313567}
   - component: {fileID: 1064666547812497203}
   - component: {fileID: 5390632854229922764}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14872,7 +14872,7 @@ GameObject:
   - component: {fileID: 6269848034487000628}
   - component: {fileID: 2796859850026503444}
   - component: {fileID: 6300377654622691903}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: TornadoCore
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14969,7 +14969,7 @@ GameObject:
   - component: {fileID: 2010254951824778907}
   - component: {fileID: 963451793675752172}
   - component: {fileID: 4444677455763348189}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Flash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19855,8 +19855,9 @@ GameObject:
   - component: {fileID: 7370660584076891431}
   - component: {fileID: 468730068725740299}
   - component: {fileID: 6277754324526562875}
+  - component: {fileID: -7385868814519956162}
   - component: {fileID: -1913424704322501896}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FireTornado
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19894,8 +19895,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eba3be229a534d043a19123820b5171c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeTime: 5
-  damage: 20
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  ignoreLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _enemyStatusStruct:
+    _maxHp: 10
+    _hp: 10
+    _attackPower: 30
+    _attackPowerSpeed: 0
+    _moveSpeed: 0
+    _diffencePower: 0
+    _attackCoolTime: 0
+    _attackDelayTime: 0
+    _downedTime: 0
+  _tags: []
+  _hpBarUI: {fileID: 0}
+  _hpBarFill: {fileID: 0}
+  _lifeTime: 5
 --- !u!65 &6277754324526562875
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19917,6 +19936,31 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 10, y: 12, z: 10}
   m_Center: {x: 0, y: 6, z: 0}
+--- !u!114 &-7385868814519956162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8805658474712963746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 1
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 2305
+  NetworkGuid:
+    RawGuidValue: a0e8baacaf56e284ebdb27dc35788cf6
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 468730068725740299}
+  - {fileID: -1913424704322501896}
+  SimulationBehaviours: []
 --- !u!114 &-1913424704322501896
 MonoBehaviour:
   m_ObjectHideFlags: 0

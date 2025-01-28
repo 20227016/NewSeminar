@@ -2099,11 +2099,11 @@ GameObject:
   - component: {fileID: 7742317197135456877}
   - component: {fileID: 8901541539757800947}
   - component: {fileID: 5534596991613761045}
+  - component: {fileID: -5848866120006282970}
   - component: {fileID: 5919336405459587211}
+  - component: {fileID: 8949063262203398093}
   - component: {fileID: 8337689894421203317}
   - component: {fileID: 5451026373617028844}
-  - component: {fileID: 8949063262203398093}
-  - component: {fileID: -5848866120006282970}
   m_Layer: 7
   m_Name: FylingDemonPAMaskTint 1
   m_TagString: Enemy
@@ -2169,9 +2169,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   _enemyStatusStruct:
-    _maxHp: 100
-    _hp: 100
-    _attackPower: 0
+    _maxHp: 120
+    _hp: 120
+    _attackPower: 10
     _attackPowerSpeed: 0
     _moveSpeed: 0
     _diffencePower: 0
@@ -2201,6 +2201,27 @@ MonoBehaviour:
   _speed: 5
   _fireballPrefab: {fileID: 8446527596219986189, guid: f5ed9388adec780478315416392e5285, type: 3}
   _firePoint: {fileID: 8345807885091188321}
+--- !u!65 &-5848866120006282970
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7340846202947441342}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1.7216358, z: 0.9371876}
+  m_Center: {x: 0, y: 1.0373366, z: -0.055312425}
 --- !u!54 &5919336405459587211
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2228,6 +2249,32 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &8949063262203398093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7340846202947441342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 1
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 2305
+  NetworkGuid:
+    RawGuidValue: b2c4c51d21ed5554daa7bdd74d234a0c
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 5534596991613761045}
+  - {fileID: 8337689894421203317}
+  - {fileID: 5451026373617028844}
+  SimulationBehaviours: []
 --- !u!114 &8337689894421203317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2290,53 +2337,6 @@ MonoBehaviour:
     _hash: -814817977
   StateHashes: 00000000bea86a9c1bec8d236bd5a32d398fdc04edb25a4ff72360a557e353d64d72693cf1a6ecf8a3fc93d1ef25ef3fac8bdc3c1656489255f87b91855035e50173e30a2b1a167c7940695537b935014e73a6a7e94d9dd8aae3aedb
   TriggerHashes: 00000000
---- !u!114 &8949063262203398093
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7340846202947441342}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObjectInterest: 1
-  DefaultInterestGroups: []
-  DestroyWhenStateAuthorityLeaves: 0
-  AllowStateAuthorityOverride: 1
-  AoiPositionSource: {fileID: 0}
-  Flags: 2305
-  NetworkGuid:
-    RawGuidValue: b2c4c51d21ed5554daa7bdd74d234a0c
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 5534596991613761045}
-  - {fileID: 8337689894421203317}
-  - {fileID: 5451026373617028844}
-  SimulationBehaviours: []
---- !u!65 &-5848866120006282970
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7340846202947441342}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1.7216358, z: 0.9371876}
-  m_Center: {x: 0, y: 1.0373366, z: -0.055312425}
 --- !u!1 &7347934463924669088
 GameObject:
   m_ObjectHideFlags: 0

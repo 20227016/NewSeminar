@@ -707,11 +707,11 @@ GameObject:
   - component: {fileID: 7147335685683903936}
   - component: {fileID: 2553578191201063709}
   - component: {fileID: 42484123478115770}
+  - component: {fileID: -7087979274757902768}
   - component: {fileID: 8276816730841852939}
+  - component: {fileID: 5786292422275002267}
   - component: {fileID: 8002648336802626061}
   - component: {fileID: 3097559878544652780}
-  - component: {fileID: 5786292422275002267}
-  - component: {fileID: -7087979274757902768}
   m_Layer: 7
   m_Name: FishmanPADefault
   m_TagString: Enemy
@@ -777,9 +777,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   _enemyStatusStruct:
-    _maxHp: 100
-    _hp: 100
-    _attackPower: 0
+    _maxHp: 80
+    _hp: 80
+    _attackPower: 30
     _attackPowerSpeed: 0
     _moveSpeed: 0
     _diffencePower: 0
@@ -798,6 +798,27 @@ MonoBehaviour:
   _attackingPlayer: {fileID: 0}
   _damage: 10
   _lookAroundState: 0
+--- !u!65 &-7087979274757902768
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2743763501228538954}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.496614, y: 1.4872131, z: 1.0199203}
+  m_Center: {x: -0.037913084, y: 0.76408386, z: 0.009960175}
 --- !u!54 &8276816730841852939
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -825,6 +846,32 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &5786292422275002267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2743763501228538954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 1
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 2305
+  NetworkGuid:
+    RawGuidValue: e6795c22ad904637bbe60283e1c0cd08
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 42484123478115770}
+  - {fileID: 8002648336802626061}
+  - {fileID: 3097559878544652780}
+  SimulationBehaviours: []
 --- !u!114 &8002648336802626061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -887,53 +934,6 @@ MonoBehaviour:
     _hash: -814817977
   StateHashes: 00000000bea86a9c1bec8d23f3b09ce077934a0fedb25a4ff72360a56bd5a32d398fdc0457e353d64d72693c855035e50173e30ae94d9dd8aae3aedb37b935014e73a6a72b1a167c79406955
   TriggerHashes: 00000000
---- !u!114 &5786292422275002267
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2743763501228538954}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObjectInterest: 1
-  DefaultInterestGroups: []
-  DestroyWhenStateAuthorityLeaves: 0
-  AllowStateAuthorityOverride: 1
-  AoiPositionSource: {fileID: 0}
-  Flags: 2305
-  NetworkGuid:
-    RawGuidValue: e6795c22ad904637bbe60283e1c0cd08
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 42484123478115770}
-  - {fileID: 8002648336802626061}
-  - {fileID: 3097559878544652780}
-  SimulationBehaviours: []
---- !u!65 &-7087979274757902768
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2743763501228538954}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.496614, y: 1.4872131, z: 1.0199203}
-  m_Center: {x: -0.037913084, y: 0.76408386, z: 0.009960175}
 --- !u!1 &2797856771012604806
 GameObject:
   m_ObjectHideFlags: 0
