@@ -17,7 +17,6 @@ using UnityEngine.UI;
 /// </summary>
 public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
 {
-
     [SerializeField, Header("無視するレイヤー")]
     protected LayerMask ignoreLayer = default;
     [SerializeField, Header("キャラクターステータス")]
@@ -25,13 +24,11 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     [SerializeField, Header("無視するレイヤー")]
     protected List<string> _tags = new List<string>();
 
-
     // 敵UI関連
     [SerializeField,Tooltip("敵のHPバー")]
     private GameObject _hpBarUI;
     [SerializeField,Tooltip("UIのHPバー(Imageコンポーネント)")]
     private Slider _hpBarFill;
-
 
     // UniTaskキャンセルトークン
     // private CancellationTokenSource _cancellatToken = default;
@@ -54,7 +51,6 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
 
     private void OnDrawGizmos()
     {
-
         /// 可視化
         Gizmos.color = Color.red;
 
@@ -94,7 +90,6 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
 
     protected virtual void BasicRaycast()
     {
-
         SetPostion();
         SetSiz();
         SetDirection();
@@ -106,40 +101,31 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
         }
         // 無視するレイヤー
         _boxCastStruct._layerMask = ~ignoreLayer;
-
     }
 
     protected virtual void SetPostion()
     {
-
         // 自分の目の前から
         // 中心点
         _boxCastStruct._originPos = this.transform.position + this.transform.localScale / 2;
-
     }
 
     protected virtual void SetSiz()
     {
-
         // 半径（直径ではない）
         _boxCastStruct._size = (transform.localScale - Vector3.forward * transform.localScale.z);
         _boxCastStruct._size += Vector3.right * _boxCastStruct._size.x * 4;
         _boxCastStruct._size -= Vector3.one / 100;
-
     }
     protected virtual void SetDirection()
     {
-
         // 方向
         _boxCastStruct._direction = transform.forward;
-
     }
     protected virtual void SetDistance()
     {
-
         // 距離
-        _boxCastStruct._distance = 5f
-;
+        _boxCastStruct._distance = 5f;
     }
 
     /// <summary>
@@ -148,13 +134,16 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     /// <param name="other"></param>
     public virtual void OnTriggerEnter(Collider hitCollider)
     {
+        if (!hitCollider.CompareTag("Player"))
+        {
+            return;
+        }
+        print("プレイヤーにダメージを与えました");
 
         IReceiveDamage receiveDamage = hitCollider.GetComponent<IReceiveDamage>();
         if (receiveDamage == null)
         {
-
             return;
-
         }
         // 攻撃力に攻撃倍率を渡して渡す
         receiveDamage.RPC_ReceiveDamage((int)(_enemyStatusStruct._attackPower * _currentAttackMultiplier));
@@ -167,7 +156,7 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void RPC_ReceiveDamage(int damegeValue)
     {
-        print("ダメージを受けました" + damegeValue);
+        print("プレイヤーからダメージを受けました" + damegeValue);
 
         // ダメージ処理
         _enemyStatusStruct._hp -= damegeValue - _enemyStatusStruct._diffencePower;
@@ -198,6 +187,4 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     /// エネミーの死亡処理(具体的な処理は個別で設定)
     /// </summary>
     protected abstract void OnDeath();
-
-
 }

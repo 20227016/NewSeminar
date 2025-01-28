@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using System.Collections;
+using Fusion;
 
 /// <summary>
 /// FireMagic.cs
@@ -10,7 +11,7 @@ using System.Collections;
 /// 作成日: 12/11
 /// 作成者: 石井直人
 /// </summary>
-public class FireMagic : MonoBehaviour
+public class FireMagic : BaseEnemy
 {
     [Tooltip("魔法弾の速度")]
     [SerializeField] private float _speed = 10f;
@@ -18,35 +19,13 @@ public class FireMagic : MonoBehaviour
     [Tooltip("魔法弾の生存時間")]
     [SerializeField] private float _lifeTime = 5f;
 
-    [Tooltip("魔法弾のダメージ")]
-    [SerializeField] private float _damage = 10f;
-
     private float _elapsedTime = 0f; // 経過時間
-    private bool _isActive = true;  // アクティブ状態を管理
-
-    /// <summary>
-    /// 初期化処理
-    /// </summary>
-    private void Awake()
-    {
-
-    }
-
-    /// <summary>
-    /// 更新前処理
-    /// </summary>
-    private void Start()
-    {
-        
-    }
 
     /// <summary>
     /// 毎フレーム、魔法弾を移動させる。
     /// </summary>
     private void Update()
     {
-        if (!_isActive) return;
-
         // 前方に移動させる
         transform.position += transform.forward * _speed * Time.deltaTime;
 
@@ -62,20 +41,11 @@ public class FireMagic : MonoBehaviour
     /// 他のオブジェクトと衝突した際の処理。
     /// </summary>
     /// <param name="collision">衝突情報</param>
-    private void OnTriggerEnter(Collider other)
+    public override void OnTriggerEnter(Collider other)
     {
-        if (!_isActive) return;
+        base.OnTriggerEnter(other);
 
-        // ダメージを与える処理（例: プレイヤーなど特定のレイヤーの場合）
-        if (other.CompareTag("Player")) // プレイヤーに対してダメージを与える
-        {
-            // プレイヤーのダメージ処理を呼び出す（仮の例）
-            Debug.Log($"FireMagic Hit {other.gameObject.name}, dealt {_damage} damage.");
-
-            // 衝突後に非アクティブ化
-            Deactivate();
-        }
-        else if (other.gameObject.layer == 8)
+        if (other.gameObject.layer == 6 || other.gameObject.layer == 8)
         {
             // 衝突後に非アクティブ化
             Deactivate();
@@ -87,20 +57,14 @@ public class FireMagic : MonoBehaviour
     /// </summary>
     private void Deactivate()
     {
-        _isActive = false;
         gameObject.SetActive(false); // オブジェクトを非アクティブ化
-        _elapsedTime = 0f;           // 経過時間をリセット
     }
 
     /// <summary>
-    /// 魔法弾を再利用する際の初期化処理。
+    /// HPが0以下になったら呼ばれる処理(Base参照)
     /// </summary>
-    public void Initialize(Vector3 position, Quaternion rotation)
+    protected override void OnDeath()
     {
-        transform.position = position;
-        transform.rotation = rotation;
-        _elapsedTime = 0f;
-        _isActive = true;
-        gameObject.SetActive(true); // オブジェクトをアクティブ化
+
     }
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5629813958111607671}
   - component: {fileID: 7060108363448575865}
   - component: {fileID: 4689826974023289630}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,8 +95,9 @@ GameObject:
   - component: {fileID: 2903405863879293240}
   - component: {fileID: 940001794257169360}
   - component: {fileID: 3826584369983794135}
+  - component: {fileID: -4397892527730880130}
   - component: {fileID: -9136137265209171178}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MagicBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -155,7 +156,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2be3006fea39ea42a02a162709b7ce7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 30
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  ignoreLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _enemyStatusStruct:
+    _maxHp: 10
+    _hp: 10
+    _attackPower: 30
+    _attackPowerSpeed: 0
+    _moveSpeed: 0
+    _diffencePower: 0
+    _attackCoolTime: 0
+    _attackDelayTime: 0
+    _downedTime: 0
+  _tags: []
+  _hpBarUI: {fileID: 0}
+  _hpBarFill: {fileID: 0}
+--- !u!114 &-4397892527730880130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1126514637383894338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 1
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 2305
+  NetworkGuid:
+    RawGuidValue: 5f02af3c930a5fe4f9f46a5298257daa
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 3826584369983794135}
+  - {fileID: -9136137265209171178}
+  SimulationBehaviours: []
 --- !u!114 &-9136137265209171178
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,7 +241,7 @@ GameObject:
   - component: {fileID: 1402463677576454049}
   - component: {fileID: 8669686074888951053}
   - component: {fileID: 3518373941197635545}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SparksThin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5037,7 +5081,7 @@ GameObject:
   - component: {fileID: 5544537378347165989}
   - component: {fileID: 5321387361594474340}
   - component: {fileID: 6161612512917217659}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Ray
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9878,7 +9922,7 @@ GameObject:
   - component: {fileID: 2461870846176591098}
   - component: {fileID: 1566955516501008495}
   - component: {fileID: 840111360413223031}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}

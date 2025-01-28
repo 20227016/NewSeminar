@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4887975475520135326}
   - component: {fileID: 3122114064965029665}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -155,7 +155,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1694363240534908947}
   - component: {fileID: 7018755550751404948}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -250,7 +250,7 @@ GameObject:
   - component: {fileID: 2553451782311999829}
   - component: {fileID: 7606052055327308722}
   - component: {fileID: 7651240486391740270}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FireSparkTrail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5100,7 +5100,7 @@ GameObject:
   - component: {fileID: 5677471839766424638}
   - component: {fileID: 7021939215639626134}
   - component: {fileID: 6572557069229150416}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: YellowCenterProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5183,7 +5183,7 @@ GameObject:
   - component: {fileID: 2821098146741773564}
   - component: {fileID: 1984167224128547985}
   - component: {fileID: 8862235661792927302}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: OutterGlow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5266,7 +5266,7 @@ GameObject:
   - component: {fileID: 2556869643351896998}
   - component: {fileID: 3850397162008742251}
   - component: {fileID: 8082003422997476330}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: InnerGlow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5351,9 +5351,10 @@ GameObject:
   - component: {fileID: 4690896777854072957}
   - component: {fileID: 2841306974490898856}
   - component: {fileID: -3775474460485738624}
-  - component: {fileID: 5025751047246792609}
+  - component: {fileID: -9054519101364612790}
   - component: {fileID: 7153964398710920147}
-  m_Layer: 0
+  - component: {fileID: 5025751047246792609}
+  m_Layer: 7
   m_Name: FireBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5415,9 +5416,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 676c7fc9fe289054d847573f77e8cfa3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 7.5
-  lifeTime: 5
-  damage: 15
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  ignoreLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _enemyStatusStruct:
+    _maxHp: 10
+    _hp: 10
+    _attackPower: 20
+    _attackPowerSpeed: 0
+    _moveSpeed: 0
+    _diffencePower: 0
+    _attackCoolTime: 0
+    _attackDelayTime: 0
+    _downedTime: 0
+  _tags: []
+  _hpBarUI: {fileID: 0}
+  _hpBarFill: {fileID: 0}
+  _speed: 7.5
+  _lifeTime: 5
   _fireTornadoPrefab: {fileID: 8805658474712963746, guid: a0e8baacaf56e284ebdb27dc35788cf6, type: 3}
 --- !u!135 &2841306974490898856
 SphereCollider:
@@ -5467,6 +5486,62 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-9054519101364612790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8446527596219986189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 1
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 2305
+  NetworkGuid:
+    RawGuidValue: f5ed9388adec780478315416392e5285
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 4690896777854072957}
+  - {fileID: 7153964398710920147}
+  - {fileID: 5025751047246792609}
+  SimulationBehaviours: []
+--- !u!114 &7153964398710920147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8446527596219986189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1710889294, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  InterpolationSpace: 0
+  InterpolationTarget: {fileID: 0}
+  InterpolateErrorCorrection: 1
+  InterpolatedErrorCorrectionSettings:
+    MinRate: 3.3
+    MaxRate: 10
+    PosBlendStart: 0.25
+    PosBlendEnd: 1
+    PosMinCorrection: 0.025
+    PosTeleportDistance: 2
+    RotBlendStart: 0.1
+    RotBlendEnd: 0.5
+    RotTeleportRadians: 1.5
+  UseLegacySharedModeInterpolation: 0
+  TargetInterpolationDelay: 0.03
 --- !u!114 &5025751047246792609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5499,36 +5574,6 @@ MonoBehaviour:
     _hash: -814817977
   StateHashes: 000000000b1c870a161b404d
   TriggerHashes: 00000000
---- !u!114 &7153964398710920147
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8446527596219986189}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1710889294, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WordOffset: 0
-  WordCount: 0
-  _interpolationDataSource: 0
-  InterpolationSpace: 0
-  InterpolationTarget: {fileID: 0}
-  InterpolateErrorCorrection: 1
-  InterpolatedErrorCorrectionSettings:
-    MinRate: 3.3
-    MaxRate: 10
-    PosBlendStart: 0.25
-    PosBlendEnd: 1
-    PosMinCorrection: 0.025
-    PosTeleportDistance: 2
-    RotBlendStart: 0.1
-    RotBlendEnd: 0.5
-    RotTeleportRadians: 1.5
-  UseLegacySharedModeInterpolation: 0
-  TargetInterpolationDelay: 0.03
 --- !u!1 &8823252176296627968
 GameObject:
   m_ObjectHideFlags: 0
@@ -5541,7 +5586,7 @@ GameObject:
   - component: {fileID: 3059875946691896567}
   - component: {fileID: 5774825639933944021}
   - component: {fileID: 2348990925556527285}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BulletBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}

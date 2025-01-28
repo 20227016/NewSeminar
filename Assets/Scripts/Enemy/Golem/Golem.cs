@@ -656,20 +656,6 @@ public class Golem : BaseEnemy
     }
 
     /// <summary>
-    /// 他のオブジェクトと衝突した際の処理。
-    /// </summary>
-    /// <param name="collision">衝突情報</param>
-    public override void OnTriggerEnter(Collider other)
-    {
-        // ダメージを与える処理（例: プレイヤーなど特定のレイヤーの場合）
-        if (other.CompareTag("Player")) // プレイヤーに対してダメージを与える
-        {
-            // プレイヤーのダメージ処理を呼び出す（仮の例）
-            Debug.Log($"GolemAttack Hit {other.gameObject.name}, dealt {_damage} damage.");
-        }
-    }
-
-    /// <summary>
     /// HPが0以下になったら呼ばれる処理(Base参照)
     /// </summary>
     protected override void OnDeath()

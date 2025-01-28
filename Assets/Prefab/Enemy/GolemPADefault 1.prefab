@@ -1162,11 +1162,11 @@ GameObject:
   - component: {fileID: 8313724731497469686}
   - component: {fileID: 6990846854519406711}
   - component: {fileID: 2530167837038602829}
+  - component: {fileID: -8942968707704838194}
   - component: {fileID: 5681894434414268342}
+  - component: {fileID: 7426712748565669130}
   - component: {fileID: 1360560289532977612}
   - component: {fileID: 7998241454581096943}
-  - component: {fileID: 7426712748565669130}
-  - component: {fileID: -8942968707704838194}
   m_Layer: 7
   m_Name: GolemPADefault 1
   m_TagString: Enemy
@@ -1234,7 +1234,7 @@ MonoBehaviour:
   _enemyStatusStruct:
     _maxHp: 100
     _hp: 100
-    _attackPower: 0
+    _attackPower: 20
     _attackPowerSpeed: 0
     _moveSpeed: 0
     _diffencePower: 0
@@ -1253,6 +1253,27 @@ MonoBehaviour:
   _attackingPlayer: {fileID: 0}
   _damage: 10
   _lookAroundState: 0
+--- !u!65 &-8942968707704838194
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3244062444170756259}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.3723335, y: 2.1450043, z: 0.8177414}
+  m_Center: {x: 0.046445847, y: 1.260109, z: -0.0911293}
 --- !u!54 &5681894434414268342
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1280,6 +1301,32 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &7426712748565669130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3244062444170756259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 1
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 2305
+  NetworkGuid:
+    RawGuidValue: 19577731de413604b8df28e840916e76
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 2530167837038602829}
+  - {fileID: 1360560289532977612}
+  - {fileID: 7998241454581096943}
+  SimulationBehaviours: []
 --- !u!114 &1360560289532977612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1342,53 +1389,6 @@ MonoBehaviour:
     _hash: -814817977
   StateHashes: 0000000088adc69b2de92124a3f1977b9042b24cedb25a4ff72360a557e353d64d72693cf3b09ce077934a0f422906ffc60ad010d07cc57dcaedff9731ec7771da2fff8cb85813eafbf620e968cb96fc4b7b955a789bde7ba6309f18c6f20f85be4c07e4ec45916ff6d4ab85c63906bf421ad050855035e50173e30ae94d9dd8aae3aedb37b935014e73a6a72b1a167c79406955
   TriggerHashes: 00000000
---- !u!114 &7426712748565669130
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3244062444170756259}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObjectInterest: 1
-  DefaultInterestGroups: []
-  DestroyWhenStateAuthorityLeaves: 0
-  AllowStateAuthorityOverride: 1
-  AoiPositionSource: {fileID: 0}
-  Flags: 2305
-  NetworkGuid:
-    RawGuidValue: 19577731de413604b8df28e840916e76
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 2530167837038602829}
-  - {fileID: 1360560289532977612}
-  - {fileID: 7998241454581096943}
-  SimulationBehaviours: []
---- !u!65 &-8942968707704838194
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3244062444170756259}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.3723335, y: 2.1450043, z: 0.8177414}
-  m_Center: {x: 0.046445847, y: 1.260109, z: -0.0911293}
 --- !u!1 &3244865676810374134
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,7 +10,7 @@ using System.Collections;
 /// 作成日: 1/17
 /// 作成者: 石井直人
 /// </summary>
-public class FireBullet : MonoBehaviour
+public class FireBullet : BaseEnemy
 {
     [Tooltip("火球の速度")]
     [SerializeField] private float _speed = 7.5f;
@@ -18,37 +18,15 @@ public class FireBullet : MonoBehaviour
     [Tooltip("火球の生存時間")]
     [SerializeField] private float _lifeTime = 5f;
 
-    [Tooltip("火球のダメージ")]
-    [SerializeField] private float _damage = 15f;
-
     private float _elapsedTime = 0f; // 経過時間
-    private bool _isActive = true;  // アクティブ状態を管理
 
     [SerializeField] private GameObject _fireTornadoPrefab = default;
-
-    /// <summary>
-    /// 初期化処理
-    /// </summary>
-    private void Awake()
-    {
-
-    }
-
-    /// <summary>
-    /// 更新前処理
-    /// </summary>
-    private void Start()
-    {
-
-    }
 
     /// <summary>
     /// 毎フレーム、火球を移動させる。
     /// </summary>
     private void Update()
     {
-        if (!_isActive) return;
-
         // 前方に移動させる
         transform.position += transform.forward * _speed * Time.deltaTime;
 
@@ -64,19 +42,11 @@ public class FireBullet : MonoBehaviour
     /// 他のオブジェクトと衝突した際の処理。
     /// </summary>
     /// <param name="collision">衝突情報</param>
-    private void OnTriggerEnter(Collider other)
+    public override void OnTriggerEnter(Collider other)
     {
-        if (!_isActive) return;
+        base.OnTriggerEnter(other);
 
-        // ダメージを与える処理（例: プレイヤーなど特定のレイヤーの場合）
-        if (other.CompareTag("Player")) // プレイヤーに対してダメージを与える
-        {
-            // プレイヤーのダメージ処理を呼び出す（仮の例）
-            Debug.Log($"FireBullet Hit {other.gameObject.name}, dealt {_damage} damage.");
-        }
-
-        // ステージに当たったら
-        if (other.gameObject.layer == 8)
+        if (other.gameObject.layer == 6 || other.gameObject.layer == 8)
         {
             // 衝突点を取得
             if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, Mathf.Infinity))
@@ -99,20 +69,14 @@ public class FireBullet : MonoBehaviour
     /// </summary>
     private void Deactivate()
     {
-        _isActive = false;
         gameObject.SetActive(false); // オブジェクトを非アクティブ化
-        _elapsedTime = 0f;           // 経過時間をリセット
     }
 
     /// <summary>
-    /// 火球を再利用する際の初期化処理。
+    /// HPが0以下になったら呼ばれる処理(Base参照)
     /// </summary>
-    public void Initialize(Vector3 position, Quaternion rotation)
+    protected override void OnDeath()
     {
-        transform.position = position;
-        transform.rotation = rotation;
-        _elapsedTime = 0f;
-        _isActive = true;
-        gameObject.SetActive(true); // オブジェクトをアクティブ化
+
     }
 }
