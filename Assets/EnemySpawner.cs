@@ -48,8 +48,8 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     public IObservable<Unit> OnAllEnemiesDefeatedObservable => OnAllEnemiesDefeated;
 
     // 現在のウェーブ番号
-
-    private int _currentWave = 0;
+    [Networked]
+    private int _currentWave { get; set; } = 0;
 
     /// <summary>
     /// 初期処理
