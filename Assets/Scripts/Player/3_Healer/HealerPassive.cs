@@ -18,12 +18,8 @@ public class HealerPassive : MonoBehaviour, IPassive
 
     public void Passive(CharacterBase characterBase)
     {
-        Debug.Log("ヒーラーのパッシブ");
-
-        // 元の攻撃速度を保持
         _originalRessurectionTime = characterBase._characterStatusStruct._ressurectionTime;
 
-        // 攻撃速度を一時的に変更
         characterBase._characterStatusStruct._ressurectionTime *= _ressurectionTimeShortening;
     }
 

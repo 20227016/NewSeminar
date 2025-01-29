@@ -13,8 +13,6 @@ public class TankPassive : MonoBehaviour, IPassive
 
     public void Passive(CharacterBase characterBase)
     {
-        Debug.Log("タンクのパッシブ");
-
         // 初回実行時に元の防御力を記録
         if (!_isGuard && _originalDefensePower == 0)
         {

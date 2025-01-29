@@ -49339,22 +49339,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameLauncher
       objectReference: {fileID: 0}
-    - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
-      propertyPath: _portalPosition
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
-      propertyPath: _portalPosition.x
-      value: -10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
-      propertyPath: _portalPosition.y
-      value: -1.35
-      objectReference: {fileID: 0}
-    - target: {fileID: 2283437524460443190, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
-      propertyPath: _portalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2436158963617984829, guid: 74fb1fcc9e2bb5442b33541ee546aef3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

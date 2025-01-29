@@ -28,8 +28,6 @@ public class HealerSkill : MonoBehaviour, ISkill
 
     public void Skill(CharacterBase characterBase, float skillDuration)
     {
-        Debug.Log("ヒーラーのスキル発動");
-
         _actionPosition = characterBase.transform.position;
 
         // 遅延処理
