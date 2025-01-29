@@ -36,7 +36,7 @@ public class FlyingDemon : BaseEnemy
     [Tooltip("検索範囲の半径を指定します")]
     [SerializeField] private float _searchRadius = 50f; // 検索範囲（半径）
 
-    [SerializeField] private float _stopDistance = 3.0f; // プレイヤーの手前で止まる距離
+    [SerializeField] private float _stopDistance = 5.0f; // プレイヤーの手前で止まる距離
 
     [SerializeField, Tooltip("攻撃範囲")]
     private float _attackRange = 4.0f;
@@ -94,6 +94,9 @@ public class FlyingDemon : BaseEnemy
         _animator = GetComponent<Animator>();
         _boxCollider = GetComponentInChildren<BoxCollider>();
 
+        // 現在の位置をスタート地点として記録
+        _startPosition = transform.position;
+
         _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
 
         // 開始時のY座標を記録
@@ -105,8 +108,11 @@ public class FlyingDemon : BaseEnemy
     /// </summary>
     protected void Update()
     {
-        PlayerSearch();
-
+        if (_movementState != EnemyMovementState.DIE)
+        {
+            PlayerSearch();
+        }
+        
         if (_targetTrans == null)
         {
             return;
@@ -163,8 +169,9 @@ public class FlyingDemon : BaseEnemy
             // 死亡
             case EnemyMovementState.DIE:
 
+                print("ドラゴン死亡処理");
                 // Y座標が0.7を下回ったら停止
-                if (transform.position.y > 0.7f)
+                if (transform.position.y > _startY)
                 {
                     transform.position -= _speed * Time.deltaTime * transform.up * 2;
                 }
@@ -243,10 +250,9 @@ public class FlyingDemon : BaseEnemy
             0f,
             Random.Range(-_randomRange, _randomRange)
         );
-        return _startPosition + randomOffset; // 現在位置を基準にランダムな位置を生成
+        return _startPosition + randomOffset; // 初期位置を基準にランダムな位置を生成
     }
 
-    /*
     /// <summary>
     /// ランダム移動の目標位置への線を表示
     /// </summary>
@@ -259,7 +265,6 @@ public class FlyingDemon : BaseEnemy
             Gizmos.DrawSphere(_randomTargetPos, 0.2f); // 目標位置を球で表示
         }
     }
-    */
 
     /// <summary>
     /// 移動処理
@@ -573,7 +578,7 @@ public class FlyingDemon : BaseEnemy
     /// </summary>
     protected override void OnDeath()
     {
-        print("ドラゴン死亡" + _movementState);
         _movementState = EnemyMovementState.DIE;
+        print("ドラゴン死亡" + _movementState);
     }
 }

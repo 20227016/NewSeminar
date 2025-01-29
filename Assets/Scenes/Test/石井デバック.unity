@@ -18960,6 +18960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cf5f797a98f4db44adda7e26756b271, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _bossTeleporter: {fileID: 0}
   _networkRunnerPrefab: {fileID: 5701922471170824758, guid: 7d2bbb37f0570514684b499e2a4fb9d6, type: 3}
   _enemyPrefabs:
   - {fileID: 7120314230197923028, guid: 93b94039cf7541e8a7c9453819da38f0, type: 3}
@@ -18969,11 +18970,11 @@ MonoBehaviour:
   - {fileID: 7120314230197923028, guid: 93b94039cf7541e8a7c9453819da38f0, type: 3}
   - {fileID: 5786292422275002267, guid: e6795c22ad904637bbe60283e1c0cd08, type: 3}
   - {fileID: 7120314230197923028, guid: 93b94039cf7541e8a7c9453819da38f0, type: 3}
-  - {fileID: 7120314230197923028, guid: 93b94039cf7541e8a7c9453819da38f0, type: 3}
+  - {fileID: 8949063262203398093, guid: b2c4c51d21ed5554daa7bdd74d234a0c, type: 3}
   - {fileID: 7120314230197923028, guid: 93b94039cf7541e8a7c9453819da38f0, type: 3}
   - {fileID: 7120314230197923028, guid: 93b94039cf7541e8a7c9453819da38f0, type: 3}
   - {fileID: 7426712748565669130, guid: 19577731de413604b8df28e840916e76, type: 3}
-  - {fileID: 8949063262203398093, guid: b2c4c51d21ed5554daa7bdd74d234a0c, type: 3}
+  - {fileID: 7120314230197923028, guid: 93b94039cf7541e8a7c9453819da38f0, type: 3}
   - {fileID: 7120314230197923028, guid: 93b94039cf7541e8a7c9453819da38f0, type: 3}
   - {fileID: 4750146601420544367, guid: d27828975a5265e43a7a1c5975bab9cf, type: 3}
   _enemyStartPositions:
