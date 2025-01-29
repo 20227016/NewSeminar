@@ -30,8 +30,6 @@ public class NormalSkill : MonoBehaviour, ISkill
 
     public void Skill(CharacterBase characterBase, float skillTime)
     {
-        Debug.Log("ノーマルのスキル発動");
-
         // 遅延処理
         Observable.Timer(TimeSpan.FromSeconds(_skillAttackHitboxDelay))
             .Subscribe(_ =>

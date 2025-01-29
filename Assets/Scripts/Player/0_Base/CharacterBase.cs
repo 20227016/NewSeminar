@@ -238,6 +238,15 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// </summary>
     protected virtual void InitialValues()
     {
+        // 死亡判定
+        _currentHP
+            .Where(_ => _ <= 0)
+            .Subscribe(_ =>
+            {
+                RPC_Death();
+            })
+            .AddTo(this);
+
         // 初期化
         _playerTransform = this.transform;
         _moveSpeed = _characterStatusStruct._walkSpeed;
@@ -264,14 +273,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         // エフェクトを設定
         InstanceEffect();
-
-        // 死亡判定
-        _currentHP
-            .Where(_ => _ <= 0)
-            .Subscribe(_ => {
-                Debug.Log(_ + "現HP");
-                RPC_Death();
-                });
 
         // スタミナ管理
         StaminaManagement();
@@ -732,7 +733,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// <summary>
     /// 死亡処理
     /// </summary>
-    [Rpc(RpcSources.All, RpcTargets.All)]
     protected virtual void RPC_Death()
     {
         _resetStateTokenSource?.Cancel();

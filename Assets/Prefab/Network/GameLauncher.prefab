@@ -52,7 +52,7 @@ MonoBehaviour:
     RawGuidValue: ea9ebd305099e114091516c919b9c7bb
   _playerSpawnPos: {x: 0, y: 0, z: 0}
   _portal: {fileID: 1751012669339039604, guid: 0be3f3d8fb82f2a4491adba8a94b5834, type: 3}
-  _portalPosition: {x: -8, y: 6, z: -9}
+  _portalPosition: {x: -10, y: -1.35, z: 0}
 --- !u!114 &5050406778293680978
 MonoBehaviour:
   m_ObjectHideFlags: 0

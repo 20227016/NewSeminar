@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2698726992813747836}
   - component: {fileID: 554879033168844904}
   - component: {fileID: 8179596486899178368}
+  - component: {fileID: -3995105482694665249}
   m_Layer: 0
   m_Name: Fighter 3
   m_TagString: Untagged
@@ -4929,5 +4930,36 @@ MonoBehaviour:
   NetworkGuid:
     RawGuidValue: f17223a78a9263c4693e7aac7059025e
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: -3995105482694665249}
   SimulationBehaviours: []
+--- !u!114 &-3995105482694665249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46317674558579430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  InterpolationSpace: 0
+  InterpolationTarget: {fileID: 0}
+  InterpolateErrorCorrection: 1
+  InterpolatedErrorCorrectionSettings:
+    MinRate: 3.3
+    MaxRate: 10
+    PosBlendStart: 0.25
+    PosBlendEnd: 1
+    PosMinCorrection: 0.025
+    PosTeleportDistance: 2
+    RotBlendStart: 0.1
+    RotBlendEnd: 0.5
+    RotTeleportRadians: 1.5
+  UseLegacySharedModeInterpolation: 0
+  TargetInterpolationDelay: 0.03

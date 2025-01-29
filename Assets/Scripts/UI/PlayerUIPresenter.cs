@@ -60,6 +60,7 @@ public class PlayerUIPresenter : MonoBehaviour
 
         // 名前を設定
         PlayerData playerData = thisPlayer.GetComponentInParent<PlayerData>();
+
         _nameTexts[0].text = playerData._avatarName;
 
         // UIを有効化
@@ -88,6 +89,7 @@ public class PlayerUIPresenter : MonoBehaviour
 
         // 名前を設定
         PlayerData playerData = character.GetComponentInParent<PlayerData>();
+
         _nameTexts[modelCount].text = playerData._avatarName;
 
         // UIを有効化
@@ -99,14 +101,7 @@ public class PlayerUIPresenter : MonoBehaviour
     /// </summary>
     public void ClearAllyModels()
     {
-        // 登録リストをクリア
         _registeredAllyModels.Clear();
-
-        // UIゲージを初期化（非表示化）
-        foreach (var hpGauge in _hpGauges)
-        {
-            hpGauge.gameObject.SetActive(false);
-        }
     }
 
     /// <summary>
