@@ -5,42 +5,58 @@ using Fusion.Sockets;
 using UnityEngine;
 using UniRx;
 
+[Serializable]
+public class EnemyWave
+{
+    [Tooltip("このウェーブでスポーンするエネミーのリスト")]
+    public List<NetworkObject> Enemies = new List<NetworkObject>();
+
+    [Tooltip("このウェーブのスポーン位置リスト")]
+    public List<Transform> SpawnPositions = new List<Transform>();
+}
+
+/// <summary>
+/// エネミーのスポーンを管理するスクリプト
+/// </summary>
 public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     [SerializeField, Tooltip("ボスへ向かうテレポーター")]
     private GameObject _bossTeleporter = default;
 
+    [SerializeField, Tooltip("ステージをわける仕切り")]
+    private GameObject _wavePartition = default;
+
     [SerializeField, Tooltip("ネットワークランナープレハブ")]
     private NetworkRunner _networkRunnerPrefab = default;
 
-    [SerializeField, Tooltip("エネミーのプレハブリスト")]
-    private List<NetworkObject> _enemyPrefabs = new List<NetworkObject>();
+    [SerializeField, Tooltip("エネミーのウェーブごとの設定")]
+    private List<EnemyWave> _enemyWaves = new List<EnemyWave>();
 
-    [SerializeField, Tooltip("エネミーのスポーン位置リスト")]
-    private List<Transform> _enemyStartPositions = new List<Transform>();
-
-
-    
-    private List<NetworkObject> _spawnedEnemies = new List<NetworkObject>();
+    // スポーン済みエネミーを管理
+    private List<NetworkObject> _spawnedEnemies = new List<NetworkObject>(); 
 
     private Subject<Unit> OnAllEnemiesDefeated = new Subject<Unit>();
     public IObservable<Unit> OnAllEnemiesDefeatedObservable => OnAllEnemiesDefeated;
 
+    // 現在のウェーブ番号
+    private int _currentWave = 0;
+
+    /// <summary>
+    /// 初期処理
+    /// </summary>
     private void Start()
     {
-
         GameLauncher gameLauncher = FindObjectOfType<GameLauncher>();
         NetworkRunner networkRunner = gameLauncher.NetworkRunner;
-        Debug.Log(networkRunner);
 
-        gameLauncher.StartGameSubject.Subscribe(_ => InitialSpawn(networkRunner));
+        gameLauncher.StartGameSubject.Subscribe(_ => StartWave(networkRunner));
 
-        // エネミー全滅時の通知を購読
-        OnAllEnemiesDefeated.Subscribe(_ => HandleAllEnemiesDefeated());
+        // エネミー全滅時の通知を購読し、次のウェーブへ
+        OnAllEnemiesDefeated.Subscribe(_ => NextWave(networkRunner));
     }
 
     /// <summary>
-    /// すべてのエネミーの状態(表示・非表示)を確認する 
+    /// 全てのエネミーの全滅確認
     /// </summary>
     private void Update()
     {
@@ -51,59 +67,95 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     /// <summary>
-    /// エネミーの初期スポーン処理
+    /// 指定されたウェーブのエネミーをスポーン
     /// </summary>
-    private void InitialSpawn(NetworkRunner runner)
+    private void StartWave(NetworkRunner runner)
     {
-        if (runner.IsServer)
+        if (_enemyWaves.Count == 0)
         {
-            for (int i = 0; i < _enemyPrefabs.Count; i++)
-            {
-                // エネミーをスポーン
-                var spawnedEnemy = runner.Spawn(_enemyPrefabs[i], _enemyStartPositions[i].position, Quaternion.identity);
-                _spawnedEnemies.Add(spawnedEnemy);
-
-                // エネミーの非表示を監視
-                spawnedEnemy.gameObject.SetActive(true);
-            }
-
-            Debug.Log($"{_spawnedEnemies.Count}体のエネミーをスポーンしました");
+            Debug.LogWarning("エネミーウェーブが設定されていません！");
+            return;
         }
+
+        _currentWave = 0; // 初期ウェーブをセット
+        SpawnEnemies(runner, _currentWave);
+    }
+
+    /// <summary>
+    /// 次のウェーブへ進む
+    /// </summary>
+    private void NextWave(NetworkRunner runner)
+    {
+        _currentWave++;
+
+
+
+        if (_currentWave >= _enemyWaves.Count)
+        {
+            Debug.Log("すべてのウェーブが終了しました！");
+            if (_bossTeleporter != null)
+            {
+                // ボステレポーターを有効化
+                _bossTeleporter.SetActive(true); 
+            }
+            return;
+        }
+
+        Debug.Log($"ウェーブ {_currentWave + 1} 開始！");
+        SpawnEnemies(runner, _currentWave);
+    }
+
+    /// <summary>
+    /// Waveごとにエネミーをスポーンさせる
+    /// </summary>
+    /// <param name="runner"></param>
+    /// <param name="waveIndex"></param>
+    private void SpawnEnemies(NetworkRunner runner, int waveIndex)
+    {
+        if (!runner.IsServer) return;
+
+        _spawnedEnemies.Clear();
+
+        // 今のウェーブデータ
+        EnemyWave wave = _enemyWaves[waveIndex]; 
+        List<NetworkObject> waveEnemies = wave.Enemies;
+        List<Transform> spawnPositions = wave.SpawnPositions;
+
+        for (int i = 0; i < waveEnemies.Count; i++)
+        {
+            NetworkObject enemyPrefab = waveEnemies[i];
+
+            // 各敵ごとのスポーン位置を設定
+            Transform spawnPosition = (spawnPositions.Count > i) ? spawnPositions[i] : spawnPositions[spawnPositions.Count - 1];
+
+            NetworkObject spawnedEnemy = runner.Spawn(enemyPrefab, spawnPosition.position, Quaternion.identity);
+            _spawnedEnemies.Add(spawnedEnemy);
+        }
+
+        if (_currentWave == 2)
+        {
+            _wavePartition.SetActive(false);
+        }
+
+        Debug.Log($"{_spawnedEnemies.Count} 体のエネミーをウェーブ {waveIndex + 1} にスポーンしました");
     }
 
     /// <summary>
     /// 全てのエネミーが非表示かを確認
     /// </summary>
-    /// <returns>全エネミーが非表示ならtrue</returns>
     private bool AllEnemiesHidden()
     {
-        foreach (var enemy in _spawnedEnemies)
+        foreach (NetworkObject enemy in _spawnedEnemies)
         {
             if (enemy.gameObject.activeSelf)
             {
                 return false;
             }
         }
-
         return true;
     }
 
-    /// <summary>
-    /// 全エネミーが非表示になったときの処理
-    /// </summary>
-    private void HandleAllEnemiesDefeated()
-    {
-        Debug.Log("全エネミーが倒されました！");
-        if (_bossTeleporter != null)
-        {
-            _bossTeleporter.SetActive(true);
-        }
-    }
-
-
-
-
-
+    // INetworkRunnerCallbacksの必要なメソッド
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
     public void OnConnectedToServer(NetworkRunner runner) { }
@@ -117,19 +169,7 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) { }
     public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }
-
-    /// <summary>
-    /// プレイヤーが参加したときの処理
-    /// </summary>
-    /// <param name="runner"></param>
-    /// <param name="player"></param>
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { }
-
-    /// <summary>
-    /// プレイヤーが退出した時の処理
-    /// </summary>
-    /// <param name="runner"></param>
-    /// <param name="player"></param>
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
 }
