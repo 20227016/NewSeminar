@@ -149,7 +149,6 @@ public class Golem : BaseEnemy
             // 死亡
             case EnemyMovementState.DIE:
 
-                print("ゴーレム死亡ステートに変更");
                 StartCoroutine(EnemyDie(3f));
 
                 return;
