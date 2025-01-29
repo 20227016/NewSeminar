@@ -2934,7 +2934,7 @@ MonoBehaviour:
     _walkSpeed: 1
     _runSpeed: 2
     _avoidanceDistance: 5
-    _attackPower: 5
+    _attackPower: 50
     _attackLightMultiplier: 1
     _attackStrongMultiplier: 1.5
     _attackSpeed: 1
@@ -2946,7 +2946,7 @@ MonoBehaviour:
     _attackLight3HitboxRange: 4
     _attackStrongHitboxDelay: 0.6
     _attackStrongHitboxRange: 4
-    _defensePower: 8
+    _defensePower: 1000
     _skillDuration: 5
     _skillCoolTime: 10
     _counterTime: 0.5
