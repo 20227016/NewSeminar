@@ -48,6 +48,7 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     public IObservable<Unit> OnAllEnemiesDefeatedObservable => OnAllEnemiesDefeated;
 
     // 現在のウェーブ番号
+
     private int _currentWave = 0;
 
     /// <summary>
@@ -122,24 +123,26 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     /// <param name="waveIndex"></param>
     private void SpawnEnemies(NetworkRunner runner, int waveIndex)
     {
-        if (!runner.IsServer) return;
-
-        _spawnedEnemies.Clear();
-
-        // 今のウェーブデータ
-        EnemyWave wave = _enemyWaves[waveIndex]; 
-        List<NetworkObject> waveEnemies = wave.Enemies;
-        List<Transform> spawnPositions = wave.SpawnPositions;
-
-        for (int i = 0; i < waveEnemies.Count; i++)
+        if (runner.IsServer)
         {
-            NetworkObject enemyPrefab = waveEnemies[i];
+            _spawnedEnemies.Clear();
 
-            // 各敵ごとのスポーン位置を設定
-            Transform spawnPosition = (spawnPositions.Count > i) ? spawnPositions[i] : spawnPositions[spawnPositions.Count - 1];
+            // 今のウェーブデータ
+            EnemyWave wave = _enemyWaves[waveIndex];
+            List<NetworkObject> waveEnemies = wave.Enemies;
+            List<Transform> spawnPositions = wave.SpawnPositions;
 
-            NetworkObject spawnedEnemy = runner.Spawn(enemyPrefab, spawnPosition.position, Quaternion.identity);
-            _spawnedEnemies.Add(spawnedEnemy);
+            for (int i = 0; i < waveEnemies.Count; i++)
+            {
+                NetworkObject enemyPrefab = waveEnemies[i];
+
+                // 各敵ごとのスポーン位置を設定
+                Transform spawnPosition = (spawnPositions.Count > i) ? spawnPositions[i] : spawnPositions[spawnPositions.Count - 1];
+
+                NetworkObject spawnedEnemy = runner.Spawn(enemyPrefab, spawnPosition.position, Quaternion.identity);
+                _spawnedEnemies.Add(spawnedEnemy);
+            }
+
         }
 
         if (_currentWave == 2)
