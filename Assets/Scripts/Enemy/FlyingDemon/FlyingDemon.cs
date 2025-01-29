@@ -274,7 +274,6 @@ public class FlyingDemon : BaseEnemy
         _actionState = EnemyActionState.SEARCHING;
 
         _animator.SetInteger("TransitionNo", 1);
-        //Debug.Log("巡回中");
 
         _walkRange = 2.5f;
 
@@ -519,14 +518,13 @@ public class FlyingDemon : BaseEnemy
 
         float distanceToTarget = Vector3.Distance(transform.position, _targetTrans.position);
 
-
         // 追跡範囲
         if (distanceToTarget <= _trackingRange)
         {
             _movementState = EnemyMovementState.RUNNING;
 
             // Y座標が初期値を下回ったら停止
-            if (transform.position.y < _startY)
+            if (transform.position.y < _targetTrans.position.y)
             {
                 return;
             }
