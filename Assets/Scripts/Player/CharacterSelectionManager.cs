@@ -17,6 +17,9 @@ public class CharacterSelectionManager : MonoBehaviour
     [SerializeField, Tooltip("キャラクターモデル")]
     private List<GameObject> _characterModel = new List<GameObject>();
 
+    [SerializeField, Tooltip("選択用キャラクターモデル")]
+    private List<GameObject> _animeCharacterModel = new List<GameObject>();
+
     [SerializeField, Tooltip("名前入力フィールド")]
     private TMP_InputField _nameInputField = default;
 
@@ -42,6 +45,7 @@ public class CharacterSelectionManager : MonoBehaviour
         if ((_currentSelectionCharacter != 1) && (!_characterDecision) && (!_tankChoice))
         {
             DeleteCharacter();
+            _animeCharacterModel[0].SetActive(true);
             _currentSelectionCharacter = 1;
 
             // リストの1番目のオブジェクトを取得して制御
@@ -58,6 +62,7 @@ public class CharacterSelectionManager : MonoBehaviour
             DeleteCharacter();
             _currentSelectionCharacter = 2;
 
+            _animeCharacterModel[1].SetActive(true);
             // リストの2番目のオブジェクトを取得して制御
             GameObject secondObject = _characterModel[1];
             secondObject.SetActive(true);
@@ -72,6 +77,7 @@ public class CharacterSelectionManager : MonoBehaviour
             DeleteCharacter();
             _currentSelectionCharacter = 3;
 
+            _animeCharacterModel[2].SetActive(true);
             // リストの3番目のオブジェクトを取得して制御
             GameObject secondObject = _characterModel[2];
             secondObject.SetActive(true);
@@ -86,6 +92,7 @@ public class CharacterSelectionManager : MonoBehaviour
             DeleteCharacter();
             _currentSelectionCharacter = 4;
 
+            _animeCharacterModel[3].SetActive(true);
             // リストの4番目のオブジェクトを取得して制御
             GameObject secondObject = _characterModel[3];
             secondObject.SetActive(true);
@@ -133,8 +140,12 @@ public class CharacterSelectionManager : MonoBehaviour
         _playerData.RPC_SetAvatarInfo(_currentSelectionCharacter, _nameInputField.text);
         _playerData.RPC_ActiveAvatar();
 
+        // 表示しているキャラクターを非表示
+        DeleteCharacter();
+
         // 選択画面を非表示
         this.gameObject.SetActive(false);
+
 
         // シーン内の全てのPlayerを取得
         PlayerData[] allPlayerData = FindObjectsOfType<PlayerData>();
@@ -165,7 +176,7 @@ public class CharacterSelectionManager : MonoBehaviour
     /// </summary>
     private void DeleteCharacter()
     {
-        foreach (GameObject obj in _characterModel)
+        foreach (GameObject obj in _animeCharacterModel)
         {
             obj.SetActive(false);
         }
