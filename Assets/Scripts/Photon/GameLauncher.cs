@@ -33,7 +33,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField]
     private NetworkObject _portal = default;
 
-    public GameObject _portalPosition = default;
+    public Vector3 _portalPosition = new Vector3(-10f, -1.35f, 0f);
 
     private NetworkRunner _networkRunner = default;
 
@@ -72,7 +72,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private void InitialSpaen(NetworkRunner runner)
     {
         runner.Spawn(_comboCounterPrefab, Vector3.zero, Quaternion.identity);
-        runner.Spawn(_portal, _portalPosition.transform.position, Quaternion.Euler(90, 0, 0));
+        runner.Spawn(_portal, _portalPosition, Quaternion.Euler(90, 0, 0));
     }
 
     private void RegisterInputActions(bool isRegister)
@@ -232,13 +232,13 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             return;
         }
 
+        // 
         Vector3 spawnPosition = new Vector3(_playerSpawnPos.x + UnityEngine.Random.Range(0, 10), _playerSpawnPos.y, _playerSpawnPos.z);
 
         // プレイヤーを生成
         NetworkObject playerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
 
         runner.SetPlayerObject(player, playerObject);
-
     }
 
     /// <summary>

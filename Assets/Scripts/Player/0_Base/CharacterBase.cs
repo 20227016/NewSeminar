@@ -49,7 +49,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     // エフェクト設定
     public CharacterEffectStruct _characterEffectStruct = default;
 
-    protected NetworkObject[] _effects = default;
+    protected NetworkObject[] _effects { get; set; } = default;
 
     // ステート
     protected CharacterStateEnum _characterStateEnum = default;
@@ -59,7 +59,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     public CharacterStateEnum _currentState { get; set; } = default;
 
     // HP ---------------------------------------------------------------------------------
-    protected ReactiveProperty<float> _currentHP = new ReactiveProperty<float>();
+    protected ReactiveProperty<float> _currentHP = new ReactiveProperty<float>(100f);
 
     [Networked(OnChanged = nameof(OnNetworkedHPChanged))]
     protected float _networkedHP { get; set; } = 100f;
@@ -70,31 +70,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     }
     // ------------------------------------------------------------------------------------
 
-
-    // スタミナ ---------------------------------------------------------------------------
+    // スタミナ
     protected ReactiveProperty<float> _currentStamina = new ReactiveProperty<float>();
 
-    [Networked(OnChanged = nameof(OnNetworkedStaminaChanged))]
-    protected float _networkedStamina { get; set; } = 100f;
-
-    private static void OnNetworkedStaminaChanged(Changed<CharacterBase> changed)
-    {
-        changed.Behaviour._currentStamina.Value = changed.Behaviour._networkedStamina;
-    }
-    // ------------------------------------------------------------------------------------
-
-
-    // スキルゲージ -----------------------------------------------------------------------
+    // スキルゲージ
     protected ReactiveProperty<float> _currentSkillPoint = new ReactiveProperty<float>();
-
-    [Networked(OnChanged = nameof(OnNetworkedSkillPointChanged))]
-    protected float _networkedSkillPoint { get; set; } = 100f;
-
-    private static void OnNetworkedSkillPointChanged(Changed<CharacterBase> changed)
-    {
-        changed.Behaviour._currentSkillPoint.Value = changed.Behaviour._networkedSkillPoint;
-    }
-    // ------------------------------------------------------------------------------------
 
     // カメラコントローラー
     protected CameraDirection _cameraDirection = default;
@@ -196,12 +176,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
             // UIをリンク
             GameObject canvas = GameObject.FindGameObjectWithTag("Canvas");
-            PlayerUIPresenter playerUIPresenter = canvas.GetComponentInChildren<PlayerUIPresenter>();
+            _playerUIPresenter = canvas.GetComponentInChildren<PlayerUIPresenter>();
             LockOnCursorPresenter lockOnCursorPresenter = canvas.GetComponentInChildren<LockOnCursorPresenter>();
-            playerUIPresenter.SetMyModel(this.gameObject);
+            _playerUIPresenter.SetMyModel(this.gameObject);
             lockOnCursorPresenter.SetModel(this.gameObject);
 
-            _playerUIPresenter = FindObjectOfType<PlayerUIPresenter>();
         }
         RPC_SetAllyHPBar(this);
     }
@@ -221,7 +200,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         if (allCharacters == null || allCharacters.Length == 0)
         {
-            Debug.Log("キャラクターモデルが見つかりませんでした。");
             return;
         }
 
@@ -268,12 +246,21 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // ネットワーク同期用変数とリアクティブプロパティを初期化
         _currentHP.Value = _characterStatusStruct._playerStatus.MaxHp;
         _networkedHP = _currentHP.Value;
+
         _currentStamina.Value = _characterStatusStruct._playerStatus.MaxStamina;
-        _networkedStamina = _currentStamina.Value;
         _currentSkillPoint.Value = 0f;
-        _networkedSkillPoint = _currentSkillPoint.Value;
 
         _currentState = CharacterStateEnum.IDLE;
+
+        // エフェクトを配列に格納
+        _effects = new NetworkObject[]
+        {
+            _characterEffectStruct._attackLight1Effect,
+            _characterEffectStruct._attackLight2Effect,
+            _characterEffectStruct._attackLight3Effect,
+            _characterEffectStruct._attackStrongEffect,
+            _characterEffectStruct._skillEffect
+        };
 
         // エフェクトを設定
         InstanceEffect();
@@ -281,7 +268,10 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 死亡判定
         _currentHP
             .Where(_ => _ <= 0)
-            .Subscribe(_ => RPC_Death());
+            .Subscribe(_ => {
+                Debug.Log(_ + "現HP");
+                RPC_Death();
+                });
 
         // スタミナ管理
         StaminaManagement();
@@ -334,7 +324,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         HandleOutOfStamina();
 
         // スタミナの最小、最大値を制限
-        _networkedStamina = Mathf.Clamp(_networkedStamina, 0, _characterStatusStruct._playerStatus.MaxStamina);
+        _currentStamina.Value = Mathf.Clamp(_currentStamina.Value, 0, _characterStatusStruct._playerStatus.MaxStamina);
     }
 
 
@@ -347,10 +337,10 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             // 走り状態時
             .Where(_ => _currentState == CharacterStateEnum.RUN)
             // スタミナが0以上の時
-            .Where(_ => _networkedStamina > 0)
+            .Where(_ => _currentStamina.Value > 0)
             .Subscribe(_ =>
             {
-                _networkedStamina -= _characterStatusStruct._runStamina * STAMINA_UPDATE_INTERVAL;
+                _currentStamina.Value -= _characterStatusStruct._runStamina * STAMINA_UPDATE_INTERVAL;
             })
             .AddTo(this);
     }
@@ -367,12 +357,12 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             // 走っていない or スタミナ切れ or 移動していない
             .Where(_ => !_isRun || _isOutOfStamina || _moveDirection == Vector2.zero)
             // スタミナが最大値以下
-            .Where(_ => _networkedStamina < _characterStatusStruct._playerStatus.MaxStamina)
+            .Where(_ => _currentStamina.Value < _characterStatusStruct._playerStatus.MaxStamina)
             .Subscribe(_ =>
             {
                 // スタミナ切れ時は回復速度が半減
                 float recoveryRate = _isOutOfStamina ? 2.0f : 1.0f;
-                _networkedStamina += _characterStatusStruct._recoveryStamina * STAMINA_UPDATE_INTERVAL / recoveryRate ;
+                _currentStamina.Value += _characterStatusStruct._recoveryStamina * STAMINA_UPDATE_INTERVAL / recoveryRate ;
             })
             .AddTo(this);
     }
@@ -587,12 +577,14 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         ResetState(animationDuration, () => _notAttackAccepted = false);
 
-        _networkedSkillPoint = 100f;
+        _currentSkillPoint.Value = 100f;
     }
 
 
     protected virtual void Targetting()
     {
+        _networkedHP -= 100f;
+
         _target.Targetting();
     }
 
@@ -604,7 +596,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _currentState = CharacterStateEnum.AVOIDANCE;
 
-        _networkedStamina -= _characterStatusStruct._avoidanceStamina;
+        _currentStamina.Value -= _characterStatusStruct._avoidanceStamina;
 
         float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._avoidanceActionAnimation);
 
@@ -627,7 +619,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             .Subscribe(_ => _isSkillCoolTime = false);
 
         // 発動後スキルポイントを０に
-        _networkedSkillPoint = 0f;
+        _currentSkillPoint.Value = 0f;
 
         _skill.Skill(this, skillTime);
 
@@ -641,10 +633,10 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         ResetState(animationDuration);
     }
 
-    protected virtual void Resurrection(Transform transform, float ressurectionTime)
+    protected virtual void Resurrection(Transform transform, float resurrectionTime)
     {
         Debug.Log("蘇生させるよ" + this.gameObject.name);
-        _resurrection.Resurrection(transform, ressurectionTime);
+        _resurrection.Resurrection(transform, resurrectionTime);
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
@@ -681,6 +673,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         ResetState(animationDuration);
     }
 
+    [Rpc(RpcSources.All, RpcTargets.All)]
     public virtual void RPC_ReceiveHeal(int healValue)
     {
         // HPが0の状態から回復処理をした場合は蘇生
@@ -702,7 +695,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // スキルポイントを与ダメージを参照してチャージする
         float chargeSkillPoint = damage / 2;
 
-        _networkedSkillPoint = Mathf.Clamp(_networkedSkillPoint+ chargeSkillPoint, 0, _characterStatusStruct._skillPointUpperLimit);
+        _currentSkillPoint.Value = Mathf.Clamp(_currentSkillPoint.Value + chargeSkillPoint, 0, _characterStatusStruct._skillPointUpperLimit);
     }
 
 
@@ -725,7 +718,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
             // 待機状態に
             _currentState = CharacterStateEnum.IDLE;
-
+            
             // リセット完了を通知
             onResetComplete?.Invoke();
         }

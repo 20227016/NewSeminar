@@ -149,6 +149,7 @@ public class CharacterSelectionManager : MonoBehaviour
         {
             playerData.RPC_ActiveAvatar();
         }
+
     }
 
     /// <summary>
