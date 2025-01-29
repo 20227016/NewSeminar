@@ -4,6 +4,7 @@ using Fusion;
 using Fusion.Sockets;
 using UnityEngine;
 using UniRx;
+using System.Threading.Tasks;
 
 [Serializable]
 public class EnemyWave
@@ -26,6 +27,9 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField, Tooltip("ステージをわける仕切り")]
     private GameObject _wavePartition = default;
 
+    [SerializeField, Tooltip("ステージをわける仕切り")]
+    private GameObject _wavePartitionEND = default;
+
     [SerializeField, Tooltip("ネットワークランナープレハブ")]
     private NetworkRunner _networkRunnerPrefab = default;
 
@@ -35,6 +39,11 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     // スポーン済みエネミーを管理
     private List<NetworkObject> _spawnedEnemies = new List<NetworkObject>(); 
 
+    // Waveクリア通知
+    private Subject<Unit> OnEnemiesDefeated = new Subject<Unit>();
+    public IObservable<Unit> OnEnemiesDefeatedObservable => OnEnemiesDefeated;
+
+    // ノーマルステージクリア通知
     private Subject<Unit> OnAllEnemiesDefeated = new Subject<Unit>();
     public IObservable<Unit> OnAllEnemiesDefeatedObservable => OnAllEnemiesDefeated;
 
@@ -52,7 +61,7 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
         gameLauncher.StartGameSubject.Subscribe(_ => StartWave(networkRunner));
 
         // エネミー全滅時の通知を購読し、次のウェーブへ
-        OnAllEnemiesDefeated.Subscribe(_ => NextWave(networkRunner));
+        OnEnemiesDefeated.Subscribe(_ => NextWave(networkRunner));
     }
 
     /// <summary>
@@ -62,7 +71,7 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (_spawnedEnemies.Count > 0 && AllEnemiesHidden())
         {
-            OnAllEnemiesDefeated.OnNext(Unit.Default);
+            OnEnemiesDefeated.OnNext(Unit.Default);
         }
     }
 
@@ -95,6 +104,7 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
             Debug.Log("すべてのウェーブが終了しました！");
             if (_bossTeleporter != null)
             {
+                OnAllEnemiesDefeated.OnNext(Unit.Default);
                 // ボステレポーターを有効化
                 _bossTeleporter.SetActive(true); 
             }
@@ -134,10 +144,18 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         if (_currentWave == 2)
         {
-            _wavePartition.SetActive(false);
+            RPC_WaveGeteOpen();
         }
 
         Debug.Log($"{_spawnedEnemies.Count} 体のエネミーをウェーブ {waveIndex + 1} にスポーンしました");
+    }
+
+    [Rpc(RpcSources.All,RpcTargets.All)]
+    private async void RPC_WaveGeteOpen()
+    {
+        _wavePartitionEND.SetActive(true);
+        await Task.Delay(1000); 
+        _wavePartition.SetActive(false);
     }
 
     /// <summary>

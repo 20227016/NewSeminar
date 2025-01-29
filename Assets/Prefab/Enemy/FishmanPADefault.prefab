@@ -710,7 +710,7 @@ GameObject:
   - component: {fileID: -7087979274757902768}
   - component: {fileID: 8276816730841852939}
   - component: {fileID: 5786292422275002267}
-  - component: {fileID: 8002648336802626061}
+  - component: {fileID: -4749064125834334837}
   - component: {fileID: 3097559878544652780}
   m_Layer: 7
   m_Name: FishmanPADefault
@@ -841,10 +841,10 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &5786292422275002267
 MonoBehaviour:
@@ -869,10 +869,10 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 42484123478115770}
-  - {fileID: 8002648336802626061}
+  - {fileID: -4749064125834334837}
   - {fileID: 3097559878544652780}
   SimulationBehaviours: []
---- !u!114 &8002648336802626061
+--- !u!114 &-4749064125834334837
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -881,7 +881,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2743763501228538954}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Script: {fileID: 1710889294, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   WordOffset: 0

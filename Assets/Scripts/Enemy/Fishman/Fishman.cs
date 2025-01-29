@@ -79,7 +79,6 @@ public class Fishman : BaseEnemy
     // TransitionNo.7 Die
     private Animator _animator;
 
-
     public override void Spawned()
     {
         _searchRange = 20f;
@@ -117,23 +116,6 @@ public class Fishman : BaseEnemy
 
         // のけぞるまでの時間
         _stunnedTimer -= Time.deltaTime;
-
-        //// ダウン
-        //if (Input.GetKeyDown(KeyCode.B))
-        //{
-        //    _movementState = EnemyMovementState.DOWNED;
-        //}
-        //// のけぞる
-        //else if (Input.GetKeyDown(KeyCode.S)
-        //    && _stunnedTimer <= 0)
-        //{
-        //    _movementState = EnemyMovementState.STUNNED;
-        //}
-        //// 倒れる
-        //else if (Input.GetKeyDown(KeyCode.D))
-        //{
-        //    _movementState = EnemyMovementState.DIE;
-        //}
 
         switch (_movementState)
         {
@@ -277,9 +259,21 @@ public class Fishman : BaseEnemy
         _animator.SetInteger("TransitionNo", 1);
 
         moveSpeed = 2.5f;
-        transform.position = Vector3.MoveTowards(transform.position, _randomTargetPos, moveSpeed * Time.deltaTime);
 
-        Vector3 direction = (_randomTargetPos - transform.position).normalized;
+        // 現在の位置
+        Vector3 currentPosition = transform.position;
+
+        // ターゲット位置 (_randomTargetPosのy座標を現在のy座標に固定)
+        Vector3 targetPosition = new Vector3(_randomTargetPos.x, currentPosition.y, _randomTargetPos.z);
+
+        // 移動
+        transform.position = Vector3.MoveTowards(currentPosition, targetPosition, moveSpeed * Time.deltaTime);
+
+        // 方向ベクトルを計算し、Y軸回転のみを適用
+        Vector3 direction = _randomTargetPos - transform.position;
+        direction.y = 0f; // X回転を無視するためにY軸成分を0にする
+        direction.Normalize(); // 正規化
+
         if (direction != Vector3.zero)
         {
             transform.rotation = Quaternion.LookRotation(direction);
@@ -295,7 +289,9 @@ public class Fishman : BaseEnemy
         }
 
         // 目標地点到達
-        if (Vector3.Distance(transform.position, _randomTargetPos) < 0.1f)
+        if (Vector2.Distance(
+        new Vector2(transform.position.x, transform.position.z),
+        new Vector2(_randomTargetPos.x, _randomTargetPos.z)) < 0.1f)
         {
             _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
             _movementState = EnemyMovementState.IDLE;
