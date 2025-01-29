@@ -144,6 +144,7 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         if (_currentWave == 2)
         {
+            print("Wave２になりました(ローカル)");
             RPC_WaveGeteOpen();
         }
 
@@ -153,6 +154,7 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     [Rpc(RpcSources.All,RpcTargets.All)]
     private void RPC_WaveGeteOpen()
     {
+        print("2Waveをクリアしました。ゲート開放！(ネットワーク)");
         _wavePartitionEND.SetActive(true);
         _wavePartition.SetActive(false);
     }
