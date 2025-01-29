@@ -157,11 +157,11 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void RPC_ReceiveDamage(int damegeValue)
     {
-        print("プレイヤーからダメージを受けました" + damegeValue);
+        //print("プレイヤーからダメージを受けました" + damegeValue);
 
         // ダメージ処理
         _enemyStatusStruct._hp -= damegeValue - _enemyStatusStruct._diffencePower;
-        print(_enemyStatusStruct._hp);
+        //print(_enemyStatusStruct._hp);
         // HPUIの更新
         RPC_UpdateHPBar();
         if (_enemyStatusStruct._hp <= 0)

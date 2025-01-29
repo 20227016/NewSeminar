@@ -159,6 +159,8 @@ public class CharacterSelectionManager : MonoBehaviour
         foreach (PlayerData playerData in allPlayerData)
         {
             playerData.RPC_ActiveAvatar();
+            CharacterBase characterBase = playerData.GetComponentInChildren<CharacterBase>();
+            characterBase.RPC_SetAllyHPBar(characterBase);
         }
 
     }
