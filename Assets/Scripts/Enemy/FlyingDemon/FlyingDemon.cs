@@ -577,6 +577,5 @@ public class FlyingDemon : BaseEnemy
     protected override void OnDeath()
     {
         _movementState = EnemyMovementState.DIE;
-        print("ドラゴン死亡" + _movementState);
     }
 }

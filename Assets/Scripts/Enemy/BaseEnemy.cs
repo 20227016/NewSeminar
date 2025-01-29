@@ -139,7 +139,8 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
         {
             return;
         }
-        print("プレイヤーにダメージを与えました");
+
+        //print("プレイヤーにダメージを与えました");
 
         IReceiveDamage receiveDamage = hitCollider.GetComponent<IReceiveDamage>();
         if (receiveDamage == null)
@@ -161,7 +162,9 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
 
         // ダメージ処理
         _enemyStatusStruct._hp -= damegeValue - _enemyStatusStruct._diffencePower;
+
         //print(_enemyStatusStruct._hp);
+
         // HPUIの更新
         RPC_UpdateHPBar();
         if (_enemyStatusStruct._hp <= 0)

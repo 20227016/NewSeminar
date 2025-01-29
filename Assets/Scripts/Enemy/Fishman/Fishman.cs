@@ -535,7 +535,6 @@ public class Fishman : BaseEnemy
     [Rpc(RpcSources.All , RpcTargets.All)]
     private void RPC_EnemyDie()
     {
-
         // 完全に透明にした後、オブジェクトを非アクティブ化
         gameObject.SetActive(false);
     }
