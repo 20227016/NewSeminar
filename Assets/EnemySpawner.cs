@@ -151,10 +151,9 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     [Rpc(RpcSources.All,RpcTargets.All)]
-    private async void RPC_WaveGeteOpen()
+    private void RPC_WaveGeteOpen()
     {
         _wavePartitionEND.SetActive(true);
-        await Task.Delay(1000); 
         _wavePartition.SetActive(false);
     }
 
