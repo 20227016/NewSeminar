@@ -18,7 +18,6 @@ public class PlayerResurrection : IResurrection
 
     public async void Resurrection(Transform thisTransform, float resurrectionTime)
     {
-        Debug.Log("あ");
         // 前の処理が残っていればキャンセル
         _cancellationTokenSource?.Cancel();
 
@@ -28,34 +27,37 @@ public class PlayerResurrection : IResurrection
         // 自分の周囲を取得
         BoxCastStruct _boxcastStruct = BoxcastSetting(thisTransform);
         RaycastHit[] hits = Search.Sort(Search.BoxCastAll(_boxcastStruct));
-
+        Debug.Log(hits.Length);
         foreach (RaycastHit hit in hits)
         {
-            Debug.Log("い");
-
             // 自分を除外
             if (hit.collider.transform.name == thisTransform.name)
             {
-                return;
+                Debug.Log("自分");
+                continue;
             }
 
             // 対象のキャラクターの CharacterBase を取得
             CharacterBase targetCharacter = hit.collider.transform.GetComponent<CharacterBase>();
 
-            Debug.Log("う");
-
             // CharacterBase が null であれば処理を中断
             if (targetCharacter == null)
             {
-                Debug.Log("NOTプレイヤー");
-                return;
+                Debug.Log("ターゲットではない");
+                continue;
+            }
+
+            IReceiveHeal receiveHeal = hit.collider.transform.GetComponent<IReceiveHeal>();
+
+            if(receiveHeal == null)
+            {
+                Debug.Log("ヒール拒否");
+                continue;
             }
 
             // 対象のキャラクターがDEATH状態か確認
             if (targetCharacter._currentState == CharacterStateEnum.DEATH)
             {
-                Debug.Log("蘇生開始" + targetCharacter.name);
-
                 try
                 {
                     // (resurrectionTime * 1000)ミリ秒待機
@@ -64,13 +66,11 @@ public class PlayerResurrection : IResurrection
                 }
                 catch (OperationCanceledException)
                 {
-                    Debug.Log("蘇生キャンセル" + targetCharacter.name);
-                    return;
+                    Debug.Log("エラー");
+                    continue;
                 }
 
                 // 蘇生完了の処理
-                Debug.Log("蘇生完了" + targetCharacter.name);
-
                 targetCharacter.RPC_ReceiveHeal((int)targetCharacter._characterStatusStruct._playerStatus.MaxHp);
             }
 

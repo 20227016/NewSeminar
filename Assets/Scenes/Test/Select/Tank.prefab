@@ -222,6 +222,7 @@ MonoBehaviour:
   WordCount: 0
   _interpolationDataSource: 0
   _playerAvatar: []
+  _playerNameTexts: []
   __avatarName: 
 --- !u!114 &-1971493915030146910
 MonoBehaviour:
