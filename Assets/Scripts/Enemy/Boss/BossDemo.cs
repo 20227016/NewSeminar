@@ -92,6 +92,7 @@ public class BossDemo : BaseEnemy
 
     [SerializeField] private float _detectionRadius = 40f; // 検知範囲
     [SerializeField] private LayerMask _playerLayer; // プレイヤーを検知するためのレイヤーマスク
+    [SerializeField] private LayerMask _enemyLayer; // 敵を検知するためのレイヤーマスク
 
     private bool isPlayerNearby = false; // プレイヤーが範囲内にいるかどうか
 
@@ -109,16 +110,6 @@ public class BossDemo : BaseEnemy
         {
             collider.enabled = false;
         }
-        /*
-        _golem = GameObject.Find("GolemPADefault");
-        _golem.SetActive(false);
-        _evilMage = GameObject.Find("EvilMagePADefault");
-        _evilMage.SetActive(false);
-        _fishman = GameObject.Find("FishmanPADefault");
-        _fishman.SetActive(false); 
-        _demon = GameObject.Find("FylingDemonPAMaskTint");
-        _demon.SetActive(false);
-        */ 
     }
 
     /// <summary>
@@ -133,6 +124,8 @@ public class BossDemo : BaseEnemy
         Quaternion currentRotation = transform.rotation;
         Quaternion rotationY180 = Quaternion.Euler(0, 180, 0);
         transform.rotation = currentRotation * rotationY180;
+
+        EnemySpawn();
     }
 
     /// <summary>
@@ -385,12 +378,11 @@ public class BossDemo : BaseEnemy
 
                 if (IsAnimationFinished("Summon"))
                 {
-                    /*
                     _golem.SetActive(true);
                     _evilMage.SetActive(true);
                     _fishman.SetActive(true);
                     _demon.SetActive(true);
-                    */
+
                     _summonTimer = 10.0f;
                     _faintingState = 2;           
                 }
@@ -464,6 +456,40 @@ public class BossDemo : BaseEnemy
             // プレイヤーが1人以上範囲内にいる
             isPlayerNearby = true;
             _animator.SetInteger("TransitionNo", -2);
+        }
+    }
+
+    /// <summary>
+    /// 敵召喚準備
+    /// </summary>
+    private void EnemySpawn()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, _detectionRadius, _enemyLayer);
+
+        foreach (Collider col in hitColliders)
+        {
+            Debug.Log($"Found: {col.gameObject.name}");
+
+            if (col.gameObject.name == "GolemPADefault(Clone)")
+            {
+                _golem = col.gameObject;
+                _golem.SetActive(false);
+            }
+            else if (col.gameObject.name == "EvilMagePADefault(Clone)")
+            {
+                _evilMage = col.gameObject;
+                _evilMage.SetActive(false);
+            }
+            else if(col.gameObject.name == "FishmanPADefault(Clone)")
+            {
+                _fishman = col.gameObject;
+                _fishman.SetActive(false);
+            }
+            else if(col.gameObject.name == "FylingDemonPAMaskTint(Clone)")
+            {
+                _demon = col.gameObject;
+                _demon.SetActive(false);
+            }
         }
     }
 
