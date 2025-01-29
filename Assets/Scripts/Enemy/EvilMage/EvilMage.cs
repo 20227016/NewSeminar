@@ -317,7 +317,6 @@ public class EvilMage : BaseEnemy
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_EnemyDie()
     {
-        print("エネミー死亡");
         // 完全に透明にした後、オブジェクトを非アクティブ化
         this.gameObject.SetActive(false);
     }
