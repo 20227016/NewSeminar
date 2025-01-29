@@ -3188,7 +3188,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyManagement: {fileID: 5198176800673508211}
-  _bossStageRequiredPlayers: 2
+  _bossStageRequiredPlayers: 3
   _bossTeleportPos: {fileID: 660883544}
 --- !u!4 &424125022 stripped
 Transform:
@@ -11372,9 +11372,9 @@ MonoBehaviour:
     - {fileID: 1899348220}
   - Enemies:
     - {fileID: 7120314230197923028, guid: 93b94039cf7541e8a7c9453819da38f0, type: 3}
-    - {fileID: 8949063262203398093, guid: b2c4c51d21ed5554daa7bdd74d234a0c, type: 3}
+    - {fileID: 8014046880259408940, guid: 7a94a2282f074984b866cff8715f9ccd, type: 3}
     - {fileID: 7426712748565669130, guid: 19577731de413604b8df28e840916e76, type: 3}
-    - {fileID: 8949063262203398093, guid: b2c4c51d21ed5554daa7bdd74d234a0c, type: 3}
+    - {fileID: 8014046880259408940, guid: 7a94a2282f074984b866cff8715f9ccd, type: 3}
     - {fileID: 7120314230197923028, guid: 93b94039cf7541e8a7c9453819da38f0, type: 3}
     SpawnPositions:
     - {fileID: 344208277}
@@ -11386,13 +11386,13 @@ MonoBehaviour:
     - {fileID: 7120314230197923028, guid: 93b94039cf7541e8a7c9453819da38f0, type: 3}
     - {fileID: 5786292422275002267, guid: e6795c22ad904637bbe60283e1c0cd08, type: 3}
     - {fileID: 7120314230197923028, guid: 93b94039cf7541e8a7c9453819da38f0, type: 3}
-    - {fileID: 8949063262203398093, guid: b2c4c51d21ed5554daa7bdd74d234a0c, type: 3}
+    - {fileID: 8014046880259408940, guid: 7a94a2282f074984b866cff8715f9ccd, type: 3}
     - {fileID: 7120314230197923028, guid: 93b94039cf7541e8a7c9453819da38f0, type: 3}
     - {fileID: 7426712748565669130, guid: 19577731de413604b8df28e840916e76, type: 3}
     - {fileID: 7120314230197923028, guid: 93b94039cf7541e8a7c9453819da38f0, type: 3}
     - {fileID: 7426712748565669130, guid: 19577731de413604b8df28e840916e76, type: 3}
     - {fileID: 5786292422275002267, guid: e6795c22ad904637bbe60283e1c0cd08, type: 3}
-    - {fileID: 8949063262203398093, guid: b2c4c51d21ed5554daa7bdd74d234a0c, type: 3}
+    - {fileID: 8014046880259408940, guid: 7a94a2282f074984b866cff8715f9ccd, type: 3}
     SpawnPositions:
     - {fileID: 949083579}
     - {fileID: 1108576560}
