@@ -243,14 +243,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// </summary>
     protected virtual void InitialValues()
     {
-        // 死亡判定
-        _currentHP
-            .Where(_ => _ <= 0)
-            .Subscribe(_ =>
-            {
-                RPC_Death();
-            })
-            .AddTo(this);
 
         // 初期化
         _playerTransform = this.transform;
@@ -275,6 +267,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             _characterEffectStruct._attackStrongEffect,
             _characterEffectStruct._skillEffect
         };
+
 
         // エフェクトを設定
         InstanceEffect();
@@ -497,6 +490,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected virtual void Move(Transform transform, Vector2 moveDirection, float moveSpeed, Rigidbody rigidbody, CharacterStateEnum characterState)
     {
         _currentState = characterState;
+
         _move.Move(transform, moveDirection, moveSpeed, rigidbody);
     }
 
@@ -579,7 +573,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         {
             _playEffect.RPC_PlayEffect(_effects[3], _effects[3].transform.position);
         }
-            
 
         ResetState(animationDuration, () => _notAttackAccepted = false);
 
@@ -589,7 +582,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     protected virtual void Targetting()
     {
-        _networkedHP -= 100f;
+        RPC_ReceiveDamage(50);
 
         _target.Targetting();
     }
@@ -636,12 +629,14 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         {
             _playEffect.RPC_LoopEffect(_effects[4], _effects[4].transform.position, _characterStatusStruct._skillDuration);
         }
+
         Invincible(animationDuration);
         ResetState(animationDuration);
     }
 
     protected virtual void Resurrection(Transform transform, float resurrectionTime)
     {
+        
         _resurrection.Resurrection(transform, resurrectionTime);
     }
 
@@ -660,7 +655,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _networkedHP = Mathf.Clamp(_networkedHP - damageValue, 0, _characterStatusStruct._playerStatus.MaxHp);
 
         
-        if(_networkedHP <= 0) return;
+        if(_networkedHP <= 0)
+        {
+            RPC_Death();
+            return;
+        }
 
         // 被弾時のリアクション
         float animationDuration;
@@ -686,7 +685,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     public virtual void RPC_ReceiveHeal(int healValue)
     {
         // HPが0の状態から回復処理をした場合は蘇生
-        if (_networkedHP <= 0 && healValue > 0)
+        if (_currentState == CharacterStateEnum.DEATH)
         {
             float animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._reviveAnimation);
 
@@ -741,10 +740,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// <summary>
     /// 死亡処理
     /// </summary>
+    [Rpc(RpcSources.All, RpcTargets.All)]
     protected virtual void RPC_Death()
     {
-        _resetStateTokenSource?.Cancel();
-
         _currentState = CharacterStateEnum.DEATH;
 
         _animation.PlayAnimation(_animator, _characterAnimationStruct._deathAnimation);

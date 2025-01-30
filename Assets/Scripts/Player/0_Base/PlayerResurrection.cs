@@ -2,6 +2,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using System;
+using UnityEngine.UI;
 
 /// <summary>
 /// PlayerResurrection.cs
@@ -24,16 +25,17 @@ public class PlayerResurrection : IResurrection
         // 新しいキャンセルトークンの作成
         _cancellationTokenSource = new CancellationTokenSource();
 
+        //Slider resurrectionGauge = 
+
         // 自分の周囲を取得
         BoxCastStruct _boxcastStruct = BoxcastSetting(thisTransform);
         RaycastHit[] hits = Search.Sort(Search.BoxCastAll(_boxcastStruct));
-        Debug.Log(hits.Length);
+
         foreach (RaycastHit hit in hits)
         {
             // 自分を除外
             if (hit.collider.transform.name == thisTransform.name)
             {
-                Debug.Log("自分");
                 continue;
             }
 
@@ -43,7 +45,6 @@ public class PlayerResurrection : IResurrection
             // CharacterBase が null であれば処理を中断
             if (targetCharacter == null)
             {
-                Debug.Log("ターゲットではない");
                 continue;
             }
 
@@ -51,7 +52,6 @@ public class PlayerResurrection : IResurrection
 
             if(receiveHeal == null)
             {
-                Debug.Log("ヒール拒否");
                 continue;
             }
 
@@ -61,15 +61,13 @@ public class PlayerResurrection : IResurrection
                 try
                 {
                     // (resurrectionTime * 1000)ミリ秒待機
-                    //await UniTask.Delay((int)(resurrectionTime * 1000), cancellationToken: _cancellationTokenSource.Token);
-                    await UniTask.Delay((int)(resurrectionTime), cancellationToken: _cancellationTokenSource.Token);
+                    await UniTask.Delay((int)(resurrectionTime * 1000), cancellationToken: _cancellationTokenSource.Token);
                 }
                 catch (OperationCanceledException)
                 {
-                    Debug.Log("エラー");
                     continue;
                 }
-                Debug.Log("蘇生完了");
+
                 // 蘇生完了の処理
                 targetCharacter.RPC_ReceiveHeal((int)targetCharacter._characterStatusStruct._playerStatus.MaxHp);
             }
@@ -88,7 +86,7 @@ public class PlayerResurrection : IResurrection
         return new BoxCastStruct
         {
             _originPos = transform.position,
-            _size = transform.localScale * 3,
+            _size = transform.localScale * 2,
             _direction = transform.forward,
             _quaternion = Quaternion.identity,
             _layerMask = 1 << 6

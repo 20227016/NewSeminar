@@ -2933,7 +2933,7 @@ MonoBehaviour:
   _characterStatusStruct:
     _walkSpeed: 1
     _runSpeed: 2
-    _avoidanceDistance: 5
+    _avoidanceDistance: 10
     _attackPower: 100
     _attackLightMultiplier: 1
     _attackStrongMultiplier: 1.5
@@ -2953,7 +2953,7 @@ MonoBehaviour:
     _skillPointUpperLimit: 100
     _ressurectionTime: 10
     _recoveryStamina: 25
-    _runStamina: 25
+    _runStamina: 20
     _avoidanceStamina: 20
   _characterAnimationStruct:
     _idleAnimation: {fileID: 7400000, guid: be797334aa848784d838447aa3d3a0e4, type: 3}
@@ -2976,7 +2976,6 @@ MonoBehaviour:
     _attackLight3Effect: {fileID: -1453255996750119121, guid: d0e13ce05e9f06a43ac45e8744e6fd90, type: 3}
     _attackStrongEffect: {fileID: -7463171992428113002, guid: 1facde3a50abc614f884b35124f4ef87, type: 3}
     _skillEffect: {fileID: -5048008784679982985, guid: c80ca6399cf5c9344840992fd2b69975, type: 3}
-  _playerUIPresenter: {fileID: 0}
 --- !u!114 &3010514447135096629
 MonoBehaviour:
   m_ObjectHideFlags: 0
