@@ -159,6 +159,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// </summary>
     public override void FixedUpdateNetwork()
     {
+        Debug.Log(this.name + "ステート" + _currentState);
+
         if (GetInput(out PlayerNetworkInput data))
         {
             // 入力情報収集
@@ -403,7 +405,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             _currentState == CharacterStateEnum.AVOIDANCE ||
             _currentState == CharacterStateEnum.SKILL ||
             _currentState == CharacterStateEnum.DAMAGE_REACTION ||
-            _currentState == CharacterStateEnum.DEATH)
+            _currentState == CharacterStateEnum.DEATH ||
+            _currentState == CharacterStateEnum.RESURRECTION)
         {
             return;
         }
@@ -636,8 +639,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     protected virtual void Resurrection(Transform transform, float resurrectionTime)
     {
-        
-        _resurrection.Resurrection(transform, resurrectionTime);
+        _currentState = CharacterStateEnum.RESURRECTION;
+
+        _resurrection.Resurrection(transform, resurrectionTime, false);
+
+        ResetState(_characterStatusStruct._ressurectionTime);
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
@@ -648,13 +654,14 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _currentState = CharacterStateEnum.DAMAGE_REACTION;
 
+        _resurrection.Resurrection(transform, 0, true);
+
         // ダメージ量に防御力を適応して最終ダメージを算出
         float damage = (damageValue - _characterStatusStruct._defensePower);
 
         // 現在HPから最終ダメージを引く
         _networkedHP = Mathf.Clamp(_networkedHP - damageValue, 0, _characterStatusStruct._playerStatus.MaxHp);
 
-        
         if(_networkedHP <= 0)
         {
             RPC_Death();
