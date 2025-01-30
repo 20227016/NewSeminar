@@ -93,13 +93,13 @@ public class Golem : BaseEnemy
 
         _animator = GetComponent<Animator>();
 
-        //_boxCollider1 = FindChild(transform, "Hand_R");
+        Transform boxCollider1 = FindChild(transform, "Hand_R");
 
-        Transform _effectObj1 = FindChild(transform, "ChargeRed"); // 子1のオブジェクト名
-        Transform _effectObj2 = FindChild(transform, "RedEnergyExplosion"); // 子2のオブジェクト名
+        Transform effectObj1 = FindChild(transform, "ChargeRed"); // 子1のオブジェクト名
+        Transform effectObj2 = FindChild(transform, "RedEnergyExplosion"); // 子2のオブジェクト名
 
-        _attackEffects1 = _effectObj1.GetComponentsInChildren<ParticleSystem>();
-        _attackEffects2 = _effectObj2.GetComponentsInChildren<ParticleSystem>();
+        _attackEffects1 = effectObj1.GetComponentsInChildren<ParticleSystem>();
+        _attackEffects2 = effectObj2.GetComponentsInChildren<ParticleSystem>();
 
         _randomTargetPos = GenerateRandomPosition();
     }
