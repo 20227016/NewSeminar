@@ -58,8 +58,6 @@ public class PlayerData : NetworkBehaviour
     public void RPC_PlayerJoined()
     {
 
-        Debug.Log(_normalStageTransfer.NormalStageRequiredPlayers);
-        Debug.Log(_networkRunner.SessionInfo.PlayerCount);
         _normalStageTransfer.NormalStageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
 
     }
