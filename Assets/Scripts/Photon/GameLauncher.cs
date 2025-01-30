@@ -48,7 +48,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     public NetworkRunner NetworkRunner { get => _networkRunner; set => _networkRunner = value; }
 
-    private async void Awake()
+    private async void Start()
     {
         _mainCamera = Camera.main;
         _playerInput = GetComponent<PlayerInput>();
