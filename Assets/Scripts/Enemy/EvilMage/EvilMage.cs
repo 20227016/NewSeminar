@@ -42,7 +42,7 @@ public class EvilMage : BaseEnemy
     private Animator _animator;
 
     private GameObject _magicCharge = default; // エフェクト本体を取得
-    private ParticleSystem[] _evilMageEffects = default; // 子オブジェクトのParticleSystemを取得
+    private ParticleSystem[] _attackEffects = default; // 子オブジェクトのParticleSystemを取得
 
     [Header("魔法攻撃設定")]
     [Tooltip("発射する魔法弾のPrefab")]
@@ -61,7 +61,7 @@ public class EvilMage : BaseEnemy
         _animator = GetComponent<Animator>();
 
         _magicCharge = GameObject.Find("MagicCharge");
-        _evilMageEffects = GetComponentsInChildren<ParticleSystem>();
+        _attackEffects = GetComponentsInChildren<ParticleSystem>();
     }
 
     /// <summary>
@@ -231,7 +231,7 @@ public class EvilMage : BaseEnemy
         _animator.SetInteger("TransitionNo", 1);
 
         // 溜め中のエフェクトを再能
-        foreach (var effect in _evilMageEffects)
+        foreach (var effect in _attackEffects)
         {
             effect.Play();
         }

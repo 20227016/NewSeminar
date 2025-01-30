@@ -79,6 +79,10 @@ public class Fishman : BaseEnemy
     // TransitionNo.7 Die
     private Animator _animator;
 
+    // 子オブジェクトのParticleSystemを取得
+    private ParticleSystem[] _attackEffects1 = default;
+    private ParticleSystem[] _attackEffects2 = default;
+
     public override void Spawned()
     {
         _searchRange = 20f;
@@ -95,7 +99,32 @@ public class Fishman : BaseEnemy
 
         _animator = GetComponent<Animator>();
 
+        Transform _effectObj1 = FindChild(transform, "ChargeYellow"); // 子1のオブジェクト名
+        //Transform _effectObj2 = FindChild(transform, "RedEnergyExplosion"); // 子2のオブジェクト名
+
+        _attackEffects1 = _effectObj1.GetComponentsInChildren<ParticleSystem>();
+        //_attackEffects2 = _effectObj2.GetComponentsInChildren<ParticleSystem>();
+
         _randomTargetPos = GenerateRandomPosition();
+    }
+
+    private Transform FindChild(Transform parent, string childName)
+    {
+        foreach (Transform child in parent)
+        {
+            if (child.name == childName)
+            {
+                return child; // **見つかったらそのオブジェクトを返す**
+            }
+
+            // **再帰的にさらに深い子階層を探索**
+            Transform found = FindChild(child, childName);
+            if (found != null)
+            {
+                return found;
+            }
+        }
+        return null; // **見つからなかった場合は null**
     }
 
     /// <summary>
@@ -656,5 +685,23 @@ public class Fishman : BaseEnemy
     protected override void OnDeath()
     {
         _movementState = EnemyMovementState.DIE;
+    }
+
+    private void AttackEffect01()
+    {
+        // 溜め中のエフェクトを再能
+        foreach (var effect in _attackEffects1)
+        {
+            effect.Play();
+        }
+    }
+
+    private void AttackEffect02()
+    {
+        // 溜め中のエフェクトを再能
+        foreach (var effect in _attackEffects2)
+        {
+            effect.Play();
+        }
     }
 }
