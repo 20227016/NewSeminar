@@ -13,10 +13,6 @@ using UnityEngine.UI;
 /// </summary>
 public class CharacterSelectionManager : MonoBehaviour
 {
-
-    [SerializeField, Tooltip("キャラクターモデル")]
-    private List<GameObject> _characterModel = new List<GameObject>();
-
     [SerializeField, Tooltip("選択用キャラクターモデル")]
     private List<GameObject> _animeCharacterModel = new List<GameObject>();
 
@@ -25,6 +21,9 @@ public class CharacterSelectionManager : MonoBehaviour
 
     [SerializeField, Tooltip("警告文")]
     private TextMeshProUGUI _warningText = default;
+
+    [SerializeField, Tooltip("ロール名")]
+    private TextMeshProUGUI _roolName = default;
 
     // 現在選択しているキャラクター（共有する変数）
     private int _currentSelectionCharacter = default;
@@ -45,12 +44,9 @@ public class CharacterSelectionManager : MonoBehaviour
         if ((_currentSelectionCharacter != 1) && (!_characterDecision) && (!_tankChoice))
         {
             DeleteCharacter();
-            _animeCharacterModel[0].SetActive(true);
             _currentSelectionCharacter = 1;
-
-            // リストの1番目のオブジェクトを取得して制御
-            GameObject secondObject = _characterModel[0];
-            secondObject.SetActive(true);
+            _roolName.text = "ノーマル";
+            _animeCharacterModel[0].SetActive(true);
         }
     }
 
@@ -61,11 +57,8 @@ public class CharacterSelectionManager : MonoBehaviour
         {
             DeleteCharacter();
             _currentSelectionCharacter = 2;
-
+            _roolName.text = "ファイター";
             _animeCharacterModel[1].SetActive(true);
-            // リストの2番目のオブジェクトを取得して制御
-            GameObject secondObject = _characterModel[1];
-            secondObject.SetActive(true);
         }
     }
 
@@ -76,11 +69,8 @@ public class CharacterSelectionManager : MonoBehaviour
         {
             DeleteCharacter();
             _currentSelectionCharacter = 3;
-
+            _roolName.text = "ヒーラー";
             _animeCharacterModel[2].SetActive(true);
-            // リストの3番目のオブジェクトを取得して制御
-            GameObject secondObject = _characterModel[2];
-            secondObject.SetActive(true);
         }
     }
 
@@ -91,11 +81,8 @@ public class CharacterSelectionManager : MonoBehaviour
         {
             DeleteCharacter();
             _currentSelectionCharacter = 4;
-
+            _roolName.text = "タンク";
             _animeCharacterModel[3].SetActive(true);
-            // リストの4番目のオブジェクトを取得して制御
-            GameObject secondObject = _characterModel[3];
-            secondObject.SetActive(true);
         }
     }
 

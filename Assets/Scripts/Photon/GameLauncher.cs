@@ -53,7 +53,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         networkRunner.AddCallbacks(this);
         NetworkRunner = networkRunner;
 
-        StartGameResult result = await networkRunner.StartGame(new StartGameArgs
+        await networkRunner.StartGame(new StartGameArgs
         {
             GameMode = GameMode.AutoHostOrClient,
             SceneManager = networkRunner.GetComponent<NetworkSceneManagerDefault>()
