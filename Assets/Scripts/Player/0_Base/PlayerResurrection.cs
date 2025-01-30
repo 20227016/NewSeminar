@@ -17,15 +17,20 @@ public class PlayerResurrection : IResurrection
     // キャンセレーショントークン
     private CancellationTokenSource _cancellationTokenSource = default;
 
-    public async void Resurrection(Transform thisTransform, float resurrectionTime)
+    public async void Resurrection(Transform thisTransform, float resurrectionTime, bool isCancel)
     {
+        if (isCancel)
+        {
+            // 前の処理が残っていればキャンセル
+            _cancellationTokenSource?.Cancel();
+            return;
+        }
+
         // 前の処理が残っていればキャンセル
         _cancellationTokenSource?.Cancel();
 
         // 新しいキャンセルトークンの作成
         _cancellationTokenSource = new CancellationTokenSource();
-
-        //Slider resurrectionGauge = 
 
         // 自分の周囲を取得
         BoxCastStruct _boxcastStruct = BoxcastSetting(thisTransform);
