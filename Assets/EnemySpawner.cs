@@ -27,11 +27,20 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField, Tooltip("真ん中のEFを管理するオブジェクト")]
     private GameObject _wave2ClearManager = default;
 
-    [SerializeField, Tooltip("ネットワークランナープレハブ")]
-    private NetworkRunner _networkRunnerPrefab = default;
-
     [SerializeField, Tooltip("エネミーのウェーブごとの設定")]
     private List<EnemyWave> _enemyWaves = new List<EnemyWave>();
+
+
+
+    // ボス関連のリスト
+    [SerializeField]
+    private List<NetworkObject> _bossObjList = new List<NetworkObject>();
+
+    // ボス関連のpos管理リスト
+    [SerializeField]
+    private List<GameObject> _bossObjPosList = new List<GameObject>();
+
+    private bool _spawnEnd = default;
 
     // スポーン済みエネミーを管理
     private List<NetworkObject> _spawnedEnemies = new List<NetworkObject>(); 
@@ -78,6 +87,7 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     /// </summary>
     private void StartWave(NetworkRunner runner)
     {
+      
         if (_enemyWaves.Count == 0)
         {
             Debug.LogWarning("エネミーウェーブが設定されていません！");
@@ -86,6 +96,9 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         _currentWave = 0; // 初期ウェーブをセット
         SpawnEnemies(runner, _currentWave);
+
+        // ボス関連の処理を実行する
+        BossStage(runner);
     }
 
     /// <summary>
@@ -162,6 +175,21 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
             }
         }
         return true;
+    }
+
+    private void BossStage(NetworkRunner runner)
+    {
+        if(!_spawnEnd)
+        {
+            for (int i = 0; i < _bossObjList.Count; i++)
+            {
+                NetworkObject enemyPrefab = _bossObjList[i];
+                runner.Spawn(enemyPrefab, _bossObjPosList[i].transform.position, Quaternion.identity);
+                print("ボス生成したなう");
+            }
+            _spawnEnd = true;
+        }
+        
     }
 
     // INetworkRunnerCallbacksの必要なメソッド

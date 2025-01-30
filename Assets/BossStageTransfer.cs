@@ -6,9 +6,6 @@ public class BossStageTransfer : MonoBehaviour
     // テレポート内のプレイヤーを管理するリスト
     private List<GameObject> _playersInPortal = new List<GameObject>();
 
-    [SerializeField]
-    private StageEnemyManagement _enemyManagement = default; // 敵管理クラス
-
     // 必要なプレイヤー数
     [SerializeField, Tooltip("ノーマルステージにテレポートするために必要な人数")]
     private int _bossStageRequiredPlayers = 1; // 必要なプレイヤー数
