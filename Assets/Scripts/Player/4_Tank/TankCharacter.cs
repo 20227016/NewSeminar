@@ -38,7 +38,7 @@ public class TankCharacter : CharacterBase
         // ガード解除入力
         if (_isBlockReactive.Value && input.IsAvoidance)
         {
-            _currentState = CharacterStateEnum.IDLE;
+            CurrentState = CharacterStateEnum.IDLE;
 
             _isBlockReactive.Value = false;
 
@@ -53,7 +53,7 @@ public class TankCharacter : CharacterBase
     protected override void Avoidance(Transform transform)
     {
         // 回避処理をガードに置き換える
-        _currentState = CharacterStateEnum.AVOIDANCE;
+        CurrentState = CharacterStateEnum.AVOIDANCE;
 
         _isBlockReactive.Value = true;
 
@@ -66,17 +66,17 @@ public class TankCharacter : CharacterBase
         if (!Object.HasStateAuthority) return;
 
         // 被弾中は無敵
-        if (_currentState == CharacterStateEnum.DAMAGE_REACTION) return;
+        if (CurrentState == CharacterStateEnum.DAMAGE_REACTION) return;
 
-        _currentState = CharacterStateEnum.DAMAGE_REACTION;
+        CurrentState = CharacterStateEnum.DAMAGE_REACTION;
 
         // ダメージ量に防御力を適応して最終ダメージを算出
         float damage = (damageValue - _characterStatusStruct._defensePower);
 
         // 現在HPから最終ダメージを引く
-        _networkedHP = Mathf.Clamp(_networkedHP - damageValue, 0, _characterStatusStruct._playerStatus.MaxHp);
+        NetworkedHP = Mathf.Clamp(NetworkedHP - damageValue, 0, _characterStatusStruct._playerStatus.MaxHp);
 
-        if (_networkedHP <= 0)
+        if (NetworkedHP <= 0)
         {
             RPC_Death();
             return;

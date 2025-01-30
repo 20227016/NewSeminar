@@ -51,24 +51,24 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     // エフェクト設定
     public CharacterEffectStruct _characterEffectStruct = default;
 
-    protected NetworkObject[] _effects { get; set; } = default;
+    protected NetworkObject[] Effects { get; set; } = default;
 
     // ステート
     protected CharacterStateEnum _characterStateEnum = default;
 
     // 現在のステート
     [HideInInspector]
-    public CharacterStateEnum _currentState { get; set; } = default;
+    public CharacterStateEnum CurrentState { get; set; } = default;
 
     // HP ---------------------------------------------------------------------------------
     protected ReactiveProperty<float> _currentHP = new ReactiveProperty<float>(100f);
 
     [Networked(OnChanged = nameof(OnNetworkedHPChanged))]
-    protected float _networkedHP { get; set; } = 100f;
+    protected float NetworkedHP { get; set; } = 100f;
 
     private static void OnNetworkedHPChanged(Changed<CharacterBase> changed)
     {
-        changed.Behaviour._currentHP.Value = changed.Behaviour._networkedHP;
+        changed.Behaviour._currentHP.Value = changed.Behaviour.NetworkedHP;
     }
     // ------------------------------------------------------------------------------------
 
@@ -159,6 +159,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// </summary>
     public override void FixedUpdateNetwork()
     {
+        Debug.Log($"<color= yellow>{this.name}のステート：{CurrentState}<color>");
+
         if (GetInput(out PlayerNetworkInput data))
         {
             // 入力情報収集
@@ -251,15 +253,15 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         // ネットワーク同期用変数とリアクティブプロパティを初期化
         _currentHP.Value = _characterStatusStruct._playerStatus.MaxHp;
-        _networkedHP = _currentHP.Value;
+        NetworkedHP = _currentHP.Value;
 
         _currentStamina.Value = _characterStatusStruct._playerStatus.MaxStamina;
         _currentSkillPoint.Value = 0f;
 
-        _currentState = CharacterStateEnum.IDLE;
+        CurrentState = CharacterStateEnum.IDLE;
 
         // エフェクトを配列に格納
-        _effects = new NetworkObject[]
+        Effects = new NetworkObject[]
         {
             _characterEffectStruct._attackLight1Effect,
             _characterEffectStruct._attackLight2Effect,
@@ -280,7 +282,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     public void InstanceEffect()
     {
         // エフェクトを配列に格納
-        _effects = new NetworkObject[]
+        Effects = new NetworkObject[]
         {
             _characterEffectStruct._attackLight1Effect,
             _characterEffectStruct._attackLight2Effect,
@@ -289,21 +291,21 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             _characterEffectStruct._skillEffect
         };
 
-        for (int i = 0; i < _effects.Length; i++)
+        for (int i = 0; i < Effects.Length; i++)
         {
-            if (_effects[i] != null)
+            if (Effects[i] != null)
             {
                 // プレハブの位置（ローカル座標）を取得
-                Vector3 prefabLocalPosition = _effects[i].transform.localPosition;
+                Vector3 prefabLocalPosition = Effects[i].transform.localPosition;
 
                 // プレハブの位置に基づいてインスタンス化する
-                _effects[i] = Instantiate(_effects[i], transform.position + prefabLocalPosition, _effects[i].transform.rotation, transform);
+                Effects[i] = Instantiate(Effects[i], transform.position + prefabLocalPosition, Effects[i].transform.rotation, transform);
 
                 // インスタンスの名前を設定（任意）
-                _effects[i].name = _effects[i].name;
+                Effects[i].name = Effects[i].name;
 
                 // インスタンスを非アクティブにする
-                _effects[i].gameObject.SetActive(false);
+                Effects[i].gameObject.SetActive(false);
             }
         }
     }
@@ -334,7 +336,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         Observable.Interval(TimeSpan.FromSeconds(STAMINA_UPDATE_INTERVAL))
             // 走り状態時
-            .Where(_ => _currentState == CharacterStateEnum.RUN)
+            .Where(_ => CurrentState == CharacterStateEnum.RUN)
             // スタミナが0以上の時
             .Where(_ => _currentStamina.Value > 0)
             .Subscribe(_ =>
@@ -352,7 +354,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         Observable.Interval(TimeSpan.FromSeconds(STAMINA_UPDATE_INTERVAL))
             // 回避状態ではない
-            .Where(_ => _currentState != CharacterStateEnum.AVOIDANCE)
+            .Where(_ => CurrentState != CharacterStateEnum.AVOIDANCE)
             // 走っていない or スタミナ切れ or 移動していない
             .Where(_ => !_isRun || _isOutOfStamina || _moveDirection == Vector2.zero)
             // スタミナが最大値以下
@@ -400,17 +402,17 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         // 状態が特定のものなら入力を無視
         if (_notAttackAccepted ||
-            _currentState == CharacterStateEnum.AVOIDANCE ||
-            _currentState == CharacterStateEnum.SKILL ||
-            _currentState == CharacterStateEnum.DAMAGE_REACTION ||
-            _currentState == CharacterStateEnum.DEATH ||
-            _currentState == CharacterStateEnum.RESURRECTION)
+            CurrentState == CharacterStateEnum.AVOIDANCE ||
+            CurrentState == CharacterStateEnum.SKILL ||
+            CurrentState == CharacterStateEnum.DAMAGE_REACTION ||
+            CurrentState == CharacterStateEnum.DEATH ||
+            CurrentState == CharacterStateEnum.RESURRECTION)
         {
             Debug.Log("操作不能");
             return;
         }
 
-        if(_currentState != CharacterStateEnum.ATTACK)
+        if(CurrentState != CharacterStateEnum.ATTACK)
         {
             // 移動処理
             MoveManagement(input);
@@ -461,7 +463,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 移動値がない場合は待機状態に
         if (_moveDirection == Vector2.zero)
         {
-            _currentState = CharacterStateEnum.IDLE;
+            CurrentState = CharacterStateEnum.IDLE;
             _animation.BoolAnimation(_animator, _characterAnimationStruct._walkAnimation, false);
             _animation.BoolAnimation(_animator, _characterAnimationStruct._runAnimation, false);
             return;
@@ -473,7 +475,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 状態に応じて移動設定を変更
         _move = isWalking ? _moveProvider.GetWalk() : _moveProvider.GetRun();
         _moveSpeed = isWalking ? _characterStatusStruct._walkSpeed : _characterStatusStruct._runSpeed;
-        _currentState = isWalking ? CharacterStateEnum.WALK : CharacterStateEnum.RUN;
+        CurrentState = isWalking ? CharacterStateEnum.WALK : CharacterStateEnum.RUN;
 
         if (isWalking)
         {
@@ -485,13 +487,13 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         }
 
         // 移動を実行
-        Move(_playerTransform, _moveDirection, _moveSpeed, _rigidbody, _currentState);
+        Move(_playerTransform, _moveDirection, _moveSpeed, _rigidbody, CurrentState);
     }
 
 
     protected virtual void Move(Transform transform, Vector2 moveDirection, float moveSpeed, Rigidbody rigidbody, CharacterStateEnum characterState)
     {
-        _currentState = characterState;
+        CurrentState = characterState;
 
         _move.Move(transform, moveDirection, moveSpeed, rigidbody);
     }
@@ -499,11 +501,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     public virtual void AttackLight(CharacterBase characterBase, float attackPower, float attackMultiplier)
     {
-        _currentState = CharacterStateEnum.ATTACK;
+        CurrentState = CharacterStateEnum.ATTACK;
 
         if (Object.HasInputAuthority)
         {
-            _playEffect.RPC_PlayEffect(_effects[_attackLightComboCount], _effects[_attackLightComboCount].transform.position);
+            _playEffect.RPC_PlayEffect(Effects[_attackLightComboCount], Effects[_attackLightComboCount].transform.position);
         }
             
         // 攻撃速度を適用
@@ -558,7 +560,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         _notAttackAccepted = true;
 
-        _currentState = CharacterStateEnum.ATTACK;
+        CurrentState = CharacterStateEnum.ATTACK;
 
         _playerAttackStrong.AttackStrong(
             characterBase,
@@ -573,7 +575,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         if (Object.HasInputAuthority)
         {
-            _playEffect.RPC_PlayEffect(_effects[3], _effects[3].transform.position);
+            _playEffect.RPC_PlayEffect(Effects[3], Effects[3].transform.position);
         }
 
         ResetState(animationDuration, () => _notAttackAccepted = false);
@@ -595,7 +597,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 移動値0 or スタミナ切れ状態の時はリターン
         if (_moveDirection == Vector2.zero || _isOutOfStamina) return;
 
-        _currentState = CharacterStateEnum.AVOIDANCE;
+        CurrentState = CharacterStateEnum.AVOIDANCE;
 
         _currentStamina.Value -= _characterStatusStruct._avoidanceStamina;
 
@@ -613,7 +615,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // クールタイム中ならリターン
         if (_isSkillCoolTime) return;
 
-        _currentState = CharacterStateEnum.SKILL;
+        CurrentState = CharacterStateEnum.SKILL;
 
         // クールタイム管理
         _isSkillCoolTime = true;
@@ -629,7 +631,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         if (Object.HasInputAuthority)
         {
-            _playEffect.RPC_LoopEffect(_effects[4], _effects[4].transform.position, _characterStatusStruct._skillDuration);
+            _playEffect.RPC_LoopEffect(Effects[4], Effects[4].transform.position, _characterStatusStruct._skillDuration);
         }
 
         Invincible(animationDuration);
@@ -638,7 +640,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     protected virtual void Resurrection(Transform transform, float resurrectionTime)
     {
-        _currentState = CharacterStateEnum.RESURRECTION;
+        CurrentState = CharacterStateEnum.RESURRECTION;
 
         _resurrection.Resurrection(transform, resurrectionTime, false);
 
@@ -651,7 +653,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 無敵中はリターン
         if (isInvincible) return;
 
-        _currentState = CharacterStateEnum.DAMAGE_REACTION;
+        CurrentState = CharacterStateEnum.DAMAGE_REACTION;
 
         _resurrection.Resurrection(transform, 0, true);
 
@@ -659,9 +661,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         float damage = (damageValue - _characterStatusStruct._defensePower);
 
         // 現在HPから最終ダメージを引く
-        _networkedHP = Mathf.Clamp(_networkedHP - damage, 0, _characterStatusStruct._playerStatus.MaxHp);
+        NetworkedHP = Mathf.Clamp(NetworkedHP - damage, 0, _characterStatusStruct._playerStatus.MaxHp);
 
-        if(_networkedHP <= 0)
+        if(NetworkedHP <= 0)
         {
             RPC_Death();
             return;
@@ -691,13 +693,13 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     public virtual void RPC_ReceiveHeal(int healValue)
     {
         // HPが0の状態から回復処理をした場合は蘇生
-        if (_currentState == CharacterStateEnum.DEATH)
+        if (CurrentState == CharacterStateEnum.DEATH)
         {
             float animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._reviveAnimation);
 
             ResetState(animationDuration);
         }
-        _networkedHP = Mathf.Clamp(_networkedHP + healValue, 0, _characterStatusStruct._playerStatus.MaxHp);
+        NetworkedHP = Mathf.Clamp(NetworkedHP + healValue, 0, _characterStatusStruct._playerStatus.MaxHp);
     }
 
 
@@ -749,7 +751,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     [Rpc(RpcSources.All, RpcTargets.All)]
     protected virtual void RPC_Death()
     {
-        _currentState = CharacterStateEnum.DEATH;
+        CurrentState = CharacterStateEnum.DEATH;
 
         _animation.PlayAnimation(_animator, _characterAnimationStruct._deathAnimation);
     }
