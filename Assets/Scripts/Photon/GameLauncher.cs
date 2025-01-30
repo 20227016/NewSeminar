@@ -248,7 +248,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private void InitialSpaen(NetworkRunner runner)
     {
         runner.Spawn(_comboCounterPrefab, Vector3.zero, Quaternion.identity);
-        //runner.Spawn(_portal, _portalPosition, Quaternion.Euler(90, 0, 0));
+        runner.Spawn(_portal, _portalPosition, Quaternion.Euler(90, 0, 0));
     }
 
     /// <summary>
