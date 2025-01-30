@@ -408,6 +408,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             CurrentState == CharacterStateEnum.DEATH ||
             CurrentState == CharacterStateEnum.RESURRECTION)
         {
+            Debug.Log("操作不能");
             return;
         }
 
@@ -732,8 +733,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             _animator.speed = 1.0f;
 
             // 待機状態に
-            CurrentState = CharacterStateEnum.IDLE;
-            
+            _currentState = CharacterStateEnum.IDLE;
+            _notAttackAccepted = false;
             // リセット完了を通知
             onResetComplete?.Invoke();
         }
