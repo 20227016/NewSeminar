@@ -79,7 +79,9 @@ public class Golem : BaseEnemy
     private ParticleSystem[] _attackEffects1 = default;
     private ParticleSystem[] _attackEffects2 = default;
 
+    // 攻撃時の当たり判定
     private BoxCollider _boxCollider1 = default;
+    private BoxCollider _boxCollider2 = default;
 
     public override void Spawned()
     {
@@ -100,8 +102,12 @@ public class Golem : BaseEnemy
         _attackEffects2 = effectObj2.GetComponentsInChildren<ParticleSystem>();
 
         Transform boxObj1 = FindChild(transform, "Hand_R");
+        Transform boxObj2 = FindChild(transform, "Hand_L");
 
         _boxCollider1 = boxObj1.GetComponent<BoxCollider>();
+        _boxCollider2 = boxObj2.GetComponent<BoxCollider>();
+        _boxCollider1.enabled = false;
+        _boxCollider2.enabled = false;
 
         _randomTargetPos = GenerateRandomPosition();
     }
@@ -449,6 +455,8 @@ public class Golem : BaseEnemy
         {
             _animator.SetInteger("TransitionNo", 0);
             isAttackInterval = false;
+            _boxCollider1.enabled = false;
+            _boxCollider2.enabled = false;
         }
 
         if (isAttackInterval)
@@ -677,21 +685,43 @@ public class Golem : BaseEnemy
         _movementState = EnemyMovementState.DIE;
     }
 
+    /// <summary>
+    /// 攻撃1のエフェクト
+    /// </summary>
     private void AttackEffect01()
     {
-        // 溜め中のエフェクトを再能
         foreach (var effect in _attackEffects1)
         {
             effect.Play();
         }
     }
 
+    /// <summary>
+    /// 攻撃2のエフェクト
+    /// </summary>
+
     private void AttackEffect02()
     {
-        // 溜め中のエフェクトを再能
         foreach (var effect in _attackEffects2)
         {
             effect.Play();
         }
+    }
+
+    /// <summary>
+    /// 攻撃1の当たり判定
+    /// </summary>
+    private void AttackCollider1()
+    {
+        _boxCollider1.enabled = true;
+    }
+
+    /// <summary>
+    /// 攻撃2の当たり判定
+    /// </summary>
+    private void AttackCollider2()
+    {
+        _boxCollider1.enabled = true;
+        _boxCollider2.enabled = true;
     }
 }

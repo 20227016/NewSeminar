@@ -468,8 +468,6 @@ public class BossDemo : BaseEnemy
 
         foreach (Collider col in hitColliders)
         {
-            Debug.Log($"Found: {col.gameObject.name}");
-
             if (col.gameObject.name == "GolemPADefault(Clone)")
             {
                 _golem = col.gameObject;

@@ -65,9 +65,6 @@ public class Fishman : BaseEnemy
     private float _lookAroundTimer = 0f; // 周囲を見渡すためのタイマー
     private float _turnSpeed = 60f; // 回転速度 (度/秒)
 
-    private GameObject _harpoon = default;
-    private BoxCollider _boxCollider = default;
-
     // アニメーター変数
     // TransitionNo.0 Idle
     // TransitionNo.1 Walk
@@ -83,6 +80,9 @@ public class Fishman : BaseEnemy
     private ParticleSystem[] _attackEffects1 = default;
     private ParticleSystem[] _attackEffects2 = default;
 
+    // 攻撃時の当たり判定
+    private BoxCollider _boxCollider1 = default;
+
     public override void Spawned()
     {
         _searchRange = 20f;
@@ -93,10 +93,6 @@ public class Fishman : BaseEnemy
         // HPUIの初期化
         RPC_UpdateHPBar();
 
-        _harpoon = GameObject.Find("Harpoon");
-        _boxCollider = _harpoon.GetComponent<BoxCollider>();
-        _boxCollider.enabled = false;
-
         _animator = GetComponent<Animator>();
 
         Transform effectObj1 = FindChild(transform, "ChargeYellow"); // 子1のオブジェクト名
@@ -104,6 +100,11 @@ public class Fishman : BaseEnemy
 
         _attackEffects1 = effectObj1.GetComponentsInChildren<ParticleSystem>();
         //_attackEffects2 = effectObj2.GetComponentsInChildren<ParticleSystem>();
+
+        Transform boxObj1 = FindChild(transform, "Harpoon");
+
+        _boxCollider1 = boxObj1.GetComponent<BoxCollider>();
+        _boxCollider1.enabled = false;
 
         _randomTargetPos = GenerateRandomPosition();
     }
@@ -114,17 +115,17 @@ public class Fishman : BaseEnemy
         {
             if (child.name == childName)
             {
-                return child; // **見つかったらそのオブジェクトを返す**
+                return child; // 見つかったらそのオブジェクトを返す
             }
 
-            // **再帰的にさらに深い子階層を探索**
+            // 再帰的にさらに深い子階層を探索
             Transform found = FindChild(child, childName);
             if (found != null)
             {
                 return found;
             }
         }
-        return null; // **見つからなかった場合は null**
+        return null; // 見つからなかった場合は null
     }
 
     /// <summary>
@@ -219,7 +220,6 @@ public class Fishman : BaseEnemy
         {
             _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
             _actionState = EnemyActionState.SEARCHING;
-            _boxCollider.enabled = false;
             isAttackInterval = false;
 
             // トリガーをセット
@@ -254,7 +254,7 @@ public class Fishman : BaseEnemy
     }
 
     /// <summary>
-    /// ゴーレムの前方に広い範囲で障害物があるかを判定する
+    /// 前方に広い範囲で障害物があるかを判定する
     /// </summary>
     /// <param name="direction">移動方向</param>
     /// <param name="distance">検出範囲の距離</param>
@@ -263,8 +263,8 @@ public class Fishman : BaseEnemy
     {
         // BoxCastの設定
         Vector3 boxSize = new Vector3(3.0f, 1.0f, 0.5f); // 幅、高さ、奥行き
-        Vector3 origin = transform.position + Vector3.up * 0.5f; // ゴーレムの少し上から発射
-        Quaternion rotation = Quaternion.LookRotation(direction); // ゴーレムの向きに合わせる
+        Vector3 origin = transform.position + Vector3.up * 0.5f; // 少し上から発射
+        Quaternion rotation = Quaternion.LookRotation(direction); // 向きに合わせる
 
         // BoxCastで障害物を検出
         RaycastHit hit;
@@ -424,7 +424,6 @@ public class Fishman : BaseEnemy
         {
             _movementState = EnemyMovementState.IDLE;  // 待機状態に戻す
             _actionState = EnemyActionState.ATTACKING;
-            _boxCollider.enabled = true;
             _attackingPlayer = null;
             return;
         }
@@ -436,7 +435,7 @@ public class Fishman : BaseEnemy
             moveSpeed * Time.deltaTime
         );
 
-        // ゴーレムの方向をプレイヤーに向ける (Y軸回転のみ)
+        // 方向をプレイヤーに向ける (Y軸回転のみ)
         Vector3 direction = (targetPosition - currentPosition).normalized;
         if (direction != Vector3.zero)
         {
@@ -456,6 +455,7 @@ public class Fishman : BaseEnemy
         {
             _animator.SetInteger("TransitionNo", 0);
             isAttackInterval = false;
+            _boxCollider1.enabled = false;
         }
 
         if (isAttackInterval)
@@ -483,8 +483,6 @@ public class Fishman : BaseEnemy
             _targetTrans = null;
             return;
         }
-
-        //_movementState = EnemyMovementState.IDLE;  // 待機状態に戻す
     }
 
     /// <summary>
@@ -657,8 +655,6 @@ public class Fishman : BaseEnemy
         // ボックスキャストの実行
         if (Physics.BoxCast(center, halfExtents, direction, out RaycastHit hit, orientation, maxDistance, layerMask))
         {
-            // Debug.Log("ヒットしたオブジェクト: " + hit.collider.gameObject.name);
-
             // プレイヤー（レイヤー6）の場合の処理
             if (hit.collider.gameObject.layer == 6)
             {
@@ -675,7 +671,6 @@ public class Fishman : BaseEnemy
         {
             // ヒットしなかった場合
             _targetTrans = null;
-            // Debug.Log("プレイヤーもステージも検出されませんでした。");
         }
     }
 
@@ -687,21 +682,33 @@ public class Fishman : BaseEnemy
         _movementState = EnemyMovementState.DIE;
     }
 
+    /// <summary>
+    /// 攻撃1のエフェクト
+    /// </summary>
     private void AttackEffect01()
     {
-        // 溜め中のエフェクトを再能
         foreach (var effect in _attackEffects1)
         {
             effect.Play();
         }
     }
 
+    /// <summary>
+    /// 攻撃2のエフェクト
+    /// </summary>
     private void AttackEffect02()
     {
-        // 溜め中のエフェクトを再能
         foreach (var effect in _attackEffects2)
         {
             effect.Play();
         }
+    }
+
+    /// <summary>
+    /// 攻撃1の当たり判定
+    /// </summary>
+    private void AttackCollider1()
+    {
+        _boxCollider1.enabled = true;
     }
 }
