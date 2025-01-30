@@ -24,11 +24,8 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField, Tooltip("ボスへ向かうテレポーター")]
     private GameObject _bossTeleporter = default;
 
-    [SerializeField, Tooltip("ステージをわける仕切り")]
-    private GameObject _wavePartition = default;
-
-    [SerializeField, Tooltip("ステージをわける仕切り")]
-    private GameObject _wavePartitionEND = default;
+    [SerializeField, Tooltip("真ん中のEFを管理するオブジェクト")]
+    private GameObject _wave2ClearManager = default;
 
     [SerializeField, Tooltip("ネットワークランナープレハブ")]
     private NetworkRunner _networkRunnerPrefab = default;
@@ -98,8 +95,6 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         _currentWave++;
 
-
-
         if (_currentWave >= _enemyWaves.Count)
         {
             Debug.Log("すべてのウェーブが終了しました！");
@@ -147,19 +142,11 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         if (_currentWave == 2)
         {
-            print("Wave２になりました(ローカル)");
-            RPC_WaveGeteOpen();
+            // WaveClearを生成する
+            runner.Spawn(_wave2ClearManager, transform.position, Quaternion.identity);
         }
 
         Debug.Log($"{_spawnedEnemies.Count} 体のエネミーをウェーブ {waveIndex + 1} にスポーンしました");
-    }
-
-    [Rpc(RpcSources.All,RpcTargets.All)]
-    private void RPC_WaveGeteOpen()
-    {
-        print("2Waveをクリアしました。ゲート開放！(ネットワーク)");
-        _wavePartitionEND.SetActive(true);
-        _wavePartition.SetActive(false);
     }
 
     /// <summary>
@@ -195,10 +182,4 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
 
-
-
-    public class EnemySpawner1 : NetworkBehaviour
-    {
-
-    }
 }
