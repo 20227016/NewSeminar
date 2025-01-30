@@ -159,8 +159,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// </summary>
     public override void FixedUpdateNetwork()
     {
-        Debug.Log(this.name + "ステート" + _currentState);
-
         if (GetInput(out PlayerNetworkInput data))
         {
             // 入力情報収集
