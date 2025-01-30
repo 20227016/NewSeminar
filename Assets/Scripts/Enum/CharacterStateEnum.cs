@@ -32,5 +32,9 @@ public enum CharacterStateEnum
     /// <summary>
     /// éÄñS
     /// </summary>
-    DEATH
+    DEATH,
+    /// <summary>
+    /// ëhê∂
+    /// </summary>
+    RESURRECTION
 }

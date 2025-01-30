@@ -23,6 +23,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     public IReadOnlyReactiveProperty<float> CurrentSkillPoint => _currentSkillPoint;
 
+    public PlayerUIPresenter PlayerUIPresenter { get => _playerUIPresenter; set => _playerUIPresenter = value; }
+
     #endregion
 
     #region 定数
@@ -129,7 +131,10 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected IAnimation _animation = new PlayerAnima();
     protected IPlayEffect _playEffect = new PlayerPlayEffect();
 
-    public PlayerUIPresenter _playerUIPresenter = default;
+    private PlayerUIPresenter _playerUIPresenter = default;
+
+    private bool isInvincible = false;
+    protected CancellationTokenSource invincibleCts;
 
     #endregion
 
@@ -176,9 +181,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
             // UIをリンク
             GameObject canvas = GameObject.FindGameObjectWithTag("Canvas");
-            _playerUIPresenter = canvas.GetComponentInChildren<PlayerUIPresenter>();
+            PlayerUIPresenter = canvas.GetComponentInChildren<PlayerUIPresenter>();
             LockOnCursorPresenter lockOnCursorPresenter = canvas.GetComponentInChildren<LockOnCursorPresenter>();
-            _playerUIPresenter.SetMyModel(this.gameObject);
+            PlayerUIPresenter.SetMyModel(this.gameObject);
             lockOnCursorPresenter.SetModel(this.gameObject);
 
         }
@@ -193,7 +198,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             return;
         }
 
-        int modelCount = _playerUIPresenter.GetAllyModelCount() + 1;
+        int modelCount = PlayerUIPresenter.GetAllyModelCount() + 1;
 
         // シーン内の全てのPlayerを取得
         CharacterBase[] allCharacters = FindObjectsOfType<CharacterBase>();
@@ -205,14 +210,14 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         foreach (CharacterBase characterBase in allCharacters)
         {
-            if (characterBase == this || _playerUIPresenter.IsAllyModelSet(characterBase))
+            if (characterBase == this || PlayerUIPresenter.IsAllyModelSet(characterBase))
             {
                 // 自分自身または既に登録されているモデルはスキップ
                 continue;
             }
 
             // PlayerUIPresenterにモデルを設定
-            character._playerUIPresenter.SetAllyModel(characterBase, modelCount);
+            character.PlayerUIPresenter.SetAllyModel(characterBase, modelCount);
 
             modelCount++;
         }
@@ -238,14 +243,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// </summary>
     protected virtual void InitialValues()
     {
-        // 死亡判定
-        _currentHP
-            .Where(_ => _ <= 0)
-            .Subscribe(_ =>
-            {
-                RPC_Death();
-            })
-            .AddTo(this);
 
         // 初期化
         _playerTransform = this.transform;
@@ -270,6 +267,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             _characterEffectStruct._attackStrongEffect,
             _characterEffectStruct._skillEffect
         };
+
 
         // エフェクトを設定
         InstanceEffect();
@@ -492,6 +490,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected virtual void Move(Transform transform, Vector2 moveDirection, float moveSpeed, Rigidbody rigidbody, CharacterStateEnum characterState)
     {
         _currentState = characterState;
+
         _move.Move(transform, moveDirection, moveSpeed, rigidbody);
     }
 
@@ -574,7 +573,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         {
             _playEffect.RPC_PlayEffect(_effects[3], _effects[3].transform.position);
         }
-            
 
         ResetState(animationDuration, () => _notAttackAccepted = false);
 
@@ -584,7 +582,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     protected virtual void Targetting()
     {
-        _networkedHP -= 100f;
+        RPC_ReceiveDamage(50);
 
         _target.Targetting();
     }
@@ -603,6 +601,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _avoidance.Avoidance(transform, _moveDirection, _characterStatusStruct._avoidanceDistance, animationDuration);
 
+        Invincible(animationDuration);
         ResetState(animationDuration);
     }
 
@@ -631,20 +630,21 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             _playEffect.RPC_LoopEffect(_effects[4], _effects[4].transform.position, _characterStatusStruct._skillDuration);
         }
 
+        Invincible(animationDuration);
         ResetState(animationDuration);
     }
 
     protected virtual void Resurrection(Transform transform, float resurrectionTime)
     {
-        Debug.Log("蘇生させるよ" + this.gameObject.name);
+        
         _resurrection.Resurrection(transform, resurrectionTime);
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
     public virtual void RPC_ReceiveDamage(int damageValue)
     {
-        // 被弾中は無敵
-        if (_currentState == CharacterStateEnum.DAMAGE_REACTION) return;
+        // 無敵中はリターン
+        if (isInvincible) return;
 
         _currentState = CharacterStateEnum.DAMAGE_REACTION;
 
@@ -654,7 +654,12 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 現在HPから最終ダメージを引く
         _networkedHP = Mathf.Clamp(_networkedHP - damageValue, 0, _characterStatusStruct._playerStatus.MaxHp);
 
-        if(_networkedHP <= 0) return;
+        
+        if(_networkedHP <= 0)
+        {
+            RPC_Death();
+            return;
+        }
 
         // 被弾時のリアクション
         float animationDuration;
@@ -667,10 +672,12 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         {
             // 吹っ飛び
             animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._damageReactionHeavyAnimation);
+
             // ノックバック
             _avoidance.Avoidance(transform, new Vector2(-transform.forward.x, -transform.forward.z), _characterStatusStruct._avoidanceDistance, animationDuration / 5);
         }
 
+        Invincible(animationDuration * 2f);
         ResetState(animationDuration);
     }
 
@@ -678,7 +685,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     public virtual void RPC_ReceiveHeal(int healValue)
     {
         // HPが0の状態から回復処理をした場合は蘇生
-        if (_networkedHP <= 0 && healValue > 0)
+        if (_currentState == CharacterStateEnum.DEATH)
         {
             float animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._reviveAnimation);
 
@@ -733,13 +740,33 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// <summary>
     /// 死亡処理
     /// </summary>
+    [Rpc(RpcSources.All, RpcTargets.All)]
     protected virtual void RPC_Death()
     {
-        _resetStateTokenSource?.Cancel();
-
         _currentState = CharacterStateEnum.DEATH;
 
         _animation.PlayAnimation(_animator, _characterAnimationStruct._deathAnimation);
     }
 
+
+
+    protected async virtual void Invincible(float resetTime)
+    {
+        // 以前の処理があればキャンセル
+        invincibleCts?.Cancel();
+        invincibleCts = new CancellationTokenSource();
+
+        isInvincible = true;
+
+        try
+        {
+            await UniTask.Delay(Mathf.RoundToInt(resetTime * 1000), cancellationToken: invincibleCts.Token);
+            // 無敵解除の処理
+            isInvincible = false;
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+    }
 }

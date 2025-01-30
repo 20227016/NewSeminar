@@ -39,6 +39,11 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     private Subject<Unit> _startGameSubject = new();
 
+    /// <summary>
+    /// スポーンしたかのフラグ
+    /// </summary>
+    private bool _hasSpawn = default;
+
     public Subject<Unit> StartGameSubject { get => _startGameSubject; set => _startGameSubject = value; }
 
     public NetworkRunner NetworkRunner { get => _networkRunner; set => _networkRunner = value; }
@@ -53,7 +58,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         networkRunner.AddCallbacks(this);
         NetworkRunner = networkRunner;
 
-        StartGameResult result = await networkRunner.StartGame(new StartGameArgs
+        await networkRunner.StartGame(new StartGameArgs
         {
             GameMode = GameMode.AutoHostOrClient,
             SceneManager = networkRunner.GetComponent<NetworkSceneManagerDefault>()
@@ -61,18 +66,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
         _startGameSubject.OnNext(Unit.Default);
 
-        // ここでComboCounterを生成
-        if (networkRunner.IsServer)
-        {
-            InitialSpaen(networkRunner);
-        }
-    }
-
-    // ComboCounterを生成するメソッド
-    private void InitialSpaen(NetworkRunner runner)
-    {
-        runner.Spawn(_comboCounterPrefab, Vector3.zero, Quaternion.identity);
-        runner.Spawn(_portal, _portalPosition, Quaternion.Euler(90, 0, 0));
     }
 
     private void RegisterInputActions(bool isRegister)
@@ -224,7 +217,17 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         {
             return;
         }
+        if (!_hasSpawn)
+        {
 
+            _hasSpawn = true;
+            // ここでComboCounterを生成
+            if (runner.IsServer)
+            {
+                InitialSpaen(runner);
+            }
+
+        }
         // 現在のプレイヤー数を確認
         if (runner.ActivePlayers.Count() > 4) // 最大4人まで
         {
@@ -239,6 +242,13 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         NetworkObject playerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
 
         runner.SetPlayerObject(player, playerObject);
+    }
+
+    // ComboCounterを生成するメソッド
+    private void InitialSpaen(NetworkRunner runner)
+    {
+        runner.Spawn(_comboCounterPrefab, Vector3.zero, Quaternion.identity);
+        runner.Spawn(_portal, _portalPosition, Quaternion.Euler(90, 0, 0));
     }
 
     /// <summary>

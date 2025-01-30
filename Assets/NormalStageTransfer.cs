@@ -6,19 +6,18 @@ using UniRx;
 public class NormalStageTransfer : NetworkBehaviour
 {
 
-    // テレポート内のプレイヤーを管理するリスト
+    /// <summary>
+    ///  テレポート内のプレイヤーを管理するリスト
+    /// </summary>
     private List<GameObject> _playersInPortal = new List<GameObject>();
 
-    private EnemySpawner _enemySpawner = default; // 敵管理クラス
-
-    [Networked]
-    private bool _clearNormalStage { get; set; } = false;
-
-    // 必要なプレイヤー数
-    [Networked, SerializeField,Tooltip("ノーマルステージにテレポートするために必要な人数")]
-    private int _normalStageRequiredPlayers { get; set; } = 2; // 必要なプレイヤー数
-
+    /// <summary>
+    /// ノーマルステージのポータルに入りステージ移動した後の位置
+    /// </summary>
     private GameObject _normalTeleportPosition = default;
+    /// <summary>
+    /// ボスステージのポータルに入りステージ移動した後の位置
+    /// </summary>
     private GameObject _bossTeleportPosition = default;
 
     [Tooltip("ノーマルステージのテレポート座標")]
@@ -27,10 +26,29 @@ public class NormalStageTransfer : NetworkBehaviour
     [Tooltip("ボスステージのテレポート座標")]
     private Transform _bossStageteleportPos = default;
 
+    /// <summary>
+    /// 敵管理クラス
+    /// </summary>
+    private EnemySpawner _enemySpawner = default;
+
+    /// <summary>
+    /// ノーマルステージをクリアしたかのフラグ
+    /// </summary>
+    [Networked]
+    public bool ClearNormalStage { get; set; } = false;
+
+    /// <summary>
+    /// ノーマルステージにテレポートするために必要な人数
+    /// </summary>
+    [Networked, Tooltip("ノーマルステージにテレポートするために必要な人数")]
+    public int NormalStageRequiredPlayers { get; set; }
+
+
     public override void Spawned()
     {
 
         _enemySpawner = FindObjectOfType<EnemySpawner>();
+
         _normalTeleportPosition = GameObject.Find("NormalTeleportPosition");
         _bossTeleportPosition = GameObject.Find("BossTeleportPosition");
 
@@ -56,14 +74,15 @@ public class NormalStageTransfer : NetworkBehaviour
             _playersInPortal.Add(collider.gameObject);
             print($"プレイヤーを検知。現在の人数は {_playersInPortal.Count} です");
         }
-
         // 必要人数が揃ったら全員をテレポート
-        if ((_playersInPortal.Count >= _normalStageRequiredPlayers) && (!_clearNormalStage))
+        if ((_playersInPortal.Count >= NormalStageRequiredPlayers) && (!ClearNormalStage))
         {
+            Debug.Log($"<color=red>ポータル人数：{_playersInPortal.Count}</color>");
+            Debug.Log($"<color=red>参加人数：{NormalStageRequiredPlayers}</color>");
             print("ただのテレポート");
             NormalTeleportAllPlayers();
         }
-        else if ((_playersInPortal.Count >= _normalStageRequiredPlayers) && (_clearNormalStage))
+        else if ((_playersInPortal.Count >= NormalStageRequiredPlayers) && (ClearNormalStage))
         {
             print("ボステレポート、成功");
             BossTeleportAllPlayers();
@@ -96,7 +115,7 @@ public class NormalStageTransfer : NetworkBehaviour
             print($"{player.name} をノーマルステージにテレポートしました");
         }
         // 一度ノーマルステージにテレポートしたらノーマルステージに行くためのテレポート人数を1人にする(再接続用)
-        _normalStageRequiredPlayers = 1;
+        NormalStageRequiredPlayers = 1;
     }
 
     private void BossTeleportAllPlayers()
@@ -120,7 +139,7 @@ public class NormalStageTransfer : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_AllEnemiesDefeated()
     {
-        _clearNormalStage = true;
-        print("敵全滅の通知を受け取りました" + _clearNormalStage);
+        ClearNormalStage = true;
+        print("敵全滅の通知を受け取りました" + ClearNormalStage);
     }
 }
