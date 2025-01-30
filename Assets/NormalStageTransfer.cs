@@ -77,6 +77,8 @@ public class NormalStageTransfer : NetworkBehaviour
         // 必要人数が揃ったら全員をテレポート
         if ((_playersInPortal.Count >= NormalStageRequiredPlayers) && (!ClearNormalStage))
         {
+            Debug.Log($"<color=red>ポータル人数：{_playersInPortal.Count}</color>");
+            Debug.Log($"<color=red>参加人数：{NormalStageRequiredPlayers}</color>");
             print("ただのテレポート");
             NormalTeleportAllPlayers();
         }
