@@ -58,7 +58,7 @@ public class HealerSkill : MonoBehaviour, ISkill
         foreach (Collider collider in hitColliders)
         {
             CharacterBase characterBase = collider.GetComponent<CharacterBase>();
-            if(characterBase._currentState == CharacterStateEnum.DEATH)
+            if(characterBase.CurrentState == CharacterStateEnum.DEATH)
             {
                 return;
             }

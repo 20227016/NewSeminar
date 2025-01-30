@@ -61,7 +61,7 @@ public class PlayerResurrection : IResurrection
             }
 
             // 対象のキャラクターがDEATH状態か確認
-            if (targetCharacter._currentState == CharacterStateEnum.DEATH)
+            if (targetCharacter.CurrentState == CharacterStateEnum.DEATH)
             {
                 try
                 {
