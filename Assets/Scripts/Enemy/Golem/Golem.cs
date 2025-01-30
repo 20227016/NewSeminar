@@ -75,6 +75,12 @@ public class Golem : BaseEnemy
     // TransitionNo.6 Die
     private Animator _animator;
 
+    // 子オブジェクトのParticleSystemを取得
+    private ParticleSystem[] _attackEffects1 = default;
+    private ParticleSystem[] _attackEffects2 = default;
+
+    private BoxCollider _boxCollider1 = default;
+
     public override void Spawned()
     {
         _searchRange = 20f;
@@ -87,7 +93,37 @@ public class Golem : BaseEnemy
 
         _animator = GetComponent<Animator>();
 
+        //_boxCollider1 = FindChild(transform, "Hand_R");
+
+        Transform _effectObj1 = FindChild(transform, "ChargeRed"); // 子1のオブジェクト名
+        Transform _effectObj2 = FindChild(transform, "RedEnergyExplosion"); // 子2のオブジェクト名
+
+        _attackEffects1 = _effectObj1.GetComponentsInChildren<ParticleSystem>();
+        _attackEffects2 = _effectObj2.GetComponentsInChildren<ParticleSystem>();
+
         _randomTargetPos = GenerateRandomPosition();
+    }
+
+    /// <summary>
+    /// 再帰的に子オブジェクトを探す
+    /// </summary>
+    private Transform FindChild(Transform parent, string childName)
+    {
+        foreach (Transform child in parent)
+        {
+            if (child.name == childName)
+            {
+                return child; // 見つかったらそのオブジェクトを返す
+            }
+
+            // 再帰的にさらに深い子階層を探索
+            Transform found = FindChild(child, childName);
+            if (found != null)
+            {
+                return found;
+            }
+        }
+        return null; // 見つからなかった場合は null
     }
 
     /// <summary>
@@ -438,8 +474,6 @@ public class Golem : BaseEnemy
             _targetTrans = null;
             return;
         }
-
-        //_movementState = EnemyMovementState.IDLE;  // 待機状態に戻す
     }
 
     /// <summary>
@@ -630,7 +664,6 @@ public class Golem : BaseEnemy
         {
             // ヒットしなかった場合
             _targetTrans = null;
-            // Debug.Log("プレイヤーもステージも検出されませんでした。");
         }
     }
 
@@ -640,5 +673,23 @@ public class Golem : BaseEnemy
     protected override void OnDeath()
     {
         _movementState = EnemyMovementState.DIE;
+    }
+
+    private void AttackEffect01()
+    {
+        // 溜め中のエフェクトを再能
+        foreach (var effect in _attackEffects1)
+        {
+            effect.Play();
+        }
+    }
+
+    private void AttackEffect02()
+    {
+        // 溜め中のエフェクトを再能
+        foreach (var effect in _attackEffects2)
+        {
+            effect.Play();
+        }
     }
 }
