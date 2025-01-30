@@ -4908,7 +4908,7 @@ MonoBehaviour:
   WordOffset: 0
   WordCount: 0
   _interpolationDataSource: 0
-  __normalStageRequiredPlayers: 3
+  __normalStageRequiredPlayers: 2
 --- !u!114 &3167697459582647966
 MonoBehaviour:
   m_ObjectHideFlags: 0
