@@ -45,7 +45,8 @@ public class FireTornado : BaseEnemy
     /// </summary>
     private void Deactivate()
     {
-        gameObject.SetActive(false); // オブジェクトを非アクティブ化
+        Destroy(gameObject);
+        // gameObject.SetActive(false); // オブジェクトを非アクティブ化
     }
 
     /// <summary>
