@@ -23,7 +23,7 @@ public class BossStageTransfer : MonoBehaviour
         if (collider.CompareTag("Player") && !_playersInPortal.Contains(collider.gameObject))
         {
             _playersInPortal.Add(collider.gameObject);
-            print($"プレイヤーを検知。現在の人数は {_playersInPortal.Count} です");
+            print($"プレイヤーを検知。現在の人数は {_playersInPortal.Count} /{BossStageRequiredPlayers}です");
         }
 
         // 必要人数が揃ったら全員をテレポート

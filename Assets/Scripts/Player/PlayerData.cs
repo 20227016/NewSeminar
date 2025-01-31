@@ -34,7 +34,6 @@ public class PlayerData : NetworkBehaviour
             CharacterSelectionManager characterSelectionManager = canvas.GetComponentInChildren<CharacterSelectionManager>();
             _normalStageTransfer = FindObjectOfType<NormalStageTransfer>();
             _bossStageTransfer = Resources.FindObjectsOfTypeAll<BossStageTransfer>().FirstOrDefault(obj => obj.name == "IsHitPlayer");
-            _bossStageTransfer = FindObjectOfType<BossStageTransfer>();
             if (_normalStageTransfer == null)
             {
 
@@ -76,7 +75,8 @@ public class PlayerData : NetworkBehaviour
     public void RPC_PlayerJoined()
     {
 
-        _normalStageTransfer.NormalStageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
+        _normalStageTransfer.StageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
+        Debug.Log($"åªç›ÇÃéQâ¡êlêî{_networkRunner.SessionInfo.PlayerCount}");
         _bossStageTransfer.BossStageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
 
     }
@@ -85,7 +85,7 @@ public class PlayerData : NetworkBehaviour
     public void RPC_PlayerLeft()
     {
 
-        _normalStageTransfer.NormalStageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
+        _normalStageTransfer.StageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
         _bossStageTransfer.BossStageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
 
     }
