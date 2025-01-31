@@ -744,7 +744,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             // 待機状態に
             CurrentState = CharacterStateEnum.IDLE;
 
-
             _notAttackAccepted = false;
 
             // リセット完了を通知
