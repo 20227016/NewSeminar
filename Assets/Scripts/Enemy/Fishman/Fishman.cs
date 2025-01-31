@@ -42,7 +42,7 @@ public class Fishman : BaseEnemy
     [Tooltip("物理攻撃ダメージ")]
     [SerializeField] private float _damage = 10f;
 
-    private bool isAttackInterval = default; // 連続攻撃をしない
+    [SerializeField] private bool isAttackInterval = default; // 連続攻撃をしない
 
     private float _downedTimer = 5f; // ダウンタイマー
     private float _stunnedTimer = default; // のけぞりタイマー
@@ -95,11 +95,12 @@ public class Fishman : BaseEnemy
 
         _animator = GetComponent<Animator>();
 
-        Transform effectObj1 = FindChild(transform, "ChargeYellow"); // 子1のオブジェクト名
-        //Transform effectObj2 = FindChild(transform, "RedEnergyExplosion"); // 子2のオブジェクト名
+        // 子のオブジェクト名
+        Transform effectObj1 = FindChild(transform, "ChargeYellow");
+        Transform effectObj2 = FindChild(transform, "Flash_ellow"); 
 
         _attackEffects1 = effectObj1.GetComponentsInChildren<ParticleSystem>();
-        //_attackEffects2 = effectObj2.GetComponentsInChildren<ParticleSystem>();
+        _attackEffects2 = effectObj2.GetComponentsInChildren<ParticleSystem>();
 
         Transform boxObj1 = FindChild(transform, "Harpoon");
 
