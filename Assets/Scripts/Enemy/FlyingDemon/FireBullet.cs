@@ -46,7 +46,7 @@ public class FireBullet : BaseEnemy
     {
         base.OnTriggerEnter(other);
 
-        if (other.gameObject.layer == 6 || other.gameObject.layer == 8)
+        if (other.gameObject.layer != 6 && other.gameObject.layer != 7)
         {
             // 衝突点を取得
             if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, Mathf.Infinity))
@@ -69,7 +69,8 @@ public class FireBullet : BaseEnemy
     /// </summary>
     private void Deactivate()
     {
-        gameObject.SetActive(false); // オブジェクトを非アクティブ化
+        Destroy(gameObject);
+        // gameObject.SetActive(false); // オブジェクトを非アクティブ化
     }
 
     /// <summary>
