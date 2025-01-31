@@ -21,6 +21,7 @@ public class PlayerResurrection : IResurrection
     {
         if (isCancel)
         {
+            Debug.Log("キャンセル");
             // 前の処理が残っていればキャンセル
             _cancellationTokenSource?.Cancel();
             return;
@@ -63,6 +64,7 @@ public class PlayerResurrection : IResurrection
             // 対象のキャラクターがDEATH状態か確認
             if (targetCharacter.CurrentState == CharacterStateEnum.DEATH)
             {
+                Debug.Log("蘇生開始");
                 try
                 {
                     // (resurrectionTime * 1000)ミリ秒待機

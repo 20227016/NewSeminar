@@ -159,8 +159,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// </summary>
     public override void FixedUpdateNetwork()
     {
-        Debug.Log($"<color= yellow>{this.name}のステート：{CurrentState}<color>");
-
         if (GetInput(out PlayerNetworkInput data))
         {
             // 入力情報収集
@@ -400,6 +398,17 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             _isRun = !_isRun;
         }
 
+        if (CurrentState == CharacterStateEnum.RESURRECTION)
+        {
+            if (input.IsResurrection)
+            {
+                Resurrection(this.transform, 0);
+
+                ResetState(0);
+            }
+            return;
+        }
+
         // 状態が特定のものなら入力を無視
         if (_notAttackAccepted ||
             CurrentState == CharacterStateEnum.AVOIDANCE ||
@@ -408,7 +417,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             CurrentState == CharacterStateEnum.DEATH ||
             CurrentState == CharacterStateEnum.RESURRECTION)
         {
-            Debug.Log("操作不能");
             return;
         }
 
@@ -522,6 +530,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         // 連続攻撃リセットタイマー
         _attackLightComboResetDisposable?.Dispose();
+
         _attackLightComboResetDisposable = Observable.Timer(TimeSpan.FromSeconds(animationDuration + COMBO_RESET_TIME))
             .Subscribe(_ => _attackLightComboCount = 0)
             .AddTo(this);
@@ -692,7 +701,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     [Rpc(RpcSources.All, RpcTargets.All)]
     public virtual void RPC_ReceiveHeal(int healValue)
     {
-        // HPが0の状態から回復処理をした場合は蘇生
+        // 死亡状態から回復処理をした場合は蘇生
         if (CurrentState == CharacterStateEnum.DEATH)
         {
             float animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._reviveAnimation);
@@ -734,7 +743,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
             // 待機状態に
             CurrentState = CharacterStateEnum.IDLE;
+
             _notAttackAccepted = false;
+
             // リセット完了を通知
             onResetComplete?.Invoke();
         }

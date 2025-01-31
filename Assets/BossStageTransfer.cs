@@ -7,8 +7,8 @@ public class BossStageTransfer : MonoBehaviour
     private List<GameObject> _playersInPortal = new List<GameObject>();
 
     // 必要なプレイヤー数
-    [SerializeField, Tooltip("ノーマルステージにテレポートするために必要な人数")]
-    private int _bossStageRequiredPlayers = 1; // 必要なプレイヤー数
+    [ Tooltip("ノーマルステージにテレポートするために必要な人数")]
+    public int BossStageRequiredPlayers { get; set; }// 必要なプレイヤー数
 
     [SerializeField, Tooltip("ボスステージのテレポート座標")]
     private Transform _bossTeleportPos = default;
@@ -27,7 +27,7 @@ public class BossStageTransfer : MonoBehaviour
         }
 
         // 必要人数が揃ったら全員をテレポート
-        if (_playersInPortal.Count >= _bossStageRequiredPlayers)
+        if (_playersInPortal.Count >= BossStageRequiredPlayers)
         {
             BossTeleportAllPlayers();
         }

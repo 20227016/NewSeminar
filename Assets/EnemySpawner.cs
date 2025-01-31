@@ -21,8 +21,6 @@ public class EnemyWave
 /// </summary>
 public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
-    [SerializeField, Tooltip("ボスへ向かうテレポーター")]
-    private GameObject _bossTeleporter = default;
 
     [SerializeField, Tooltip("真ん中のEFを管理するオブジェクト")]
     private GameObject _wave2ClearManager = default;
@@ -43,7 +41,7 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     private bool _spawnEnd = default;
 
     // スポーン済みエネミーを管理
-    private List<NetworkObject> _spawnedEnemies = new List<NetworkObject>(); 
+    private List<NetworkObject> _spawnedEnemies = new List<NetworkObject>();
 
     // Waveクリア通知
     private Subject<Unit> OnEnemiesDefeated = new Subject<Unit>();
@@ -87,7 +85,7 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     /// </summary>
     private void StartWave(NetworkRunner runner)
     {
-      
+
         if (_enemyWaves.Count == 0)
         {
             Debug.LogWarning("エネミーウェーブが設定されていません！");
@@ -111,12 +109,9 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (_currentWave >= _enemyWaves.Count)
         {
             Debug.Log("すべてのウェーブが終了しました！");
-            if (_bossTeleporter != null)
-            {
-                OnAllEnemiesDefeated.OnNext(Unit.Default);
-                // ボステレポーターを有効化
-                _bossTeleporter.SetActive(true); 
-            }
+
+            OnAllEnemiesDefeated.OnNext(Unit.Default);
+
             return;
         }
 
@@ -155,8 +150,10 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         if (_currentWave == 2)
         {
+            print("ウェーブ２。_wave2ClearManagerの生成を開始します"+ _wave2ClearManager);
             // WaveClearを生成する
-            runner.Spawn(_wave2ClearManager, transform.position, Quaternion.identity);
+            runner.Spawn(_wave2ClearManager);
+            print("ウェーブ２。_wave2ClearManagerの生成を開始します後ろ" + _wave2ClearManager);
         }
 
         Debug.Log($"{_spawnedEnemies.Count} 体のエネミーをウェーブ {waveIndex + 1} にスポーンしました");
@@ -179,7 +176,7 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     private void BossStage(NetworkRunner runner)
     {
-        if(!_spawnEnd)
+        if (!_spawnEnd)
         {
             for (int i = 0; i < _bossObjList.Count; i++)
             {
@@ -189,7 +186,7 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
             }
             _spawnEnd = true;
         }
-        
+
     }
 
     // INetworkRunnerCallbacksの必要なメソッド
