@@ -80,7 +80,13 @@ public class FlyingDemon : BaseEnemy
     // TransitionNo.9 Die
     private Animator _animator;
 
-    private BoxCollider _boxCollider;
+    // 子オブジェクトのParticleSystemを取得
+    private ParticleSystem[] _attackEffects1 = default;
+    private ParticleSystem[] _attackEffects2 = default;
+
+    // 攻撃時の当たり判定
+    private BoxCollider _boxCollider1 = default;
+    private BoxCollider _boxCollider2 = default;
 
     private float _startY; // 開始時のY座標を保持
     [SerializeField] private float _riseLimit = 5f;    // 上昇範囲（Y軸方向の上限）
@@ -92,7 +98,21 @@ public class FlyingDemon : BaseEnemy
     public override void Spawned()
     {
         _animator = GetComponent<Animator>();
-        _boxCollider = GetComponentInChildren<BoxCollider>();
+
+        // 子のオブジェクト名
+        Transform effectObj1 = FindChild(transform, "ChargePurple");
+        //Transform effectObj2 = FindChild(transform, "RedEnergyExplosion");
+
+        _attackEffects1 = effectObj1.GetComponentsInChildren<ParticleSystem>();
+        //_attackEffects2 = effectObj2.GetComponentsInChildren<ParticleSystem>();
+
+        Transform boxObj1 = FindChild(transform, "Hand_R");
+        Transform boxObj2 = FindChild(transform, "LowerJaw01");
+
+        _boxCollider1 = boxObj1.GetComponent<BoxCollider>();
+        _boxCollider2 = boxObj2.GetComponent<BoxCollider>();
+        _boxCollider1.enabled = false;
+        _boxCollider2.enabled = false;
 
         // 現在の位置をスタート地点として記録
         _startPosition = transform.position;
@@ -101,6 +121,28 @@ public class FlyingDemon : BaseEnemy
 
         // 開始時のY座標を記録
         _startY = transform.position.y;
+    }
+
+    /// <summary>
+    /// 再帰的に子オブジェクトを探す
+    /// </summary>
+    private Transform FindChild(Transform parent, string childName)
+    {
+        foreach (Transform child in parent)
+        {
+            if (child.name == childName)
+            {
+                return child; // 見つかったらそのオブジェクトを返す
+            }
+
+            // 再帰的にさらに深い子階層を探索
+            Transform found = FindChild(child, childName);
+            if (found != null)
+            {
+                return found;
+            }
+        }
+        return null; // 見つからなかった場合は null
     }
 
     /// <summary>
@@ -187,8 +229,6 @@ public class FlyingDemon : BaseEnemy
             // サーチ
             case EnemyActionState.SEARCHING:
 
-                _boxCollider.enabled = false;
-
                 PlayerLook();
 
                 break;
@@ -196,7 +236,6 @@ public class FlyingDemon : BaseEnemy
             // 攻撃
             case EnemyActionState.ATTACKING:
 
-                _boxCollider.enabled = true;
                 PlayerAttack();
 
                 break;
@@ -216,6 +255,8 @@ public class FlyingDemon : BaseEnemy
         if (IsAnimationFinished("Attack01") || IsAnimationFinished("Attack02") || IsAnimationFinished("Fire"))
         {
             _animator.SetInteger("TransitionNo", 0);
+            _boxCollider1.enabled = false;
+            _boxCollider2.enabled = false;
         }
     }
 
@@ -378,6 +419,8 @@ public class FlyingDemon : BaseEnemy
         {
             _animator.SetInteger("TransitionNo", 0);
             _attackEnd = true;
+            _boxCollider1.enabled = false;
+            _boxCollider2.enabled = false;
             _actionState = EnemyActionState.SEARCHING;
         }
 
@@ -577,5 +620,44 @@ public class FlyingDemon : BaseEnemy
     protected override void OnDeath()
     {
         _movementState = EnemyMovementState.DIE;
+    }
+
+    /// <summary>
+    /// 攻撃1のエフェクト
+    /// </summary>
+    private void AttackEffect01()
+    {
+        foreach (var effect in _attackEffects1)
+        {
+            effect.Play();
+        }
+    }
+
+    /// <summary>
+    /// 攻撃2のエフェクト
+    /// </summary>
+
+    private void AttackEffect02()
+    {
+        foreach (var effect in _attackEffects2)
+        {
+            effect.Play();
+        }
+    }
+
+    /// <summary>
+    /// 攻撃1の当たり判定
+    /// </summary>
+    private void AttackCollider1()
+    {
+        _boxCollider1.enabled = true;
+    }
+
+    /// <summary>
+    /// 攻撃2の当たり判定
+    /// </summary>
+    private void AttackCollider2()
+    {
+        _boxCollider2.enabled = true;
     }
 }

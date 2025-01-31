@@ -222,6 +222,7 @@ public class Fishman : BaseEnemy
             _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
             _actionState = EnemyActionState.SEARCHING;
             isAttackInterval = false;
+            _boxCollider1.enabled = false;
 
             // トリガーをセット
             _animator.SetInteger("TransitionNo", 0);
