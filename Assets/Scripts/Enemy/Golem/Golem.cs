@@ -95,7 +95,8 @@ public class Golem : BaseEnemy
 
         _animator = GetComponent<Animator>();
 
-        Transform effectObj1 = FindChild(transform, "ChargeRed"); // 子のオブジェクト名
+        // 子のオブジェクト名
+        Transform effectObj1 = FindChild(transform, "ChargeRed");
         Transform effectObj2 = FindChild(transform, "RedEnergyExplosion");
 
         _attackEffects1 = effectObj1.GetComponentsInChildren<ParticleSystem>();
@@ -227,6 +228,8 @@ public class Golem : BaseEnemy
             _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
             _actionState = EnemyActionState.SEARCHING;
             isAttackInterval = false;
+            _boxCollider1.enabled = false;
+            _boxCollider2.enabled = false;
 
             // トリガーをセット
             _animator.SetInteger("TransitionNo", 0);
