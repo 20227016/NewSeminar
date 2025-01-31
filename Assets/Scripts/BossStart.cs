@@ -36,9 +36,16 @@ public class BossStart : MonoBehaviour
         yield return new WaitForSeconds(fadeDuration);
 
         _text = GameObject.Find("BossNameText");
-        _text.SetActive(false);
         _bar = GameObject.Find("BossHP_Bar");
-        _bar.SetActive(false);
+        if (_text != null)
+        {
+            _text.SetActive(false);
+        }
+        if(_bar != null)
+        {
+            _bar.SetActive(false);
+        }
+
     }
 
     private void Update()
