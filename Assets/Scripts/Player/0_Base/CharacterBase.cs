@@ -85,7 +85,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected Animator _animator = default;
 
     // リジッドボディ
-    private Rigidbody _rigidbody = default;
+    protected Rigidbody _rigidbody = default;
 
     // 移動方向
     protected Vector2 _moveDirection = default;
@@ -106,10 +106,10 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected bool _notAttackAccepted = default;
 
     // ステートリセット用トークンソース
-    private CancellationTokenSource _resetStateTokenSource = new();
+    protected CancellationTokenSource _resetStateTokenSource = new();
 
     // 弱攻撃コンボ段階リセット用
-    private IDisposable _attackLightComboResetDisposable = default;
+    protected IDisposable _attackLightComboResetDisposable = default;
 
     // 移動速度
     protected float _moveSpeed = default;
@@ -131,9 +131,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected IAnimation _animation = new PlayerAnima();
     protected IPlayEffect _playEffect = new PlayerPlayEffect();
 
-    private PlayerUIPresenter _playerUIPresenter = default;
+    protected PlayerUIPresenter _playerUIPresenter = default;
 
-    private bool isInvincible = false;
+    protected bool isInvincible = false;
     protected CancellationTokenSource invincibleCts;
 
     #endregion
@@ -398,17 +398,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             _isRun = !_isRun;
         }
 
-        if (CurrentState == CharacterStateEnum.RESURRECTION)
-        {
-            if (input.IsResurrection)
-            {
-                Resurrection(this.transform, 0);
-
-                ResetState(0);
-            }
-            return;
-        }
-
         // 状態が特定のものなら入力を無視
         if (_notAttackAccepted ||
             CurrentState == CharacterStateEnum.AVOIDANCE ||
@@ -649,9 +638,10 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     protected virtual void Resurrection(Transform transform, float resurrectionTime)
     {
+        Debug.Log("蘇生入力検知");
         CurrentState = CharacterStateEnum.RESURRECTION;
 
-        _resurrection.Resurrection(transform, resurrectionTime, false);
+        _resurrection.Resurrection(transform, resurrectionTime);
 
         ResetState(_characterStatusStruct._ressurectionTime);
     }
@@ -664,7 +654,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         CurrentState = CharacterStateEnum.DAMAGE_REACTION;
 
-        _resurrection.Resurrection(transform, 0, true);
+        _resurrection.Resurrection(transform, 0);
 
         // ダメージ量に防御力を適応して最終ダメージを算出
         float damage = (damageValue - _characterStatusStruct._defensePower);
@@ -675,6 +665,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         if(NetworkedHP <= 0)
         {
             RPC_Death();
+
             return;
         }
 
@@ -704,6 +695,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 死亡状態から回復処理をした場合は蘇生
         if (CurrentState == CharacterStateEnum.DEATH)
         {
+
             float animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._reviveAnimation);
 
             ResetState(animationDuration);

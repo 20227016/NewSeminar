@@ -17,15 +17,8 @@ public class PlayerResurrection : IResurrection
     // キャンセレーショントークン
     private CancellationTokenSource _cancellationTokenSource = default;
 
-    public async void Resurrection(Transform thisTransform, float resurrectionTime, bool isCancel)
+    public async void Resurrection(Transform thisTransform, float resurrectionTime)
     {
-        if (isCancel)
-        {
-            Debug.Log("キャンセル");
-            // 前の処理が残っていればキャンセル
-            _cancellationTokenSource?.Cancel();
-            return;
-        }
 
         // 前の処理が残っていればキャンセル
         _cancellationTokenSource?.Cancel();
@@ -72,7 +65,7 @@ public class PlayerResurrection : IResurrection
                 }
                 catch (OperationCanceledException)
                 {
-                    continue;
+                    return;
                 }
 
                 // 蘇生完了の処理
