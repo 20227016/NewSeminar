@@ -2932,7 +2932,7 @@ MonoBehaviour:
   _interpolationDataSource: 0
   _characterStatusStruct:
     _walkSpeed: 1
-    _runSpeed: 2
+    _runSpeed: 2.5
     _avoidanceDistance: 10
     _attackPower: 100
     _attackLightMultiplier: 1
@@ -2951,7 +2951,7 @@ MonoBehaviour:
     _skillCoolTime: 10
     _counterTime: 0.5
     _skillPointUpperLimit: 100
-    _ressurectionTime: 10
+    _ressurectionTime: 5
     _recoveryStamina: 25
     _runStamina: 20
     _avoidanceStamina: 20

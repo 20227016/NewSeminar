@@ -2722,7 +2722,7 @@ MonoBehaviour:
   _interpolationDataSource: 0
   _characterStatusStruct:
     _walkSpeed: 1
-    _runSpeed: 2
+    _runSpeed: 2.5
     _avoidanceDistance: 10
     _attackPower: 8
     _attackLightMultiplier: 1
@@ -2736,12 +2736,12 @@ MonoBehaviour:
     _attackLight3HitboxRange: 1.5
     _attackStrongHitboxDelay: 0.3
     _attackStrongHitboxRange: 1.5
-    _defensePower: 8
+    _defensePower: 9
     _skillDuration: 20
     _skillCoolTime: 30
     _counterTime: 0.5
     _skillPointUpperLimit: 100
-    _ressurectionTime: 10
+    _ressurectionTime: 5
     _recoveryStamina: 25
     _runStamina: 20
     _avoidanceStamina: 20
