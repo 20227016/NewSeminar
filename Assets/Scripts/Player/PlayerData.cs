@@ -1,6 +1,7 @@
 using Fusion;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 
 public class PlayerData : NetworkBehaviour
 {
@@ -32,6 +33,7 @@ public class PlayerData : NetworkBehaviour
             GameObject canvas = GameObject.FindGameObjectWithTag("Canvas");
             CharacterSelectionManager characterSelectionManager = canvas.GetComponentInChildren<CharacterSelectionManager>();
             _normalStageTransfer = FindObjectOfType<NormalStageTransfer>();
+            _bossStageTransfer = Resources.FindObjectsOfTypeAll<BossStageTransfer>().FirstOrDefault(obj => obj.name == "IsHitPlayer");
             _bossStageTransfer = FindObjectOfType<BossStageTransfer>();
             if (_normalStageTransfer == null)
             {
