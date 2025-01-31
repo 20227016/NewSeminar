@@ -41,7 +41,7 @@ public class NormalStageTransfer : NetworkBehaviour
     /// ノーマルステージにテレポートするために必要な人数
     /// </summary>
     [Networked, Tooltip("ノーマルステージにテレポートするために必要な人数")]
-    public int NormalStageRequiredPlayers { get; set; }
+    public int StageRequiredPlayers { get; set; }
 
 
     public override void Spawned()
@@ -75,14 +75,14 @@ public class NormalStageTransfer : NetworkBehaviour
             print($"プレイヤーを検知。現在の人数は {_playersInPortal.Count} です");
         }
         // 必要人数が揃ったら全員をテレポート
-        if ((_playersInPortal.Count >= NormalStageRequiredPlayers) && (!ClearNormalStage))
+        if ((_playersInPortal.Count >= StageRequiredPlayers) && (!ClearNormalStage))
         {
             Debug.Log($"<color=red>ポータル人数：{_playersInPortal.Count}</color>");
-            Debug.Log($"<color=red>参加人数：{NormalStageRequiredPlayers}</color>");
+            Debug.Log($"<color=red>参加人数：{StageRequiredPlayers}</color>");
             print("ただのテレポート");
             NormalTeleportAllPlayers();
         }
-        else if ((_playersInPortal.Count >= NormalStageRequiredPlayers) && (ClearNormalStage))
+        else if ((_playersInPortal.Count >= StageRequiredPlayers) && (ClearNormalStage))
         {
             print("ボステレポート、成功");
             BossTeleportAllPlayers();
@@ -98,7 +98,7 @@ public class NormalStageTransfer : NetworkBehaviour
         if (collider.CompareTag("Player") && _playersInPortal.Contains(collider.gameObject))
         {
             _playersInPortal.Remove(collider.gameObject);
-            print($"プレイヤーがポータルを離れました。現在の人数は {_playersInPortal.Count} です");
+            print($"<color=red>プレイヤーがポータルを離れました。現在の人数は {_playersInPortal.Count} です</color>");
         }
     }
 
@@ -115,7 +115,7 @@ public class NormalStageTransfer : NetworkBehaviour
             print($"{player.name} をノーマルステージにテレポートしました");
         }
         // 一度ノーマルステージにテレポートしたらノーマルステージに行くためのテレポート人数を1人にする(再接続用)
-        NormalStageRequiredPlayers = 1;
+        StageRequiredPlayers = 1;
     }
 
     private void BossTeleportAllPlayers()

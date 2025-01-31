@@ -171,6 +171,7 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
         {
             OnDeath();
         }
+
     }
 
     /// <summary>
