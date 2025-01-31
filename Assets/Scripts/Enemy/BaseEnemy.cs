@@ -114,7 +114,7 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     {
         // 半径（直径ではない）
         _boxCastStruct._size = (transform.localScale - Vector3.forward * transform.localScale.z);
-        _boxCastStruct._size += Vector3.right * _boxCastStruct._size.x * 4; // X方向を広げる
+        _boxCastStruct._size += Vector3.right * _boxCastStruct._size.x * 2; // X方向を広げる
         _boxCastStruct._size += Vector3.up * _boxCastStruct._size.y * 8;    // Y方向を大きくする
         _boxCastStruct._size -= Vector3.one / 100;
     }
