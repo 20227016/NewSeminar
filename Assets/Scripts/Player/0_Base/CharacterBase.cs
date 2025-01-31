@@ -733,7 +733,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             _animator.speed = 1.0f;
 
             // 待機状態に
-            _currentState = CharacterStateEnum.IDLE;
+            CurrentState = CharacterStateEnum.IDLE;
             _notAttackAccepted = false;
             // リセット完了を通知
             onResetComplete?.Invoke();
