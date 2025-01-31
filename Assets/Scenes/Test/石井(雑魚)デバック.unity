@@ -3932,7 +3932,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e9d69c57edabf241a23422cb3f8a905, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bossStageRequiredPlayers: 3
   _bossTeleportPos: {fileID: 660883544}
 --- !u!4 &424125022 stripped
 Transform:
@@ -12119,7 +12118,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cf5f797a98f4db44adda7e26756b271, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bossTeleporter: {fileID: 1993158595}
   _wave2ClearManager: {fileID: 0}
   _enemyWaves:
   - Enemies:
@@ -31278,11 +31276,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5786292422275002267, guid: e6795c22ad904637bbe60283e1c0cd08, type: 3}
       propertyPath: NetworkGuid.RawGuidValue.Array.data[0]
-      value: -4374244453306668858
+      value: 6791934710700871906
       objectReference: {fileID: 0}
     - target: {fileID: 5786292422275002267, guid: e6795c22ad904637bbe60283e1c0cd08, type: 3}
       propertyPath: NetworkGuid.RawGuidValue.Array.data[1]
-      value: -5419981709190861400
+      value: -487944020048320361
       objectReference: {fileID: 0}
     - target: {fileID: 7147335685683903936, guid: e6795c22ad904637bbe60283e1c0cd08, type: 3}
       propertyPath: m_LocalPosition.x
@@ -31323,14 +31321,6 @@ PrefabInstance:
     - target: {fileID: 7147335685683903936, guid: e6795c22ad904637bbe60283e1c0cd08, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8439179984020348177, guid: e6795c22ad904637bbe60283e1c0cd08, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8439179984020348177, guid: e6795c22ad904637bbe60283e1c0cd08, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

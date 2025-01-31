@@ -42,7 +42,7 @@ public class Fishman : BaseEnemy
     [Tooltip("物理攻撃ダメージ")]
     [SerializeField] private float _damage = 10f;
 
-    [SerializeField] private bool isAttackInterval = default; // 連続攻撃をしない
+    private bool isAttackInterval = default; // 連続攻撃をしない
 
     private float _downedTimer = 5f; // ダウンタイマー
     private float _stunnedTimer = default; // のけぞりタイマー
@@ -457,6 +457,7 @@ public class Fishman : BaseEnemy
             _animator.SetInteger("TransitionNo", 0);
             isAttackInterval = false;
             _boxCollider1.enabled = false;
+            return;
         }
 
         if (isAttackInterval)
