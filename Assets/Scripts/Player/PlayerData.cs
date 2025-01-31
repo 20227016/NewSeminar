@@ -16,6 +16,7 @@ public class PlayerData : NetworkBehaviour
     private NetworkRunner _networkRunner = default;
 
     private NormalStageTransfer _normalStageTransfer = default;
+    private BossStageTransfer _bossStageTransfer = default;
 
     [Networked]
     private int _avatarNumber { get; set; } = default;
@@ -31,7 +32,14 @@ public class PlayerData : NetworkBehaviour
             GameObject canvas = GameObject.FindGameObjectWithTag("Canvas");
             CharacterSelectionManager characterSelectionManager = canvas.GetComponentInChildren<CharacterSelectionManager>();
             _normalStageTransfer = FindObjectOfType<NormalStageTransfer>();
+            _bossStageTransfer = FindObjectOfType<BossStageTransfer>();
             if (_normalStageTransfer == null)
+            {
+
+                Debug.Log("トランスファーがない");
+
+            }       
+            if (_bossStageTransfer == null)
             {
 
                 Debug.Log("トランスファーがない");
@@ -54,14 +62,31 @@ public class PlayerData : NetworkBehaviour
 
     }
 
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+
+        base.Despawned(runner, hasState);
+        RPC_PlayerLeft();
+
+    }
+
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_PlayerJoined()
     {
 
         _normalStageTransfer.NormalStageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
+        _bossStageTransfer.BossStageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
 
     }
 
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_PlayerLeft()
+    {
+
+        _normalStageTransfer.NormalStageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
+        _bossStageTransfer.BossStageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
+
+    }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void RPC_ActiveAvatar()
