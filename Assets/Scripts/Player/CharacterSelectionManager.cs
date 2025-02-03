@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// キャラクター選択画面制御用スクリプト
@@ -37,6 +38,66 @@ public class CharacterSelectionManager : MonoBehaviour
     public bool _knightChoice { get; set; } = false;
     public bool _healerChoice { get; set; } = false;
     public bool _fighterChoice { get; set; } = false;
+
+    public void UpSelect(InputAction.CallbackContext context)
+    {
+        if (!context.performed || _characterDecision) return;
+
+        _currentSelectionCharacter--;
+        Debug.Log("上");
+        if (_currentSelectionCharacter < 1)
+        {
+            _currentSelectionCharacter = _animeCharacterModel.Count; // 最後のキャラクターにループ
+        }
+        UpdateCharacterSelection();
+    }
+
+    public void DownSelect(InputAction.CallbackContext context)
+    {
+        if (!context.performed || _characterDecision) return;
+        Debug.Log("下");
+        _currentSelectionCharacter++;
+        if (_currentSelectionCharacter > _animeCharacterModel.Count)
+        {
+            _currentSelectionCharacter = 1; // 最初のキャラクターにループ
+        }
+        UpdateCharacterSelection();
+    }
+
+    public void Decision(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        Debug.Log("決定");
+        Decision();
+    }
+
+    /// <summary>
+    /// キャラクター選択を更新
+    /// </summary>
+    private void UpdateCharacterSelection()
+    {
+        DeleteCharacter();
+
+        switch (_currentSelectionCharacter)
+        {
+            case 1:
+                if (!_tankChoice) _roolName.text = "ノーマル";
+                break;
+            case 2:
+                if (!_knightChoice) _roolName.text = "ファイター";
+                break;
+            case 3:
+                if (!_healerChoice) _roolName.text = "ヒーラー";
+                break;
+            case 4:
+                if (!_fighterChoice) _roolName.text = "タンク";
+                break;
+            default:
+                return;
+        }
+
+        _animeCharacterModel[_currentSelectionCharacter - 1].SetActive(true);
+    }
 
     //キャラクター1のボタンにつける
     public void OnClick1()
@@ -84,6 +145,7 @@ public class CharacterSelectionManager : MonoBehaviour
             _roolName.text = "タンク";
             _animeCharacterModel[3].SetActive(true);
         }
+        TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Default, false, false, true, true);
     }
 
     // 選択しているキャラクターを確定する

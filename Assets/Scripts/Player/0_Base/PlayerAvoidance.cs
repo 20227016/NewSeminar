@@ -18,7 +18,7 @@ public class PlayerAvoidance : IAvoidance
     // 回避開始までの遅延(ミリ秒)
     private const int AVOIDANCE_START_DELAY = 100;
 
-    public void Avoidance(Transform transform, Vector2 avoidanceDirection, float avoidanceDistance, float avoidanceDuration)
+    public void Avoidance(Transform transform, Rigidbody rigidbody, Vector2 avoidanceDirection, float avoidanceDistance, float avoidanceDuration)
     {
         if (_isAvoiding) return;
 
@@ -26,46 +26,31 @@ public class PlayerAvoidance : IAvoidance
         Vector3 startPosition = transform.position;
         Vector3 endPosition = startPosition + normalizedAvoidanceDirection * avoidanceDistance;
 
-        AvoidanceCoroutine(transform, startPosition, endPosition, avoidanceDuration, normalizedAvoidanceDirection).Forget();
+        AvoidanceCoroutine(rigidbody, startPosition, endPosition, avoidanceDuration, normalizedAvoidanceDirection).Forget();
     }
 
-    /// <summary>
-    /// 回避処理の非同期コルーチン
-    /// </summary>
-    private async UniTaskVoid AvoidanceCoroutine(Transform transform, Vector3 startPosition, Vector3 endPosition, float duration, Vector3 moveDirection)
+    private async UniTaskVoid AvoidanceCoroutine(Rigidbody rigidbody, Vector3 startPosition, Vector3 endPosition, float duration, Vector3 moveDirection)
     {
         _isAvoiding = true;
-
-        await UniTask.Delay(AVOIDANCE_START_DELAY); // 遅延時間をミリ秒単位で指定
+        await UniTask.Delay(AVOIDANCE_START_DELAY);
 
         float elapsedTime = 0f;
-
-        // 回避の持続時間が経過するまでループ
         while (elapsedTime < duration - (AVOIDANCE_START_DELAY * 0.001))
         {
             elapsedTime += Time.deltaTime;
-
-            // progress は回避処理の進行度を表す割合
             float progress = Mathf.Clamp01(elapsedTime / duration);
-
-            // 移動先を計算
             Vector3 nextPosition = Vector3.Lerp(startPosition, endPosition, progress);
 
-            // 移動方向にレイキャストを飛ばして壁があるか確認
-            if (Physics.Raycast(transform.position, moveDirection, transform.localScale.x / 2f, LayerMask.GetMask("Stage")))
+            if (Physics.Raycast(rigidbody.position, moveDirection, rigidbody.transform.localScale.x / 2f, LayerMask.GetMask("Stage")))
             {
-                // 衝突している場合、回避を終了させる
                 break;
             }
 
-            // 壁に衝突していなければ位置を更新
-            transform.position = nextPosition;
-
-            // フレームごとに待機
+            rigidbody.MovePosition(nextPosition);
             await UniTask.Yield();
         }
 
         _isAvoiding = false;
     }
-    
+
 }
