@@ -8,14 +8,15 @@ using UnityEngine;
 public class Respawn : MonoBehaviour
 {
     [SerializeField, Tooltip("リスポーンPosオブジェクト")]
-    private GameObject _respawnPos = default;
+    private Transform _respawnPos = default;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
-            print("リスポーンしました");
-            _respawnPos.transform.position = other.gameObject.transform.position;
+            Debug.Log("リスポーンします");
+            other.transform.position = _respawnPos.position;
+            other.transform.rotation = _respawnPos.rotation;
         }
     }
 
