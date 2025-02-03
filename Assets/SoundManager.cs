@@ -8,10 +8,10 @@
 ///// 基本的に関数を呼び出し、その関数内でRPCが設定されているEF再生関数を呼び出し、全クライアントに通知する
 ///// </summary>
 //public class SoundManager : NetworkBehaviour
-//{ 
-//    [SerializeField] 
+//{
+//    [SerializeField]
 //    private AudioSource _effectAudioSource = default;
-//    [SerializeField] 
+//    [SerializeField]
 //    private AudioClip _testClip = default;
 
 //    /// <summary>
