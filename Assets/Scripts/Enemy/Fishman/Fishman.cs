@@ -25,17 +25,17 @@ public class Fishman : BaseEnemy
     protected float _searchRange = 20f;
 
     [SerializeField, Tooltip("移動速度")]
-    private float moveSpeed = default; // ゴーレムの移動速度
+    private float _moveSpeed = default; // ゴーレムの移動速度
 
     [SerializeField, Tooltip("停止する距離")]
-    private float stopDistance = 2.0f; // プレイヤー手前で停止する距離
+    private float _stopDistance = 2.0f; // プレイヤー手前で停止する距離
 
     private Vector3 _playerLastKnownPosition; // プレイヤーの最後の位置
 
     [SerializeField]
     private Transform _attackingPlayer; // 攻撃してきたプレイヤーのTransform
 
-    private float detectionDistance = 3.0f; // 壁を検出する距離
+    private float _detectionDistance = 3.0f; // 壁を検出する距離
 
     private Vector3 _randomTargetPos; // ランダム移動の目標位置
 
@@ -43,6 +43,8 @@ public class Fishman : BaseEnemy
     [SerializeField] private float _damage = 10f;
 
     private bool isAttackInterval = default; // 連続攻撃をしない
+
+    private bool isAnimationFinished = default; // 一度だけ判定するためのフラグ
 
     private float _downedTimer = 5f; // ダウンタイマー
     private float _stunnedTimer = default; // のけぞりタイマー
@@ -82,6 +84,14 @@ public class Fishman : BaseEnemy
 
     // 攻撃時の当たり判定
     private BoxCollider _boxCollider1 = default;
+
+    //AudioSource型の変数を宣言
+    [SerializeField] private AudioSource _audioSource = default;
+
+    //AudioClip型の変数を宣言
+    [SerializeField] private AudioClip _chargeSE = default;
+    [SerializeField] private AudioClip _AttackSE1 = default;
+    [SerializeField] private AudioClip _AttackSE2 = default;
 
     public override void Spawned()
     {
@@ -219,13 +229,18 @@ public class Fishman : BaseEnemy
         // アニメーションが終了したら次の状態に遷移
         if (IsAnimationFinished("Attack01") || IsAnimationFinished("Attack02"))
         {
+            if (isAnimationFinished)
+            {
+                return;
+            }
+
+            _animator.SetInteger("TransitionNo", 0);
             _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
             _actionState = EnemyActionState.SEARCHING;
+            isAnimationFinished = true;
             isAttackInterval = false;
             _boxCollider1.enabled = false;
-
-            // トリガーをセット
-            _animator.SetInteger("TransitionNo", 0);
+            return;
         }
 
         if (_actionState != EnemyActionState.SEARCHING)
@@ -289,7 +304,7 @@ public class Fishman : BaseEnemy
     {
         _animator.SetInteger("TransitionNo", 1);
 
-        moveSpeed = 2.5f;
+        _moveSpeed = 2.5f;
 
         // 現在の位置
         Vector3 currentPosition = transform.position;
@@ -298,7 +313,7 @@ public class Fishman : BaseEnemy
         Vector3 targetPosition = new Vector3(_randomTargetPos.x, currentPosition.y, _randomTargetPos.z);
 
         // 移動
-        transform.position = Vector3.MoveTowards(currentPosition, targetPosition, moveSpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(currentPosition, targetPosition, _moveSpeed * Time.deltaTime);
 
         // 方向ベクトルを計算し、Y軸回転のみを適用
         Vector3 direction = _randomTargetPos - transform.position;
@@ -311,7 +326,7 @@ public class Fishman : BaseEnemy
         }
 
         // 壁を検知
-        if (IsPathBlocked(direction, detectionDistance))
+        if (IsPathBlocked(direction, _detectionDistance))
         {
             _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
             _movementState = EnemyMovementState.IDLE;
@@ -405,7 +420,7 @@ public class Fishman : BaseEnemy
         }
 
         // 前進速度
-        moveSpeed = 5.0f;
+        _moveSpeed = 5.0f;
 
         // 現在の高さを維持する
         Vector3 currentPosition = transform.position;
@@ -422,7 +437,7 @@ public class Fishman : BaseEnemy
         float distanceToTarget = Vector3.Distance(currentPosition, targetPosition);
 
         // 停止距離以内なら移動を停止
-        if (distanceToTarget <= stopDistance)
+        if (distanceToTarget <= _stopDistance)
         {
             _movementState = EnemyMovementState.IDLE;  // 待機状態に戻す
             _actionState = EnemyActionState.ATTACKING;
@@ -434,7 +449,7 @@ public class Fishman : BaseEnemy
         transform.position = Vector3.MoveTowards(
             currentPosition,
             targetPosition,
-            moveSpeed * Time.deltaTime
+            _moveSpeed * Time.deltaTime
         );
 
         // 方向をプレイヤーに向ける (Y軸回転のみ)
@@ -479,6 +494,8 @@ public class Fishman : BaseEnemy
             _animator.SetInteger("TransitionNo", 4);
         }
 
+        StartCoroutine(ResetAnimationFlag());
+
         // プレイヤーがいたら攻撃を繰り返す
         PlayerSearch();
         if (_targetTrans != null && _targetTrans.gameObject.layer == 6)
@@ -486,6 +503,15 @@ public class Fishman : BaseEnemy
             _targetTrans = null;
             return;
         }
+    }
+
+    /// <summary>
+    /// 次のアニメーションが始まるまで待機して `_isAnimationFinished` をリセット
+    /// </summary>
+    private IEnumerator ResetAnimationFlag()
+    {
+        yield return new WaitForSeconds(1.0f); // 少し待つ
+        isAnimationFinished = false; // フラグをリセット
     }
 
     /// <summary>
@@ -648,10 +674,10 @@ public class Fishman : BaseEnemy
     private void PlayerSearch()
     {
         // ボックスキャストの設定
-        Vector3 center = transform.position; // キャスト開始位置
+        Vector3 center = transform.position - (transform.forward * 10f); // キャスト開始位置
         Vector3 halfExtents = new Vector3(1f, 1f, 1f); // ボックスの半径
         Vector3 direction = transform.forward; // キャストの方向
-        float maxDistance = 10f; // キャストの最大距離
+        float maxDistance = 20f; // キャストの最大距離
         Quaternion orientation = Quaternion.identity; // ボックスの回転（回転なし）
         int layerMask = (1 << 6) | (1 << 8); // レイヤーマスク（レイヤー6と8）
 
@@ -694,6 +720,8 @@ public class Fishman : BaseEnemy
         {
             effect.Play();
         }
+
+        _audioSource.PlayOneShot(_chargeSE);
     }
 
     /// <summary>
@@ -705,6 +733,8 @@ public class Fishman : BaseEnemy
         {
             effect.Play();
         }
+
+        _audioSource.PlayOneShot(_chargeSE);
     }
 
     /// <summary>
@@ -713,5 +743,6 @@ public class Fishman : BaseEnemy
     private void AttackCollider1()
     {
         _boxCollider1.enabled = true;
+        _audioSource.PlayOneShot(_AttackSE1);
     }
 }

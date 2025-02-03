@@ -107,7 +107,9 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     {
         // 自分の目の前から
         // 中心点
-        _boxCastStruct._originPos = this.transform.position + this.transform.localScale / 2;
+        _boxCastStruct._originPos = this.transform.position
+            + this.transform.localScale / 2
+            - (transform.forward * 5f);
     }
 
     protected virtual void SetSiz()
@@ -140,8 +142,6 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
             return;
         }
 
-        //print("プレイヤーにダメージを与えました");
-
         IReceiveDamage receiveDamage = hitCollider.GetComponent<IReceiveDamage>();
         if (receiveDamage == null)
         {
@@ -158,12 +158,8 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void RPC_ReceiveDamage(int damegeValue)
     {
-        //print("プレイヤーからダメージを受けました" + damegeValue);
-
         // ダメージ処理
         _enemyStatusStruct._hp -= damegeValue - _enemyStatusStruct._diffencePower;
-
-        //print(_enemyStatusStruct._hp);
 
         // HPUIの更新
         RPC_UpdateHPBar();
