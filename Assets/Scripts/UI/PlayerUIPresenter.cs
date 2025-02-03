@@ -34,6 +34,9 @@ public class PlayerUIPresenter : MonoBehaviour
     [SerializeField, Tooltip("ゲージ変動アニメーション速度")]
     private float _animationSpeed = 10f;
 
+    [SerializeField, Tooltip("キーコンフィグ")]
+    private GameObject _keyconfig = default;
+
     // 追跡用リスト（登録済みのプレイヤーキャラクター）
     private readonly List<CharacterBase> _registeredAllyModels = new();
 
@@ -65,6 +68,8 @@ public class PlayerUIPresenter : MonoBehaviour
 
         // UIを有効化
         _playerUIImages[0].gameObject.SetActive(true);
+
+        _keyconfig.SetActive(_keyconfig);
     }
 
     /// <summary>

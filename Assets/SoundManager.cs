@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using Fusion;
 
 /// <summary>
-/// ƒlƒbƒgƒ[ƒNó‚ÅƒTƒEƒ“ƒh‚ğÄ¶‚·‚éƒeƒXƒgƒXƒNƒŠƒvƒg
-/// Šî–{“I‚ÉŠÖ”‚ğŒÄ‚Ño‚µA‚»‚ÌŠÖ”“à‚ÅRPC‚ªİ’è‚³‚ê‚Ä‚¢‚éEFÄ¶ŠÖ”‚ğŒÄ‚Ño‚µA‘SƒNƒ‰ƒCƒAƒ“ƒg‚É’Ê’m‚·‚é
+/// ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯çŠ¶ã§ã‚µã‚¦ãƒ³ãƒ‰ã‚’å†ç”Ÿã™ã‚‹ãƒ†ã‚¹ãƒˆã‚¹ã‚¯ãƒªãƒ—ãƒˆ
+/// åŸºæœ¬çš„ã«é–¢æ•°ã‚’å‘¼ã³å‡ºã—ã€ãã®é–¢æ•°å†…ã§RPCãŒè¨­å®šã•ã‚Œã¦ã„ã‚‹EFå†ç”Ÿé–¢æ•°ã‚’å‘¼ã³å‡ºã—ã€å…¨ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã«é€šçŸ¥ã™ã‚‹
 /// </summary>
 public class SoundManager : NetworkBehaviour
 {
@@ -15,26 +14,26 @@ public class SoundManager : NetworkBehaviour
     private AudioClip _testClip = default;
 
     /// <summary>
-    /// Œø‰Ê‰¹Ä¶iƒT[ƒo[’Ê’mj
+    /// åŠ¹æœéŸ³å†ç”Ÿï¼ˆã‚µãƒ¼ãƒãƒ¼é€šçŸ¥ï¼‰
     /// </summary>
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_PlayEffectSound(Vector3 position)
     {
-        // ‰¹Œ¹‚ÌˆÊ’u‚ğİ’è
+        // éŸ³æºã®ä½ç½®ã‚’è¨­å®š
         _effectAudioSource.transform.position = position;
 
-        // Œø‰Ê‰¹‚ğÄ¶
+        // åŠ¹æœéŸ³ã‚’å†ç”Ÿ
         _effectAudioSource.PlayOneShot(_testClip);
     }
 
     /// <summary>
-    //  Œø‰Ê‰¹‚ğÄ¶
+    //  åŠ¹æœéŸ³ã‚’å†ç”Ÿ
     /// </summary>
     public void TriggerSkillEffect(Vector3 skillPosition)
     {
         if (Object.HasStateAuthority)
         {
-            // ‘SƒNƒ‰ƒCƒAƒ“ƒg‚É’Ê’m
+            // å…¨ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã«é€šçŸ¥
             RPC_PlayEffectSound(skillPosition);
         }
     }

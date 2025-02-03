@@ -101,7 +101,7 @@ public class TankCharacter : CharacterBase
             // 吹っ飛び
             animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._damageReactionHeavyAnimation);
             // ノックバック
-            _avoidance.Avoidance(transform, new Vector2(-transform.forward.x, -transform.forward.z), _characterStatusStruct._avoidanceDistance, animationDuration / 5);
+            _avoidance.Avoidance(transform, _rigidbody, new Vector2(-transform.forward.x, -transform.forward.z), _characterStatusStruct._avoidanceDistance, animationDuration / 5);
         }
         Invincible(animationDuration * 2f);
         ResetState(animationDuration);
