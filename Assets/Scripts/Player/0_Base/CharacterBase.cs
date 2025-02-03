@@ -134,6 +134,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected PlayerUIPresenter _playerUIPresenter = default;
 
     protected bool isInvincible = false;
+
     protected CancellationTokenSource invincibleCts;
 
     #endregion
@@ -403,8 +404,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             CurrentState == CharacterStateEnum.AVOIDANCE ||
             CurrentState == CharacterStateEnum.SKILL ||
             CurrentState == CharacterStateEnum.DAMAGE_REACTION ||
-            CurrentState == CharacterStateEnum.DEATH ||
-            CurrentState == CharacterStateEnum.RESURRECTION)
+            CurrentState == CharacterStateEnum.DEATH)
         {
             return;
         }
@@ -601,7 +601,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._avoidanceActionAnimation);
 
-        _avoidance.Avoidance(transform, _moveDirection, _characterStatusStruct._avoidanceDistance, animationDuration);
+        _avoidance.Avoidance(transform, _rigidbody, _moveDirection, _characterStatusStruct._avoidanceDistance, animationDuration);
 
         Invincible(animationDuration);
         ResetState(animationDuration);
@@ -643,7 +643,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _resurrection.Resurrection(transform, resurrectionTime);
 
-        ResetState(_characterStatusStruct._ressurectionTime);
+        //ResetState(_characterStatusStruct._ressurectionTime);
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
@@ -653,8 +653,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         if (isInvincible) return;
 
         CurrentState = CharacterStateEnum.DAMAGE_REACTION;
-
-        _resurrection.Resurrection(transform, 0);
 
         // ダメージ量に防御力を適応して最終ダメージを算出
         float damage = (damageValue - _characterStatusStruct._defensePower);
@@ -682,7 +680,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._damageReactionHeavyAnimation);
 
             // ノックバック
-            _avoidance.Avoidance(transform, new Vector2(-transform.forward.x, -transform.forward.z), _characterStatusStruct._avoidanceDistance, animationDuration / 5);
+            _avoidance.Avoidance(transform, _rigidbody, new Vector2(-transform.forward.x, -transform.forward.z), _characterStatusStruct._avoidanceDistance, animationDuration / 5);
         }
 
         Invincible(animationDuration * 2f);
@@ -695,7 +693,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 死亡状態から回復処理をした場合は蘇生
         if (CurrentState == CharacterStateEnum.DEATH)
         {
-
             float animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._reviveAnimation);
 
             ResetState(animationDuration);

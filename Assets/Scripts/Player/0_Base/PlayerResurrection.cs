@@ -19,7 +19,6 @@ public class PlayerResurrection : IResurrection
 
     public async void Resurrection(Transform thisTransform, float resurrectionTime)
     {
-
         // 前の処理が残っていればキャンセル
         _cancellationTokenSource?.Cancel();
 
@@ -86,7 +85,7 @@ public class PlayerResurrection : IResurrection
         return new BoxCastStruct
         {
             _originPos = transform.position,
-            _size = transform.localScale * 2,
+            _size = transform.localScale * 3,
             _direction = transform.forward,
             _quaternion = Quaternion.identity,
             _layerMask = 1 << 6
