@@ -85,7 +85,11 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     /// </summary>
     private void StartWave(NetworkRunner runner)
     {
-
+        if (_enemyWaves == null || _enemyWaves.Count == 0)
+        {
+            Debug.LogError("エネミーウェーブリストが設定されていません！");
+            return;
+        }
         if (_enemyWaves.Count == 0)
         {
             Debug.LogWarning("エネミーウェーブが設定されていません！");
@@ -126,6 +130,11 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     /// <param name="waveIndex"></param>
     private void SpawnEnemies(NetworkRunner runner, int waveIndex)
     {
+        if (_enemyWaves == null || _enemyWaves.Count == 0)
+        {
+            Debug.LogError("エネミーウェーブリストが設定されていません！");
+            return;
+        }
         if (runner.IsServer)
         {
             _spawnedEnemies.Clear();

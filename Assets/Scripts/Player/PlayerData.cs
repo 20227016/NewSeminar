@@ -20,10 +20,10 @@ public class PlayerData : NetworkBehaviour
     private BossStageTransfer _bossStageTransfer = default;
 
     [Networked]
-    private int _avatarNumber { get; set; } = default;
+    public int AvatarNumber { get; set; } = default;
 
     [Networked, HideInInspector]
-    public string _avatarName { get; set; } = default;
+    public string AvatarName { get; set; } = default;
 
 
     public override void Spawned()
@@ -93,14 +93,14 @@ public class PlayerData : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void RPC_ActiveAvatar()
     {
-        if (_avatarNumber <= 0)
+        if (AvatarNumber <= 0)
         {
             return;
         }
 
-        _playerAvatar[_avatarNumber - 1].SetActive(true);
+        _playerAvatar[AvatarNumber - 1].SetActive(true);
 
-        _playerNameTexts[_avatarNumber - 1].text = _avatarName;
+        _playerNameTexts[AvatarNumber - 1].text = AvatarName;
 
     }
 
@@ -108,10 +108,10 @@ public class PlayerData : NetworkBehaviour
     public void RPC_SetAvatarInfo(int avatarNumber, string avatarName)
     {
 
-        _avatarNumber = avatarNumber;
+        AvatarNumber = avatarNumber;
 
 
-        _avatarName = avatarName;
+        AvatarName = avatarName;
     }
 
 }
