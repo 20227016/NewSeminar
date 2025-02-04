@@ -26,10 +26,10 @@ public class PlayerAvoidance : IAvoidance
         Vector3 startPosition = transform.position;
         Vector3 endPosition = startPosition + normalizedAvoidanceDirection * avoidanceDistance;
 
-        AvoidanceCoroutine(rigidbody, startPosition, endPosition, avoidanceDuration, normalizedAvoidanceDirection).Forget();
+        AvoidanceCoroutine(rigidbody, transform, startPosition, endPosition, avoidanceDuration, normalizedAvoidanceDirection).Forget();
     }
 
-    private async UniTaskVoid AvoidanceCoroutine(Rigidbody rigidbody, Vector3 startPosition, Vector3 endPosition, float duration, Vector3 moveDirection)
+    private async UniTaskVoid AvoidanceCoroutine(Rigidbody rigidbody,Transform transform, Vector3 startPosition, Vector3 endPosition, float duration, Vector3 moveDirection)
     {
         _isAvoiding = true;
         await UniTask.Delay(AVOIDANCE_START_DELAY);
@@ -41,7 +41,7 @@ public class PlayerAvoidance : IAvoidance
             float progress = Mathf.Clamp01(elapsedTime / duration);
             Vector3 nextPosition = Vector3.Lerp(startPosition, endPosition, progress);
 
-            if (Physics.Raycast(rigidbody.position, moveDirection, rigidbody.transform.localScale.x / 2f, LayerMask.GetMask("Stage")))
+            if (Physics.Raycast(transform.position, moveDirection, transform.localScale.x / 2f, LayerMask.GetMask("Stage")))
             {
                 break;
             }
