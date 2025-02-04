@@ -39,66 +39,6 @@ public class CharacterSelectionManager : MonoBehaviour
     public bool _healerChoice { get; set; } = false;
     public bool _fighterChoice { get; set; } = false;
 
-    public void UpSelect(InputAction.CallbackContext context)
-    {
-        if (!context.performed || _characterDecision) return;
-
-        _currentSelectionCharacter--;
-        Debug.Log("上");
-        if (_currentSelectionCharacter < 1)
-        {
-            _currentSelectionCharacter = _animeCharacterModel.Count; // 最後のキャラクターにループ
-        }
-        UpdateCharacterSelection();
-    }
-
-    public void DownSelect(InputAction.CallbackContext context)
-    {
-        if (!context.performed || _characterDecision) return;
-        Debug.Log("下");
-        _currentSelectionCharacter++;
-        if (_currentSelectionCharacter > _animeCharacterModel.Count)
-        {
-            _currentSelectionCharacter = 1; // 最初のキャラクターにループ
-        }
-        UpdateCharacterSelection();
-    }
-
-    public void Decision(InputAction.CallbackContext context)
-    {
-        if (!context.performed) return;
-        Debug.Log("決定");
-        Decision();
-    }
-
-    /// <summary>
-    /// キャラクター選択を更新
-    /// </summary>
-    private void UpdateCharacterSelection()
-    {
-        DeleteCharacter();
-
-        switch (_currentSelectionCharacter)
-        {
-            case 1:
-                if (!_tankChoice) _roolName.text = "ノーマル";
-                break;
-            case 2:
-                if (!_knightChoice) _roolName.text = "ファイター";
-                break;
-            case 3:
-                if (!_healerChoice) _roolName.text = "ヒーラー";
-                break;
-            case 4:
-                if (!_fighterChoice) _roolName.text = "タンク";
-                break;
-            default:
-                return;
-        }
-
-        _animeCharacterModel[_currentSelectionCharacter - 1].SetActive(true);
-    }
-
     //キャラクター1のボタンにつける
     public void OnClick1()
     {
@@ -145,7 +85,6 @@ public class CharacterSelectionManager : MonoBehaviour
             _roolName.text = "タンク";
             _animeCharacterModel[3].SetActive(true);
         }
-        TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Default, false, false, true, true);
     }
 
     // 選択しているキャラクターを確定する
@@ -154,34 +93,38 @@ public class CharacterSelectionManager : MonoBehaviour
         // 名前が入力されていない場合はリターン
         if (string.IsNullOrWhiteSpace(_nameInputField.text))
         {
-            _warningText.text = "名前を入力してください";
-            _warningText.gameObject.SetActive(true);
-            return;
+            //_warningText.text = "名前を入力してください";
+            //_warningText.gameObject.SetActive(true);
+            //return;
+            _nameInputField.text = "あああ";
         }
 
         switch (_currentSelectionCharacter)
         {
-            // タンク
+            // ノーマル
             case 1:
-                _tankChoice = true;
-                break;
-            // 騎士
-            case 2:
                 _knightChoice = true;
+                break;
+            // ファイター
+            case 2:
+                _fighterChoice = true;
                 break;
             // ヒーラー
             case 3:
                 _healerChoice = true;
                 break;
-            // ファイター
+            // タンク
             case 4:
-                _fighterChoice = true;
+                _tankChoice = true;
                 break;
             // 選択されてないとき
             default:
-                _warningText.text = "キャラクターを選択してください";
-                _warningText.gameObject.SetActive(true);
-                return;
+                //_warningText.text = "キャラクターを選択してください";
+                //_warningText.gameObject.SetActive(true);
+                //return;
+
+                _currentSelectionCharacter = 1;
+                break;
         }
         _characterDecision = true;
 

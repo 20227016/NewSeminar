@@ -1722,6 +1722,11 @@ MonoBehaviour:
   - {fileID: 6483129452879746837}
   - {fileID: 797791236355828702}
   - {fileID: 3653333862054315172}
+  _skillIcons:
+  - {fileID: 21300000, guid: e6d75a3e5edec3540befdff96457a9c0, type: 3}
+  - {fileID: 21300000, guid: 53a1e59a32a93754f886a258dfddb20c, type: 3}
+  - {fileID: 21300000, guid: 2d808e9c68876de4fb73ce69b1812d53, type: 3}
+  - {fileID: 21300000, guid: 0fdae0614e1eefa43ba21a2540b59de7, type: 3}
   _nameTexts:
   - {fileID: 8911859011139248622}
   - {fileID: 7097286604934002283}
@@ -1736,6 +1741,7 @@ MonoBehaviour:
   _skillPointGauge: {fileID: 4372362781593484582}
   _animationSpeed: 10
   _keyconfig: {fileID: 1827735312548847983}
+  _skillIconImage: {fileID: 8155352453367120998}
 --- !u!114 &7769936700494540505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5263,7 +5269,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3042\u3042\u3042"
+  m_text: '
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cdd7b830eb46ebb42abfec333821465a, type: 2}
   m_sharedMaterial: {fileID: 21757523808282504, guid: cdd7b830eb46ebb42abfec333821465a, type: 2}

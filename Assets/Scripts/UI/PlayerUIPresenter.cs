@@ -19,6 +19,9 @@ public class PlayerUIPresenter : MonoBehaviour
     [SerializeField, Tooltip("プレイヤーUIイメージ")]
     private Image[] _playerUIImages = default;
 
+    [SerializeField, Tooltip("スキルアイコン")]
+    private Sprite[] _skillIcons = default;
+
     [SerializeField, Tooltip("名前")]
     private TextMeshProUGUI[] _nameTexts = default;
 
@@ -36,6 +39,9 @@ public class PlayerUIPresenter : MonoBehaviour
 
     [SerializeField, Tooltip("キーコンフィグ")]
     private GameObject _keyconfig = default;
+
+    [SerializeField, Tooltip("スキルアイコンイメージ")]
+    private Image _skillIconImage = default;
 
     // 追跡用リスト（登録済みのプレイヤーキャラクター）
     private readonly List<CharacterBase> _registeredAllyModels = new();
@@ -64,12 +70,12 @@ public class PlayerUIPresenter : MonoBehaviour
         // 名前を設定
         PlayerData playerData = thisPlayer.GetComponentInParent<PlayerData>();
 
-        _nameTexts[0].text = playerData._avatarName;
+        _nameTexts[0].text = playerData.AvatarName;
 
         // UIを有効化
         _playerUIImages[0].gameObject.SetActive(true);
-
-        _keyconfig.SetActive(_keyconfig);
+        _keyconfig.SetActive(true);
+        _skillIconImage.sprite = _skillIcons[playerData.AvatarNumber - 1];
     }
 
     /// <summary>
@@ -95,7 +101,7 @@ public class PlayerUIPresenter : MonoBehaviour
         // 名前を設定
         PlayerData playerData = character.GetComponentInParent<PlayerData>();
 
-        _nameTexts[modelCount].text = playerData._avatarName;
+        _nameTexts[modelCount].text = playerData.AvatarName;
 
         // UIを有効化
         _playerUIImages[modelCount].gameObject.SetActive(true);
