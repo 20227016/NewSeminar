@@ -24,7 +24,7 @@ public class CharacterSelectionManager : MonoBehaviour
     private TextMeshProUGUI _warningText = default;
 
     [SerializeField, Tooltip("ロール名")]
-    private TextMeshProUGUI _roolName = default;
+    private TextMeshProUGUI _rollName = default;
 
     // 現在選択しているキャラクター（共有する変数）
     private int _currentSelectionCharacter = default;
@@ -46,7 +46,8 @@ public class CharacterSelectionManager : MonoBehaviour
         {
             DeleteCharacter();
             _currentSelectionCharacter = 1;
-            _roolName.text = "ノーマル";
+            _rollName.text = "ノーマル";
+            _rollName.color = Color.cyan;
             _animeCharacterModel[0].SetActive(true);
         }
     }
@@ -58,7 +59,8 @@ public class CharacterSelectionManager : MonoBehaviour
         {
             DeleteCharacter();
             _currentSelectionCharacter = 2;
-            _roolName.text = "ファイター";
+            _rollName.text = "ファイター";
+            _rollName.color = Color.red;
             _animeCharacterModel[1].SetActive(true);
         }
     }
@@ -70,7 +72,8 @@ public class CharacterSelectionManager : MonoBehaviour
         {
             DeleteCharacter();
             _currentSelectionCharacter = 3;
-            _roolName.text = "ヒーラー";
+            _rollName.text = "ヒーラー";
+            _rollName.color = new Color(0.6f, 1f, 0.4f);
             _animeCharacterModel[2].SetActive(true);
         }
     }
@@ -82,7 +85,8 @@ public class CharacterSelectionManager : MonoBehaviour
         {
             DeleteCharacter();
             _currentSelectionCharacter = 4;
-            _roolName.text = "タンク";
+            _rollName.text = "タンク";
+            _rollName.color = Color.yellow;
             _animeCharacterModel[3].SetActive(true);
         }
     }

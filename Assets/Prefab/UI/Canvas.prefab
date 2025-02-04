@@ -103,7 +103,7 @@ MonoBehaviour:
   - {fileID: 3377440350259229420}
   _nameInputField: {fileID: 466965980032571190}
   _warningText: {fileID: 7761545189892877652}
-  _roolName: {fileID: 5461769616377477861}
+  _rollName: {fileID: 5461769616377477861}
 --- !u!1 &64531029005069737
 GameObject:
   m_ObjectHideFlags: 0
@@ -5760,7 +5760,7 @@ GameObject:
   - component: {fileID: 4330608465416860297}
   - component: {fileID: 5461769616377477861}
   m_Layer: 5
-  m_Name: Text (RoolName)
+  m_Name: Text (RollName)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5813,9 +5813,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '
-
-'
+  m_text: "\u30CE\u30FC\u30DE\u30EB"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cdd7b830eb46ebb42abfec333821465a, type: 2}
   m_sharedMaterial: {fileID: 21757523808282504, guid: cdd7b830eb46ebb42abfec333821465a, type: 2}
