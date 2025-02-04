@@ -509,7 +509,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _animator.speed = _characterStatusStruct._attackSpeed;
 
         // 弱攻撃の段階に応じたパラメータを取得
-        (AnimationClip animation, float delay, float range,AudioSource audioSource, AudioClip audioClip,float playBackSpeed, float audioVolume) = GetAttackParameters(_attackLightComboCount);
+        (AnimationClip animation, float delay, float range,AudioSource audioSource, AudioClip audioClip,float playBackSpeed, float audioVolume , float audioDelay) = GetAttackParameters(_attackLightComboCount);
 
         // 攻撃処理
         _playerAttackLight.AttackLight(characterBase, attackPower, attackMultiplier, delay / _animator.speed, range);
@@ -518,7 +518,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         float animationDuration = _animation.PlayAnimation(_animator, animation) / _characterStatusStruct._attackSpeed;
 
         // 効果音
-        _sound.ProduceSE(audioSource,audioClip,playBackSpeed,audioVolume);
+        _sound.ProduceSE(audioSource,audioClip,playBackSpeed,audioVolume, audioDelay);
 
         // 連続攻撃リセットタイマー
         _attackLightComboResetDisposable?.Dispose();
@@ -545,14 +545,17 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// </summary>
     /// <param name="attackLightComboCount">攻撃段階</param>
     /// <returns></returns>
-    private (AnimationClip, float, float ,AudioSource,AudioClip, float,float) GetAttackParameters(int attackLightComboCount)
+    private (AnimationClip, float, float ,AudioSource,AudioClip, float,float,float) GetAttackParameters(int attackLightComboCount)
     {
         return attackLightComboCount switch
         {
-            0 => (_characterAnimationStruct._attackLightAnimation1,  _characterStatusStruct._attackLight1HitboxDelay, _characterStatusStruct._attackLight1HitboxRange              , _characterSoundStruct._audioSource , _characterSoundStruct._attack_1 , _characterSoundStruct._playBackSpeed_1 , _characterSoundStruct._audioVolume_1),
-            1 => (_characterAnimationStruct._attackLightAnimation2,  _characterStatusStruct._attackLight2HitboxDelay, _characterStatusStruct._attackLight2HitboxRange              , _characterSoundStruct._audioSource , _characterSoundStruct._attack_2, _characterSoundStruct._playBackSpeed_2, _characterSoundStruct._audioVolume_2),
-            2 => (_characterAnimationStruct._attackLightAnimation3,  _characterStatusStruct._attackLight3HitboxDelay, _characterStatusStruct._attackLight3HitboxRange              , _characterSoundStruct._audioSource , _characterSoundStruct._attack_3, _characterSoundStruct._playBackSpeed_3, _characterSoundStruct._audioVolume_3),
-            _ => (null, 0f, 0f,null, null,0f,0f),
+            0 => (_characterAnimationStruct._attackLightAnimation1,  _characterStatusStruct._attackLight1HitboxDelay, _characterStatusStruct._attackLight1HitboxRange     
+                  , _characterSoundStruct._audioSource , _characterSoundStruct._attack_1 , _characterSoundStruct._playBackSpeed_1 , _characterSoundStruct._audioVolume_1, _characterSoundStruct._delay_1),
+            1 => (_characterAnimationStruct._attackLightAnimation2,  _characterStatusStruct._attackLight2HitboxDelay, _characterStatusStruct._attackLight2HitboxRange 
+                  , _characterSoundStruct._audioSource , _characterSoundStruct._attack_2 , _characterSoundStruct._playBackSpeed_2 , _characterSoundStruct._audioVolume_2, _characterSoundStruct._delay_2),
+            2 => (_characterAnimationStruct._attackLightAnimation3,  _characterStatusStruct._attackLight3HitboxDelay, _characterStatusStruct._attackLight3HitboxRange     
+                  , _characterSoundStruct._audioSource , _characterSoundStruct._attack_3 , _characterSoundStruct._playBackSpeed_3 , _characterSoundStruct._audioVolume_3, _characterSoundStruct._delay_3),
+            _ => (null, 0f, 0f,null, null,0f,0f,0f),
         };
     }
 
@@ -574,7 +577,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._attackStrongAnimation) / _characterStatusStruct._attackSpeed;
 
         // 効果音
-        _sound.ProduceSE(_characterSoundStruct._audioSource, _characterSoundStruct._attack_Strong, _characterSoundStruct._playBackSpeed_Strong, _characterSoundStruct._audioVolume_Strong);
+        _sound.ProduceSE(_characterSoundStruct._audioSource, _characterSoundStruct._attack_Strong, _characterSoundStruct._playBackSpeed_Strong, _characterSoundStruct._audioVolume_Strong, _characterSoundStruct._delay_Strong);
 
         if (Object.HasInputAuthority)
         {
@@ -606,7 +609,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _avoidance.Avoidance(transform, _rigidbody, _moveDirection, _characterStatusStruct._avoidanceDistance, animationDuration);
         // 効果音
-        _sound.ProduceSE(_characterSoundStruct._audioSource, _characterSoundStruct._dodge, _characterSoundStruct._playBackSpeed_Dodge, _characterSoundStruct._audioVolume_Dodge);
+        _sound.ProduceSE(_characterSoundStruct._audioSource, _characterSoundStruct._dodge, _characterSoundStruct._playBackSpeed_Dodge, _characterSoundStruct._audioVolume_Dodge, _characterSoundStruct._delay_Dodge);
         Invincible(animationDuration);
         ResetState(animationDuration);
     }
@@ -629,6 +632,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _skill.Skill(this, skillTime);
 
         float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._skillAnimation);
+
+        // 効果音
+        _sound.ProduceSE(_characterSoundStruct._audioSource, _characterSoundStruct._attack_Special, _characterSoundStruct._playBackSpeed_Special, _characterSoundStruct._audioVolume_Special, _characterSoundStruct._delay_Special);
 
         if (Object.HasInputAuthority)
         {
@@ -685,7 +691,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             // ノックバック
             _avoidance.Avoidance(transform, _rigidbody, new Vector2(-transform.forward.x, -transform.forward.z), _characterStatusStruct._avoidanceDistance, animationDuration / 5);
         }
-
+        // 効果音
+        _sound.ProduceSE(_characterSoundStruct._audioSource, _characterSoundStruct._getHit, _characterSoundStruct._playBackSpeed_GetHit, _characterSoundStruct._audioVolume_GetHit, _characterSoundStruct._delay_GetHit);
         Invincible(animationDuration * 2f);
         ResetState(animationDuration);
     }

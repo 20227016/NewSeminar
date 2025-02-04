@@ -3109,16 +3109,22 @@ MonoBehaviour:
     _audioSource: {fileID: 3255883770242275783}
     _attack_1: {fileID: 8300000, guid: 6bd3260312e1f0b4fa8ebebc95e9a663, type: 3}
     _playBackSpeed_1: 1
-    _audioVolume_1: 1
+    _audioVolume_1: 2
     _attack_2: {fileID: 8300000, guid: ac810ffa6a8b84c44a9f12dac650edf1, type: 3}
     _playBackSpeed_2: 1
-    _audioVolume_2: 1
+    _audioVolume_2: 2
     _attack_3: {fileID: 8300000, guid: d906c2a259f66e648a025f2dd2b2a4e5, type: 3}
     _playBackSpeed_3: 1
-    _audioVolume_3: 1
-    _attack_Strong: {fileID: 0}
-    _playBackSpeed_Strong: 1
-    _audioVolume_Strong: 1
+    _audioVolume_3: 2
+    _attack_Strong: {fileID: 8300000, guid: bace3900ee08d5949a9ef51735caaa8b, type: 3}
+    _playBackSpeed_Strong: 1.5
+    _audioVolume_Strong: 2
+    _attack_Special: {fileID: 0}
+    _playBackSpeed_Special: 1
+    _audioVolume_Special: 1
+    _getHit: {fileID: 8300000, guid: a5d82310e75bbf64bb98be8aafb31bd9, type: 3}
+    _playBackSpeed_GetHit: 1
+    _audioVolume_GetHit: 1
     _dodge: {fileID: 8300000, guid: 7c1add22e488d0546a2c7bd67441ceda, type: 3}
     _playBackSpeed_Dodge: 1
     _audioVolume_Dodge: 1

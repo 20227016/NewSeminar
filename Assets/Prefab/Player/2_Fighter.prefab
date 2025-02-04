@@ -2909,6 +2909,12 @@ MonoBehaviour:
     _attack_Strong: {fileID: 8300000, guid: e100c72026b66c04598da885d0b692e2, type: 3}
     _playBackSpeed_Strong: 0.5
     _audioVolume_Strong: 1
+    _attack_Special: {fileID: 0}
+    _playBackSpeed_Special: 1
+    _audioVolume_Special: 1
+    _getHit: {fileID: 8300000, guid: a5d82310e75bbf64bb98be8aafb31bd9, type: 3}
+    _playBackSpeed_GetHit: 1
+    _audioVolume_GetHit: 1
     _dodge: {fileID: 8300000, guid: 7c1add22e488d0546a2c7bd67441ceda, type: 3}
     _playBackSpeed_Dodge: 1
     _audioVolume_Dodge: 1
