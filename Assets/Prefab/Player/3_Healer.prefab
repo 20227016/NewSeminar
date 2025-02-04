@@ -2755,15 +2755,16 @@ GameObject:
   m_Component:
   - component: {fileID: 6676897521617933021}
   - component: {fileID: 9169545892334789226}
+  - component: {fileID: 3255883770242275783}
   - component: {fileID: 3759338881218840937}
   - component: {fileID: 1463645892496197758}
   - component: {fileID: 5883231984984403277}
   - component: {fileID: 4558693363655189784}
+  - component: {fileID: -2404189222088039947}
   - component: {fileID: 7981777264721128690}
   - component: {fileID: 3010514447135096629}
   - component: {fileID: 4460776307409108312}
   - component: {fileID: 5421182098675606688}
-  - component: {fileID: -2404189222088039947}
   m_Layer: 6
   m_Name: 3_Healer
   m_TagString: Player
@@ -2811,6 +2812,102 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!82 &3255883770242275783
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4937443070232401564}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!65 &3759338881218840937
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2912,9 +3009,41 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 5883231984984403277}
-  - {fileID: 7981777264721128690}
   - {fileID: -2404189222088039947}
+  - {fileID: 7981777264721128690}
   SimulationBehaviours: []
+--- !u!114 &-2404189222088039947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4937443070232401564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  Animator: {fileID: 9169545892334789226}
+  TotalWords: 4
+  SyncSettings: 95
+  FloatAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  TimeAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: 1061325578
+  WeightAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  StateHashes: 000000002b1a167c794069552afa8626a8b5caa32ab4b9ec691a8aef6b7e0451b862e407291da935db18ca5e258e442d75881025d12f0dc80233ed9e98ae24644749cc450e9e2313d179cb3222ff2dfdfd18c5dc6bd5a32d394a802020e23b68aa8ece26b539534ce8fa4fdeeb8c0ec08f67df3b46fa07782211d683
+  TriggerHashes: 000000003d529f2a77906d249497e2aa0a9748661010797295953ebebcdfedb18b8bf165688c7eeb38dcc293bfae798a9e18af5a
 --- !u!114 &7981777264721128690
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2976,6 +3105,23 @@ MonoBehaviour:
     _attackLight3Effect: {fileID: -1453255996750119121, guid: d0e13ce05e9f06a43ac45e8744e6fd90, type: 3}
     _attackStrongEffect: {fileID: -7463171992428113002, guid: 1facde3a50abc614f884b35124f4ef87, type: 3}
     _skillEffect: {fileID: -5048008784679982985, guid: c80ca6399cf5c9344840992fd2b69975, type: 3}
+  _characterSoundStruct:
+    _audioSource: {fileID: 3255883770242275783}
+    _attack_1: {fileID: 8300000, guid: 6bd3260312e1f0b4fa8ebebc95e9a663, type: 3}
+    _playBackSpeed_1: 1
+    _audioVolume_1: 1
+    _attack_2: {fileID: 8300000, guid: ac810ffa6a8b84c44a9f12dac650edf1, type: 3}
+    _playBackSpeed_2: 1
+    _audioVolume_2: 1
+    _attack_3: {fileID: 8300000, guid: d906c2a259f66e648a025f2dd2b2a4e5, type: 3}
+    _playBackSpeed_3: 1
+    _audioVolume_3: 1
+    _attack_Strong: {fileID: 0}
+    _playBackSpeed_Strong: 1
+    _audioVolume_Strong: 1
+    _dodge: {fileID: 8300000, guid: 7c1add22e488d0546a2c7bd67441ceda, type: 3}
+    _playBackSpeed_Dodge: 1
+    _audioVolume_Dodge: 1
 --- !u!114 &3010514447135096629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3022,38 +3168,6 @@ MonoBehaviour:
   _ignoreLayer:
     serializedVersion: 2
     m_Bits: 823
---- !u!114 &-2404189222088039947
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4937443070232401564}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WordOffset: 0
-  WordCount: 0
-  _interpolationDataSource: 0
-  Animator: {fileID: 9169545892334789226}
-  TotalWords: 4
-  SyncSettings: 95
-  FloatAccuracy:
-    _value: 0
-    _inverse: 0
-    _hash: -814817977
-  TimeAccuracy:
-    _value: 0
-    _inverse: 0
-    _hash: 1061325578
-  WeightAccuracy:
-    _value: 0
-    _inverse: 0
-    _hash: -814817977
-  StateHashes: 000000002b1a167c794069552afa8626a8b5caa32ab4b9ec691a8aef6b7e0451b862e407291da935db18ca5e258e442d75881025d12f0dc80233ed9e98ae24644749cc450e9e2313d179cb3222ff2dfdfd18c5dc6bd5a32d394a802020e23b68aa8ece26b539534ce8fa4fdeeb8c0ec08f67df3b46fa07782211d683
-  TriggerHashes: 000000003d529f2a77906d249497e2aa0a9748661010797295953ebebcdfedb18b8bf165688c7eeb38dcc293bfae798a9e18af5a
 --- !u!1 &4968513419208051432
 GameObject:
   m_ObjectHideFlags: 0
