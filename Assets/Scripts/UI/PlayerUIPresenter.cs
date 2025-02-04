@@ -147,29 +147,34 @@ public class PlayerUIPresenter : MonoBehaviour
     {
         switch (avatarNumber)
         {
-            // ノーマル
+            // ノーマル（灰色）
             case 1:
                 rollText.text = "ノーマル";
+                rollText.color = Color.cyan;
                 break;
 
-            // ファイター
+            // ファイター（赤色）
             case 2:
                 rollText.text = "ファイター";
+                rollText.color = Color.red;
                 break;
 
-            // ヒーラー
+            // ヒーラー（黄緑）
             case 3:
                 rollText.text = "ヒーラー";
+                rollText.color = new Color(0.6f, 1f, 0.4f); // 黄緑
                 break;
 
-            // タンク
+            // タンク（黄色）
             case 4:
                 rollText.text = "タンク";
+                rollText.color = Color.yellow;
                 break;
 
-            // 選択されてないとき
+            // 選択されていないとき（ノーマル）
             default:
                 rollText.text = "ノーマル";
+                rollText.color = Color.cyan;
                 break;
         }
     }
