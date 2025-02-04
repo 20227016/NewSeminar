@@ -25,6 +25,9 @@ public class PlayerUIPresenter : MonoBehaviour
     [SerializeField, Tooltip("名前")]
     private TextMeshProUGUI[] _nameTexts = default;
 
+    [SerializeField, Tooltip("ロール")]
+    private TextMeshProUGUI[] _rollName = default;
+
     [SerializeField, Tooltip("HPゲージ")]
     private Slider[] _hpGauges = default;
 
@@ -45,6 +48,7 @@ public class PlayerUIPresenter : MonoBehaviour
 
     // 追跡用リスト（登録済みのプレイヤーキャラクター）
     private readonly List<CharacterBase> _registeredAllyModels = new();
+
 
     /// <summary>
     /// 自分自身のモデルをUIに設定する
@@ -76,6 +80,8 @@ public class PlayerUIPresenter : MonoBehaviour
         _playerUIImages[0].gameObject.SetActive(true);
         _keyconfig.SetActive(true);
         _skillIconImage.sprite = _skillIcons[playerData.AvatarNumber - 1];
+
+        RollNameDisplay(_rollName[0], playerData.AvatarNumber);
     }
 
     /// <summary>
@@ -105,6 +111,9 @@ public class PlayerUIPresenter : MonoBehaviour
 
         // UIを有効化
         _playerUIImages[modelCount].gameObject.SetActive(true);
+
+        RollNameDisplay(_rollName[modelCount], playerData.AvatarNumber);
+
     }
 
     /// <summary>
@@ -132,5 +141,36 @@ public class PlayerUIPresenter : MonoBehaviour
     public bool IsAllyModelSet(CharacterBase character)
     {
         return _registeredAllyModels.Contains(character);
+    }
+
+    private void RollNameDisplay(TextMeshProUGUI rollText, int avatarNumber)
+    {
+        switch (avatarNumber)
+        {
+            // ノーマル
+            case 1:
+                rollText.text = "ノーマル";
+                break;
+
+            // ファイター
+            case 2:
+                rollText.text = "ファイター";
+                break;
+
+            // ヒーラー
+            case 3:
+                rollText.text = "ヒーラー";
+                break;
+
+            // タンク
+            case 4:
+                rollText.text = "タンク";
+                break;
+
+            // 選択されてないとき
+            default:
+                rollText.text = "ノーマル";
+                break;
+        }
     }
 }
