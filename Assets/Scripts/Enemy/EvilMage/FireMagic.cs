@@ -21,6 +21,20 @@ public class FireMagic : BaseEnemy
 
     private float _elapsedTime = 0f; // 経過時間
 
+    //AudioSource型の変数を宣言
+    [SerializeField] private AudioSource _audioSource = default;
+
+    //AudioClip型の変数を宣言
+    [SerializeField] private AudioClip _sE = default;
+
+    /// <summary>
+    /// 効果音発生
+    /// </summary>
+    private void Start()
+    {
+        _audioSource.PlayOneShot(_sE);
+    }
+
     /// <summary>
     /// 毎フレーム、魔法弾を移動させる。
     /// </summary>

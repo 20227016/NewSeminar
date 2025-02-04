@@ -18,6 +18,20 @@ public class FireTornado : BaseEnemy
 
     private float _elapsedTime = 0f; // Œo‰ßŠÔ
 
+    //AudioSourceŒ^‚Ì•Ï”‚ğéŒ¾
+    [SerializeField] private AudioSource _audioSource = default;
+
+    //AudioClipŒ^‚Ì•Ï”‚ğéŒ¾
+    [SerializeField] private AudioClip _sE = default;
+
+    /// <summary>
+    /// Œø‰Ê‰¹”­¶
+    /// </summary>
+    private void Start()
+    {
+        _audioSource.PlayOneShot(_sE);
+    }
+
     /// <summary>
     /// ‰Š‚Ì—³Šª‚Ì¶‘¶ˆ—
     /// </summary>

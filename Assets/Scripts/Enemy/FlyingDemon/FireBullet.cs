@@ -22,6 +22,20 @@ public class FireBullet : BaseEnemy
 
     [SerializeField] private GameObject _fireTornadoPrefab = default;
 
+    //AudioSource型の変数を宣言
+    [SerializeField] private AudioSource _audioSource = default;
+
+    //AudioClip型の変数を宣言
+    [SerializeField] private AudioClip _sE = default;
+
+    /// <summary>
+    /// 効果音発生
+    /// </summary>
+    private void Start()
+    {
+        _audioSource.PlayOneShot(_sE);
+    }
+
     /// <summary>
     /// 毎フレーム、火球を移動させる。
     /// </summary>

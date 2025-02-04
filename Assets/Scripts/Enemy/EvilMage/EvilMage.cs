@@ -53,6 +53,12 @@ public class EvilMage : BaseEnemy
 
     private bool isCharging = default; // 溜め動作中かどうか
 
+    //AudioSource型の変数を宣言
+    [SerializeField] private AudioSource _audioSource = default;
+
+    //AudioClip型の変数を宣言
+    [SerializeField] private AudioClip _chargeSE = default;
+
     public override void Spawned()
     {
         // Raycastをつかうための基本設定をしてくれる関数
@@ -235,6 +241,8 @@ public class EvilMage : BaseEnemy
         {
             effect.Play();
         }
+
+        _audioSource.PlayOneShot(_chargeSE);
     }
 
     /// <summary>
