@@ -6,35 +6,28 @@ using Fusion;
 /// ネットワーク状でサウンドを再生するテストスクリプト
 /// 基本的に関数を呼び出し、その関数内でRPCが設定されているEF再生関数を呼び出し、全クライアントに通知する
 /// </summary>
-public class SoundManager : NetworkBehaviour
-{
-    [SerializeField]
-    private AudioSource _effectAudioSource = default;
-    [SerializeField]
-    private AudioClip _testClip = default;
+public class SoundManager : ISound
+{ 
 
     /// <summary>
-    /// 効果音再生（サーバー通知）
+    /// 効果音を出力
     /// </summary>
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_PlayEffectSound(Vector3 position)
+    /// <param name="audioSource"></param>
+    /// <param name="audioClip"></param>
+    /// <param name="audioSpeed"></param>
+    public void ProduceSE(AudioSource audioSource, AudioClip audioClip, float audioSpeed , float audioVolume)
     {
-        // 音源の位置を設定
-        _effectAudioSource.transform.position = position;
 
-        // 効果音を再生
-        _effectAudioSource.PlayOneShot(_testClip);
-    }
-
-    /// <summary>
-    //  効果音を再生
-    /// </summary>
-    public void TriggerSkillEffect(Vector3 skillPosition)
-    {
-        if (Object.HasStateAuthority)
+        if(audioSource == null || audioSource == null)
         {
-            // 全クライアントに通知
-            RPC_PlayEffectSound(skillPosition);
+
+            return;
+
         }
+        audioSource.pitch = audioSpeed;
+        audioSource.volume = audioVolume;
+        audioSource.PlayOneShot(audioClip);
+
     }
+
 }

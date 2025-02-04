@@ -25,6 +25,14 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     public PlayerUIPresenter PlayerUIPresenter { get => _playerUIPresenter; set => _playerUIPresenter = value; }
 
+    protected NetworkObject[] Effects { get; set; } = default;
+
+    [Networked(OnChanged = nameof(OnNetworkedHPChanged))]
+    protected float NetworkedHP { get; set; } = 100f;
+
+    // 現在のステート
+    [HideInInspector]
+    public CharacterStateEnum CurrentState { get; set; } = default;
     #endregion
 
     #region 定数
@@ -42,82 +50,47 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     #region 変数
 
+    // 構造体 ------------------------------------------------------------------------------------
+
     // ステータス設定
     public CharacterStatusStruct _characterStatusStruct = default;
-
     // アニメーション設定
     public CharacterAnimationStruct _characterAnimationStruct = default;
-
     // エフェクト設定
     public CharacterEffectStruct _characterEffectStruct = default;
+    // サウンド
+    public CharacterSoundStruct _characterSoundStruct = default;
 
-    protected NetworkObject[] Effects { get; set; } = default;
+    // Enum ------------------------------------------------------------------------------------
 
     // ステート
     protected CharacterStateEnum _characterStateEnum = default;
 
-    // 現在のステート
-    [HideInInspector]
-    public CharacterStateEnum CurrentState { get; set; } = default;
-
-    // HP ---------------------------------------------------------------------------------
-    protected ReactiveProperty<float> _currentHP = new ReactiveProperty<float>(100f);
-
-    [Networked(OnChanged = nameof(OnNetworkedHPChanged))]
-    protected float NetworkedHP { get; set; } = 100f;
-
-    private static void OnNetworkedHPChanged(Changed<CharacterBase> changed)
-    {
-        changed.Behaviour._currentHP.Value = changed.Behaviour.NetworkedHP;
-    }
-    // ------------------------------------------------------------------------------------
-
-    // スタミナ
-    protected ReactiveProperty<float> _currentStamina = new ReactiveProperty<float>();
-
-    // スキルゲージ
-    protected ReactiveProperty<float> _currentSkillPoint = new ReactiveProperty<float>();
-
-    // カメラコントローラー
-    protected CameraDirection _cameraDirection = default;
-
-    // アニメーター
-    protected Animator _animator = default;
+    // 物理系 ------------------------------------------------------------------------------------
 
     // リジッドボディ
     protected Rigidbody _rigidbody = default;
-
-    // 移動方向
-    protected Vector2 _moveDirection = default;
-
-    // 走るフラグ
-    protected bool _isRun = default;
-
-    // スタミナ切れフラグ
-    protected bool _isOutOfStamina = default;
-
-    // スキルクールタイム中フラグ
-    protected bool _isSkillCoolTime = default;
-
-    // 現在の弱攻撃コンボ段階
-    protected int _attackLightComboCount = default;
-
-    // 攻撃受付不可状態
-    protected bool _notAttackAccepted = default;
-
-    // ステートリセット用トークンソース
-    protected CancellationTokenSource _resetStateTokenSource = new();
-
-    // 弱攻撃コンボ段階リセット用
-    protected IDisposable _attackLightComboResetDisposable = default;
-
-    // 移動速度
-    protected float _moveSpeed = default;
-
     // 自身のトランスフォーム
     protected Transform _playerTransform = default;
 
-    // 各種インターフェース
+    // アニメーター ------------------------------------------------------------------------------------
+
+    protected Animator _animator = default;
+
+    // クラス ------------------------------------------------------------------------------------
+
+    // カメラコントローラー
+    protected CameraDirection _cameraDirection = default;
+    protected PlayerUIPresenter _playerUIPresenter = default;
+
+    // キャンセルトークン ------------------------------------------------------------------------------------
+
+    // ステートリセット用トークンソース
+    protected CancellationTokenSource _resetStateTokenSource = new();
+    protected CancellationTokenSource invincibleCts;
+
+    // 各種インターフェース ------------------------------------------------------------------------------------
+
     protected IMoveProvider _moveProvider = new PlayerMoveProvider();
     protected IMove _move = default;
     protected IAvoidance _avoidance = new PlayerAvoidance();
@@ -130,14 +103,48 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected IResurrection _resurrection = new PlayerResurrection();
     protected IAnimation _animation = new PlayerAnima();
     protected IPlayEffect _playEffect = new PlayerPlayEffect();
+    protected ISound _sound = new SoundManager();
+    // 弱攻撃コンボ段階リセット用
+    protected IDisposable _attackLightComboResetDisposable = default;
 
-    protected PlayerUIPresenter _playerUIPresenter = default;
+    // Vector ------------------------------------------------------------------------------------
 
+    // 移動方向
+    protected Vector2 _moveDirection = default;
+
+    // Float ------------------------------------------------------------------------------------
+
+    protected ReactiveProperty<float> _currentHP = new ReactiveProperty<float>(100f);
+    // スタミナ
+    protected ReactiveProperty<float> _currentStamina = new ReactiveProperty<float>();
+    // スキルゲージ
+    protected ReactiveProperty<float> _currentSkillPoint = new ReactiveProperty<float>();
+    // 移動速度
+    protected float _moveSpeed = default;
+
+    // int ------------------------------------------------------------------------------------
+
+    // 現在の弱攻撃コンボ段階
+    protected int _attackLightComboCount = default;
+
+    // Bool ------------------------------------------------------------------------------------
+
+    // 走るフラグ
+    protected bool _isRun = default;
+    // スタミナ切れフラグ
+    protected bool _isOutOfStamina = default;
+    // スキルクールタイム中フラグ
+    protected bool _isSkillCoolTime = default;
+    // 攻撃受付不可状態
+    protected bool _notAttackAccepted = default;
     protected bool isInvincible = false;
 
-    protected CancellationTokenSource invincibleCts;
-
     #endregion
+
+    private static void OnNetworkedHPChanged(Changed<CharacterBase> changed)
+    {
+        changed.Behaviour._currentHP.Value = changed.Behaviour.NetworkedHP;
+    }
 
     /// <summary>
     /// 生成時処理
@@ -166,7 +173,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             ProcessInput(data);
         }
     }
-
 
     /// <summary>
     /// プレイヤーごとに設定するもの
@@ -327,7 +333,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _currentStamina.Value = Mathf.Clamp(_currentStamina.Value, 0, _characterStatusStruct._playerStatus.MaxStamina);
     }
 
-
     /// <summary>
     /// 走った時のスタミナ消費
     /// </summary>
@@ -344,7 +349,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             })
             .AddTo(this);
     }
-
 
     /// <summary>
     /// スタミナ自動回復
@@ -367,7 +371,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             .AddTo(this);
     }
 
-
     /// <summary>
     /// スタミナ切れフラグの管理
     /// </summary>
@@ -385,7 +388,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             .Subscribe(_ => _isOutOfStamina = false)
             .AddTo(this);
     }
-
 
     /// <summary>
     /// 入力によるアクション処理
@@ -487,14 +489,12 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         Move(_playerTransform, _moveDirection, _moveSpeed, _rigidbody, CurrentState);
     }
 
-
     protected virtual void Move(Transform transform, Vector2 moveDirection, float moveSpeed, Rigidbody rigidbody, CharacterStateEnum characterState)
     {
         CurrentState = characterState;
 
         _move.Move(transform, moveDirection, moveSpeed, rigidbody);
     }
-
 
     public virtual void AttackLight(CharacterBase characterBase, float attackPower, float attackMultiplier)
     {
@@ -509,13 +509,16 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _animator.speed = _characterStatusStruct._attackSpeed;
 
         // 弱攻撃の段階に応じたパラメータを取得
-        (AnimationClip animation, float delay, float range) = GetAttackParameters(_attackLightComboCount);
+        (AnimationClip animation, float delay, float range,AudioSource audioSource, AudioClip audioClip,float playBackSpeed, float audioVolume) = GetAttackParameters(_attackLightComboCount);
 
         // 攻撃処理
         _playerAttackLight.AttackLight(characterBase, attackPower, attackMultiplier, delay / _animator.speed, range);
 
         // アニメーション再生
         float animationDuration = _animation.PlayAnimation(_animator, animation) / _characterStatusStruct._attackSpeed;
+
+        // 効果音
+        _sound.ProduceSE(audioSource,audioClip,playBackSpeed,audioVolume);
 
         // 連続攻撃リセットタイマー
         _attackLightComboResetDisposable?.Dispose();
@@ -542,17 +545,16 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// </summary>
     /// <param name="attackLightComboCount">攻撃段階</param>
     /// <returns></returns>
-    private (AnimationClip, float, float) GetAttackParameters(int attackLightComboCount)
+    private (AnimationClip, float, float ,AudioSource,AudioClip, float,float) GetAttackParameters(int attackLightComboCount)
     {
         return attackLightComboCount switch
         {
-            0 => (_characterAnimationStruct._attackLightAnimation1, _characterStatusStruct._attackLight1HitboxDelay, _characterStatusStruct._attackLight1HitboxRange),
-            1 => (_characterAnimationStruct._attackLightAnimation2, _characterStatusStruct._attackLight2HitboxDelay, _characterStatusStruct._attackLight2HitboxRange),
-            2 => (_characterAnimationStruct._attackLightAnimation3, _characterStatusStruct._attackLight3HitboxDelay, _characterStatusStruct._attackLight3HitboxRange),
-            _ => (null, 0f, 0f),
+            0 => (_characterAnimationStruct._attackLightAnimation1,  _characterStatusStruct._attackLight1HitboxDelay, _characterStatusStruct._attackLight1HitboxRange              , _characterSoundStruct._audioSource , _characterSoundStruct._attack_1 , _characterSoundStruct._playBackSpeed_1 , _characterSoundStruct._audioVolume_1),
+            1 => (_characterAnimationStruct._attackLightAnimation2,  _characterStatusStruct._attackLight2HitboxDelay, _characterStatusStruct._attackLight2HitboxRange              , _characterSoundStruct._audioSource , _characterSoundStruct._attack_2, _characterSoundStruct._playBackSpeed_2, _characterSoundStruct._audioVolume_2),
+            2 => (_characterAnimationStruct._attackLightAnimation3,  _characterStatusStruct._attackLight3HitboxDelay, _characterStatusStruct._attackLight3HitboxRange              , _characterSoundStruct._audioSource , _characterSoundStruct._attack_3, _characterSoundStruct._playBackSpeed_3, _characterSoundStruct._audioVolume_3),
+            _ => (null, 0f, 0f,null, null,0f,0f),
         };
     }
-
 
     public virtual void AttackStrong(CharacterBase characterBase, float attackPower, float attackMultipiler)
     {
@@ -571,6 +573,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._attackStrongAnimation) / _characterStatusStruct._attackSpeed;
 
+        // 効果音
+        _sound.ProduceSE(_characterSoundStruct._audioSource, _characterSoundStruct._attack_Strong, _characterSoundStruct._playBackSpeed_Strong, _characterSoundStruct._audioVolume_Strong);
+
         if (Object.HasInputAuthority)
         {
             _playEffect.RPC_PlayEffect(Effects[3], Effects[3].transform.position);
@@ -581,14 +586,12 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _currentSkillPoint.Value = 100f;
     }
 
-
     protected virtual void Targetting()
     {
         RPC_ReceiveDamage(50);
 
         _target.Targetting();
     }
-
 
     protected virtual void Avoidance(Transform transform)
     {
@@ -602,11 +605,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._avoidanceActionAnimation);
 
         _avoidance.Avoidance(transform, _rigidbody, _moveDirection, _characterStatusStruct._avoidanceDistance, animationDuration);
-
+        // 効果音
+        _sound.ProduceSE(_characterSoundStruct._audioSource, _characterSoundStruct._dodge, _characterSoundStruct._playBackSpeed_Dodge, _characterSoundStruct._audioVolume_Dodge);
         Invincible(animationDuration);
         ResetState(animationDuration);
     }
-
 
     protected virtual void Skill(CharacterBase characterBase, float skillTime, float skillCoolTime) 
     {
@@ -700,7 +703,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         NetworkedHP = Mathf.Clamp(NetworkedHP + healValue, 0, _characterStatusStruct._playerStatus.MaxHp);
     }
 
-
     /// <summary>
     /// 自分の攻撃がヒットしたときの処理
     /// </summary>
@@ -711,7 +713,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _currentSkillPoint.Value = Mathf.Clamp(_currentSkillPoint.Value + chargeSkillPoint, 0, _characterStatusStruct._skillPointUpperLimit);
     }
-
 
     protected async virtual void ResetState(float resetTime, Action onResetComplete = null)
     {
@@ -744,7 +745,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         }
     }
 
-
     /// <summary>
     /// 死亡処理
     /// </summary>
@@ -755,8 +755,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _animation.PlayAnimation(_animator, _characterAnimationStruct._deathAnimation);
     }
-
-
 
     protected async virtual void Invincible(float resetTime)
     {
@@ -777,4 +775,5 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             return;
         }
     }
+
 }

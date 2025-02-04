@@ -1259,15 +1259,16 @@ GameObject:
   m_Component:
   - component: {fileID: 360543453746978934}
   - component: {fileID: 6586209926102636189}
+  - component: {fileID: -884026790884336549}
   - component: {fileID: -4073057464245802520}
   - component: {fileID: -8028545516262249128}
   - component: {fileID: -4687331436730801239}
   - component: {fileID: -2122835496115614516}
+  - component: {fileID: -6661874745035884765}
   - component: {fileID: 2425328883939958496}
   - component: {fileID: 2544810034382573789}
   - component: {fileID: 1466253889594462176}
   - component: {fileID: 2493756517466308921}
-  - component: {fileID: -6661874745035884765}
   m_Layer: 6
   m_Name: 4_Tank
   m_TagString: Player
@@ -1315,6 +1316,102 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!82 &-884026790884336549
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2315900077808935384}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!65 &-4073057464245802520
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1416,9 +1513,41 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: -4687331436730801239}
-  - {fileID: 2425328883939958496}
   - {fileID: -6661874745035884765}
+  - {fileID: 2425328883939958496}
   SimulationBehaviours: []
+--- !u!114 &-6661874745035884765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2315900077808935384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  Animator: {fileID: 6586209926102636189}
+  TotalWords: 5
+  SyncSettings: 95
+  FloatAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  TimeAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: 1061325578
+  WeightAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  StateHashes: 00000000ed001c2f6f4f50aa2afa8626a8b5caa32ab4b9ec691a8aeff2af3fa99644ee5246fa07782211d68322ff2dfdfd18c5dc98ae24644749cc450e9e2313d179cb32ad0b478d72ecafac252114d510d1cc86a6eeac17931e74441cbfa58e294f7ddd73cbfc9fc8fbfc3f3c11b1863dc0c0aad07cc57de84f962a31ec77719c072259fdf95179bab87a0e20e23b68aa8ece26b539534ce8fa4fde5af0e9126aa78ff43b506b4e7461604b3b5bae8ac00d91ac
+  TriggerHashes: 0000000077906d249497e2aa0a974866139e8d6c808e49003d529f2abcdfedb195953ebed2c76fdd9e71310bd6b7faa535b0752bae5e9e1b9e18af5a
 --- !u!114 &2425328883939958496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1480,6 +1609,23 @@ MonoBehaviour:
     _attackLight3Effect: {fileID: 676587989421655650, guid: 794e664465f1a8641898ed04f3ad5199, type: 3}
     _attackStrongEffect: {fileID: -7773810677030246948, guid: 28d644a116ef72d4eb3bf73e2c4e3de2, type: 3}
     _skillEffect: {fileID: -630526741353474923, guid: 7164e845c8af3ff4b8e1d381990c0c7d, type: 3}
+  _characterSoundStruct:
+    _audioSource: {fileID: -884026790884336549}
+    _attack_1: {fileID: 8300000, guid: 6cee308cdff95a94095e6186c1afd625, type: 3}
+    _playBackSpeed_1: 0
+    _audioVolume_1: 0
+    _attack_2: {fileID: 8300000, guid: 9770ffa38b2cdc84b9ab9e7c4022e51a, type: 3}
+    _playBackSpeed_2: 0
+    _audioVolume_2: 0
+    _attack_3: {fileID: 8300000, guid: c9cd6e6aad1609242890b875eb7fc526, type: 3}
+    _playBackSpeed_3: 0
+    _audioVolume_3: 0
+    _attack_Strong: {fileID: 8300000, guid: 4c0f66ae9a8fd9c4ba2fd1e951965637, type: 3}
+    _playBackSpeed_Strong: 0
+    _audioVolume_Strong: 0
+    _dodge: {fileID: 8300000, guid: 7c1add22e488d0546a2c7bd67441ceda, type: 3}
+    _playBackSpeed_Dodge: 0
+    _audioVolume_Dodge: 0
   _blockReactionAnimation: {fileID: 7400002, guid: 06b2d730cc61165409b7dfc816822cbc, type: 3}
 --- !u!114 &2544810034382573789
 MonoBehaviour:
@@ -1524,38 +1670,6 @@ MonoBehaviour:
   _ignoreLayer:
     serializedVersion: 2
     m_Bits: 823
---- !u!114 &-6661874745035884765
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2315900077808935384}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WordOffset: 0
-  WordCount: 0
-  _interpolationDataSource: 0
-  Animator: {fileID: 6586209926102636189}
-  TotalWords: 5
-  SyncSettings: 95
-  FloatAccuracy:
-    _value: 0
-    _inverse: 0
-    _hash: -814817977
-  TimeAccuracy:
-    _value: 0
-    _inverse: 0
-    _hash: 1061325578
-  WeightAccuracy:
-    _value: 0
-    _inverse: 0
-    _hash: -814817977
-  StateHashes: 00000000ed001c2f6f4f50aa2afa8626a8b5caa32ab4b9ec691a8aeff2af3fa99644ee5246fa07782211d68322ff2dfdfd18c5dc98ae24644749cc450e9e2313d179cb32ad0b478d72ecafac252114d510d1cc86a6eeac17931e74441cbfa58e294f7ddd73cbfc9fc8fbfc3f3c11b1863dc0c0aad07cc57de84f962a31ec77719c072259fdf95179bab87a0e20e23b68aa8ece26b539534ce8fa4fde5af0e9126aa78ff43b506b4e7461604b3b5bae8ac00d91ac
-  TriggerHashes: 0000000077906d249497e2aa0a974866139e8d6c808e49003d529f2abcdfedb195953ebed2c76fdd9e71310bd6b7faa535b0752bae5e9e1b9e18af5a
 --- !u!1 &2375799347907623860
 GameObject:
   m_ObjectHideFlags: 0

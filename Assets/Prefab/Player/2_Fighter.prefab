@@ -2545,15 +2545,16 @@ GameObject:
   m_Component:
   - component: {fileID: 5491602394071283681}
   - component: {fileID: 1478857215670870914}
+  - component: {fileID: -5649098546953954172}
   - component: {fileID: 1829926201924287069}
   - component: {fileID: 6158893286631909390}
   - component: {fileID: 3445011316690945724}
   - component: {fileID: 5890137075826839959}
+  - component: {fileID: -7472982473302202369}
   - component: {fileID: 5008533909946906724}
   - component: {fileID: 4405098942096439548}
   - component: {fileID: 5064425199042777687}
   - component: {fileID: 8756446559984316052}
-  - component: {fileID: -7472982473302202369}
   m_Layer: 6
   m_Name: 2_Fighter
   m_TagString: Player
@@ -2601,6 +2602,102 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!82 &-5649098546953954172
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2789168958803033147}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!65 &1829926201924287069
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2702,9 +2799,41 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 3445011316690945724}
-  - {fileID: 5008533909946906724}
   - {fileID: -7472982473302202369}
+  - {fileID: 5008533909946906724}
   SimulationBehaviours: []
+--- !u!114 &-7472982473302202369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2789168958803033147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  Animator: {fileID: 1478857215670870914}
+  TotalWords: 9
+  SyncSettings: 95
+  FloatAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  TimeAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: 1061325578
+  WeightAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  StateHashes: 000000002afa8626a8b5caa32b1a167c79406955e67a3208b4204d212ab4b9ec691a8aefc888f3cc234b7b313c5953cd3539bb622f032d90e239d0544ea364a2e7e61f40f009c05ef96928f12ef6da87c250303504ee3433f1aa3a9affa1cb5b28a9b596363dea498ff9471e52defa6b192b589c9c0755b9f1f02455b08c1ccfcfb566d78ccf04bf2990c8da369e0d2693c1c143b1df6d68e80297e30b8e64f152539e7a3b70e7becde260375c5f20ede78f77b9e422fb400932c7fd968b165d0f9daf09291da9357291b9cb934ca0acc8c0b0526b7e0451efcb45ecd12f0dc8559a4c75258e442dbda3d3e99fdf4db407f2da70790a567f802a318905791056f588f2d73f7ec812eb432f4e393c3c8fc01c5b79de999b4d85158bb3eb8c0ec08f67df3b46fa07782211d683cea1b9df2a07d3ee34159e341fbe3ca75c803cfbd136685028a98107c93707955120ffeddb11b7f8b539534ce8fa4fde8680d13a387c1cc10c0c38f37b5f1adf22c8e5d7a8f9adc2d484eae38947f671fdf95179bab87a0e3c11b1863dc0c0aa20e23b68aa8ece26d07cc57de84f962a31ec77719c07225965eaa5325dd9f66526b8da42776bf4e86aa954b29ba0c2b66e5eab19eb91024e
+  TriggerHashes: 00000000137af922d3ef69172921e8bbcee8c913c1b9af2981247efb8929adcce8407e749e18af5a3d529f2a9d8fa9b92ae24fcac9e5c044bcdfedb1dcb703a13fb08c2f87a0c606fb65a51a2fd29ecb0b07a6eea65bbad51823006acea1b9dfbfae798a5ca9f60438dcc293dbdb4d1d8b8bf165688c7eeb9a5b3270568aebbe95953ebefdb3a30bc0d63660f176d5a9224bf82b6cde3d12fe0ab2899acd605493824525c5b3a0997ce27e4ab39febdb1129ef17
 --- !u!114 &5008533909946906724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2766,6 +2895,23 @@ MonoBehaviour:
     _attackLight3Effect: {fileID: 8179596486899178368, guid: f17223a78a9263c4693e7aac7059025e, type: 3}
     _attackStrongEffect: {fileID: -5820966933152248588, guid: 6d28c5706f3d9d24ba4d7f67284d7a23, type: 3}
     _skillEffect: {fileID: -4820907608964509799, guid: d823765285d095e4eb2045aa7c9708e0, type: 3}
+  _characterSoundStruct:
+    _audioSource: {fileID: -5649098546953954172}
+    _attack_1: {fileID: 8300000, guid: e082aa8dd917b5a42875685023be0958, type: 3}
+    _playBackSpeed_1: 1
+    _audioVolume_1: 1
+    _attack_2: {fileID: 8300000, guid: a110d6d4d657e074aafd54802498436e, type: 3}
+    _playBackSpeed_2: 1
+    _audioVolume_2: 1
+    _attack_3: {fileID: 8300000, guid: c9241e23e5ab6b54cb2985496aa398dd, type: 3}
+    _playBackSpeed_3: 1
+    _audioVolume_3: 1
+    _attack_Strong: {fileID: 8300000, guid: e100c72026b66c04598da885d0b692e2, type: 3}
+    _playBackSpeed_Strong: 0.5
+    _audioVolume_Strong: 1
+    _dodge: {fileID: 8300000, guid: 7c1add22e488d0546a2c7bd67441ceda, type: 3}
+    _playBackSpeed_Dodge: 1
+    _audioVolume_Dodge: 1
 --- !u!114 &4405098942096439548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2810,38 +2956,6 @@ MonoBehaviour:
   _ignoreLayer:
     serializedVersion: 2
     m_Bits: 823
---- !u!114 &-7472982473302202369
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2789168958803033147}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WordOffset: 0
-  WordCount: 0
-  _interpolationDataSource: 0
-  Animator: {fileID: 1478857215670870914}
-  TotalWords: 9
-  SyncSettings: 95
-  FloatAccuracy:
-    _value: 0
-    _inverse: 0
-    _hash: -814817977
-  TimeAccuracy:
-    _value: 0
-    _inverse: 0
-    _hash: 1061325578
-  WeightAccuracy:
-    _value: 0
-    _inverse: 0
-    _hash: -814817977
-  StateHashes: 000000002afa8626a8b5caa32b1a167c79406955e67a3208b4204d212ab4b9ec691a8aefc888f3cc234b7b313c5953cd3539bb622f032d90e239d0544ea364a2e7e61f40f009c05ef96928f12ef6da87c250303504ee3433f1aa3a9affa1cb5b28a9b596363dea498ff9471e52defa6b192b589c9c0755b9f1f02455b08c1ccfcfb566d78ccf04bf2990c8da369e0d2693c1c143b1df6d68e80297e30b8e64f152539e7a3b70e7becde260375c5f20ede78f77b9e422fb400932c7fd968b165d0f9daf09291da9357291b9cb934ca0acc8c0b0526b7e0451efcb45ecd12f0dc8559a4c75258e442dbda3d3e99fdf4db407f2da70790a567f802a318905791056f588f2d73f7ec812eb432f4e393c3c8fc01c5b79de999b4d85158bb3eb8c0ec08f67df3b46fa07782211d683cea1b9df2a07d3ee34159e341fbe3ca75c803cfbd136685028a98107c93707955120ffeddb11b7f8b539534ce8fa4fde8680d13a387c1cc10c0c38f37b5f1adf22c8e5d7a8f9adc2d484eae38947f671fdf95179bab87a0e3c11b1863dc0c0aa20e23b68aa8ece26d07cc57de84f962a31ec77719c07225965eaa5325dd9f66526b8da42776bf4e86aa954b29ba0c2b66e5eab19eb91024e
-  TriggerHashes: 00000000137af922d3ef69172921e8bbcee8c913c1b9af2981247efb8929adcce8407e749e18af5a3d529f2a9d8fa9b92ae24fcac9e5c044bcdfedb1dcb703a13fb08c2f87a0c606fb65a51a2fd29ecb0b07a6eea65bbad51823006acea1b9dfbfae798a5ca9f60438dcc293dbdb4d1d8b8bf165688c7eeb9a5b3270568aebbe95953ebefdb3a30bc0d63660f176d5a9224bf82b6cde3d12fe0ab2899acd605493824525c5b3a0997ce27e4ab39febdb1129ef17
 --- !u!1 &2818942768633752699
 GameObject:
   m_ObjectHideFlags: 0
