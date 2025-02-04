@@ -112,7 +112,6 @@ public class NormalStageTransfer : NetworkBehaviour
         {
 
             player.transform.position = _normalStageteleportPos.position;
-            player.transform.parent.rotation = Quaternion.Euler(0,180,0);
             print($"{player.name} をノーマルステージにテレポートしました");
         }
         // 一度ノーマルステージにテレポートしたらノーマルステージに行くためのテレポート人数を1人にする(再接続用)
