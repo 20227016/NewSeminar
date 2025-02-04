@@ -82,7 +82,6 @@ public class FlyingDemon : BaseEnemy
 
     // 子オブジェクトのParticleSystemを取得
     private ParticleSystem[] _attackEffects1 = default;
-    private ParticleSystem[] _attackEffects2 = default;
 
     // 攻撃時の当たり判定
     private BoxCollider _boxCollider1 = default;
@@ -95,16 +94,23 @@ public class FlyingDemon : BaseEnemy
     [SerializeField] private GameObject _fireballPrefab; // 炎の球のPrefab
     [SerializeField] private Transform _firePoint; // 射出位置
 
+    //AudioSource型の変数を宣言
+    [SerializeField] private AudioSource _audioSource = default;
+
+    //AudioClip型の変数を宣言
+    [SerializeField] private AudioClip _chargeSE1 = default;
+    [SerializeField] private AudioClip _chargeSE2 = default;
+    [SerializeField] private AudioClip _AttackSE1 = default;
+    [SerializeField] private AudioClip _AttackSE2 = default;
+
     public override void Spawned()
     {
         _animator = GetComponent<Animator>();
 
         // 子のオブジェクト名
         Transform effectObj1 = FindChild(transform, "ChargePurple");
-        //Transform effectObj2 = FindChild(transform, "RedEnergyExplosion");
 
         _attackEffects1 = effectObj1.GetComponentsInChildren<ParticleSystem>();
-        //_attackEffects2 = effectObj2.GetComponentsInChildren<ParticleSystem>();
 
         Transform boxObj1 = FindChild(transform, "Hand_R");
         Transform boxObj2 = FindChild(transform, "LowerJaw01");
@@ -438,7 +444,7 @@ public class FlyingDemon : BaseEnemy
         {
             return;
         }
-        print(_attackAction);
+
         int randomAttack = Random.Range(0, 2);
         switch (randomAttack)
         {
@@ -631,6 +637,8 @@ public class FlyingDemon : BaseEnemy
         {
             effect.Play();
         }
+
+        _audioSource.PlayOneShot(_chargeSE1);
     }
 
     /// <summary>
@@ -639,10 +647,7 @@ public class FlyingDemon : BaseEnemy
 
     private void AttackEffect02()
     {
-        foreach (var effect in _attackEffects2)
-        {
-            effect.Play();
-        }
+        _audioSource.PlayOneShot(_chargeSE2);
     }
 
     /// <summary>
@@ -651,6 +656,7 @@ public class FlyingDemon : BaseEnemy
     private void AttackCollider1()
     {
         _boxCollider1.enabled = true;
+        _audioSource.PlayOneShot(_AttackSE1);
     }
 
     /// <summary>
@@ -659,5 +665,6 @@ public class FlyingDemon : BaseEnemy
     private void AttackCollider2()
     {
         _boxCollider2.enabled = true;
+        _audioSource.PlayOneShot(_AttackSE2);
     }
 }
