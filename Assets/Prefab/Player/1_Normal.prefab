@@ -1847,18 +1847,31 @@ MonoBehaviour:
     _attack_1: {fileID: 8300000, guid: 286a5cda493f4d7419ed5c1f5e739105, type: 3}
     _playBackSpeed_1: 1
     _audioVolume_1: 1
+    _delay_1: 0
     _attack_2: {fileID: 8300000, guid: 191c62c3fd4fd3e41933a2aeb260c829, type: 3}
     _playBackSpeed_2: 1.1
     _audioVolume_2: 1
+    _delay_2: 0
     _attack_3: {fileID: 8300000, guid: c499944e0a21ebc46bbd6be61a56a86f, type: 3}
     _playBackSpeed_3: 1.1
     _audioVolume_3: 1
+    _delay_3: 0
     _attack_Strong: {fileID: 8300000, guid: 78a2207f53513fc4fb0d88dc9d6bf8d2, type: 3}
     _playBackSpeed_Strong: 1.7
     _audioVolume_Strong: 1
+    _delay_Strong: 0
+    _attack_Special: {fileID: 8300000, guid: 08653854de0ad994d85f0e3fe7ea62c8, type: 3}
+    _playBackSpeed_Special: 1.8
+    _audioVolume_Special: 1
+    _delay_Special: 0.49
+    _getHit: {fileID: 8300000, guid: a5d82310e75bbf64bb98be8aafb31bd9, type: 3}
+    _playBackSpeed_GetHit: 1
+    _audioVolume_GetHit: 1
+    _delay_GetHit: 0
     _dodge: {fileID: 8300000, guid: 7c1add22e488d0546a2c7bd67441ceda, type: 3}
     _playBackSpeed_Dodge: 1
     _audioVolume_Dodge: 1
+    _delay_Dodge: 0
 --- !u!114 &4762466880810951508
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1612,20 +1612,26 @@ MonoBehaviour:
   _characterSoundStruct:
     _audioSource: {fileID: -884026790884336549}
     _attack_1: {fileID: 8300000, guid: 6cee308cdff95a94095e6186c1afd625, type: 3}
-    _playBackSpeed_1: 0
-    _audioVolume_1: 0
+    _playBackSpeed_1: 1
+    _audioVolume_1: 1
     _attack_2: {fileID: 8300000, guid: 9770ffa38b2cdc84b9ab9e7c4022e51a, type: 3}
-    _playBackSpeed_2: 0
-    _audioVolume_2: 0
+    _playBackSpeed_2: 1
+    _audioVolume_2: 1
     _attack_3: {fileID: 8300000, guid: c9cd6e6aad1609242890b875eb7fc526, type: 3}
-    _playBackSpeed_3: 0
-    _audioVolume_3: 0
+    _playBackSpeed_3: 1
+    _audioVolume_3: 1
     _attack_Strong: {fileID: 8300000, guid: 4c0f66ae9a8fd9c4ba2fd1e951965637, type: 3}
-    _playBackSpeed_Strong: 0
-    _audioVolume_Strong: 0
+    _playBackSpeed_Strong: 1
+    _audioVolume_Strong: 1
+    _attack_Special: {fileID: 0}
+    _playBackSpeed_Special: 1
+    _audioVolume_Special: 1
+    _getHit: {fileID: 8300000, guid: a5d82310e75bbf64bb98be8aafb31bd9, type: 3}
+    _playBackSpeed_GetHit: 1
+    _audioVolume_GetHit: 1
     _dodge: {fileID: 8300000, guid: 7c1add22e488d0546a2c7bd67441ceda, type: 3}
-    _playBackSpeed_Dodge: 0
-    _audioVolume_Dodge: 0
+    _playBackSpeed_Dodge: 1
+    _audioVolume_Dodge: 1
   _blockReactionAnimation: {fileID: 7400002, guid: 06b2d730cc61165409b7dfc816822cbc, type: 3}
 --- !u!114 &2544810034382573789
 MonoBehaviour:
