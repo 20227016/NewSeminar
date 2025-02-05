@@ -50478,14 +50478,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8234820959766616133}
+  - component: {fileID: 4862131585626961313}
   - component: {fileID: 4707602414915168193}
-  - component: {fileID: 1869113581835770157}
   - component: {fileID: 3856769579799032353}
   - component: {fileID: 3096769644541882198}
   - component: {fileID: 920358208658283113}
   - component: {fileID: 8705980476093993038}
   - component: {fileID: 4742847114112291411}
-  - component: {fileID: 4862131585626961313}
+  - component: {fileID: 1869113581835770157}
   m_Layer: 7
   m_Name: GolemPADefault
   m_TagString: Enemy
@@ -50512,207 +50512,6 @@ Transform:
   - {fileID: 3203555108826191334}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &4707602414915168193
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6174259389272467448}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: da17702f68754f39868928b8199ce9e7, type: 3}
-  m_Controller: {fileID: 9100000, guid: f54394e8c2f80eb4c9a00a59bf77177a, type: 2}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1869113581835770157
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6174259389272467448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6e4cf0bba8732647b54bf412a101065, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WordOffset: 0
-  WordCount: 0
-  _interpolationDataSource: 0
-  ignoreLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  _enemyStatusStruct:
-    _maxHp: 100
-    _hp: 100
-    _attackPower: 20
-    _attackPowerSpeed: 0
-    _moveSpeed: 0
-    _diffencePower: 0
-    _attackCoolTime: 0
-    _attackDelayTime: 0
-    _downedTime: 0
-  _tags: []
-  _hpBarUI: {fileID: 7427003616119681246}
-  _hpBarFill: {fileID: 1379801971939293087}
-  _movementState: 0
-  _actionState: 0
-  _targetTrans: {fileID: 0}
-  _searchRange: 20
-  _moveSpeed: 0
-  _stopDistance: 2
-  _attackingPlayer: {fileID: 0}
-  _damage: 10
-  _lookAroundState: 0
-  _audioSource: {fileID: 4862131585626961313}
-  _chargeSE: {fileID: 8300000, guid: 9a542e3ec51fa114a9d05e9c1237f6d6, type: 3}
-  _AttackSE1: {fileID: 8300000, guid: ae3225b0d1cbe6243adc43f9255867fa, type: 3}
-  _AttackSE2: {fileID: 8300000, guid: 8cb3a0d8fdf6e3a4893f98742ae4b241, type: 3}
---- !u!65 &3856769579799032353
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6174259389272467448}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.3723335, y: 2.1450043, z: 0.8177414}
-  m_Center: {x: 0.046445847, y: 1.260109, z: -0.0911293}
---- !u!54 &3096769644541882198
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6174259389272467448}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
---- !u!114 &920358208658283113
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6174259389272467448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObjectInterest: 1
-  DefaultInterestGroups: []
-  DestroyWhenStateAuthorityLeaves: 0
-  AllowStateAuthorityOverride: 1
-  AoiPositionSource: {fileID: 0}
-  Flags: 2305
-  NetworkGuid:
-    RawGuidValue: 19577731de413604b8df28e840916e76
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 1869113581835770157}
-  - {fileID: 8705980476093993038}
-  - {fileID: 4742847114112291411}
-  SimulationBehaviours: []
---- !u!114 &8705980476093993038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6174259389272467448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1710889294, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WordOffset: 0
-  WordCount: 0
-  _interpolationDataSource: 0
-  InterpolationSpace: 0
-  InterpolationTarget: {fileID: 0}
-  InterpolateErrorCorrection: 1
-  InterpolatedErrorCorrectionSettings:
-    MinRate: 3.3
-    MaxRate: 10
-    PosBlendStart: 0.25
-    PosBlendEnd: 1
-    PosMinCorrection: 0.025
-    PosTeleportDistance: 2
-    RotBlendStart: 0.1
-    RotBlendEnd: 0.5
-    RotTeleportRadians: 1.5
-  UseLegacySharedModeInterpolation: 0
-  TargetInterpolationDelay: 0.03
---- !u!114 &4742847114112291411
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6174259389272467448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WordOffset: 0
-  WordCount: 0
-  _interpolationDataSource: 0
-  Animator: {fileID: 4707602414915168193}
-  TotalWords: 1
-  SyncSettings: 79
-  FloatAccuracy:
-    _value: 0
-    _inverse: 0
-    _hash: -814817977
-  TimeAccuracy:
-    _value: 0
-    _inverse: 0
-    _hash: 1061325578
-  WeightAccuracy:
-    _value: 0
-    _inverse: 0
-    _hash: -814817977
-  StateHashes: 0000000088adc69b2de92124a3f1977b9042b24cedb25a4ff72360a557e353d64d72693cf3b09ce077934a0f422906ffc60ad010d07cc57dcaedff9731ec7771da2fff8cb85813eafbf620e968cb96fc4b7b955a789bde7ba6309f18c6f20f85be4c07e4ec45916ff6d4ab85c63906bf421ad050855035e50173e30ae94d9dd8aae3aedb37b935014e73a6a72b1a167c79406955
-  TriggerHashes: 00000000
 --- !u!82 &4862131585626961313
 AudioSource:
   m_ObjectHideFlags: 0
@@ -50809,6 +50608,207 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &4707602414915168193
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6174259389272467448}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: da17702f68754f39868928b8199ce9e7, type: 3}
+  m_Controller: {fileID: 9100000, guid: f54394e8c2f80eb4c9a00a59bf77177a, type: 2}
+  m_CullingMode: 1
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!65 &3856769579799032353
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6174259389272467448}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.3723335, y: 2.1450043, z: 0.8177414}
+  m_Center: {x: 0.046445847, y: 1.260109, z: -0.0911293}
+--- !u!54 &3096769644541882198
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6174259389272467448}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!114 &920358208658283113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6174259389272467448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 1
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 2305
+  NetworkGuid:
+    RawGuidValue: 19577731de413604b8df28e840916e76
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 8705980476093993038}
+  - {fileID: 4742847114112291411}
+  - {fileID: 1869113581835770157}
+  SimulationBehaviours: []
+--- !u!114 &8705980476093993038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6174259389272467448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1710889294, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  InterpolationSpace: 0
+  InterpolationTarget: {fileID: 0}
+  InterpolateErrorCorrection: 1
+  InterpolatedErrorCorrectionSettings:
+    MinRate: 3.3
+    MaxRate: 10
+    PosBlendStart: 0.25
+    PosBlendEnd: 1
+    PosMinCorrection: 0.025
+    PosTeleportDistance: 2
+    RotBlendStart: 0.1
+    RotBlendEnd: 0.5
+    RotTeleportRadians: 1.5
+  UseLegacySharedModeInterpolation: 0
+  TargetInterpolationDelay: 0.03
+--- !u!114 &4742847114112291411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6174259389272467448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  Animator: {fileID: 4707602414915168193}
+  TotalWords: 1
+  SyncSettings: 79
+  FloatAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  TimeAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: 1061325578
+  WeightAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  StateHashes: 0000000088adc69b2de92124a3f1977b9042b24cedb25a4ff72360a557e353d64d72693cf3b09ce077934a0f422906ffc60ad010d07cc57dcaedff9731ec7771da2fff8cb85813eafbf620e968cb96fc4b7b955a789bde7ba6309f18c6f20f85be4c07e4ec45916ff6d4ab85c63906bf421ad050855035e50173e30ae94d9dd8aae3aedb37b935014e73a6a72b1a167c79406955
+  TriggerHashes: 00000000
+--- !u!114 &1869113581835770157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6174259389272467448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6e4cf0bba8732647b54bf412a101065, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  ignoreLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _enemyStatusStruct:
+    _maxHp: 100
+    _hp: 100
+    _attackPower: 20
+    _attackPowerSpeed: 0
+    _moveSpeed: 0
+    _diffencePower: 0
+    _attackCoolTime: 0
+    _attackDelayTime: 0
+    _downedTime: 0
+  _tags: []
+  _hpBarUI: {fileID: 7427003616119681246}
+  _hpBarFill: {fileID: 1379801971939293087}
+  _movementState: 0
+  _actionState: 0
+  _targetTrans: {fileID: 0}
+  _searchRange: 20
+  _moveSpeed: 0
+  _stopDistance: 2
+  _attackingPlayer: {fileID: 0}
+  _damage: 10
+  _lookAroundState: 0
+  _audioSource: {fileID: 4862131585626961313}
+  _chargeSE: {fileID: 8300000, guid: 9a542e3ec51fa114a9d05e9c1237f6d6, type: 3}
+  _AttackSE1: {fileID: 8300000, guid: ae3225b0d1cbe6243adc43f9255867fa, type: 3}
+  _AttackSE2: {fileID: 8300000, guid: 8cb3a0d8fdf6e3a4893f98742ae4b241, type: 3}
 --- !u!1 &6254046717101505467
 GameObject:
   m_ObjectHideFlags: 0

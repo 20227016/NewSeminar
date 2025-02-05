@@ -28,8 +28,6 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField, Tooltip("エネミーのウェーブごとの設定")]
     private List<EnemyWave> _enemyWaves = new List<EnemyWave>();
 
-
-
     // ボス関連のリスト
     [SerializeField]
     private List<NetworkObject> _bossObjList = new List<NetworkObject>();
@@ -190,8 +188,9 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
             for (int i = 0; i < _bossObjList.Count; i++)
             {
                 NetworkObject enemyPrefab = _bossObjList[i];
+                Debug.Log($"<color=red>敵の名前{enemyPrefab.name}</color>");
                 runner.Spawn(enemyPrefab, _bossObjPosList[i].transform.position, Quaternion.identity);
-                print("ボス生成したなう");
+                print("ボスかボスが召喚する敵を生成した");
             }
             _spawnEnd = true;
         }

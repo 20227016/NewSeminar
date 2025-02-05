@@ -17172,13 +17172,13 @@ GameObject:
   m_Component:
   - component: {fileID: 3992193180803535327}
   - component: {fileID: 7325103966427582551}
-  - component: {fileID: 6495403621470088031}
+  - component: {fileID: 7671055620160780745}
   - component: {fileID: 8243371762743419762}
   - component: {fileID: 2343821477396999000}
   - component: {fileID: 7120314230197923028}
   - component: {fileID: 5262622704728479066}
   - component: {fileID: 3551013536965517732}
-  - component: {fileID: 7671055620160780745}
+  - component: {fileID: 6495403621470088031}
   m_Layer: 7
   m_Name: EvilMagePADefault
   m_TagString: Enemy
@@ -17227,176 +17227,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6495403621470088031
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9020446898532371600}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 950dd530df588374fae1e0e24d0883d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WordOffset: 0
-  WordCount: 0
-  _interpolationDataSource: 0
-  ignoreLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  _enemyStatusStruct:
-    _maxHp: 60
-    _hp: 60
-    _attackPower: 0
-    _attackPowerSpeed: 0
-    _moveSpeed: 0
-    _diffencePower: 0
-    _attackCoolTime: 0
-    _attackDelayTime: 0
-    _downedTime: 0
-  _tags: []
-  _hpBarUI: {fileID: 5528956170292943633}
-  _hpBarFill: {fileID: 7571647284221501406}
-  _magicProjectilePrefab: {fileID: 810653205754761373, guid: f1fdc9886ac3a2842807fbff501d9ebe, type: 3}
-  _audioSource: {fileID: 7671055620160780745}
-  _chargeSE: {fileID: 8300000, guid: 9a542e3ec51fa114a9d05e9c1237f6d6, type: 3}
---- !u!65 &8243371762743419762
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9020446898532371600}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.451951, y: 1.6834412, z: 1.0095291}
-  m_Center: {x: -0.039583683, y: 0.8701019, z: 0.06303787}
---- !u!54 &2343821477396999000
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9020446898532371600}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &7120314230197923028
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9020446898532371600}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObjectInterest: 1
-  DefaultInterestGroups: []
-  DestroyWhenStateAuthorityLeaves: 0
-  AllowStateAuthorityOverride: 1
-  AoiPositionSource: {fileID: 0}
-  Flags: 2305
-  NetworkGuid:
-    RawGuidValue: 93b94039cf7541e8a7c9453819da38f0
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 6495403621470088031}
-  - {fileID: 5262622704728479066}
-  - {fileID: 3551013536965517732}
-  SimulationBehaviours: []
---- !u!114 &5262622704728479066
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9020446898532371600}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WordOffset: 0
-  WordCount: 0
-  _interpolationDataSource: 0
-  InterpolationSpace: 0
-  InterpolationTarget: {fileID: 0}
-  InterpolateErrorCorrection: 1
-  InterpolatedErrorCorrectionSettings:
-    MinRate: 3.3
-    MaxRate: 10
-    PosBlendStart: 0.25
-    PosBlendEnd: 1
-    PosMinCorrection: 0.025
-    PosTeleportDistance: 2
-    RotBlendStart: 0.1
-    RotBlendEnd: 0.5
-    RotTeleportRadians: 1.5
-  UseLegacySharedModeInterpolation: 0
-  TargetInterpolationDelay: 0.03
---- !u!114 &3551013536965517732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9020446898532371600}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WordOffset: 0
-  WordCount: 0
-  _interpolationDataSource: 0
-  Animator: {fileID: 7325103966427582551}
-  TotalWords: 1
-  SyncSettings: 79
-  FloatAccuracy:
-    _value: 0
-    _inverse: 0
-    _hash: -814817977
-  TimeAccuracy:
-    _value: 0
-    _inverse: 0
-    _hash: 1061325578
-  WeightAccuracy:
-    _value: 0
-    _inverse: 0
-    _hash: -814817977
-  StateHashes: 00000000bea86a9c1bec8d23a3f1977b9042b24cedb25a4ff72360a50d286c404e865f439e810ff81aa2d917422906ffc60ad010d07cc57dcaedff9731ec7771da2fff8cb85813eafbf620e968cb96fc4b7b955a789bde7ba6309f18c6f20f85be4c07e4ec45916ff6d4ab85c63906bf421ad050855035e50173e30ae94d9dd8aae3aedb37b935014e73a6a72b1a167c79406955
-  TriggerHashes: 00000000
 --- !u!82 &7671055620160780745
 AudioSource:
   m_ObjectHideFlags: 0
@@ -17493,6 +17323,176 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!65 &8243371762743419762
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9020446898532371600}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.451951, y: 1.6834412, z: 1.0095291}
+  m_Center: {x: -0.039583683, y: 0.8701019, z: 0.06303787}
+--- !u!54 &2343821477396999000
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9020446898532371600}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &7120314230197923028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9020446898532371600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 1
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 2305
+  NetworkGuid:
+    RawGuidValue: 93b94039cf7541e8a7c9453819da38f0
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 5262622704728479066}
+  - {fileID: 3551013536965517732}
+  - {fileID: 6495403621470088031}
+  SimulationBehaviours: []
+--- !u!114 &5262622704728479066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9020446898532371600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  InterpolationSpace: 0
+  InterpolationTarget: {fileID: 0}
+  InterpolateErrorCorrection: 1
+  InterpolatedErrorCorrectionSettings:
+    MinRate: 3.3
+    MaxRate: 10
+    PosBlendStart: 0.25
+    PosBlendEnd: 1
+    PosMinCorrection: 0.025
+    PosTeleportDistance: 2
+    RotBlendStart: 0.1
+    RotBlendEnd: 0.5
+    RotTeleportRadians: 1.5
+  UseLegacySharedModeInterpolation: 0
+  TargetInterpolationDelay: 0.03
+--- !u!114 &3551013536965517732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9020446898532371600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  Animator: {fileID: 7325103966427582551}
+  TotalWords: 1
+  SyncSettings: 79
+  FloatAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  TimeAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: 1061325578
+  WeightAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  StateHashes: 00000000bea86a9c1bec8d23a3f1977b9042b24cedb25a4ff72360a50d286c404e865f439e810ff81aa2d917422906ffc60ad010d07cc57dcaedff9731ec7771da2fff8cb85813eafbf620e968cb96fc4b7b955a789bde7ba6309f18c6f20f85be4c07e4ec45916ff6d4ab85c63906bf421ad050855035e50173e30ae94d9dd8aae3aedb37b935014e73a6a72b1a167c79406955
+  TriggerHashes: 00000000
+--- !u!114 &6495403621470088031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9020446898532371600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 950dd530df588374fae1e0e24d0883d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  ignoreLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _enemyStatusStruct:
+    _maxHp: 60
+    _hp: 60
+    _attackPower: 0
+    _attackPowerSpeed: 0
+    _moveSpeed: 0
+    _diffencePower: 0
+    _attackCoolTime: 0
+    _attackDelayTime: 0
+    _downedTime: 0
+  _tags: []
+  _hpBarUI: {fileID: 5528956170292943633}
+  _hpBarFill: {fileID: 7571647284221501406}
+  _magicProjectilePrefab: {fileID: 810653205754761373, guid: f1fdc9886ac3a2842807fbff501d9ebe, type: 3}
+  _audioSource: {fileID: 7671055620160780745}
+  _chargeSE: {fileID: 8300000, guid: 9a542e3ec51fa114a9d05e9c1237f6d6, type: 3}
 --- !u!1 &9021688990867936564
 GameObject:
   m_ObjectHideFlags: 0
