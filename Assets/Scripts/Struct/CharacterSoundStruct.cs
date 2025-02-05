@@ -11,7 +11,7 @@ public struct CharacterSoundStruct
     public AudioClip _attack_1;
     [SerializeField, Header("Ä¶‘¬“x"), Range(0f, 2f)]
     public float _playBackSpeed_1;
-    [SerializeField, Header("‰¹—Ê"), Range(0f, 2f)]
+    [SerializeField, Header("‰¹—Ê"), Range(0f, 1f)]
     public float _audioVolume_1;
     [SerializeField, Header("’x‚ê"), Min(0f)]
     public float _delay_1;
@@ -20,7 +20,7 @@ public struct CharacterSoundStruct
     public AudioClip _attack_2;
     [SerializeField, Header("Ä¶‘¬“x"), Range(0f, 2f)]
     public float _playBackSpeed_2;
-    [SerializeField, Header("‰¹—Ê"), Range(0f, 2f)]
+    [SerializeField, Header("‰¹—Ê"), Range(0f, 1f)]
     public float _audioVolume_2;
     [SerializeField, Header("’x‚ê"), Min(0f)]
     public float _delay_2;
@@ -29,7 +29,7 @@ public struct CharacterSoundStruct
     public AudioClip _attack_3;
     [SerializeField, Header("Ä¶‘¬“x"), Range(0f, 2f)]
     public float _playBackSpeed_3;
-    [SerializeField, Header("‰¹—Ê"), Range(0f, 2f)]
+    [SerializeField, Header("‰¹—Ê"), Range(0f, 1f)]
     public float _audioVolume_3;
     [SerializeField, Header("’x‚ê"), Min(0f)]
     public float _delay_3;
@@ -38,7 +38,7 @@ public struct CharacterSoundStruct
     public AudioClip _attack_Strong;
     [SerializeField, Header("Ä¶‘¬“x"), Range(0f, 2f)]
     public float _playBackSpeed_Strong;
-    [SerializeField, Header("‰¹—Ê"), Range(0f, 2f)]
+    [SerializeField, Header("‰¹—Ê"), Range(0f, 1f)]
     public float _audioVolume_Strong;
     [SerializeField, Header("’x‚ê"), Min(0f)]
     public float _delay_Strong;
@@ -47,7 +47,7 @@ public struct CharacterSoundStruct
     public AudioClip _attack_Special;
     [SerializeField, Header("Ä¶‘¬“x"), Range(0f, 2f)]
     public float _playBackSpeed_Special;
-    [SerializeField, Header("‰¹—Ê"), Range(0f, 2f)]
+    [SerializeField, Header("‰¹—Ê"), Range(0f, 1f)]
     public float _audioVolume_Special;
     [SerializeField, Header("’x‚ê"), Min(0f)]
     public float _delay_Special;
@@ -56,7 +56,7 @@ public struct CharacterSoundStruct
     public AudioClip _getHit;
     [SerializeField, Header("Ä¶‘¬“x"), Range(0f, 2f)]
     public float _playBackSpeed_GetHit;
-    [SerializeField, Header("‰¹—Ê"), Range(0f, 2f)]
+    [SerializeField, Header("‰¹—Ê"), Range(0f, 1f)]
     public float _audioVolume_GetHit;
     [SerializeField, Header("’x‚ê"), Min(0f)]
     public float _delay_GetHit;
@@ -65,7 +65,7 @@ public struct CharacterSoundStruct
     public AudioClip _dodge;
     [SerializeField, Header("Ä¶‘¬“x"), Range(0f, 2f)]
     public float _playBackSpeed_Dodge;
-    [SerializeField, Header("‰¹—Ê"), Range(0f, 2f)]
+    [SerializeField, Header("‰¹—Ê"), Range(0f, 1f)]
     public float _audioVolume_Dodge;
     [SerializeField, Header("’x‚ê"), Min(0f)]
     public float _delay_Dodge;

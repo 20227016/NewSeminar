@@ -96,6 +96,18 @@ public class BossDemo : BaseEnemy
 
     private bool isPlayerNearby = false; // プレイヤーが範囲内にいるかどうか
 
+    //AudioSource型の変数を宣言
+    [SerializeField] private AudioSource _audioSource = default;
+
+    //AudioClip型の変数を宣言
+    [SerializeField] private AudioClip _roarSE = default;
+    [SerializeField] private AudioClip _idleSE = default;
+    [SerializeField] private AudioClip _wingSE = default;
+    [SerializeField] private AudioClip _magicCircleSE = default;
+    [SerializeField] private AudioClip _laserSE = default;
+    [SerializeField] private AudioClip _summonSE = default; 
+    [SerializeField] private AudioClip _heelSE = default;
+
     /// <summary>
     /// 初期化
     /// </summary>
@@ -506,5 +518,61 @@ public class BossDemo : BaseEnemy
     protected override void OnDeath()
     {
         _actionState = 4;
+    }
+
+    /// <summary>
+    /// 咆哮SE
+    /// </summary>
+    private void RoarSE()
+    {
+        _audioSource.PlayOneShot(_roarSE);
+    }
+
+    /// <summary>
+    /// アイドルSE
+    /// </summary>
+    private void IdleSE()
+    {
+        _audioSource.PlayOneShot(_idleSE);
+    }
+
+    /// <summary>
+    /// 翼攻撃SE
+    /// </summary>
+    private void WingSE()
+    {
+        _audioSource.PlayOneShot(_wingSE);
+    }
+
+    /// <summary>
+    /// 魔法陣SE
+    /// </summary>
+    private void MagicCircleSE()
+    {
+        _audioSource.PlayOneShot(_magicCircleSE);
+    }
+
+    /// <summary>
+    /// レーザーSE
+    /// </summary>
+    private void LaserSE()
+    {
+        _audioSource.PlayOneShot(_laserSE);
+    }
+
+    /// <summary>
+    /// 召喚SE
+    /// </summary>
+    private void SummonSE()
+    {
+        _audioSource.PlayOneShot(_summonSE);
+    }
+
+    /// <summary>
+    /// 復活SE
+    /// </summary>
+    private void HeelSE()
+    {
+        _audioSource.PlayOneShot(_heelSE);
     }
 }
