@@ -87,9 +87,10 @@ public class PlayerData : NetworkBehaviour
     public void RPC_PlayerLeft()
     {
 
-        if (Runner.IsServer)
+        if (Runner.SessionInfo.PlayerCount <= 1)
         {
 
+            Debug.Log("–ß‚é@");
             return;
 
         }
