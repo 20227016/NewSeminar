@@ -67,7 +67,7 @@ public class PlayerData : NetworkBehaviour
     {
 
         base.Despawned(runner, hasState);
-        RPC_PlayerLeft();
+        // RPC_PlayerLeft();
 
     }
 
