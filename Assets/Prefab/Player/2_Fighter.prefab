@@ -2899,25 +2899,32 @@ MonoBehaviour:
     _audioSource: {fileID: -5649098546953954172}
     _attack_1: {fileID: 8300000, guid: e082aa8dd917b5a42875685023be0958, type: 3}
     _playBackSpeed_1: 1
-    _audioVolume_1: 1
+    _audioVolume_1: 0.5
+    _delay_1: 0
     _attack_2: {fileID: 8300000, guid: a110d6d4d657e074aafd54802498436e, type: 3}
     _playBackSpeed_2: 1
-    _audioVolume_2: 1
+    _audioVolume_2: 0.5
+    _delay_2: 0
     _attack_3: {fileID: 8300000, guid: c9241e23e5ab6b54cb2985496aa398dd, type: 3}
     _playBackSpeed_3: 1
-    _audioVolume_3: 1
+    _audioVolume_3: 0.5
+    _delay_3: 0
     _attack_Strong: {fileID: 8300000, guid: e100c72026b66c04598da885d0b692e2, type: 3}
     _playBackSpeed_Strong: 0.5
-    _audioVolume_Strong: 1
-    _attack_Special: {fileID: 0}
+    _audioVolume_Strong: 0.5
+    _delay_Strong: 0
+    _attack_Special: {fileID: 8300000, guid: bee52d4ef2c26dd4e9f7561e685ebf9b, type: 3}
     _playBackSpeed_Special: 1
-    _audioVolume_Special: 1
+    _audioVolume_Special: 0.5
+    _delay_Special: 0
     _getHit: {fileID: 8300000, guid: a5d82310e75bbf64bb98be8aafb31bd9, type: 3}
     _playBackSpeed_GetHit: 1
-    _audioVolume_GetHit: 1
+    _audioVolume_GetHit: 0.5
+    _delay_GetHit: 0
     _dodge: {fileID: 8300000, guid: 7c1add22e488d0546a2c7bd67441ceda, type: 3}
     _playBackSpeed_Dodge: 1
-    _audioVolume_Dodge: 1
+    _audioVolume_Dodge: 0.5
+    _delay_Dodge: 0
 --- !u!114 &4405098942096439548
 MonoBehaviour:
   m_ObjectHideFlags: 0
