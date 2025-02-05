@@ -75,6 +75,8 @@ public class PlayerData : NetworkBehaviour
     public void RPC_PlayerJoined()
     {
 
+        Debug.Log($"トランスファー（ノーマル）：{_normalStageTransfer}");
+        Debug.Log($"ランナー：{_networkRunner}");
         _normalStageTransfer.StageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
         Debug.Log($"現在の参加人数{_networkRunner.SessionInfo.PlayerCount}");
         _bossStageTransfer.BossStageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
