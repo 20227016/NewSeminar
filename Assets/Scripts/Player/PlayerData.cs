@@ -28,7 +28,7 @@ public class PlayerData : NetworkBehaviour
 
     public override void Spawned()
     {
-        if (Object.HasInputAuthority)
+        //if (Object.HasInputAuthority)
         {
             GameObject canvas = GameObject.FindGameObjectWithTag("Canvas");
             CharacterSelectionManager characterSelectionManager = canvas.GetComponentInChildren<CharacterSelectionManager>();
@@ -67,7 +67,7 @@ public class PlayerData : NetworkBehaviour
     {
 
         base.Despawned(runner, hasState);
-        // RPC_PlayerLeft();
+        RPC_PlayerLeft();
 
     }
 
@@ -75,8 +75,6 @@ public class PlayerData : NetworkBehaviour
     public void RPC_PlayerJoined()
     {
 
-        Debug.Log($"トランスファー（ノーマル）：{_normalStageTransfer}");
-        Debug.Log($"ランナー：{_networkRunner}");
         _normalStageTransfer.StageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
         Debug.Log($"現在の参加人数{_networkRunner.SessionInfo.PlayerCount}");
         _bossStageTransfer.BossStageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
@@ -87,13 +85,6 @@ public class PlayerData : NetworkBehaviour
     public void RPC_PlayerLeft()
     {
 
-        if (Runner.SessionInfo.PlayerCount <= 1)
-        {
-
-            Debug.Log("戻る　");
-            return;
-
-        }
         _normalStageTransfer.StageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
         _bossStageTransfer.BossStageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
 
