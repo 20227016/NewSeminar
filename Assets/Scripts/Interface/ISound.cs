@@ -5,6 +5,6 @@ using UnityEngine;
 public interface ISound 
 {
 
-    public void ProduceSE(AudioSource audioSource,AudioClip audioClip ,float audioSpeed, float audioVolume);
+    public void ProduceSE(AudioSource audioSource,AudioClip audioClip ,float audioSpeed, float audioVolume, float delay);
 
 }
