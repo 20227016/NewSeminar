@@ -87,6 +87,12 @@ public class PlayerData : NetworkBehaviour
     public void RPC_PlayerLeft()
     {
 
+        if (Runner.IsServer)
+        {
+
+            return;
+
+        }
         _normalStageTransfer.StageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
         _bossStageTransfer.BossStageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
 
