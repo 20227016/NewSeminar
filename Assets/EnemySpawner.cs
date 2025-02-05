@@ -28,8 +28,6 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField, Tooltip("エネミーのウェーブごとの設定")]
     private List<EnemyWave> _enemyWaves = new List<EnemyWave>();
 
-
-
     // ボス関連のリスト
     [SerializeField]
     private List<NetworkObject> _bossObjList = new List<NetworkObject>();
@@ -55,15 +53,24 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     [Networked]
     private int _currentWave { get; set; } = 0;
 
+    private GameLauncher _gameLauncher = default;
+
     /// <summary>
     /// 初期処理
     /// </summary>
     private void Start()
     {
-        GameLauncher gameLauncher = FindObjectOfType<GameLauncher>();
-        NetworkRunner networkRunner = gameLauncher.NetworkRunner;
 
-        gameLauncher.StartGameSubject.Subscribe(_ => StartWave(networkRunner));
+        _gameLauncher = FindObjectOfType<GameLauncher>();
+        _gameLauncher.StartGameSubject.Subscribe(_ => EnemyStart());
+
+    }
+
+    private void EnemyStart()
+    {
+        NetworkRunner networkRunner = _gameLauncher.NetworkRunner;
+
+        StartWave(networkRunner);
 
         // エネミー全滅時の通知を購読し、次のウェーブへ
         OnEnemiesDefeated.Subscribe(_ => NextWave(networkRunner));
@@ -85,6 +92,8 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     /// </summary>
     private void StartWave(NetworkRunner runner)
     {
+
+
         if (_enemyWaves == null || _enemyWaves.Count == 0)
         {
             Debug.LogError("エネミーウェーブリストが設定されていません！");
@@ -108,6 +117,9 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     /// </summary>
     private void NextWave(NetworkRunner runner)
     {
+
+        print("ネクストウェーブだよ");
+
         _currentWave++;
 
         if (_currentWave >= _enemyWaves.Count)
@@ -121,6 +133,7 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         Debug.Log($"ウェーブ {_currentWave + 1} 開始！");
         SpawnEnemies(runner, _currentWave);
+
     }
 
     /// <summary>
@@ -135,31 +148,42 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
             Debug.LogError("エネミーウェーブリストが設定されていません！");
             return;
         }
-        if (runner.IsServer)
+
+        if (runner != null && runner.IsRunning)
         {
-            _spawnedEnemies.Clear();
-
-            // 今のウェーブデータ
-            EnemyWave wave = _enemyWaves[waveIndex];
-            List<NetworkObject> waveEnemies = wave.Enemies;
-            List<Transform> spawnPositions = wave.SpawnPositions;
-
-            for (int i = 0; i < waveEnemies.Count; i++)
-            {
-                NetworkObject enemyPrefab = waveEnemies[i];
-
-                // 各敵ごとのスポーン位置を設定
-                Transform spawnPosition = (spawnPositions.Count > i) ? spawnPositions[i] : spawnPositions[spawnPositions.Count - 1];
-
-                NetworkObject spawnedEnemy = runner.Spawn(enemyPrefab, spawnPosition.position, Quaternion.identity);
-                _spawnedEnemies.Add(spawnedEnemy);
-            }
-
+            Debug.Log("NetworkRunner は実行中です。");
         }
+        else
+        {
+            Debug.Log("NetworkRunner は実行されていません。");
+        }
+
+
+
+
+        _spawnedEnemies.Clear();
+
+        // 今のウェーブデータ
+        EnemyWave wave = _enemyWaves[waveIndex];
+        List<NetworkObject> waveEnemies = wave.Enemies;
+        List<Transform> spawnPositions = wave.SpawnPositions;
+
+        for (int i = 0; i < waveEnemies.Count; i++)
+        {
+            NetworkObject enemyPrefab = waveEnemies[i];
+
+            // 各敵ごとのスポーン位置を設定
+            Transform spawnPosition = (spawnPositions.Count > i) ? spawnPositions[i] : spawnPositions[spawnPositions.Count - 1];
+
+            NetworkObject spawnedEnemy = runner.Spawn(enemyPrefab, spawnPosition.position, Quaternion.identity);
+            _spawnedEnemies.Add(spawnedEnemy);
+        }
+
+
 
         if (_currentWave == 2)
         {
-            print("ウェーブ２。_wave2ClearManagerの生成を開始します"+ _wave2ClearManager);
+            print("ウェーブ２。_wave2ClearManagerの生成を開始します" + _wave2ClearManager);
             // WaveClearを生成する
             runner.Spawn(_wave2ClearManager);
             print("ウェーブ２。_wave2ClearManagerの生成を開始します後ろ" + _wave2ClearManager);
