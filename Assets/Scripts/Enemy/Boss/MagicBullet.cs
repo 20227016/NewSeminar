@@ -17,6 +17,20 @@ public class MagicBullet : BaseEnemy
 
     private bool isMoving = false; // 移動状態フラグ
 
+    //AudioSource型の変数を宣言
+    [SerializeField] private AudioSource _audioSource = default;
+
+    //AudioClip型の変数を宣言
+    [SerializeField] private AudioClip _magicBulletSE = default;
+
+    /// <summary>
+    /// 効果音発生
+    /// </summary>
+    private void Start()
+    {
+        _audioSource.PlayOneShot(_magicBulletSE);
+    }
+
     private void Update()
     {
         // まだ目標サイズに達していない場合、徐々に大きくする
