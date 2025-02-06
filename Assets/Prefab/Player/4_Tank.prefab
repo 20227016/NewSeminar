@@ -1479,7 +1479,7 @@ MonoBehaviour:
   InterpolationTarget: {fileID: 1048928192657444814}
   InterpolateErrorCorrection: 1
   InterpolatedErrorCorrectionSettings:
-    MinRate: 3.3
+    MinRate: 0.1
     MaxRate: 10
     PosBlendStart: 0.25
     PosBlendEnd: 1
