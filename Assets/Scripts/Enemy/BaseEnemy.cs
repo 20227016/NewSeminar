@@ -156,7 +156,7 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     /// </summary>
     /// <param name="damegeValue">ダメージ</param>
     [Rpc(RpcSources.All, RpcTargets.All)]
-    public void RPC_ReceiveDamage(int damegeValue)
+    public virtual void RPC_ReceiveDamage(int damegeValue)
     {
         // ダメージ処理
         _enemyStatusStruct._hp -= damegeValue - _enemyStatusStruct._diffencePower;
@@ -166,8 +166,9 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
         if (_enemyStatusStruct._hp <= 0)
         {
             OnDeath();
+           
         }
-
+        return;
     }
 
     /// <summary>
