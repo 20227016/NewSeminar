@@ -1627,7 +1627,7 @@ MonoBehaviour:
     _playBackSpeed_Strong: 1
     _audioVolume_Strong: 0.5
     _delay_Strong: 0
-    _attack_Special: {fileID: 0}
+    _attack_Special: {fileID: 8300000, guid: 720b5dd57df65f2489fa44f414d2e4bf, type: 3}
     _playBackSpeed_Special: 1
     _audioVolume_Special: 0.5
     _delay_Special: 0
