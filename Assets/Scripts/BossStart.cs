@@ -67,8 +67,8 @@ public class BossStart : MonoBehaviour
             // プレイヤーが1人以上範囲内にいる
             isPlayerNearby = true;
             _playableDirector.Play();
-            //_text.SetActive(true);
-            //_bar.SetActive(true);
+            _text.SetActive(true);
+            _bar.SetActive(true);
         }
     }
 
