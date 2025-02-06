@@ -3125,7 +3125,7 @@ MonoBehaviour:
     _delay_Strong: 0
     _attack_Special: {fileID: 8300000, guid: 7082e86b99c74d44cb9e9f8dfef1e763, type: 3}
     _playBackSpeed_Special: 1
-    _audioVolume_Special: 1
+    _audioVolume_Special: 0.5
     _delay_Special: 1.3
     _getHit: {fileID: 8300000, guid: a5d82310e75bbf64bb98be8aafb31bd9, type: 3}
     _playBackSpeed_GetHit: 1
