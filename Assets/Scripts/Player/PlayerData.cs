@@ -28,31 +28,33 @@ public class PlayerData : NetworkBehaviour
 
     public override void Spawned()
     {
-        //if (Object.HasInputAuthority)
+
+        _normalStageTransfer = FindObjectOfType<NormalStageTransfer>();
+        _bossStageTransfer = Resources.FindObjectsOfTypeAll<BossStageTransfer>().FirstOrDefault(obj => obj.name == "IsHitPlayer");
+        if (_normalStageTransfer == null)
+        {
+
+            Debug.Log("トランスファーがない");
+
+        }
+        if (_bossStageTransfer == null)
+        {
+
+            Debug.Log("トランスファーがない");
+
+        }
+        _networkRunner = FindObjectOfType<NetworkRunner>();
+        if (_networkRunner == null)
+        {
+
+            Debug.Log("ランナーがない");
+
+        }
+        if (Object.HasInputAuthority)
         {
             GameObject canvas = GameObject.FindGameObjectWithTag("Canvas");
             CharacterSelectionManager characterSelectionManager = canvas.GetComponentInChildren<CharacterSelectionManager>();
-            _normalStageTransfer = FindObjectOfType<NormalStageTransfer>();
-            _bossStageTransfer = Resources.FindObjectsOfTypeAll<BossStageTransfer>().FirstOrDefault(obj => obj.name == "IsHitPlayer");
-            if (_normalStageTransfer == null)
-            {
-
-                Debug.Log("トランスファーがない");
-
-            }       
-            if (_bossStageTransfer == null)
-            {
-
-                Debug.Log("トランスファーがない");
-
-            }
-            _networkRunner = FindObjectOfType<NetworkRunner>();
-            if (_networkRunner == null)
-            {
-
-                Debug.Log("ランナーがない");
-
-            }
+          
             // アクティブ
             characterSelectionManager.ActiveUI();
 
