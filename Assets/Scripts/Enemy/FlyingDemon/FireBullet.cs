@@ -97,7 +97,9 @@ public class FireBullet : BaseEnemy
 
     public override void RPC_ReceiveDamage(int damegeValue)
     {
-        
+
+        Destroy(gameObject);
+
     }
 
 }
