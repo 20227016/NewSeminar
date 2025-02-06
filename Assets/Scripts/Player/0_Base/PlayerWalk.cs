@@ -21,7 +21,7 @@ public class PlayerWalk :IMove
         _cachedMoveDirection.Set(moveDirection.x, 0, moveDirection.y);
 
         // レイキャストで進行方向をチェック
-        if (IsBlockedByStage(transform.position, _cachedMoveDirection))
+        if (IsBlockedByStage(transform.position + new Vector3(0, 1, 0), _cachedMoveDirection))
         {
             return; // 進行方向に壁がある場合、移動しない
         }
