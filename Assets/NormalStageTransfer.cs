@@ -37,6 +37,12 @@ public class NormalStageTransfer : NetworkBehaviour
     [Networked]
     public bool ClearNormalStage { get; set; } = false;
 
+    [SerializeField, Header("ノーマルステージのスカイボックス")]
+    private Material _normalStageSkyBox = default;
+
+    [SerializeField,Header("ボスステージのスカイボックス")]
+    private Material _bossStageSkyBox = default;
+
     /// <summary>
     /// ノーマルステージにテレポートするために必要な人数
     /// </summary>
@@ -114,6 +120,8 @@ public class NormalStageTransfer : NetworkBehaviour
             player.transform.position = _normalStageteleportPos.position;
             print($"{player.name} をノーマルステージにテレポートしました");
         }
+        Debug.Log($"<color=red>スカイボックス</color>{_normalStageSkyBox}");
+        RenderSettings.skybox = _normalStageSkyBox; 
         // 一度ノーマルステージにテレポートしたらノーマルステージに行くためのテレポート人数を1人にする(再接続用)
         StageRequiredPlayers = 1;
     }
@@ -128,6 +136,7 @@ public class NormalStageTransfer : NetworkBehaviour
             print($"{player.name} をボスステージに途中参加としてテレポートしました");
 
         }
+        RenderSettings.skybox = _bossStageSkyBox;
     }
 
 

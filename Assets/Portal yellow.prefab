@@ -4908,7 +4908,10 @@ MonoBehaviour:
   WordOffset: 0
   WordCount: 0
   _interpolationDataSource: 0
-  __normalStageRequiredPlayers: 2
+  _ClearNormalStage: 0
+  _normalStageSkyBox: {fileID: 2100000, guid: c52c5d7968fa6c9499b0b5752f899bfb, type: 2}
+  _bossStageSkyBox: {fileID: 2100000, guid: cede08c9fc471e64884909cd4bbeaf59, type: 2}
+  _StageRequiredPlayers: 0
 --- !u!114 &3167697459582647966
 MonoBehaviour:
   m_ObjectHideFlags: 0

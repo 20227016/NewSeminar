@@ -13,6 +13,8 @@ public class BossStageTransfer : MonoBehaviour
     [SerializeField, Tooltip("ボスステージのテレポート座標")]
     private Transform _bossTeleportPos = default;
 
+    [SerializeField, Header("ボスステージのスカイボックス")]
+    private Material _bossStageSkyBox = default;
 
     /// <summary>
     /// 転送ポータルにプレイヤーが入ったときにリストに追加する
@@ -42,5 +44,6 @@ public class BossStageTransfer : MonoBehaviour
             player.transform.position = _bossTeleportPos.position;
             print($"{player.name} をボス部屋にテレポートしました");
         }
+        RenderSettings.skybox = _bossStageSkyBox;
     }
 }
