@@ -42445,7 +42445,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.1
-  far clip plane: 5000
+  far clip plane: 100
   field of view: 60.000004
   orthographic: 0
   orthographic size: 10
@@ -56784,8 +56784,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e9d69c57edabf241a23422cb3f8a905, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyManagement: {fileID: 1337583300}
-  _bossStageRequiredPlayers: 2
   _bossTeleportPos: {fileID: 0}
 --- !u!114 &1726768293
 MonoBehaviour:
