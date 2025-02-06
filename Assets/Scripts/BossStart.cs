@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class BossStart : MonoBehaviour
 {
@@ -9,27 +10,24 @@ public class BossStart : MonoBehaviour
 
     private bool isPlayerNearby = false; // プレイヤーが範囲内にいるかどうか
 
-    private GameObject _movieCamera = default;
-    private GameObject _roar = default;
-    private GameObject _circle = default;
     private GameObject _text = default;
     private GameObject _bar = default;
 
+    private PlayableDirector _playableDirector; // TimelineのPlayableDirector
+
     private void Awake()
     {
-        _movieCamera = GameObject.Find("MovieCamera");
-        _movieCamera.SetActive(false);
-        _roar = GameObject.Find("RoarEffects");
-        _roar.SetActive(false);
-        _circle = GameObject.Find("Magic circle Enemy");
-        _circle.SetActive(false);
+        // MovieCamera
+        // RoarEffects
+        // Magic circle Enemy
+        _playableDirector = GetComponent<PlayableDirector>();
 
-        //　ボス召喚待ち
+        // ボス召喚待ち
         StartCoroutine(Delay(5f));
     }
 
     /// <summary>
-    /// 死亡状態
+    /// ボス召喚まで待機してから初期化
     /// </summary>
     private IEnumerator Delay(float fadeDuration)
     {
@@ -45,7 +43,6 @@ public class BossStart : MonoBehaviour
         {
             _bar.SetActive(false);
         }
-
     }
 
     private void Update()
@@ -69,11 +66,9 @@ public class BossStart : MonoBehaviour
         {
             // プレイヤーが1人以上範囲内にいる
             isPlayerNearby = true;
-            _movieCamera.SetActive(true);
-            _roar.SetActive(true);
-            _circle.SetActive(true);
-            _text.SetActive(true);
-            _bar.SetActive(true);
+            _playableDirector.Play();
+            //_text.SetActive(true);
+            //_bar.SetActive(true);
         }
     }
 
