@@ -43,7 +43,7 @@ public struct CharacterSoundStruct
     [SerializeField, Header("’x‚ê"), Min(0f)]
     public float _delay_Strong;
     [Space(20)]
-    [SerializeField, Header("‹­‚ß‚ÌUŒ‚‚Ì‰¹\n¦ƒq[ƒ‰[‚Í–‚–@w‚©‚ç‰¹‚ªo‚é‚½‚ß‚±‚±‚Éİ’è‚µ‚È‚¢")]
+    [SerializeField, Header("•KE‹Z‚Ì‰¹")]
     public AudioClip _attack_Special;
     [SerializeField, Header("Ä¶‘¬“x"), Range(0f, 2f)]
     public float _playBackSpeed_Special;

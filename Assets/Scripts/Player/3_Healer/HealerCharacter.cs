@@ -1,6 +1,7 @@
 using System;
 using UniRx;
 using UnityEngine;
+using Fusion;
 
 /// <summary>
 /// HealerCharacter.cs
@@ -12,6 +13,9 @@ using UnityEngine;
 /// </summary>
 public class HealerCharacter : CharacterBase
 {
+
+    private AudioSource _audioSource = default;
+
     protected override void Skill(CharacterBase characterBase, float skillTime, float skillCoolTime)
     {
         // クールタイム中ならリターン
@@ -31,9 +35,25 @@ public class HealerCharacter : CharacterBase
 
         float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._skillAnimation);
 
-        Runner.Spawn(Effects[4], transform.position, Quaternion.identity);
+        NetworkObject effect = Runner.Spawn(Effects[4], transform.position, Quaternion.identity);
+        _audioSource = effect.GetComponent<AudioSource>();
+        if (_audioSource != null)
+        {
+            Debug.Log("キュア");
+            // 効果音
+            _sound.ProduceSE(_audioSource, _characterSoundStruct._attack_Special, _characterSoundStruct._playBackSpeed_Special, _characterSoundStruct._audioVolume_Special, _characterSoundStruct._delay_Special);
+
+
+        }
+        else
+        {
+
+            Debug.LogError($"オーディオソースが見つかりません");
+
+        }
 
         Invincible(animationDuration);
         ResetState(animationDuration);
     }
+
 }
