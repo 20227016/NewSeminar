@@ -72,10 +72,7 @@ public class BossDemo : BaseEnemy
 
     // ボスの体力
     private int _hp = default;
-    /*
-    [Networked]
-    private int HP { get; set; } = 100;
-    */
+
     [SerializeField] private Slider _hpBar; // HPバー
 
     private float _summonTimer = default;
