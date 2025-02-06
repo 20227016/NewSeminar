@@ -30,6 +30,11 @@ public class BossDemo : BaseEnemy
     [Tooltip("魔弾の生成許可")]
     [SerializeField] private bool isBulletGeneration = true;
 
+    // 翼の予告線
+    private Transform _wingNoticeLine = default;
+    // 魔弾の予告線
+    private Transform _bulletNoticeLine = default;
+
     [SerializeField]
     private float _currentTimer = 5f; // 現在時間
 
@@ -46,7 +51,7 @@ public class BossDemo : BaseEnemy
     // TransitionNo.7  Die
     private Animator _animator; // アニメーター
 
-    Transform _LaserBeam = default; // レーザービーム
+    private Transform _LaserBeam = default; // レーザービーム
 
     private bool isStartAction = default;
 
@@ -126,6 +131,11 @@ public class BossDemo : BaseEnemy
     /// </summary>
     private void Start()
     {
+        _wingNoticeLine = transform.Find("WingNoticeLine");
+        _wingNoticeLine.gameObject.SetActive(false);
+        _bulletNoticeLine = transform.Find("BulletNoticeLine");
+        _bulletNoticeLine.gameObject.SetActive(false);
+
         _LaserBeam = transform.Find("LaserBeam");
         _LaserBeam.gameObject.SetActive(false);
 
@@ -272,6 +282,7 @@ public class BossDemo : BaseEnemy
         {
             _animator.SetInteger("TransitionNo", 0);
 
+            _wingNoticeLine.gameObject.SetActive(false);
             _LaserBeam.gameObject.SetActive(false); // 非アクティブ化
             isBulletGeneration = true;
             foreach (BoxCollider collider in _boxColliders)
@@ -279,7 +290,7 @@ public class BossDemo : BaseEnemy
                 collider.enabled = false;
             }
 
-            // 召喚&ダウンテスト
+            // 召喚&ダウン
             if (_hp <= _enemyStatusStruct._maxHp / 2 && !isFaintg)
             {
                 _actionState = 3;
@@ -287,7 +298,11 @@ public class BossDemo : BaseEnemy
         }
 
         _currentTimer -= Time.deltaTime;
-        if (_currentTimer <= 0)
+        if (_currentTimer <= 1.5f)
+        {
+            _bulletNoticeLine.gameObject.SetActive(false);
+        }
+        if (_currentTimer <= 0f)
         {
             _actionState = 2;
         }
@@ -330,7 +345,10 @@ public class BossDemo : BaseEnemy
     {
         _animator.SetInteger("TransitionNo", 1);
         _actionState = 1;
-        _currentTimer = 5f;
+        _currentTimer = 10f;
+
+        // 予告線を表示
+        _wingNoticeLine.gameObject.SetActive(true);
 
         foreach (BoxCollider collider in _boxColliders)
         {
@@ -344,6 +362,10 @@ public class BossDemo : BaseEnemy
     private void MagicBulletAttack()
     {
         _animator.SetInteger("TransitionNo", 2);
+
+        // 予告線を表示
+        _bulletNoticeLine.gameObject.SetActive(true);
+
         if (isBulletGeneration)
         {
             // 魔法弾を生成
@@ -399,6 +421,7 @@ public class BossDemo : BaseEnemy
                 break;
 
             case 2:
+                _bulletNoticeLine.gameObject.SetActive(false);
                 _animator.SetInteger("TransitionNo", 5);
                 _summonTimer -= Time.deltaTime;
                 if (_summonTimer <= 0f)
@@ -424,6 +447,9 @@ public class BossDemo : BaseEnemy
         {
             collider.enabled = false;
         }
+
+        _wingNoticeLine.gameObject.SetActive(false);
+        _bulletNoticeLine.gameObject.SetActive(false);
         _LaserBeam.gameObject.SetActive(false);
 
         _animator.SetInteger("TransitionNo", 7);

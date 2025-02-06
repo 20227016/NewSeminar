@@ -23,7 +23,7 @@ public class BossStart : MonoBehaviour
         _playableDirector = GetComponent<PlayableDirector>();
 
         // É{ÉXè¢ä´ë“Çø
-        StartCoroutine(Delay(5f));
+        StartCoroutine(Delay(7f));
     }
 
     /// <summary>
