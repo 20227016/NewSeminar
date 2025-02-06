@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using Random = System.Random;
 using System.Collections;
 using System.Net.NetworkInformation;
-using Unity.VisualScripting;
 using UnityEngine.UI;
 
 /// <summary>
@@ -104,6 +103,11 @@ public class BossDemo : BaseEnemy
     [SerializeField] private AudioClip _laserSE = default;
     [SerializeField] private AudioClip _summonSE = default; 
     [SerializeField] private AudioClip _heelSE = default;
+
+    private Subject<Unit> _bossDeathSubject = new();
+
+    public Subject<Unit> BossDeathSubject { get => _bossDeathSubject; set => _bossDeathSubject = value; }
+
 
     /// <summary>
     /// èâä˙âª
@@ -436,6 +440,7 @@ public class BossDemo : BaseEnemy
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_Death()
     {
+        _bossDeathSubject.OnNext(Unit.Default);
         gameObject.SetActive(false);
     }
 

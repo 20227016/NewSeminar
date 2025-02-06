@@ -1800,7 +1800,7 @@ MonoBehaviour:
     _walkSpeed: 1
     _runSpeed: 2
     _avoidanceDistance: 10
-    _attackPower: 10
+    _attackPower: 1000
     _attackLightMultiplier: 1
     _attackStrongMultiplier: 1.5
     _attackSpeed: 1

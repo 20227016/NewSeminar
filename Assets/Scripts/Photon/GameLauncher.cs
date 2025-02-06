@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UniRx;
 using System.Linq;
+using Cysharp.Threading.Tasks;
+using UnityEngine.Playables;
 
 public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -50,9 +52,11 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     private async void Start()
     {
-        _mainCamera = Camera.main;
+        
         _playerInput = GetComponent<PlayerInput>();
         RegisterInputActions(true);
+
+        _mainCamera = Camera.main;
 
         NetworkRunner networkRunner = Instantiate(_networkRunnerPrefab);
         networkRunner.AddCallbacks(this);
@@ -65,7 +69,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         });
 
         _startGameSubject.OnNext(Unit.Default);
-
     }
 
     private void RegisterInputActions(bool isRegister)

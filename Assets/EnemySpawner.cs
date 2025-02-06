@@ -5,6 +5,7 @@ using Fusion.Sockets;
 using UnityEngine;
 using UniRx;
 using System.Threading.Tasks;
+using UnityEngine.Playables;
 
 [Serializable]
 public class EnemyWave
@@ -55,6 +56,9 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     private GameLauncher _gameLauncher = default;
 
+    [SerializeField, Tooltip("勝利時のTimeline")]
+    private PlayableDirector _victoryTimeline;
+
     /// <summary>
     /// 初期処理
     /// </summary>
@@ -64,6 +68,14 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
         _gameLauncher = FindObjectOfType<GameLauncher>();
         _gameLauncher.StartGameSubject.Subscribe(_ => EnemyStart());
 
+        
+    }
+
+    private void BossDefeat()
+    {
+        Debug.Log("僕の勝ち");
+
+        _victoryTimeline.Play();
     }
 
     private void EnemyStart()
@@ -215,11 +227,14 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
             {
                 NetworkObject enemyPrefab = _bossObjList[i];
                 runner.Spawn(enemyPrefab, _bossObjPosList[i].transform.position, Quaternion.identity);
-                print("ボス生成したなう");
+
             }
             _spawnEnd = true;
         }
 
+        BossDemo bossDemo = FindObjectOfType<BossDemo>();
+
+        bossDemo.BossDeathSubject.Subscribe(_ => BossDefeat());
     }
 
     // INetworkRunnerCallbacksの必要なメソッド

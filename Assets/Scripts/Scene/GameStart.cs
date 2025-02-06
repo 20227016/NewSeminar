@@ -3,8 +3,11 @@ using UnityEngine.SceneManagement;
 
 public class GameStart : MonoBehaviour
 {
-    public void SceneChange()
+    private void Update()
     {
-        SceneManager.LoadScene("CharacterSelection");
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            SceneManager.LoadScene("高橋デバック");
+        }
     }
 }
