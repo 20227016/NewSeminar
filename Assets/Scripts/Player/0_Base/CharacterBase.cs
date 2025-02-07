@@ -613,7 +613,12 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected virtual void Avoidance(Transform transform)
     {
         // 移動値0 or スタミナ切れ状態の時はリターン
-        if (_moveDirection == Vector2.zero || _isOutOfStamina) return;
+        if (_isOutOfStamina) return;
+
+        if(_moveDirection == Vector2.zero)
+        {
+            _moveDirection = new Vector2(transform.forward.x, transform.forward.z);
+        }
 
         CurrentState = CharacterStateEnum.AVOIDANCE;
 
