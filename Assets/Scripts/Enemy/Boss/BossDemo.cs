@@ -66,7 +66,7 @@ public class BossDemo : BaseEnemy
     // 1.羽の薙ぎ払い攻撃
     // 2.魔弾
     // 3.レーザー
-    [SerializeField, Networked]
+    [SerializeField]
     private int _currentAttack { get; set; } = default;
     private int _currentLottery = default; // 現在の抽選目
 
@@ -156,6 +156,9 @@ public class BossDemo : BaseEnemy
     /// </summary>
     private void Update()
     {
+
+        print(_currentAttack + " : 現在のボスの攻撃変数");
+
         if (!isPlayerNearby)
         {
             // プレイヤーが範囲内にいるかどうかをチェック
@@ -206,7 +209,7 @@ public class BossDemo : BaseEnemy
                 if (_currentLottery == 0)
                 {
                     // 攻撃パターンを抽選する
-                    AttackState();
+                    RPC_AttackState();
                 }
 
                 // 抽選した攻撃パターンを変数に格納。順に実行する
@@ -316,7 +319,8 @@ public class BossDemo : BaseEnemy
     /// アタック状態
     /// ボスの攻撃パターンを抽選する
     /// </summary>
-    private void AttackState()
+    [Rpc(RpcSources.All,RpcTargets.All)]
+    private void RPC_AttackState()
     {
         Random _random = new Random();
         for (_currentLottery = 0; _currentLottery < _confirmedAttackState.Length; _currentLottery++)

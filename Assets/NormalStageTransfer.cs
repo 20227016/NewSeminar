@@ -123,7 +123,7 @@ public class NormalStageTransfer : NetworkBehaviour
         foreach (GameObject player in _playersInPortal)
         {
 
-            player.transform.position = _normalStageteleportPos.position;
+            player.transform.position = _bossStageteleportPos.position;
             print($"{player.name} をノーマルステージにテレポートしました");
         }
         Debug.Log($"<color=red>スカイボックス</color>{_normalStageSkyBox}");
