@@ -5,7 +5,7 @@ public class GameStart : MonoBehaviour
 {
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.anyKey)
         {
             SceneManager.LoadScene("高橋デバック");
         }
