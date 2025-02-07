@@ -16,6 +16,13 @@ public class BossStageTransfer : MonoBehaviour
     [SerializeField, Header("ボスステージのスカイボックス")]
     private Material _bossStageSkyBox = default;
 
+    [SerializeField, Header("自身のサウンドソース")]
+    private AudioSource _audioSource = default;
+    [SerializeField, Header("テレポートの音")]
+    private AudioClip _audioClip = default;
+
+    private ISound _sound = new SoundManager();
+
     /// <summary>
     /// 転送ポータルにプレイヤーが入ったときにリストに追加する
     /// </summary>
@@ -45,5 +52,6 @@ public class BossStageTransfer : MonoBehaviour
             print($"{player.name} をボス部屋にテレポートしました");
         }
         RenderSettings.skybox = _bossStageSkyBox;
+        _sound.ProduceSE(_audioSource, _audioClip, 1, 1, 0);
     }
 }
