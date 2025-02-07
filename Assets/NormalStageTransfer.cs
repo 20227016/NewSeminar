@@ -49,6 +49,12 @@ public class NormalStageTransfer : NetworkBehaviour
     [Networked, Tooltip("ノーマルステージにテレポートするために必要な人数")]
     public int StageRequiredPlayers { get; set; }
 
+    [SerializeField, Header("自身のサウンドソース")]
+    private AudioSource _audioSource = default;
+    [SerializeField, Header("テレポートの音")]
+    private AudioClip _audioClip = default;
+
+    private ISound _sound = new SoundManager();
 
     public override void Spawned()
     {
@@ -121,7 +127,8 @@ public class NormalStageTransfer : NetworkBehaviour
             print($"{player.name} をノーマルステージにテレポートしました");
         }
         Debug.Log($"<color=red>スカイボックス</color>{_normalStageSkyBox}");
-        RenderSettings.skybox = _normalStageSkyBox; 
+        RenderSettings.skybox = _normalStageSkyBox;
+        _sound.ProduceSE(_audioSource,_audioClip,1,1,0); 
         // 一度ノーマルステージにテレポートしたらノーマルステージに行くためのテレポート人数を1人にする(再接続用)
         StageRequiredPlayers = 1;
     }
@@ -137,6 +144,7 @@ public class NormalStageTransfer : NetworkBehaviour
 
         }
         RenderSettings.skybox = _bossStageSkyBox;
+        _sound.ProduceSE(_audioSource, _audioClip, 1, 1, 0);
     }
 
 
