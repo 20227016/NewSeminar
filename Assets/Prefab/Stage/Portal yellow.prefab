@@ -19469,8 +19469,8 @@ MonoBehaviour:
   WordCount: 0
   _interpolationDataSource: 0
   _ClearNormalStage: 0
-  _normalStageSkyBox: {fileID: 2100000, guid: c52c5d7968fa6c9499b0b5752f899bfb, type: 2}
-  _bossStageSkyBox: {fileID: 2100000, guid: cede08c9fc471e64884909cd4bbeaf59, type: 2}
+  _normalStageSkyBox: {fileID: 2100000, guid: 9aa8ed67591432941bb76f12eb23ff91, type: 2}
+  _bossStageSkyBox: {fileID: 2100000, guid: 7ed994c1997814049b44c36a823bba6c, type: 2}
   _StageRequiredPlayers: 0
 --- !u!114 &1751012669339039604
 MonoBehaviour:
