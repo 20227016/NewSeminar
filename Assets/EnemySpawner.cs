@@ -6,6 +6,7 @@ using UnityEngine;
 using UniRx;
 using System.Threading.Tasks;
 using UnityEngine.Playables;
+using UnityEngine.SceneManagement;
 
 [Serializable]
 public class EnemyWave
@@ -59,33 +60,52 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField, Tooltip("勝利時のTimeline")]
     private PlayableDirector _victoryTimeline;
 
+    private NetworkRunner _networkRunner = default;
+
     /// <summary>
     /// 初期処理
     /// </summary>
     private void Start()
     {
-
         _gameLauncher = FindObjectOfType<GameLauncher>();
+        
         _gameLauncher.StartGameSubject.Subscribe(_ => EnemyStart());
 
-        
     }
 
     private void BossDefeat()
     {
-        Debug.Log("僕の勝ち");
-
+        // 勝利のタイムラインを再生
         _victoryTimeline.Play();
+
+        NetworkObject[] networkObjects = FindObjectsOfType<NetworkObject>();
+
+        foreach (var networkObject in networkObjects)
+        {
+            if (networkObject != null)
+            {
+                _networkRunner.Despawn(networkObject);
+            }
+        }
+
+        if (_networkRunner != null && _networkRunner.IsRunning)
+        {
+            _networkRunner.Shutdown(); // ネットワークをシャットダウン
+        }
+
+        // シーン遷移を全クライアントに通知
+        SceneManager.LoadScene("Title");
     }
+
 
     private void EnemyStart()
     {
-        NetworkRunner networkRunner = _gameLauncher.NetworkRunner;
+        _networkRunner = _gameLauncher.NetworkRunner;
 
-        StartWave(networkRunner);
+        StartWave(_networkRunner);
 
         // エネミー全滅時の通知を購読し、次のウェーブへ
-        OnEnemiesDefeated.Subscribe(_ => NextWave(networkRunner));
+        OnEnemiesDefeated.Subscribe(_ => NextWave(_networkRunner));
     }
 
     /// <summary>
@@ -234,7 +254,11 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         BossDemo bossDemo = FindObjectOfType<BossDemo>();
 
-        bossDemo.BossDeathSubject.Subscribe(_ => BossDefeat());
+        if (bossDemo != null)
+        {
+            bossDemo.BossDeathSubject.Subscribe(_ => BossDefeat());
+        }
+
     }
 
     // INetworkRunnerCallbacksの必要なメソッド

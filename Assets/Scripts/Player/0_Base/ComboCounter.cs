@@ -15,8 +15,13 @@ public class ComboCounter : NetworkBehaviour, IComboCounter
 {
     // シングルトン
     private static ComboCounter _instance;
-    public static ComboCounter Instance => _instance;
-
+    public static ComboCounter Instance
+    {
+        get
+        {
+            return _instance;
+        }
+    }
 
     // コンボ数をネットワーク同期 ---------------------------------------------------------
     [Networked(OnChanged = nameof(OnComboCountChanged))]
@@ -37,13 +42,12 @@ public class ComboCounter : NetworkBehaviour, IComboCounter
     // コンボリセットに要する時間
     private const float COMBO_RESET_TIME = 10f;
 
-
     private void Awake()
     {
-        // シングルトン化
         if (_instance == null)
         {
             _instance = this;
+            DontDestroyOnLoad(this.gameObject); // シーンが切り替わっても破棄されないように
         }
         else if (_instance != this)
         {
@@ -72,8 +76,15 @@ public class ComboCounter : NetworkBehaviour, IComboCounter
         // コンボを加算
         _networkComboCount++;
 
+        // `_comboResetCancellationTokenSource` の `null` チェックを追加
+        if (_comboResetCancellationTokenSource == null)
+        {
+            _comboResetCancellationTokenSource = new CancellationTokenSource();
+        }
+
         // 既存のリセット処理があればキャンセル
         _comboResetCancellationTokenSource.Cancel();
+        _comboResetCancellationTokenSource.Dispose(); // Dispose を追加
         _comboResetCancellationTokenSource = new CancellationTokenSource();
 
         // コンボリセットタイマーを開始
@@ -85,6 +96,12 @@ public class ComboCounter : NetworkBehaviour, IComboCounter
     /// </summary>
     private async UniTaskVoid StartComboResetTimerAsync(CancellationToken token)
     {
+        if (token == null)
+        {
+            Debug.LogError("StartComboResetTimerAsync received a null token!");
+            return;
+        }
+
         try
         {
             await UniTask.Delay(TimeSpan.FromSeconds(COMBO_RESET_TIME), cancellationToken: token);
@@ -92,7 +109,7 @@ public class ComboCounter : NetworkBehaviour, IComboCounter
             // コンボ数をリセット
             if (Object.HasStateAuthority)
             {
-                _networkComboCount = 0; 
+                _networkComboCount = 0;
             }
         }
         catch (OperationCanceledException)
