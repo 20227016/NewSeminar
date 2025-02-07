@@ -228,22 +228,42 @@ public class BossDemo : BaseEnemy
                     {
                         case 1:
 
+                        if (Runner.IsServer)
+                        {
                             // âHÇÃì„Ç¨ï•Ç¢çUåÇ
-                            WingAttack();
+                            RPC_WingAttack();
+                        }
+                        else
+                        {
+                            return;
+                        }
 
                             break;
 
                         case 2:
-
+                        if (Runner.IsServer)
+                        {
                             // ñÇíeçUåÇ
-                            MagicBulletAttack();
+                            RPC_MagicBulletAttack();
+                        }
+                        else
+                        {
+                            return;
+                        }
 
                             break;
 
                         case 3:
 
+                        if (Runner.IsServer)
+                        {
                             // ÉåÅ[ÉUÅ[çUåÇ
-                            LaserAttack();
+                            RPC_LaserAttack();
+                        }
+                        else
+                        {
+                            return;
+                        }
 
                             break;
 
@@ -359,7 +379,8 @@ public class BossDemo : BaseEnemy
     /// <summary>
     /// âHÇÃì„Ç¨ï•Ç¢çUåÇ
     /// </summary>
-    private void WingAttack()
+    [Rpc(RpcSources.All,RpcTargets.All)]
+    private void RPC_WingAttack()
     {
         _animator.SetInteger("TransitionNo", 1);
         _actionState = 1;
@@ -377,7 +398,8 @@ public class BossDemo : BaseEnemy
     /// <summary>
     /// ñÇíeçUåÇ
     /// </summary>
-    private void MagicBulletAttack()
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_MagicBulletAttack()
     {
         _animator.SetInteger("TransitionNo", 2);
 
@@ -405,7 +427,8 @@ public class BossDemo : BaseEnemy
     /// <summary>
     /// ÉåÅ[ÉUÅ[çUåÇ
     /// </summary>
-    private void LaserAttack()
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_LaserAttack()
     {
         _animator.SetInteger("TransitionNo", 3);
         _LaserBeam.gameObject.SetActive(true);
