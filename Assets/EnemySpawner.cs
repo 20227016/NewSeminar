@@ -57,9 +57,6 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     private GameLauncher _gameLauncher = default;
 
-    [SerializeField, Tooltip("勝利時のTimeline")]
-    private PlayableDirector _victoryTimeline;
-
     private NetworkRunner _networkRunner = default;
 
     /// <summary>
@@ -75,9 +72,6 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     private void BossDefeat()
     {
-        // 勝利のタイムラインを再生
-        _victoryTimeline.Play();
-
         NetworkObject[] networkObjects = FindObjectsOfType<NetworkObject>();
 
         foreach (var networkObject in networkObjects)
@@ -94,7 +88,7 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
         }
 
         // シーン遷移を全クライアントに通知
-        SceneManager.LoadScene("Title");
+        SceneManager.LoadScene("GameClear");
     }
 
 

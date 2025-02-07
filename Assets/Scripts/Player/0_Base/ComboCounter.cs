@@ -66,9 +66,6 @@ public class ComboCounter : NetworkBehaviour, IComboCounter
         }
     }
 
-    /// <summary>
-    /// コンボ加算
-    /// </summary>
     public void AddCombo()
     {
         if (!Object.HasStateAuthority) return; // State Authority のみ加算可能
@@ -76,32 +73,19 @@ public class ComboCounter : NetworkBehaviour, IComboCounter
         // コンボを加算
         _networkComboCount++;
 
-        // `_comboResetCancellationTokenSource` の `null` チェックを追加
-        if (_comboResetCancellationTokenSource == null)
-        {
-            _comboResetCancellationTokenSource = new CancellationTokenSource();
-        }
+        // `_comboResetCancellationTokenSource` が `null` ではない場合はキャンセル＆Dispose
+        _comboResetCancellationTokenSource?.Cancel();
+        _comboResetCancellationTokenSource?.Dispose();
 
-        // 既存のリセット処理があればキャンセル
-        _comboResetCancellationTokenSource.Cancel();
-        _comboResetCancellationTokenSource.Dispose(); // Dispose を追加
+        // 新しい CancellationTokenSource を作成
         _comboResetCancellationTokenSource = new CancellationTokenSource();
 
         // コンボリセットタイマーを開始
         StartComboResetTimerAsync(_comboResetCancellationTokenSource.Token).Forget();
     }
 
-    /// <summary>
-    /// コンボリセットタイマー
-    /// </summary>
     private async UniTaskVoid StartComboResetTimerAsync(CancellationToken token)
     {
-        if (token == null)
-        {
-            Debug.LogError("StartComboResetTimerAsync received a null token!");
-            return;
-        }
-
         try
         {
             await UniTask.Delay(TimeSpan.FromSeconds(COMBO_RESET_TIME), cancellationToken: token);
@@ -118,6 +102,11 @@ public class ComboCounter : NetworkBehaviour, IComboCounter
         }
     }
 
+    private void OnDestroy()
+    {
+        _comboResetCancellationTokenSource?.Cancel();
+        _comboResetCancellationTokenSource?.Dispose();
+    }
     /// <summary>
     /// 現在のコンボ倍率を取得
     /// </summary>
