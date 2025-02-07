@@ -66,8 +66,8 @@ public class BossDemo : BaseEnemy
     // 1.羽の薙ぎ払い攻撃
     // 2.魔弾
     // 3.レーザー
-    [SerializeField]
-    private int _currentAttack = default;
+    [SerializeField, Networked]
+    private int _currentAttack { get; set; } = default;
     private int _currentLottery = default; // 現在の抽選目
 
     // 行動パターンを抽選し、その結果を配列に格納する
