@@ -456,18 +456,29 @@ public class BossDemo : BaseEnemy
         _bulletNoticeLine.gameObject.SetActive(false);
         _LaserBeam.gameObject.SetActive(false);
 
+        RPC_EnemyDeath();
+
         _animator.SetInteger("TransitionNo", 7);
 
         yield return new WaitForSeconds(fadeDuration);
 
-        RPC_Death();
+        RPC_BossDeath();
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
-    private void RPC_Death()
+    private void RPC_BossDeath()
     {
         _bossDeathSubject.OnNext(Unit.Default);
         gameObject.SetActive(false);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_EnemyDeath()
+    {
+        _golem.SetActive(false);
+        _evilMage.SetActive(false);
+        _fishman.SetActive(false);
+        _demon.SetActive(false);
     }
 
     /// <summary>
