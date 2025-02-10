@@ -417,6 +417,17 @@
                     "action": "Resurrection",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "741e0f56-7399-4a02-9120-1a4db7b968e9",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Resurrection",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
