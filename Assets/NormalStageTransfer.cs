@@ -37,6 +37,12 @@ public class NormalStageTransfer : NetworkBehaviour
     [Networked]
     public bool ClearNormalStage { get; set; } = false;
 
+    /// <summary>
+    /// スポーンしたことがあるかのフラグ
+    /// </summary>
+    [Networked]
+    public bool HasTeleport { get; set; } = false;
+
     [Header("ノーマルステージのスカイボックス")]
     private Material _normalStageSkyBox = default;
 
@@ -92,24 +98,43 @@ public class NormalStageTransfer : NetworkBehaviour
     /// <param name="collider"></param>
     private void OnTriggerEnter(Collider collider)
     {
+
         if (collider.CompareTag("Player") && !_playersInPortal.Contains(collider.gameObject))
         {
             _playersInPortal.Add(collider.gameObject);
             print($"プレイヤーを検知。現在の人数は {_playersInPortal.Count}/{StageRequiredPlayers} です");
         }
         // 必要人数が揃ったら全員をテレポート
-        if ((_playersInPortal.Count >= StageRequiredPlayers) && (!ClearNormalStage))
+        if ((_playersInPortal.Count >= StageRequiredPlayers) && !ClearNormalStage || HasTeleport && !ClearNormalStage )
         {
             Debug.Log($"<color=red>ポータル人数：{_playersInPortal.Count}</color>");
             Debug.Log($"<color=red>参加人数：{StageRequiredPlayers}</color>");
             print("ただのテレポート");
             NormalTeleportAllPlayers();
+            if (Runner.IsServer)
+            {
+
+                ChecgeBool();
+
+            }
+          
         }
-        else if ((_playersInPortal.Count >= StageRequiredPlayers) && (ClearNormalStage))
+        else if ((_playersInPortal.Count >= StageRequiredPlayers) && ClearNormalStage ||  HasTeleport &&  ClearNormalStage)
         {
             print("ボステレポート、成功");
             BossTeleportAllPlayers();
         }
+    }
+
+    /// <summary>
+    /// テレポートしたときにフラグを変更する
+    /// </summary>
+    private void ChecgeBool()
+    {
+
+        Debug.Log("Bool変更");
+        HasTeleport = true;
+
     }
 
     /// <summary>
@@ -140,8 +165,7 @@ public class NormalStageTransfer : NetworkBehaviour
         Debug.Log($"<color=red>スカイボックス</color>{_normalStageSkyBox}");
         RenderSettings.skybox = _normalStageSkyBox;
         _sound.ProduceSE(_audioSource,_audioClip,1,1,0); 
-        // 一度ノーマルステージにテレポートしたらノーマルステージに行くためのテレポート人数を1人にする(再接続用)
-        StageRequiredPlayers = 1;
+
     }
 
     private void BossTeleportAllPlayers()
