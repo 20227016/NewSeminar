@@ -237,14 +237,16 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// </summary>
     protected virtual void CacheComponents()
     {
-        _move = _moveProvider.GetWalk();
-        _playerAttackLight = _attackProvider.GetAttackLight();
-        _playerAttackStrong = _attackProvider.GetAttackStrong();
         _target = GetComponent<PlayerTargetting>();
         _skill = GetComponent<ISkill>();
         _passive = GetComponent<IPassive>();
         _animator = GetComponent<Animator>();
         _rigidbody = GetComponentInParent<Rigidbody>();
+
+        _move = _moveProvider.GetWalk();
+        _playerAttackLight = _attackProvider.GetAttackLight();
+        _playerAttackStrong = _attackProvider.GetAttackStrong();
+        
     }
 
     /// <summary>
@@ -590,7 +592,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _animator.speed = _characterStatusStruct._attackSpeed;
 
         float animationDuration = _animation.GetAnimationLength(_animator, _characterAnimationStruct._attackStrongAnimation.name) / _characterStatusStruct._attackSpeed;
-        RPC_TriggerAnimation(_characterAnimationStruct._attackStrongAnimation.name);
+
+        RPC_PlayAnimation(_characterAnimationStruct._attackStrongAnimation.name);
 
         // 効果音
         _sound.ProduceSE(_characterSoundStruct._audioSource, _characterSoundStruct._attack_Strong, _characterSoundStruct._playBackSpeed_Strong, _characterSoundStruct._audioVolume_Strong, _characterSoundStruct._delay_Strong);
@@ -816,18 +819,31 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     [Rpc(RpcSources.All, RpcTargets.All)]
     protected void RPC_PlayAnimation(string animationClipName)
     {
+        if (_animator == null)
+        {
+            _animator = GetComponent<Animator>();
+        }
         _animation.PlayAnimation(_animator, animationClipName);
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
     protected void RPC_TriggerAnimation(string animationClipName)
     {
+        if (_animator == null)
+        {
+            _animator = GetComponent<Animator>();
+        }
         _animation.TriggerAnimation(_animator, animationClipName);
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
     protected void RPC_BoolAnimation(string animationClipName, bool isPlay)
     {
+        if(_animator == null)
+        {
+            _animator = GetComponent<Animator>();
+        }
+
         _animation.BoolAnimation(_animator, animationClipName, isPlay);
     }
 }

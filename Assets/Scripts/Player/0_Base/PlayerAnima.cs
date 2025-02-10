@@ -15,13 +15,34 @@ public class PlayerAnima : IAnimation
 
     public void TriggerAnimation(Animator animator, string animationClipName)
     {
-        ResetAllBools(animator);
+        // パラメーターを配列に取得
+        AnimatorControllerParameter[] parameters = animator.parameters;
+
+        // 各パラメーターを調べてBool型の場合、リセットする
+        foreach (AnimatorControllerParameter parameter in parameters)
+        {
+            if (parameter.type == AnimatorControllerParameterType.Bool)
+            {
+                animator.SetBool(parameter.name, false);
+            }
+        }
+
         animator.SetTrigger(animationClipName + "Trigger");
     }
 
     public void BoolAnimation(Animator animator, string animationClipName, bool isPlay)
     {
-        ResetAllBools(animator);
+        // パラメーターを配列に取得
+        AnimatorControllerParameter[] parameters = animator.parameters;
+
+        // 各パラメーターを調べてBool型の場合、リセットする
+        foreach (AnimatorControllerParameter parameter in parameters)
+        {
+            if (parameter.type == AnimatorControllerParameterType.Bool)
+            {
+                animator.SetBool(parameter.name, false);
+            }
+        }
         animator.SetBool(animationClipName, isPlay);
     }
 
@@ -30,16 +51,6 @@ public class PlayerAnima : IAnimation
         animator.Play(animationClipName);
     }
 
-    private void ResetAllBools(Animator animator)
-    {
-        foreach (var parameter in animator.parameters)
-        {
-            if (parameter.type == AnimatorControllerParameterType.Bool)
-            {
-                animator.SetBool(parameter.name, false);
-            }
-        }
-    }
 
     public float GetAnimationLength(Animator animator, string animationClipName)
     {
