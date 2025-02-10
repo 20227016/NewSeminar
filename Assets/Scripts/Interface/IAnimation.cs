@@ -8,7 +8,7 @@ public interface IAnimation
     /// </summary>
     /// <param name="animator">操作するアニメーター</param>
     /// <param name="animationClip">操作するアニメーションクリップ</param>
-    float TriggerAnimation(Animator animator, AnimationClip animationClip);
+    void TriggerAnimation(Animator animator, string animationClipName);
 
     /// <summary>
     /// bool操作用
@@ -16,12 +16,14 @@ public interface IAnimation
     /// <param name="animator">操作するアニメーター</param>
     /// <param name="animationClip">操作するアニメーションクリップ</param>
     /// <param name="isPlay">再生するか</param>
-    void BoolAnimation(Animator animator, AnimationClip animationClip, bool isPlay);
+    void BoolAnimation(Animator animator, string animationClipName, bool isPlay);
 
     /// <summary>
     /// play操作用
     /// </summary>
     /// <param name="animator">操作するアニメーター</param>
     /// <param name="animationClip">操作するアニメーションクリップ</param>
-    float PlayAnimation(Animator animator, AnimationClip animationClip);
+    void PlayAnimation(Animator animator, string animationClipName);
+
+    public float GetAnimationLength(Animator animator, string animationClipName);
 }

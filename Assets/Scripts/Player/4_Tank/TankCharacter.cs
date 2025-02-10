@@ -27,7 +27,7 @@ public class TankCharacter : CharacterBase
             .DistinctUntilChanged()
             .Subscribe(isBlock =>
             {
-                _animation.BoolAnimation(_animator, _characterAnimationStruct._avoidanceActionAnimation, isBlock);
+                RPC_BoolAnimation(_characterAnimationStruct._avoidanceActionAnimation.name, isBlock);
             })
             .AddTo(this);
     }
@@ -85,7 +85,7 @@ public class TankCharacter : CharacterBase
         // ガード中なら盾受けアニメーションを再生
         if (_isBlockReactive.Value)
         {
-            _animation.PlayAnimation(_animator, _blockReactionAnimation);
+            RPC_PlayAnimation(_blockReactionAnimation.name);
             return;
         }
 
@@ -93,13 +93,16 @@ public class TankCharacter : CharacterBase
         float animationDuration;
         if (damage <= _characterStatusStruct._playerStatus.MaxHp / 2)
         {
+            animationDuration = _animation.GetAnimationLength(_animator, _characterAnimationStruct._damageReactionLightAnimation.name);
             // 怯み
-            animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._damageReactionLightAnimation);
+            RPC_PlayAnimation(_characterAnimationStruct._damageReactionLightAnimation.name);
         }
         else
         {
+            animationDuration = _animation.GetAnimationLength(_animator, _characterAnimationStruct._damageReactionHeavyAnimation.name);
             // 吹っ飛び
-            animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._damageReactionHeavyAnimation);
+            RPC_PlayAnimation(_characterAnimationStruct._damageReactionHeavyAnimation.name);
+
             // ノックバック
             _avoidance.Avoidance(transform, _rigidbody, new Vector2(-transform.forward.x, -transform.forward.z), _characterStatusStruct._avoidanceDistance, animationDuration / 5);
         }

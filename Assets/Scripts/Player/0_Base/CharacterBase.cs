@@ -477,8 +477,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         if (_moveDirection == Vector2.zero)
         {
             CurrentState = CharacterStateEnum.IDLE;
-            _animation.BoolAnimation(_animator, _characterAnimationStruct._walkAnimation, false);
-            _animation.BoolAnimation(_animator, _characterAnimationStruct._runAnimation, false);
+            RPC_BoolAnimation(_characterAnimationStruct._walkAnimation.name, false);
+            RPC_BoolAnimation(_characterAnimationStruct._runAnimation.name, false);
             return;
         }
 
@@ -492,11 +492,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         if (isWalking)
         {
-            _animation.BoolAnimation(_animator, _characterAnimationStruct._walkAnimation, true);
+            RPC_BoolAnimation(_characterAnimationStruct._walkAnimation.name, true);
         }
         else
         {
-            _animation.BoolAnimation(_animator, _characterAnimationStruct._runAnimation, true);
+            RPC_BoolAnimation(_characterAnimationStruct._runAnimation.name, true);
         }
 
         // 移動を実行
@@ -528,8 +528,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 攻撃処理
         _playerAttackLight.AttackLight(characterBase, attackPower, attackMultiplier, delay / _animator.speed, range);
 
+        float animationDuration = _animation.GetAnimationLength(_animator, animation.name) / _characterStatusStruct._attackSpeed;
         // アニメーション再生
-        float animationDuration = _animation.PlayAnimation(_animator, animation) / _characterStatusStruct._attackSpeed;
+        RPC_PlayAnimation(animation.name);
 
         // 効果音
         _sound.ProduceSE(audioSource,audioClip,playBackSpeed,audioVolume, audioDelay);
@@ -588,7 +589,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _animator.speed = _characterStatusStruct._attackSpeed;
 
-        float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._attackStrongAnimation) / _characterStatusStruct._attackSpeed;
+        float animationDuration = _animation.GetAnimationLength(_animator, _characterAnimationStruct._attackStrongAnimation.name) / _characterStatusStruct._attackSpeed;
+        RPC_TriggerAnimation(_characterAnimationStruct._attackStrongAnimation.name);
 
         // 効果音
         _sound.ProduceSE(_characterSoundStruct._audioSource, _characterSoundStruct._attack_Strong, _characterSoundStruct._playBackSpeed_Strong, _characterSoundStruct._audioVolume_Strong, _characterSoundStruct._delay_Strong);
@@ -624,7 +626,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _currentStamina.Value -= _characterStatusStruct._avoidanceStamina;
 
-        float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._avoidanceActionAnimation);
+        float animationDuration = _animation.GetAnimationLength(_animator, _characterAnimationStruct._avoidanceActionAnimation.name);
+
+        RPC_TriggerAnimation(_characterAnimationStruct._avoidanceActionAnimation.name);
 
         _avoidance.Avoidance(transform, _rigidbody, _moveDirection, _characterStatusStruct._avoidanceDistance, animationDuration);
         // 効果音
@@ -650,7 +654,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _skill.Skill(this, skillTime);
 
-        float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._skillAnimation);
+        float animationDuration = _animation.GetAnimationLength(_animator, _characterAnimationStruct._skillAnimation.name);
+
+        RPC_TriggerAnimation(_characterAnimationStruct._skillAnimation.name);
 
         // 効果音
         _sound.ProduceSE(_characterSoundStruct._audioSource, _characterSoundStruct._attack_Special, _characterSoundStruct._playBackSpeed_Special, _characterSoundStruct._audioVolume_Special, _characterSoundStruct._delay_Special);
@@ -699,13 +705,15 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         float animationDuration;
         if (damage <= _characterStatusStruct._playerStatus.MaxHp / 2)
         {
+            animationDuration = _animation.GetAnimationLength(_animator, _characterAnimationStruct._damageReactionLightAnimation.name);
             // 怯み
-            animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._damageReactionLightAnimation);
+            RPC_PlayAnimation(_characterAnimationStruct._damageReactionLightAnimation.name);
         }
         else
         {
+            animationDuration = _animation.GetAnimationLength(_animator, _characterAnimationStruct._damageReactionHeavyAnimation.name);
             // 吹っ飛び
-            animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._damageReactionHeavyAnimation);
+            RPC_PlayAnimation(_characterAnimationStruct._damageReactionHeavyAnimation.name);
 
             // ノックバック
             _avoidance.Avoidance(transform, _rigidbody, new Vector2(-transform.forward.x, -transform.forward.z), _characterStatusStruct._avoidanceDistance, animationDuration / 5);
@@ -721,8 +729,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         // 死亡状態から回復処理をした場合は蘇生
         if (CurrentState == CharacterStateEnum.DEATH)
-        {
-            float animationDuration = _animation.PlayAnimation(_animator, _characterAnimationStruct._reviveAnimation);
+        { 
+            float animationDuration = _animation.GetAnimationLength(_animator, _characterAnimationStruct._reviveAnimation.name);
+            RPC_PlayAnimation(_characterAnimationStruct._reviveAnimation.name);
 
             ResetState(animationDuration);
         }
@@ -762,6 +771,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
             _notAttackAccepted = false;
 
+            _moveProvider.GetWalk();
+
             // リセット完了を通知
             onResetComplete?.Invoke();
         }
@@ -779,7 +790,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         CurrentState = CharacterStateEnum.DEATH;
 
-        _animation.PlayAnimation(_animator, _characterAnimationStruct._deathAnimation);
+        RPC_PlayAnimation(_characterAnimationStruct._deathAnimation.name);
     }
 
     protected async virtual void Invincible(float resetTime)
@@ -802,4 +813,21 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         }
     }
 
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    protected void RPC_PlayAnimation(string animationClipName)
+    {
+        _animation.PlayAnimation(_animator, animationClipName);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    protected void RPC_TriggerAnimation(string animationClipName)
+    {
+        _animation.TriggerAnimation(_animator, animationClipName);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    protected void RPC_BoolAnimation(string animationClipName, bool isPlay)
+    {
+        _animation.BoolAnimation(_animator, animationClipName, isPlay);
+    }
 }
