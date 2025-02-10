@@ -109,4 +109,9 @@ public class TankCharacter : CharacterBase
         Invincible(animationDuration * 2f);
         ResetState(animationDuration);
     }
+
+    protected override void Skill(CharacterBase characterBase, float skillTime, float skillCoolTime)
+    {
+        base.Skill(characterBase, skillTime, skillCoolTime);
+    }
 }
