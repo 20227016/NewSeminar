@@ -2819,7 +2819,7 @@ MonoBehaviour:
   _interpolationDataSource: 0
   Animator: {fileID: 1478857215670870914}
   TotalWords: 9
-  SyncSettings: 95
+  SyncSettings: -1
   FloatAccuracy:
     _value: 0
     _inverse: 0
