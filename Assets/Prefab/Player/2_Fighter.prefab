@@ -2819,7 +2819,7 @@ MonoBehaviour:
   _interpolationDataSource: 0
   Animator: {fileID: 1478857215670870914}
   TotalWords: 9
-  SyncSettings: 95
+  SyncSettings: -1
   FloatAccuracy:
     _value: 0
     _inverse: 0
@@ -2853,18 +2853,18 @@ MonoBehaviour:
     _walkSpeed: 1
     _runSpeed: 2.5
     _avoidanceDistance: 10
-    _attackPower: 8
+    _attackPower: 10
     _attackLightMultiplier: 1
-    _attackStrongMultiplier: 1.5
+    _attackStrongMultiplier: 0.8
     _attackSpeed: 1
     _attackLight1HitboxDelay: 0.1
-    _attackLight1HitboxRange: 1.5
+    _attackLight1HitboxRange: 2.5
     _attackLight2HitboxDelay: 0.2
-    _attackLight2HitboxRange: 1.5
+    _attackLight2HitboxRange: 2.5
     _attackLight3HitboxDelay: 0.5
-    _attackLight3HitboxRange: 1.5
+    _attackLight3HitboxRange: 2.5
     _attackStrongHitboxDelay: 0.3
-    _attackStrongHitboxRange: 1.5
+    _attackStrongHitboxRange: 6.5
     _defensePower: 9
     _skillDuration: 20
     _skillCoolTime: 30
@@ -2872,8 +2872,8 @@ MonoBehaviour:
     _skillPointUpperLimit: 100
     _ressurectionTime: 5
     _recoveryStamina: 25
-    _runStamina: 20
-    _avoidanceStamina: 20
+    _runStamina: 10
+    _avoidanceStamina: 10
   _characterAnimationStruct:
     _idleAnimation: {fileID: 7400000, guid: cd6b8800735c1234fa390689961beb00, type: 3}
     _walkAnimation: {fileID: 7400000, guid: b1afb1a8906792749986c8e7514a1796, type: 3}

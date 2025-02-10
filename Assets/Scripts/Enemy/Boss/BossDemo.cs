@@ -157,9 +157,6 @@ public class BossDemo : BaseEnemy
     /// </summary>
     private void Update()
     {
-        
-        print(_currentAttack + " : 現在のボスの攻撃変数");
-
         if (!isPlayerNearby)
         {
             // プレイヤーが範囲内にいるかどうかをチェック
@@ -211,7 +208,6 @@ public class BossDemo : BaseEnemy
                 {
                     if(Runner.IsServer)
                     {
-                        print("関数は呼ばれてます");
                         // 攻撃パターンを抽選する
                         RPC_AttackState();
                     }
@@ -228,42 +224,43 @@ public class BossDemo : BaseEnemy
                     {
                         case 1:
 
-                        if (Runner.IsServer)
-                        {
-                            // 羽の薙ぎ払い攻撃
-                            RPC_WingAttack();
-                        }
-                        else
-                        {
-                            return;
-                        }
+                            if (Runner.IsServer)
+                            {
+                                // 羽の薙ぎ払い攻撃
+                                RPC_WingAttack();
+                            }
+                            else
+                            {
+                                return;
+                            }
 
                             break;
 
                         case 2:
-                        if (Runner.IsServer)
-                        {
-                            // 魔弾攻撃
-                            RPC_MagicBulletAttack();
-                        }
-                        else
-                        {
-                            return;
-                        }
+
+                            if (Runner.IsServer)
+                            {
+                                // 魔弾攻撃
+                                RPC_MagicBulletAttack();
+                            }
+                            else
+                            {
+                                return;
+                            }
 
                             break;
 
                         case 3:
 
-                        if (Runner.IsServer)
-                        {
-                            // レーザー攻撃
-                            RPC_LaserAttack();
-                        }
-                        else
-                        {
-                            return;
-                        }
+                            if (Runner.IsServer)
+                            {
+                                // レーザー攻撃
+                                RPC_LaserAttack();
+                            }
+                            else
+                            {
+                                return;
+                            }
 
                             break;
 
@@ -351,7 +348,6 @@ public class BossDemo : BaseEnemy
     [Rpc(RpcSources.All,RpcTargets.All)]
     private void RPC_AttackState()
     {
-        print("攻撃の抽選に成功しました");
         Random _random = new Random();
         for (_currentLottery = 0; _currentLottery < _confirmedAttackState.Length; _currentLottery++)
         {

@@ -135,9 +135,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected bool _isOutOfStamina = default;
     // スキルクールタイム中フラグ
     protected bool _isSkillCoolTime = default;
-    // 攻撃受付不可状態
+    /// <summary>
+    /// 攻撃受付不可状態
+    /// </summary>
     protected bool _notAttackAccepted = default;
-    protected bool isInvincible = false;
+    protected bool _isInvincible = false;
 
     #endregion
 
@@ -395,6 +397,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// <param name="input">入力情報</param>
     protected virtual void ProcessInput(PlayerNetworkInput input)
     {
+
         // Run状態を切り替える
         if (input.IsRunning)
         {
@@ -402,16 +405,27 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         }
 
         // 状態が特定のものなら入力を無視
-        if (_notAttackAccepted ||
-            CurrentState == CharacterStateEnum.AVOIDANCE ||
-            CurrentState == CharacterStateEnum.SKILL ||
-            CurrentState == CharacterStateEnum.DAMAGE_REACTION ||
+        if (  ( _notAttackAccepted || CurrentState == CharacterStateEnum.SKILL||CurrentState == CharacterStateEnum.DAMAGE_REACTION )  && 
+            !input.IsAvoidance ||
             CurrentState == CharacterStateEnum.DEATH)
         {
             return;
         }
+        if(CurrentState != CharacterStateEnum.AVOIDANCE && input.IsAvoidance)
+        {
 
-        if(CurrentState != CharacterStateEnum.ATTACK)
+            Debug.Log($"<color=#AFDFE4>回避ステート以外のステータス中に回避入力</color>");
+
+        }
+        // 回避中に回避をできないようにする
+        if (CurrentState == CharacterStateEnum.AVOIDANCE)
+        {
+
+            return;
+
+        }
+        //色コード#AFDFE4
+        if (CurrentState != CharacterStateEnum.ATTACK)
         {
             // 移動処理
             MoveManagement(input);
@@ -599,7 +613,12 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected virtual void Avoidance(Transform transform)
     {
         // 移動値0 or スタミナ切れ状態の時はリターン
-        if (_moveDirection == Vector2.zero || _isOutOfStamina) return;
+        if (_isOutOfStamina) return;
+
+        if(_moveDirection == Vector2.zero)
+        {
+            _moveDirection = new Vector2(transform.forward.x, transform.forward.z);
+        }
 
         CurrentState = CharacterStateEnum.AVOIDANCE;
 
@@ -659,7 +678,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     public virtual void RPC_ReceiveDamage(int damageValue)
     {
         // 無敵中はリターン
-        if (isInvincible) return;
+        if (_isInvincible) return;
 
         CurrentState = CharacterStateEnum.DAMAGE_REACTION;
 
@@ -769,13 +788,13 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         invincibleCts?.Cancel();
         invincibleCts = new CancellationTokenSource();
 
-        isInvincible = true;
+        _isInvincible = true;
 
         try
         {
             await UniTask.Delay(Mathf.RoundToInt(resetTime * 1000), cancellationToken: invincibleCts.Token);
             // 無敵解除の処理
-            isInvincible = false;
+            _isInvincible = false;
         }
         catch (OperationCanceledException)
         {

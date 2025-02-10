@@ -8,6 +8,7 @@ using UniRx;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine.Playables;
+using UnityEngine.SceneManagement;
 
 public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -50,22 +51,42 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     public NetworkRunner NetworkRunner { get => _networkRunner; set => _networkRunner = value; }
 
+    private void Awake()
+    {
+        var existingRunners = FindObjectsOfType<NetworkSceneManagerDefault>();
+        foreach (var runner in existingRunners)
+        {
+            Debug.Log("Destroying extra NetworkRunner");
+            Destroy(runner.gameObject);
+        }
+    }
+
+
     private async void Start()
     {
-        
         _playerInput = GetComponent<PlayerInput>();
         RegisterInputActions(true);
 
         _mainCamera = Camera.main;
 
-        NetworkRunner networkRunner = Instantiate(_networkRunnerPrefab);
-        networkRunner.AddCallbacks(this);
-        NetworkRunner = networkRunner;
+        // 既存のNetworkRunnerを探す
+        NetworkRunner existingRunner = FindObjectOfType<NetworkRunner>();
 
-        await networkRunner.StartGame(new StartGameArgs
+        if (existingRunner != null)
+        {
+            NetworkRunner = existingRunner;
+        }
+        else
+        {
+            NetworkRunner = Instantiate(_networkRunnerPrefab);
+            NetworkRunner.AddCallbacks(this);
+        }
+
+        // ゲーム開始処理
+        await NetworkRunner.StartGame(new StartGameArgs
         {
             GameMode = GameMode.AutoHostOrClient,
-            SceneManager = networkRunner.GetComponent<NetworkSceneManagerDefault>()
+            SceneManager = NetworkRunner.GetComponent<NetworkSceneManagerDefault>()
         });
 
         _startGameSubject.OnNext(Unit.Default);
@@ -277,7 +298,14 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
-    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) 
+    {
+        Debug.Log($"シャットダウン理由: {shutdownReason}");
+        runner.Shutdown();
+        Destroy(runner);
+
+        SceneManager.LoadScene("Title");
+    }
     public void OnConnectedToServer(NetworkRunner runner) { }
     public void OnDisconnectedFromServer(NetworkRunner runner) { }
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
@@ -287,6 +315,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) { }
-    public void OnSceneLoadDone(NetworkRunner runner)  { }
-    public void OnSceneLoadStart(NetworkRunner runner) {}
+    public void OnSceneLoadStart(NetworkRunner runner) {  }
+    public void OnSceneLoadDone(NetworkRunner runner) {  }
 }
