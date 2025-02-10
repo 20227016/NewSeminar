@@ -566,8 +566,6 @@ public class FlyingDemon : BaseEnemy
 
         float distanceToTarget = Vector3.Distance(transform.position, _targetTrans.position);
 
-        print("今の場所 :" + transform.position.y + "初期値 :" + _startY + _riseLimit);
-
         // 追跡範囲
         if (distanceToTarget <= _trackingRange)
         {
