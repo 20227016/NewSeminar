@@ -82,8 +82,8 @@ public class Golem : BaseEnemy
     private ParticleSystem[] _attackEffects2 = default;
 
     // 攻撃時の当たり判定
-    private BoxCollider _boxCollider1 = default;
-    private BoxCollider _boxCollider2 = default;
+    private BoxCollider _boxCollider = default;
+    private CapsuleCollider _capsuleCollider = default;
 
     //AudioSource型の変数を宣言
     [SerializeField] private AudioSource _audioSource = default;
@@ -112,13 +112,13 @@ public class Golem : BaseEnemy
         _attackEffects1 = effectObj1.GetComponentsInChildren<ParticleSystem>();
         _attackEffects2 = effectObj2.GetComponentsInChildren<ParticleSystem>();
 
-        Transform boxObj1 = FindChild(transform, "Hand_R");
-        Transform boxObj2 = FindChild(transform, "Hand_L");
+        Transform boxObj = FindChild(transform, "Hand_R");
+        Transform capsuleObj = FindChild(transform, "RockCrusher");
 
-        _boxCollider1 = boxObj1.GetComponent<BoxCollider>();
-        _boxCollider2 = boxObj2.GetComponent<BoxCollider>();
-        _boxCollider1.enabled = false;
-        _boxCollider2.enabled = false;
+        _boxCollider = boxObj.GetComponent<BoxCollider>();
+        _capsuleCollider = capsuleObj.GetComponent<CapsuleCollider>();
+        _boxCollider.enabled = false;
+        _capsuleCollider.enabled = false;
 
         _randomTargetPos = GenerateRandomPosition();
     }
@@ -245,8 +245,7 @@ public class Golem : BaseEnemy
             _actionState = EnemyActionState.SEARCHING;
             isAnimationFinished = true;
             isAttackInterval = false;
-            _boxCollider1.enabled = false;
-            _boxCollider2.enabled = false;
+            _boxCollider.enabled = false;
         }
 
         if (_actionState != EnemyActionState.SEARCHING)
@@ -745,7 +744,7 @@ public class Golem : BaseEnemy
     /// </summary>
     private void AttackCollider1()
     {
-        _boxCollider1.enabled = true;
+        _boxCollider.enabled = true;
         _audioSource.PlayOneShot(_AttackSE1);
     }
 
@@ -754,8 +753,15 @@ public class Golem : BaseEnemy
     /// </summary>
     private void AttackCollider2()
     {
-        _boxCollider1.enabled = true;
-        _boxCollider2.enabled = true;
+        _capsuleCollider.enabled = true;
         _audioSource.PlayOneShot(_AttackSE2);
+    }
+
+    /// <summary>
+    /// 攻撃2の当たり判定
+    /// </summary>
+    private void FinishedCollider()
+    {
+        _capsuleCollider.enabled = false;
     }
 }
