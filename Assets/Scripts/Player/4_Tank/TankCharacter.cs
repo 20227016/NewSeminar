@@ -32,6 +32,15 @@ public class TankCharacter : CharacterBase
             .AddTo(this);
     }
 
+    protected override void Move(Transform transform, Vector2 moveDirection, float moveSpeed, Rigidbody rigidbody, CharacterStateEnum characterState)
+    {
+        if(_isBlockReactive.Value == true)
+        {
+            return;
+        }
+
+        base.Move(transform, moveDirection, moveSpeed, rigidbody, characterState);
+    }
 
     protected override void ProcessInput(PlayerNetworkInput input)
     {
