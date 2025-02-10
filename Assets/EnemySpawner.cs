@@ -59,6 +59,8 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     private NetworkRunner _networkRunner = default;
 
+    private bool _isStart = false;
+
     /// <summary>
     /// 初期処理
     /// </summary>
@@ -94,9 +96,14 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     private void EnemyStart()
     {
+
         _networkRunner = _gameLauncher.NetworkRunner;
 
         StartWave(_networkRunner);
+
+        _isStart = true;
+
+        print(_isStart + "_isStartの状態");
 
         // エネミー全滅時の通知を購読し、次のウェーブへ
         OnEnemiesDefeated.Subscribe(_ => NextWave(_networkRunner));
@@ -107,10 +114,18 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     /// </summary>
     private void Update()
     {
-        if (_spawnedEnemies.Count > 0 && AllEnemiesHidden())
+
+        if(_isStart)
         {
-            OnEnemiesDefeated.OnNext(Unit.Default);
+            if(_networkRunner.IsServer)
+            {
+                if (_spawnedEnemies.Count > 0 && AllEnemiesHidden())
+                {
+                    OnEnemiesDefeated.OnNext(Unit.Default);
+                }
+            }
         }
+
     }
 
     /// <summary>
@@ -184,9 +199,6 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
             Debug.Log("NetworkRunner は実行されていません。");
         }
 
-
-
-
         _spawnedEnemies.Clear();
 
         // 今のウェーブデータ
@@ -225,6 +237,9 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         foreach (NetworkObject enemy in _spawnedEnemies)
         {
+
+            //if (enemy == null) continue; 
+
             if (enemy.gameObject.activeSelf)
             {
                 return false;
