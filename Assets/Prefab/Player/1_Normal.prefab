@@ -1766,7 +1766,7 @@ MonoBehaviour:
   _interpolationDataSource: 0
   Animator: {fileID: 6236969221784064739}
   TotalWords: 4
-  SyncSettings: 95
+  SyncSettings: -1
   FloatAccuracy:
     _value: 0
     _inverse: 0
