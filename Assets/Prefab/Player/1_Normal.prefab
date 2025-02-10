@@ -1850,7 +1850,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d693c5de262176741bbb007dca57a5cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skillAttackMultiplier: 0.8
+  _skillAttackMultiplier: 0.4
   _skillAttackHitCount: 5
   _skillAttackHitInterval: 0.05
   _skillAttackHitboxRange: 25
