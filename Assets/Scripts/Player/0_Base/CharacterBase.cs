@@ -481,6 +481,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             CurrentState = CharacterStateEnum.IDLE;
             RPC_BoolAnimation(_characterAnimationStruct._walkAnimation.name, false);
             RPC_BoolAnimation(_characterAnimationStruct._runAnimation.name, false);
+            ResetState(0);
             return;
         }
 
@@ -631,7 +632,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         float animationDuration = _animation.GetAnimationLength(_animator, _characterAnimationStruct._avoidanceActionAnimation.name);
 
-        RPC_TriggerAnimation(_characterAnimationStruct._avoidanceActionAnimation.name);
+        RPC_PlayAnimation(_characterAnimationStruct._avoidanceActionAnimation.name);
 
         _avoidance.Avoidance(transform, _rigidbody, _moveDirection, _characterStatusStruct._avoidanceDistance, animationDuration);
         // 効果音
@@ -775,6 +776,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             _notAttackAccepted = false;
 
             _moveProvider.GetWalk();
+
+            _isRun = false;
 
             // リセット完了を通知
             onResetComplete?.Invoke();

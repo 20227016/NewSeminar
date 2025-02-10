@@ -60,7 +60,7 @@ public class PlayerResurrection : IResurrection
                 try
                 {
                     // (resurrectionTime * 1000)ミリ秒待機
-                    await UniTask.Delay((int)(resurrectionTime * 1000), cancellationToken: _cancellationTokenSource.Token);
+                    await UniTask.Delay((int)(resurrectionTime), cancellationToken: _cancellationTokenSource.Token);
                 }
                 catch (OperationCanceledException)
                 {
