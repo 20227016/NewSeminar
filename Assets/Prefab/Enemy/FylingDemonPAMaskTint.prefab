@@ -496,9 +496,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1000
+  m_MaxValue: 500
   m_WholeNumbers: 1
-  m_Value: 1000
+  m_Value: 500
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -6888,8 +6888,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   _enemyStatusStruct:
-    _maxHp: 1000
-    _hp: 1000
+    _maxHp: 500
+    _hp: 500
     _attackPower: 40
     _attackPowerSpeed: 0
     _moveSpeed: 0
