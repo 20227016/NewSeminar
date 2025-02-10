@@ -33,13 +33,13 @@ public class HealerCharacter : CharacterBase
 
         _skill.Skill(this, skillTime);
 
-        float animationDuration = _animation.TriggerAnimation(_animator, _characterAnimationStruct._skillAnimation);
+        float animationDuration = _animation.GetAnimationLength(_animator, _characterAnimationStruct._skillAnimation.name);
+        RPC_TriggerAnimation(_characterAnimationStruct._skillAnimation.name);
 
         NetworkObject effect = Runner.Spawn(Effects[4], transform.position, Quaternion.identity);
         _audioSource = effect.GetComponent<AudioSource>();
         if (_audioSource != null)
         {
-            Debug.Log("キュア");
             // 効果音
             _sound.ProduceSE(_audioSource, _characterSoundStruct._attack_Special, _characterSoundStruct._playBackSpeed_Special, _characterSoundStruct._audioVolume_Special, _characterSoundStruct._delay_Special);
 
@@ -47,9 +47,7 @@ public class HealerCharacter : CharacterBase
         }
         else
         {
-
             Debug.LogError($"オーディオソースが見つかりません");
-
         }
 
         Invincible(animationDuration);

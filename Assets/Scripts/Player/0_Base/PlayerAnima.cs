@@ -13,48 +13,43 @@ using System.Collections;
 public class PlayerAnima : IAnimation
 {
 
-    public float TriggerAnimation(Animator animator, AnimationClip animationClip)
+    public void TriggerAnimation(Animator animator, string animationClipName)
     {
-        // パラメーターを配列に取得
-        AnimatorControllerParameter[] parameters = animator.parameters;
+        ResetAllBools(animator);
+        animator.SetTrigger(animationClipName + "Trigger");
+    }
 
-        // 各パラメーターを調べてBool型の場合、リセットする
-        foreach (AnimatorControllerParameter parameter in parameters)
+    public void BoolAnimation(Animator animator, string animationClipName, bool isPlay)
+    {
+        ResetAllBools(animator);
+        animator.SetBool(animationClipName, isPlay);
+    }
+
+    public void PlayAnimation(Animator animator, string animationClipName)
+    {
+        animator.Play(animationClipName);
+    }
+
+    private void ResetAllBools(Animator animator)
+    {
+        foreach (var parameter in animator.parameters)
         {
             if (parameter.type == AnimatorControllerParameterType.Bool)
             {
                 animator.SetBool(parameter.name, false);
             }
         }
-
-        animator.SetTrigger(animationClip.name + "Trigger");
-
-        // アニメーションの再生時間を返す
-        return animationClip.length;
     }
 
-    public void BoolAnimation(Animator animator, AnimationClip animationClip, bool isPlay)
+    public float GetAnimationLength(Animator animator, string animationClipName)
     {
-        // パラメーターを配列に取得
-        AnimatorControllerParameter[] parameters = animator.parameters;
-
-        // 各パラメーターを調べてBool型の場合、リセットする
-        foreach (AnimatorControllerParameter parameter in parameters)
+        foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
         {
-            if (parameter.type == AnimatorControllerParameterType.Bool)
+            if (clip.name == animationClipName)
             {
-                animator.SetBool(parameter.name, false);
+                return clip.length;
             }
         }
-
-        animator.SetBool(animationClip.name, isPlay);
-    }
-
-    public float PlayAnimation(Animator animator, AnimationClip animationClip)
-    {
-        animator.Play(animationClip.name);
-
-        // アニメーションの再生時間を返す
-        return animationClip.length;
+        return 0f;
     }
 }
