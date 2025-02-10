@@ -5426,7 +5426,7 @@ MonoBehaviour:
   _enemyStatusStruct:
     _maxHp: 10
     _hp: 10
-    _attackPower: 10
+    _attackPower: 15
     _attackPowerSpeed: 0
     _moveSpeed: 0
     _diffencePower: 0
