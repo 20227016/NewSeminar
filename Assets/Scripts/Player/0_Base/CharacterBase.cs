@@ -605,12 +605,12 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         ResetState(animationDuration, () => _notAttackAccepted = false);
 
-        _currentSkillPoint.Value = 100f;
+        //_currentSkillPoint.Value = 100f;
     }
 
     protected virtual void Targetting()
     {
-        RPC_ReceiveDamage(50);
+        //RPC_ReceiveDamage(50);
 
         _target.Targetting();
     }
@@ -747,7 +747,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     public virtual void AttackHit(int damage) 
     {
         // スキルポイントを与ダメージを参照してチャージする
-        float chargeSkillPoint = damage / 2;
+        float chargeSkillPoint = damage;
 
         _currentSkillPoint.Value = Mathf.Clamp(_currentSkillPoint.Value + chargeSkillPoint, 0, _characterStatusStruct._skillPointUpperLimit);
     }
