@@ -32,17 +32,6 @@ public class PlayerAnima : IAnimation
 
     public void BoolAnimation(Animator animator, string animationClipName, bool isPlay)
     {
-        // パラメーターを配列に取得
-        AnimatorControllerParameter[] parameters = animator.parameters;
-
-        // 各パラメーターを調べてBool型の場合、リセットする
-        foreach (AnimatorControllerParameter parameter in parameters)
-        {
-            if (parameter.type == AnimatorControllerParameterType.Bool)
-            {
-                animator.SetBool(parameter.name, false);
-            }
-        }
         animator.SetBool(animationClipName, isPlay);
     }
 

@@ -1545,7 +1545,7 @@ MonoBehaviour:
     _attackLight3HitboxRange: 3
     _attackStrongHitboxDelay: 0.3
     _attackStrongHitboxRange: 3
-    _defensePower: 15
+    _defensePower: 30
     _skillDuration: 30
     _skillCoolTime: 30
     _counterTime: 0.5
@@ -1618,6 +1618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0635f440ab4dc6c4c874bfef8e91bf32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _defenceMaltiplier: 2
 --- !u!114 &1466253889594462176
 MonoBehaviour:
   m_ObjectHideFlags: 0
