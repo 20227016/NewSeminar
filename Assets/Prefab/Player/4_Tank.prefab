@@ -1530,7 +1530,7 @@ MonoBehaviour:
   WordCount: 0
   _interpolationDataSource: 0
   _characterStatusStruct:
-    _walkSpeed: 0.9
+    _walkSpeed: 1
     _runSpeed: 2.2
     _avoidanceDistance: 10
     _attackPower: 10
