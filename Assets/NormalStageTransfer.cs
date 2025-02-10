@@ -37,10 +37,10 @@ public class NormalStageTransfer : NetworkBehaviour
     [Networked]
     public bool ClearNormalStage { get; set; } = false;
 
-    [SerializeField, Header("ノーマルステージのスカイボックス")]
+    [Header("ノーマルステージのスカイボックス")]
     private Material _normalStageSkyBox = default;
 
-    [SerializeField,Header("ボスステージのスカイボックス")]
+    [Header("ボスステージのスカイボックス")]
     private Material _bossStageSkyBox = default;
 
     /// <summary>
@@ -63,6 +63,17 @@ public class NormalStageTransfer : NetworkBehaviour
 
         _normalTeleportPosition = GameObject.Find("NormalTeleportPosition");
         _bossTeleportPosition = GameObject.Find("BossTeleportPosition");
+
+        _normalStageSkyBox = Resources.Load<Material>("Day1");
+        _bossStageSkyBox = Resources.Load<Material>("Sunset3");
+        if(_normalStageSkyBox != null)
+        {
+            print("取得できたよ");
+        }
+        else
+        {
+            print("できてないよ");
+        }
 
         _normalStageteleportPos = _normalTeleportPosition.transform;
         _bossStageteleportPos = _bossTeleportPosition.transform;
