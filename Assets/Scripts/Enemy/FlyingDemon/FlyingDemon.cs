@@ -39,10 +39,10 @@ public class FlyingDemon : BaseEnemy
     [SerializeField] private float _stopDistance = 5.0f; // プレイヤーの手前で止まる距離
 
     [SerializeField, Tooltip("攻撃範囲")]
-    private float _attackRange = 4.0f;
+    private float _attackRange = 5.5f;
 
     [SerializeField, Tooltip("追跡範囲")]
-    private float _trackingRange = 7.0f;
+    private float _trackingRange = 7.5f;
 
     [SerializeField, Tooltip("歩くスピード")]
     private float _walkRange = 3.0f;
@@ -217,7 +217,6 @@ public class FlyingDemon : BaseEnemy
             // 死亡
             case EnemyMovementState.DIE:
 
-                print("ドラゴン死亡処理");
                 // Y座標が0.7を下回ったら停止
                 if (transform.position.y > _startY)
                 {
@@ -400,7 +399,7 @@ public class FlyingDemon : BaseEnemy
         {
             float distanceToTarget = Vector3.Distance(transform.position, _targetTrans.position);
 
-            if (distanceToTarget <= _attackRange && transform.position.y <= _startY)
+            if (distanceToTarget <= _attackRange && transform.position.y <= _startY + 0.5f)
             {
                 _actionState = EnemyActionState.ATTACKING;
             }
@@ -567,6 +566,8 @@ public class FlyingDemon : BaseEnemy
 
         float distanceToTarget = Vector3.Distance(transform.position, _targetTrans.position);
 
+        print("今の場所 :" + transform.position.y + "初期値 :" + _startY + _riseLimit);
+
         // 追跡範囲
         if (distanceToTarget <= _trackingRange)
         {
@@ -584,6 +585,11 @@ public class FlyingDemon : BaseEnemy
         {
             if (transform.position.y > _startY + _riseLimit)
             {
+                transform.position = new Vector3(
+                    transform.position.x,  // x はそのまま
+                    _startY + _riseLimit,  // y を固定
+                    transform.position.z   // z はそのまま
+                );
                 return;
             }
             // 一定距離離れると上昇する

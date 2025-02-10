@@ -6907,8 +6907,8 @@ MonoBehaviour:
   _targetTrans: {fileID: 0}
   _searchRadius: 50
   _stopDistance: 3
-  _attackRange: 5
-  _trackingRange: 7
+  _attackRange: 5.5
+  _trackingRange: 7.5
   _walkRange: 3
   _damageRange: 1
   _targetLayer: 6
