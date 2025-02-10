@@ -83,7 +83,7 @@ public class TankCharacter : CharacterBase
         float damage = (damageValue - _characterStatusStruct._defensePower);
 
         // 現在HPから最終ダメージを引く
-        NetworkedHP = Mathf.Clamp(NetworkedHP - damageValue, 0, _characterStatusStruct._playerStatus.MaxHp);
+        NetworkedHP = Mathf.Clamp(NetworkedHP - damage, 0, _characterStatusStruct._playerStatus.MaxHp);
 
         if (NetworkedHP <= 0)
         {
