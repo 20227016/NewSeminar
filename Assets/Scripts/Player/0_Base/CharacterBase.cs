@@ -791,7 +791,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// <summary>
     /// 死亡処理
     /// </summary>
-    [Rpc(RpcSources.All, RpcTargets.All)]
     protected virtual void RPC_Death()
     {
         CurrentState = CharacterStateEnum.DEATH;
