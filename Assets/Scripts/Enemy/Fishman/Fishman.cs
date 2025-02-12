@@ -12,11 +12,11 @@ using Fusion;
 /// </summary>
 public class Fishman : BaseEnemy
 {
-    [SerializeField]
-    private EnemyMovementState _movementState = EnemyMovementState.IDLE;
+    [SerializeField, Networked]
+    private EnemyMovementState _movementState { get; set; } = EnemyMovementState.IDLE;
 
-    [SerializeField]
-    private EnemyActionState _actionState = EnemyActionState.SEARCHING;
+    [SerializeField, Networked]
+    private EnemyActionState _actionState { get; set; } = EnemyActionState.SEARCHING;
 
     [SerializeField, Header("追いかけたいオブジェクトのトランスフォーム")]
     private Transform _targetTrans = default;
@@ -163,21 +163,42 @@ public class Fishman : BaseEnemy
             // 待機
             case EnemyMovementState.IDLE:
 
-                EnemyIdle();
+                if (Runner.IsServer)
+                {
+                    RPC_EnemyIdle();
+                }
+                else
+                {
+                    return;
+                }
 
                 break;
 
             // 移動
             case EnemyMovementState.WALKING:
 
-                EnemyWalking();
+                if (Runner.IsServer)
+                {
+                    RPC_EnemyWalking();
+                }
+                else
+                {
+                    return;
+                }
 
                 break;
 
             // 追跡
             case EnemyMovementState.RUNNING:
 
-                EnemyRunning();
+                if (Runner.IsServer)
+                {
+                    RPC_EnemyRunning();
+                }
+                else
+                {
+                    return;
+                }
 
                 break;
 
@@ -238,7 +259,8 @@ public class Fishman : BaseEnemy
     /// <summary>
     /// ここにアイドル状態のときの処理を書く
     /// </summary>
-    private void EnemyIdle()
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_EnemyIdle()
     {
         // アニメーションが終了したら次の状態に遷移
         if (IsAnimationFinished("Attack01") || IsAnimationFinished("Attack02"))
@@ -314,7 +336,8 @@ public class Fishman : BaseEnemy
     /// <summary>
     /// 歩行状態：移動後、見渡し状態へ移行
     /// </summary>
-    private void EnemyWalking()
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_EnemyWalking()
     {
         _animator.SetInteger("TransitionNo", 1);
 
@@ -428,7 +451,8 @@ public class Fishman : BaseEnemy
     /// <summary>
     /// プレイヤーの最後の場所まで移動する
     /// </summary>
-    private void EnemyRunning()
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_EnemyRunning()
     {
         if (_actionState == EnemyActionState.SEARCHING)
         {
@@ -452,6 +476,14 @@ public class Fishman : BaseEnemy
         // プレイヤーの最後の位置までの距離を計算
         float distanceToTarget = Vector3.Distance(currentPosition, targetPosition);
 
+        // 方向をプレイヤーに向ける (Y軸回転のみ)
+        Vector3 direction = (targetPosition - currentPosition).normalized;
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Euler(0, targetRotation.eulerAngles.y, 0); // Y軸のみ回転
+        }
+
         // 停止距離以内なら移動を停止
         if (distanceToTarget <= _stopDistance)
         {
@@ -467,14 +499,6 @@ public class Fishman : BaseEnemy
             targetPosition,
             _moveSpeed * Time.deltaTime
         );
-
-        // 方向をプレイヤーに向ける (Y軸回転のみ)
-        Vector3 direction = (targetPosition - currentPosition).normalized;
-        if (direction != Vector3.zero)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Euler(0, targetRotation.eulerAngles.y, 0); // Y軸のみ回転
-        }
     }
 
     /// <summary>
@@ -602,7 +626,14 @@ public class Fishman : BaseEnemy
         // 秒後
         yield return new WaitForSeconds(fadeDuration);
 
-        EnemyDespawn();
+        RPC_EnemyDie();
+    }
+
+    [Rpc(RpcSources.All , RpcTargets.All)]
+    private void RPC_EnemyDie()
+    {
+        // 完全に透明にした後、オブジェクトを非アクティブ化
+        gameObject.SetActive(false);
     }
 
     /// <summary>
