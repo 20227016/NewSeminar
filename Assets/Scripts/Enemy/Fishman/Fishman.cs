@@ -18,8 +18,8 @@ public class Fishman : BaseEnemy
     [SerializeField]
     private EnemyActionState _actionState = EnemyActionState.SEARCHING;
 
-    [SerializeField, Tooltip("追いかけたいオブジェクトのトランスフォーム"), Networked]
-    private Transform _targetTrans { get; set; } = default;
+    [SerializeField, Header("追いかけたいオブジェクトのトランスフォーム")]
+    private Transform _targetTrans = default;
 
     [SerializeField, Tooltip("探索範囲(前方距離)")]
     protected float _searchRange = 20f;
@@ -37,7 +37,7 @@ public class Fishman : BaseEnemy
 
     private float _detectionDistance = 3.0f; // 壁を検出する距離
 
-    private Vector3 _randomTargetPos; // ランダム移動の目標位置
+    [Networked] private Vector3 _randomTargetPos { get; set; } // ランダム移動の目標位置
 
     [Tooltip("物理攻撃ダメージ")]
     [SerializeField] private float _damage = 10f;
@@ -117,14 +117,7 @@ public class Fishman : BaseEnemy
         _boxCollider1 = boxObj1.GetComponent<BoxCollider>();
         _boxCollider1.enabled = false;
 
-        if (Runner.IsServer)
-        {
-            _randomTargetPos = RPC_GenerateRandomPosition(); // ランダムな位置を生成
-        }
-        else
-        {
-            return;
-        }
+        _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
     }
 
     private Transform FindChild(Transform parent, string childName)
@@ -261,14 +254,7 @@ public class Fishman : BaseEnemy
             isAttackInterval = false;
             _boxCollider1.enabled = false;
 
-            if (Runner.IsServer)
-            {
-                _randomTargetPos = RPC_GenerateRandomPosition(); // ランダムな位置を生成
-            }
-            else
-            {
-                return;
-            }
+            _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
         }
 
         if (_actionState != EnemyActionState.SEARCHING)
@@ -356,14 +342,7 @@ public class Fishman : BaseEnemy
         // 壁を検知
         if (IsPathBlocked(direction, _detectionDistance))
         {
-            if (Runner.IsServer)
-            {
-                _randomTargetPos = RPC_GenerateRandomPosition(); // ランダムな位置を生成
-            }
-            else
-            {
-                return;
-            }
+            _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
 
             _movementState = EnemyMovementState.IDLE;
             _lookAroundState = EnemyLookAroundState.TURNING;
@@ -375,14 +354,7 @@ public class Fishman : BaseEnemy
         new Vector2(transform.position.x, transform.position.z),
         new Vector2(_randomTargetPos.x, _randomTargetPos.z)) < 0.1f)
         {
-            if (Runner.IsServer)
-            {
-                _randomTargetPos = RPC_GenerateRandomPosition(); // ランダムな位置を生成
-            }
-            else
-            {
-                return;
-            }
+            _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
 
             _movementState = EnemyMovementState.IDLE;
             _lookAroundState = EnemyLookAroundState.LOOKING_AROUND;
@@ -394,8 +366,7 @@ public class Fishman : BaseEnemy
     /// <summary>
     /// ランダムな位置を生成する
     /// </summary>
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    private Vector3 RPC_GenerateRandomPosition()
+    private Vector3 GenerateRandomPosition()
     {
         float range = 10.0f; // ランダム移動範囲
         Vector3 randomOffset = new Vector3(
@@ -603,7 +574,7 @@ public class Fishman : BaseEnemy
         {
             _animator.SetInteger("TransitionNo", 0);
 
-            _randomTargetPos = RPC_GenerateRandomPosition(); // ランダムな位置を生成
+            _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
 
             _movementState = EnemyMovementState.RUNNING;
             _actionState = EnemyActionState.SEARCHING;
