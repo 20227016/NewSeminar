@@ -46,9 +46,13 @@ public class PlayerUIPresenter : MonoBehaviour
     [SerializeField, Tooltip("スキルアイコンイメージ")]
     private Image _skillIconImage = default;
 
+    [SerializeField, Tooltip("スキルクールタイムテキスト")]
+    private TextMeshProUGUI _skillCoolTimeText = default;
+    private float _coolTimeRemaining = 0f;
+    private bool _isCoolTimeActive = false;
+
     // 追跡用リスト（登録済みのプレイヤーキャラクター）
     private readonly List<CharacterBase> _registeredAllyModels = new();
-
 
     /// <summary>
     /// 自分自身のモデルをUIに設定する
@@ -70,6 +74,12 @@ public class PlayerUIPresenter : MonoBehaviour
         // スキルポイントの更新購読
         thisPlayer.CurrentSkillPoint.Subscribe(value =>
             _playerUIViews.UpdateGauge(_skillPointGauge, value, _animationSpeed));
+
+        // スキルクールタイムの更新購読
+        thisPlayer.SkillCoolTimeSubject.Subscribe(value =>
+        {
+            StartSkillCooldown(value);
+        });
 
         // 名前を設定
         PlayerData playerData = thisPlayer.GetComponentInParent<PlayerData>();
@@ -114,6 +124,49 @@ public class PlayerUIPresenter : MonoBehaviour
 
         RollNameDisplay(_rollName[modelCount], playerData.AvatarNumber);
 
+    }
+
+    /// <summary>
+    /// スキルクールタイムを開始する
+    /// </summary>
+    /// <param name="coolTime">クールタイムの時間</param>
+    private void StartSkillCooldown(float coolTime)
+    {
+        _coolTimeRemaining = coolTime;
+        _isCoolTimeActive = true;
+
+        // スキルアイコンのアルファ値を下げる（透明度を上げる）
+        Color iconColor = _skillIconImage.color;
+        iconColor.a = 0.3f; // 透明度を50%に
+        _skillIconImage.color = iconColor;
+
+        _skillCoolTimeText.gameObject.SetActive(true);  // クールタイムテキストをアクティブ化
+
+    }
+
+    private void Update()
+    {
+        if (!_isCoolTimeActive)
+        {
+            return;
+        }
+
+        // 残り時間を減算
+        _coolTimeRemaining -= Time.deltaTime;
+
+        // クールタイムテキストを更新
+        _skillCoolTimeText.text = Mathf.Max(0f, _coolTimeRemaining).ToString("F1");
+
+        // クールタイムが終了したら非アクティブ化
+        if (_coolTimeRemaining <= 0f)
+        {
+            _isCoolTimeActive = false;
+            _skillCoolTimeText.gameObject.SetActive(false);  // クールタイムテキストを非アクティブ化
+                                                             // スキルアイコンのアルファ値を元に戻す
+            Color iconColor = _skillIconImage.color;
+            iconColor.a = 1f; // 透明度100%（元の色）
+            _skillIconImage.color = iconColor;
+        }
     }
 
     /// <summary>

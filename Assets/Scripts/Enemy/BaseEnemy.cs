@@ -112,6 +112,7 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
             - (transform.forward * 5f);
     }
 
+
     protected virtual void SetSiz()
     {
         // 半径（直径ではない）
@@ -120,11 +121,15 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
         _boxCastStruct._size += Vector3.up * _boxCastStruct._size.y * 8;    // Y方向を大きくする
         _boxCastStruct._size -= Vector3.one / 100;
     }
+
+
     protected virtual void SetDirection()
     {
         // 方向
         _boxCastStruct._direction = transform.forward;
     }
+
+
     protected virtual void SetDistance()
     {
         // 距離
@@ -188,6 +193,7 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     /// エネミーの死亡処理(具体的な処理は個別で設定)
     /// </summary>
     protected abstract void OnDeath();
+
 
     public virtual void EnemyDespawn()
     {
