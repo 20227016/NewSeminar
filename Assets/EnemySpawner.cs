@@ -30,6 +30,9 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField, Tooltip("エネミーのウェーブごとの設定")]
     private List<EnemyWave> _enemyWaves = new List<EnemyWave>();
 
+    [SerializeField,Tooltip("テレポーターPosのオブジェクト")]
+    private GameObject _bossTeleportOBJ = default;
+
     // ボス関連のリスト
     [SerializeField]
     private List<NetworkObject> _bossObjList = new List<NetworkObject>();
@@ -107,6 +110,8 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         // エネミー全滅時の通知を購読し、次のウェーブへ
         OnEnemiesDefeated.Subscribe(_ => NextWave(_networkRunner));
+
+        
     }
 
     /// <summary>
@@ -271,6 +276,13 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
         {
             bossDemo.BossDeathSubject.Subscribe(_ => BossDefeat());
         }
+    }
+
+    public void BossStart(NetworkRunner runner)
+    {
+        print("ボスのテレポーター出現準備");
+        runner.Spawn(_bossTeleportOBJ, transform.position, Quaternion.identity);
+        print("ボスのテレポーター出現完了");
 
     }
 

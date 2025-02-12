@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Fusion;
+using System.Linq;
 
-public class BossStageTransfer : MonoBehaviour
+public class BossStageTransfer : NetworkBehaviour
 {
     // テレポート内のプレイヤーを管理するリスト
     private List<GameObject> _playersInPortal = new List<GameObject>();
@@ -10,7 +12,10 @@ public class BossStageTransfer : MonoBehaviour
     [ Tooltip("ノーマルステージにテレポートするために必要な人数")]
     public int BossStageRequiredPlayers { get; set; }// 必要なプレイヤー数
 
-    [SerializeField, Tooltip("ボスステージのテレポート座標")]
+    [Tooltip("テレポーターPosのオブジェクト")]
+    private GameObject _bossTeleportOBJ = default;
+
+    [Tooltip("ボスステージのテレポート座標")]
     private Transform _bossTeleportPos = default;
 
     [SerializeField, Header("ボスステージのスカイボックス")]
@@ -22,6 +27,26 @@ public class BossStageTransfer : MonoBehaviour
     private AudioClip _audioClip = default;
 
     private ISound _sound = new SoundManager();
+
+    public override void Spawned()
+    {
+        print("ボスのテレポーターがうまれました");
+        _bossTeleportOBJ = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(obj => obj.name == "IsHitPlayerPos");
+        _bossTeleportPos = _bossTeleportOBJ.transform;
+        this.transform.position = _bossTeleportPos.transform.position;
+        print("出現+移動が完了しました");
+
+        RPC_SetStart();
+    }
+
+    [Rpc(RpcSources.All,RpcTargets.All)]
+
+    private void RPC_SetStart()
+    {
+        print("非表示にしといたよ");
+        this.gameObject.SetActive(false);
+    }
+
 
     /// <summary>
     /// 転送ポータルにプレイヤーが入ったときにリストに追加する
