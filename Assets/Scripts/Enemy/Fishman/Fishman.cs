@@ -83,7 +83,7 @@ public class Fishman : BaseEnemy
     private ParticleSystem[] _attackEffects2 = default;
 
     // 攻撃時の当たり判定
-    private BoxCollider _boxCollider1 = default;
+    private BoxCollider _boxCollider = default;
 
     //AudioSource型の変数を宣言
     [SerializeField] private AudioSource _audioSource = default;
@@ -114,8 +114,8 @@ public class Fishman : BaseEnemy
 
         Transform boxObj1 = FindChild(transform, "Harpoon");
 
-        _boxCollider1 = boxObj1.GetComponent<BoxCollider>();
-        _boxCollider1.enabled = false;
+        _boxCollider = boxObj1.GetComponent<BoxCollider>();
+        _boxCollider.enabled = false;
 
         _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
     }
@@ -274,7 +274,6 @@ public class Fishman : BaseEnemy
             _actionState = EnemyActionState.SEARCHING;
             isAnimationFinished = true;
             isAttackInterval = false;
-            _boxCollider1.enabled = false;
 
             _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
         }
@@ -508,15 +507,6 @@ public class Fishman : BaseEnemy
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_EnemyAttacking()
     {
-        // 攻撃アニメーションが終了したら待機に戻る
-        if (IsAnimationFinished("Attack01") || IsAnimationFinished("Attack02"))
-        {
-            _animator.SetInteger("TransitionNo", 0);
-            isAttackInterval = false;
-            _boxCollider1.enabled = false;
-            return;
-        }
-
         if (isAttackInterval)
         {
             return;
@@ -732,11 +722,19 @@ public class Fishman : BaseEnemy
     }
 
     /// <summary>
-    /// 攻撃1の当たり判定
+    /// 攻撃1,2の当たり判定
     /// </summary>
     private void AttackCollider1()
     {
-        _boxCollider1.enabled = true;
+        _boxCollider.enabled = true;
         _audioSource.PlayOneShot(_AttackSE1);
+    }
+
+    /// <summary>
+    /// 攻撃1,2の当たり判定消滅
+    /// </summary>
+    private void FinishedCollider()
+    {
+        _boxCollider.enabled = false;
     }
 }
