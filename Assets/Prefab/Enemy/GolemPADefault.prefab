@@ -45269,6 +45269,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1760427222040005172}
   - component: {fileID: 1379801971939293087}
+  - component: {fileID: 2876819342181053905}
   m_Layer: 5
   m_Name: EnemySlider
   m_TagString: Untagged
@@ -45295,7 +45296,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -960.07, y: -537.17}
-  m_SizeDelta: {x: 160, y: 20}
+  m_SizeDelta: {x: 120, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1379801971939293087
 MonoBehaviour:
@@ -45348,6 +45349,18 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2876819342181053905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5606165872184632346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7922a57ea1a0bf845853d0458b738ba4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5646688136529180118
 GameObject:
   m_ObjectHideFlags: 0
