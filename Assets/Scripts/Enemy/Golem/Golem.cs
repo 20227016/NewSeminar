@@ -280,7 +280,6 @@ public class Golem : BaseEnemy
             _actionState = EnemyActionState.SEARCHING;
             isAnimationFinished = true;
             isAttackInterval = false;
-            _boxCollider.enabled = false;
 
             _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
         }
@@ -732,10 +731,11 @@ public class Golem : BaseEnemy
     }
 
     /// <summary>
-    /// 攻撃2の当たり判定
+    /// 攻撃の当たり判定消滅
     /// </summary>
     private void FinishedCollider()
     {
+        _boxCollider.enabled = false;
         _capsuleCollider.enabled = false;
     }
 }
