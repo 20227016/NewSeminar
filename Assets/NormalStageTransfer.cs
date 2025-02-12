@@ -2,6 +2,7 @@ using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using System.Collections;
 
 public class NormalStageTransfer : NetworkBehaviour
 {
@@ -110,19 +111,17 @@ public class NormalStageTransfer : NetworkBehaviour
             Debug.Log($"<color=red>ポータル人数：{_playersInPortal.Count}</color>");
             Debug.Log($"<color=red>参加人数：{StageRequiredPlayers}</color>");
             print("ただのテレポート");
-            NormalTeleportAllPlayers();
             if (Runner.IsServer)
             {
-
                 ChecgeBool();
-
             }
-          
+            NormalTeleportAllPlayers();
         }
         else if ((_playersInPortal.Count >= StageRequiredPlayers) && ClearNormalStage ||  HasTeleport &&  ClearNormalStage)
         {
             print("ボステレポート、成功");
             BossTeleportAllPlayers();
+
         }
     }
 
@@ -164,8 +163,25 @@ public class NormalStageTransfer : NetworkBehaviour
         }
         Debug.Log($"<color=red>スカイボックス</color>{_normalStageSkyBox}");
         RenderSettings.skybox = _normalStageSkyBox;
-        _sound.ProduceSE(_audioSource,_audioClip,1,1,0); 
+        _sound.ProduceSE(_audioSource,_audioClip,1,1,0);
 
+        // 音が再生されている間は待つ
+        StartCoroutine(WaitForSoundToFinish());
+    }
+
+    /// <summary>
+    /// 音が終了するまで待ってからDespawnを実行するコルーチン
+    /// </summary>
+    private IEnumerator WaitForSoundToFinish()
+    {
+        yield return new WaitForSeconds(2f);
+
+        // 音の再生が終了したらDespawnを実行
+        NetworkObject networkObject = GetComponent<NetworkObject>();
+        if (networkObject != null)
+        {
+            Runner.Despawn(networkObject);
+        }
     }
 
     private void BossTeleportAllPlayers()

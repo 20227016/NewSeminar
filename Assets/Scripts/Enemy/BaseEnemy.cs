@@ -166,7 +166,6 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
         if (_enemyStatusStruct._hp <= 0)
         {
             OnDeath();
-           
         }
         return;
     }
@@ -189,4 +188,13 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     /// エネミーの死亡処理(具体的な処理は個別で設定)
     /// </summary>
     protected abstract void OnDeath();
+
+    public virtual void EnemyDespawn()
+    {
+        if (HasStateAuthority)
+        {
+            Debug.Log("ですぽーん" + this.name);
+            Runner.Despawn(Object);
+        }
+    }
 }

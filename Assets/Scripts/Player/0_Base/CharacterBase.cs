@@ -242,7 +242,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _passive = GetComponent<IPassive>();
         _animator = GetComponent<Animator>();
         _rigidbody = GetComponentInParent<Rigidbody>();
-
         _move = _moveProvider.GetWalk();
         _playerAttackLight = _attackProvider.GetAttackLight();
         _playerAttackStrong = _attackProvider.GetAttackStrong();
@@ -606,7 +605,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         ResetState(animationDuration, () => _notAttackAccepted = false);
 
-        //_currentSkillPoint.Value = 100f;
+        _currentSkillPoint.Value = 100f;
     }
 
     protected virtual void Targetting()
@@ -684,7 +683,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         //ResetState(_characterStatusStruct._ressurectionTime);
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
     public virtual void RPC_ReceiveDamage(int damageValue)
     {
         // 無敵中はリターン
@@ -698,9 +696,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 現在HPから最終ダメージを引く
         NetworkedHP = Mathf.Clamp(NetworkedHP - damage, 0, _characterStatusStruct._playerStatus.MaxHp);
 
-        if(NetworkedHP <= 0)
+        if(NetworkedHP <= 0 && _currentHP.Value <= 0)
         {
-            RPC_Death();
+            Death();
 
             return;
         }
@@ -728,7 +726,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         ResetState(animationDuration);
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
     public virtual void RPC_ReceiveHeal(int healValue)
     {
         // 死亡状態から回復処理をした場合は蘇生
@@ -767,6 +764,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             // キャンセル可能な遅延処理
             await UniTask.Delay((int)resetTime, cancellationToken: _resetStateTokenSource.Token);
 
+            if(CurrentState == CharacterStateEnum.DEATH)
+            {
+                return;
+            }
+
             // アニメーション速度を元に戻す
             _animator.speed = 1.0f;
 
@@ -791,7 +793,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// <summary>
     /// 死亡処理
     /// </summary>
-    protected virtual void RPC_Death()
+    protected virtual void Death()
     {
         CurrentState = CharacterStateEnum.DEATH;
 

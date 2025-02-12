@@ -301,6 +301,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) 
     {
         Debug.Log($"シャットダウン理由: {shutdownReason}");
+
         runner.Shutdown();
         Destroy(runner);
 

@@ -87,7 +87,7 @@ public class TankCharacter : CharacterBase
 
         if (NetworkedHP <= 0)
         {
-            RPC_Death();
+            Death();
             return;
         }
 

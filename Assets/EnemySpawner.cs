@@ -235,17 +235,21 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     /// </summary>
     private bool AllEnemiesHidden()
     {
+        bool allNull = true;
+
         foreach (NetworkObject enemy in _spawnedEnemies)
         {
-
-            //if (enemy == null) continue; 
-
-            if (enemy.gameObject.activeSelf)
+            if (enemy != null) // enemyが存在するなら
             {
-                return false;
+                allNull = false; // 全てnullではない
+                if (enemy.gameObject.activeSelf) // 1つでも表示されているエネミーがいたら
+                {
+                    return false; // すぐに false を返す
+                }
             }
         }
-        return true;
+
+        return allNull; // 全てnullなら true
     }
 
     private void BossStage(NetworkRunner runner)
