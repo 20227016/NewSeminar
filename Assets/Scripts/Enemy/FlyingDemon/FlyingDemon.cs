@@ -30,8 +30,8 @@ public class FlyingDemon : BaseEnemy
 
     private float _searchHeight = default;
 
-    [SerializeField, Tooltip("追いかけたいオブジェクトのトランスフォーム"), Networked]
-    private Transform _targetTrans { get; set; } = default;
+    [SerializeField, Header("追いかけたいオブジェクトのトランスフォーム")]
+    private Transform _targetTrans = default;
 
     [Tooltip("検索範囲の半径を指定します")]
     [SerializeField] private float _searchRadius = 50f; // 検索範囲（半径）
@@ -55,7 +55,7 @@ public class FlyingDemon : BaseEnemy
     [SerializeField] private int _targetLayer = 6; // 対象のレイヤー番号
 
     private Vector3 _startPosition; // 開始時の位置を保持
-    private Vector3 _randomTargetPos; // ランダム移動の目標位置
+    [Networked] private Vector3 _randomTargetPos { get; set; } // ランダム移動の目標位置
     [SerializeField] private float _randomRange = 10f; // ランダム移動範囲（±X軸, Z軸）
 
     [Tooltip("物理攻撃ダメージ")]
@@ -123,14 +123,7 @@ public class FlyingDemon : BaseEnemy
         // 現在の位置をスタート地点として記録
         _startPosition = transform.position;
 
-        if (Runner.IsServer)
-        {
-            _randomTargetPos = RPC_GenerateRandomPosition(); // ランダムな位置を生成
-        }
-        else
-        {
-            return;
-        }
+        _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
 
         // 開始時のY座標を記録
         _startY = transform.position.y;
@@ -310,8 +303,7 @@ public class FlyingDemon : BaseEnemy
     /// <summary>
     /// ランダムな位置を生成する
     /// </summary>
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    private Vector3 RPC_GenerateRandomPosition()
+    private Vector3 GenerateRandomPosition()
     {
         Vector3 randomOffset = new Vector3(
             Random.Range(-_randomRange, _randomRange),
@@ -367,14 +359,7 @@ public class FlyingDemon : BaseEnemy
         {
             _movementState = EnemyMovementState.IDLE;
 
-            if (Runner.IsServer)
-            {
-                _randomTargetPos = RPC_GenerateRandomPosition(); // ランダムな位置を生成
-            }
-            else
-            {
-                return;
-            }
+            _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
         }
     }
 
