@@ -111,11 +111,11 @@ public class NormalStageTransfer : NetworkBehaviour
             Debug.Log($"<color=red>ポータル人数：{_playersInPortal.Count}</color>");
             Debug.Log($"<color=red>参加人数：{StageRequiredPlayers}</color>");
             print("ただのテレポート");
+            NormalTeleportAllPlayers();
             if (Runner.IsServer)
             {
                 ChecgeBool();
             }
-            NormalTeleportAllPlayers();
         }
         else if ((_playersInPortal.Count >= StageRequiredPlayers) && ClearNormalStage ||  HasTeleport &&  ClearNormalStage)
         {
@@ -165,23 +165,6 @@ public class NormalStageTransfer : NetworkBehaviour
         RenderSettings.skybox = _normalStageSkyBox;
         _sound.ProduceSE(_audioSource,_audioClip,1,1,0);
 
-        // 音が再生されている間は待つ
-        StartCoroutine(WaitForSoundToFinish());
-    }
-
-    /// <summary>
-    /// 音が終了するまで待ってからDespawnを実行するコルーチン
-    /// </summary>
-    private IEnumerator WaitForSoundToFinish()
-    {
-        yield return new WaitForSeconds(2f);
-
-        // 音の再生が終了したらDespawnを実行
-        NetworkObject networkObject = GetComponent<NetworkObject>();
-        if (networkObject != null)
-        {
-            Runner.Despawn(networkObject);
-        }
     }
 
     private void BossTeleportAllPlayers()
