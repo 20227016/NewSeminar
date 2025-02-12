@@ -21,6 +21,7 @@ public class WaveClear : NetworkBehaviour
     /// </summary>
     private EnemySpawner _enemySpawner = default;
 
+    private NetworkRunner runner = default;
 
     public override void Spawned()
     {
@@ -73,19 +74,20 @@ public class WaveClear : NetworkBehaviour
     private void RPC_WaveGateOpen3()
     {
         _wavePartition.SetActive(false);
-        print("2Waveをクリアしました。ゲート開放！(ネットワーク)EnemySpawner1で実行しました");
     }
 
     private void HandleAllEnemiesDefeated()
     {
-        print("テレポーター出現(ローカル)");
         RPC_HandleAllEnemiesDefeated();
     }
 
+    /// <summary>
+    /// 敵が全滅したら呼ばれる処理
+    /// </summary>
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_HandleAllEnemiesDefeated()
     {
-        print("テレポーター出現(ネットワーク)");
-        _bossTeleporter.SetActive(true);
+        print("敵が全滅しました。テレポーター出現処理を実行させます");
+        _enemySpawner.BossStart(runner);
     }
 }
