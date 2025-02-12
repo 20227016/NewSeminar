@@ -30,8 +30,8 @@ public class FlyingDemon : BaseEnemy
 
     private float _searchHeight = default;
 
-    [SerializeField, Header("追いかけたいオブジェクトのトランスフォーム")]
-    private Transform _targetTrans = default;
+    [SerializeField, Tooltip("追いかけたいオブジェクトのトランスフォーム"), Networked]
+    private Transform _targetTrans { get; set; } = default;
 
     [Tooltip("検索範囲の半径を指定します")]
     [SerializeField] private float _searchRadius = 50f; // 検索範囲（半径）
@@ -123,7 +123,14 @@ public class FlyingDemon : BaseEnemy
         // 現在の位置をスタート地点として記録
         _startPosition = transform.position;
 
-        _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
+        if (Runner.IsServer)
+        {
+            _randomTargetPos = RPC_GenerateRandomPosition(); // ランダムな位置を生成
+        }
+        else
+        {
+            return;
+        }
 
         // 開始時のY座標を記録
         _startY = transform.position.y;
@@ -158,7 +165,14 @@ public class FlyingDemon : BaseEnemy
     {
         if (_movementState != EnemyMovementState.DIE)
         {
-            PlayerSearch();
+            if (Runner.IsServer)
+            {
+                RPC_PlayerSearch();
+            }
+            else
+            {
+                return;
+            }
         }
         
         if (_targetTrans == null)
@@ -241,7 +255,14 @@ public class FlyingDemon : BaseEnemy
             // 攻撃
             case EnemyActionState.ATTACKING:
 
-                PlayerAttack();
+                if (Runner.IsServer)
+                {
+                    RPC_PlayerAttack();
+                }
+                else
+                {
+                    return;
+                }
 
                 break;
         }
@@ -289,7 +310,8 @@ public class FlyingDemon : BaseEnemy
     /// <summary>
     /// ランダムな位置を生成する
     /// </summary>
-    private Vector3 GenerateRandomPosition()
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private Vector3 RPC_GenerateRandomPosition()
     {
         Vector3 randomOffset = new Vector3(
             Random.Range(-_randomRange, _randomRange),
@@ -344,7 +366,15 @@ public class FlyingDemon : BaseEnemy
         new Vector2(_randomTargetPos.x, _randomTargetPos.z)) < 0.1f)
         {
             _movementState = EnemyMovementState.IDLE;
-            _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
+
+            if (Runner.IsServer)
+            {
+                _randomTargetPos = RPC_GenerateRandomPosition(); // ランダムな位置を生成
+            }
+            else
+            {
+                return;
+            }
         }
     }
 
@@ -418,7 +448,8 @@ public class FlyingDemon : BaseEnemy
     /// <summary>
     /// 攻撃処理
     /// </summary>
-    private void PlayerAttack()
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_PlayerAttack()
     {
         if (IsAnimationFinished("Attack01") || IsAnimationFinished("Attack02"))
         {
@@ -528,7 +559,8 @@ public class FlyingDemon : BaseEnemy
     /// 自分を中心とした円柱形の一定範囲内で、指定のレイヤーに属するオブジェクトを検索し、
     /// 最も近いオブジェクトを特定します。
     /// </summary>
-    private void PlayerSearch()
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_PlayerSearch()
     {
         // 円柱範囲をカプセルで近似
         Vector3 capsuleBottom = transform.position - Vector3.up * (_searchHeight / 5f);

@@ -9,10 +9,9 @@ public class GameClear : MonoBehaviour
     [SerializeField, Tooltip("Ÿ—˜‚ÌTimeline")]
     private PlayableDirector _victoryTimeline;
 
-    private float _victoryTime = default;
+    private float _victoryTime = 3f;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         _victoryTimeline.Play();
         _victoryTime = 3f;
