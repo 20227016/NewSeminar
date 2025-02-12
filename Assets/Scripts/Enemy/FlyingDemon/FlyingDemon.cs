@@ -504,14 +504,7 @@ public class FlyingDemon : BaseEnemy
         // 秒後
         yield return new WaitForSeconds(fadeDuration);
 
-        RPC_EnemyDie();
-    }
-
-    [Rpc(RpcSources.All , RpcTargets.All)]
-    private void RPC_EnemyDie()
-    {
-        // 完全に透明にした後、オブジェクトを非アクティブ化
-        gameObject.SetActive(false);
+        EnemyDespawn();
     }
 
     /// <summary>
