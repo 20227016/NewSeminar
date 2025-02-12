@@ -1107,6 +1107,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4811148020363059116}
   - component: {fileID: 7571647284221501406}
+  - component: {fileID: 5236031204844814234}
   m_Layer: 5
   m_Name: EnemySlider
   m_TagString: Untagged
@@ -1133,7 +1134,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -946.72, y: -1009.78}
-  m_SizeDelta: {x: 160, y: 20}
+  m_SizeDelta: {x: 120, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7571647284221501406
 MonoBehaviour:
@@ -1186,6 +1187,18 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5236031204844814234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4049653446369112849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7922a57ea1a0bf845853d0458b738ba4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4056389947113527010
 GameObject:
   m_ObjectHideFlags: 0
@@ -17256,7 +17269,6 @@ MonoBehaviour:
     _attackDelayTime: 0
     _downedTime: 0
   _tags: []
-  _hpBarUI: {fileID: 5528956170292943633}
   _hpBarFill: {fileID: 7571647284221501406}
   _magicProjectilePrefab: {fileID: 810653205754761373, guid: f1fdc9886ac3a2842807fbff501d9ebe, type: 3}
   _audioSource: {fileID: 7671055620160780745}

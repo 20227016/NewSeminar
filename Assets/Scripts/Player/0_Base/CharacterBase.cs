@@ -534,6 +534,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _playerAttackLight.AttackLight(characterBase, attackPower, attackMultiplier, delay / _animator.speed, range);
 
         float animationDuration = _animation.GetAnimationLength(_animator, animation.name) / _characterStatusStruct._attackSpeed;
+
         // アニメーション再生
         RPC_PlayAnimation(animation.name);
 
@@ -613,8 +614,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     protected virtual void Targetting()
     {
-        //RPC_ReceiveDamage(50);
-
         _target.Targetting();
     }
 
@@ -637,6 +636,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         RPC_PlayAnimation(_characterAnimationStruct._avoidanceActionAnimation.name);
 
         _avoidance.Avoidance(transform, _rigidbody, _moveDirection, _characterStatusStruct._avoidanceDistance, animationDuration);
+
         // 効果音
         _sound.ProduceSE(_characterSoundStruct._audioSource, _characterSoundStruct._dodge, _characterSoundStruct._playBackSpeed_Dodge, _characterSoundStruct._audioVolume_Dodge, _characterSoundStruct._delay_Dodge);
         Invincible(animationDuration);
@@ -685,7 +685,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _resurrection.Resurrection(transform, resurrectionTime);
 
-        //ResetState(_characterStatusStruct._ressurectionTime);
     }
 
 
@@ -726,12 +725,14 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             // ノックバック
             _avoidance.Avoidance(transform, _rigidbody, new Vector2(-transform.forward.x, -transform.forward.z), _characterStatusStruct._avoidanceDistance, animationDuration / 5);
         }
+
         // 効果音
         _sound.ProduceSE(_characterSoundStruct._audioSource, _characterSoundStruct._getHit, _characterSoundStruct._playBackSpeed_GetHit, _characterSoundStruct._audioVolume_GetHit, _characterSoundStruct._delay_GetHit);
         Invincible(animationDuration * 2f);
         ResetState(animationDuration);
     }
 
+    [Rpc(RpcSources.All, RpcTargets.All)]
     public virtual void RPC_ReceiveHeal(int healValue)
     {
         // 死亡状態から回復処理をした場合は蘇生
@@ -798,7 +799,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected virtual void Death()
     {
         CurrentState = CharacterStateEnum.DEATH;
-
         RPC_PlayAnimation(_characterAnimationStruct._deathAnimation.name);
     }
 
@@ -839,6 +839,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         {
             _animator = GetComponent<Animator>();
         }
+
         _animation.TriggerAnimation(_animator, animationClipName);
     }
 

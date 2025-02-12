@@ -24,9 +24,6 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     [SerializeField, Header("無視するレイヤー")]
     protected List<string> _tags = new List<string>();
 
-    // 敵UI関連
-    [SerializeField,Tooltip("敵のHPバー")]
-    private GameObject _hpBarUI;
     [SerializeField,Tooltip("UIのHPバー(Imageコンポーネント)")]
     private Slider _hpBarFill;
 
