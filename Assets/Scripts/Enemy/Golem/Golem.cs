@@ -183,7 +183,14 @@ public class Golem : BaseEnemy
             // 追跡
             case EnemyMovementState.RUNNING:
 
-                EnemyRunning();
+                if (Runner.IsServer)
+                {
+                    RPC_EnemyRunning();
+                }
+                else
+                {
+                    return;
+                }
                 
                 break;
 
@@ -427,7 +434,8 @@ public class Golem : BaseEnemy
     /// <summary>
     /// プレイヤーの最後の場所まで移動する
     /// </summary>
-    private void EnemyRunning()
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_EnemyRunning()
     {
         if (_actionState == EnemyActionState.SEARCHING)
         {

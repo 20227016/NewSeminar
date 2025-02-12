@@ -177,7 +177,14 @@ public class Fishman : BaseEnemy
             // ’ÇÕ
             case EnemyMovementState.RUNNING:
 
-                EnemyRunning();
+                if (Runner.IsServer)
+                {
+                    RPC_EnemyRunning();
+                }
+                else
+                {
+                    return;
+                }
 
                 break;
 
@@ -428,7 +435,8 @@ public class Fishman : BaseEnemy
     /// <summary>
     /// ƒvƒŒƒCƒ„[‚ÌÅŒã‚ÌêŠ‚Ü‚ÅˆÚ“®‚·‚é
     /// </summary>
-    private void EnemyRunning()
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_EnemyRunning()
     {
         if (_actionState == EnemyActionState.SEARCHING)
         {
