@@ -69,7 +69,6 @@ public class NormalStageTransfer : NetworkBehaviour
         _enemySpawner = FindObjectOfType<EnemySpawner>();
 
         _normalTeleportPosition = GameObject.Find("NormalTeleportPosition");
-        _bossTeleportPosition = GameObject.Find("BossTeleportPosition");
 
         _normalStageSkyBox = Resources.Load<Material>("Day1");
         _bossStageSkyBox = Resources.Load<Material>("Sunset3");
@@ -83,7 +82,6 @@ public class NormalStageTransfer : NetworkBehaviour
         }
 
         _normalStageteleportPos = _normalTeleportPosition.transform;
-        _bossStageteleportPos = _bossTeleportPosition.transform;
 
         _enemySpawner.OnAllEnemiesDefeatedObservable.Subscribe(_ =>
         {
@@ -190,6 +188,8 @@ public class NormalStageTransfer : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_AllEnemiesDefeated()
     {
+        _bossTeleportPosition = GameObject.Find("BossTeleportPosition");
+        _bossStageteleportPos = _bossTeleportPosition.transform;
         ClearNormalStage = true;
         print("“G‘S–Å‚Ì’Ê’m‚ðŽó‚¯Žæ‚è‚Ü‚µ‚½" + ClearNormalStage);
     }
