@@ -20189,7 +20189,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -50539,11 +50539,11 @@ Transform:
   m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4072428118130483351}
   - {fileID: 281604173181131620}
   - {fileID: 3206298814505852275}
   - {fileID: 1313380586595660743}
   - {fileID: 3203555108826191334}
+  - {fileID: 4072428118130483351}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &4707602414915168193
@@ -50598,8 +50598,8 @@ MonoBehaviour:
   _tags: []
   _hpBarUI: {fileID: 7427003616119681246}
   _hpBarFill: {fileID: 1379801971939293087}
-  _movementState: 0
-  _actionState: 0
+  __movementState: 0
+  __actionState: 0
   _targetTrans: {fileID: 0}
   _searchRange: 20
   _moveSpeed: 0
