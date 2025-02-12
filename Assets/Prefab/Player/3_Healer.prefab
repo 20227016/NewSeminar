@@ -3113,8 +3113,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c515da2fb549564abd32a2130676db0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _healAreaRadius: 5
-  _healValue: 10
+  _healAreaRadius: 10
+  _healValue: 12
   _skillHitboxDelay: 1.5
 --- !u!114 &4460776307409108312
 MonoBehaviour:

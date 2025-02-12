@@ -2833,7 +2833,7 @@ MonoBehaviour:
     _attackStrongHitboxRange: 6.5
     _defensePower: 9
     _skillDuration: 20
-    _skillCoolTime: 30
+    _skillCoolTime: 25
     _counterTime: 0.5
     _skillPointUpperLimit: 100
     _ressurectionTime: 5
@@ -2903,7 +2903,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6d85ea7471cb8a47b87df1f0cf6c19e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attackSpeedMaltiplier: 1.2
+  _attackSpeedMaltiplier: 1.8
 --- !u!114 &5064425199042777687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2916,7 +2916,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e84e72c825904e48b8ee8a72772fb9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _passiveHealValue: 2
+  _passiveHealValue: 1
 --- !u!114 &8756446559984316052
 MonoBehaviour:
   m_ObjectHideFlags: 0
