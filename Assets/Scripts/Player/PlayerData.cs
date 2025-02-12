@@ -2,6 +2,7 @@ using Fusion;
 using UnityEngine;
 using TMPro;
 using System.Linq;
+using UniRx;
 
 public class PlayerData : NetworkBehaviour
 {
@@ -25,19 +26,15 @@ public class PlayerData : NetworkBehaviour
     [Networked, HideInInspector]
     public string AvatarName { get; set; } = default;
 
+    private EnemySpawner _enemySpawner = default;
+
+    private int _playerCount = default;
 
     public override void Spawned()
     {
-
+        _enemySpawner = FindObjectOfType<EnemySpawner>();
         _normalStageTransfer = FindObjectOfType<NormalStageTransfer>();
-        _bossStageTransfer = Resources.FindObjectsOfTypeAll<BossStageTransfer>().FirstOrDefault(obj => obj.name == "IsHitPlayer");
         if (_normalStageTransfer == null)
-        {
-
-            Debug.Log("トランスファーがない");
-
-        }
-        if (_bossStageTransfer == null)
         {
 
             Debug.Log("トランスファーがない");
@@ -61,8 +58,26 @@ public class PlayerData : NetworkBehaviour
             // プレイヤーセット
             characterSelectionManager.SetPlayer(this);
         }
+
+        _enemySpawner.OnAllEnemiesDefeatedObservable.Subscribe(_ =>
+        {
+            // エネミー全滅時の処理を記述
+            Debug.Log("他のスクリプトでエネミー全滅イベントを受け取りました！");
+            HandleAllEnemiesDefeated();
+        }).AddTo(this);
+
         RPC_PlayerJoined();
 
+    }
+
+    /// <summary>
+    /// エネミーが全滅したら
+    /// </summary>
+    private void HandleAllEnemiesDefeated()
+    {
+        // 敵が全滅してからFindする。そして、プレイヤー人数を代入する
+        _bossStageTransfer = Resources.FindObjectsOfTypeAll<BossStageTransfer>().FirstOrDefault(obj => obj.name == "IsHitPlayer");
+        _normalStageTransfer.StageRequiredPlayers = _playerCount;
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
@@ -79,7 +94,7 @@ public class PlayerData : NetworkBehaviour
 
         _normalStageTransfer.StageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
         Debug.Log($"現在の参加人数{_networkRunner.SessionInfo.PlayerCount}");
-        _bossStageTransfer.BossStageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
+        _playerCount++;
 
     }
 
@@ -94,7 +109,7 @@ public class PlayerData : NetworkBehaviour
 
         }
         _normalStageTransfer.StageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
-        _bossStageTransfer.BossStageRequiredPlayers = _networkRunner.SessionInfo.PlayerCount;
+        _playerCount--;
 
     }
 
