@@ -66,7 +66,7 @@ public class BossDemo : BaseEnemy
     // 1.羽の薙ぎ払い攻撃
     // 2.魔弾
     // 3.レーザー
-    [SerializeField,Networked]
+    [SerializeField, Networked]
     private int _currentAttack { get; set; } = default;
     [Networked]
     private int _currentLottery { get; set; } = default; // 現在の抽選目
@@ -345,7 +345,7 @@ public class BossDemo : BaseEnemy
     /// アタック状態
     /// ボスの攻撃パターンを抽選する
     /// </summary>
-    [Rpc(RpcSources.All,RpcTargets.All)]
+    [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_AttackState()
     {
         Random _random = new Random();
@@ -375,7 +375,7 @@ public class BossDemo : BaseEnemy
     /// <summary>
     /// 羽の薙ぎ払い攻撃
     /// </summary>
-    [Rpc(RpcSources.All,RpcTargets.All)]
+    [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_WingAttack()
     {
         _animator.SetInteger("TransitionNo", 1);

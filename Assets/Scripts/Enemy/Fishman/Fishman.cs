@@ -18,8 +18,8 @@ public class Fishman : BaseEnemy
     [SerializeField]
     private EnemyActionState _actionState = EnemyActionState.SEARCHING;
 
-    [SerializeField, Header("追いかけたいオブジェクトのトランスフォーム")]
-    private Transform _targetTrans = default;
+    [SerializeField, Tooltip("追いかけたいオブジェクトのトランスフォーム"), Networked]
+    private Transform _targetTrans { get; set; } = default;
 
     [SerializeField, Tooltip("探索範囲(前方距離)")]
     protected float _searchRange = 20f;
@@ -117,7 +117,14 @@ public class Fishman : BaseEnemy
         _boxCollider1 = boxObj1.GetComponent<BoxCollider>();
         _boxCollider1.enabled = false;
 
-        _randomTargetPos = GenerateRandomPosition();
+        if (Runner.IsServer)
+        {
+            _randomTargetPos = RPC_GenerateRandomPosition(); // ランダムな位置を生成
+        }
+        else
+        {
+            return;
+        }
     }
 
     private Transform FindChild(Transform parent, string childName)
@@ -208,14 +215,28 @@ public class Fishman : BaseEnemy
             // サーチ
             case EnemyActionState.SEARCHING:
 
-                PlayerSearch();
+                if (Runner.IsServer)
+                {
+                    RPC_PlayerSearch();
+                }
+                else
+                {
+                    return;
+                }
 
                 break;
 
             // 攻撃
             case EnemyActionState.ATTACKING:
 
-                EnemyAttacking();
+                if (Runner.IsServer)
+                {
+                    RPC_EnemyAttacking();
+                }
+                else
+                {
+                    return;
+                }
 
                 break;
         }
@@ -235,12 +256,19 @@ public class Fishman : BaseEnemy
             }
 
             _animator.SetInteger("TransitionNo", 0);
-            _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
             _actionState = EnemyActionState.SEARCHING;
             isAnimationFinished = true;
             isAttackInterval = false;
             _boxCollider1.enabled = false;
-            return;
+
+            if (Runner.IsServer)
+            {
+                _randomTargetPos = RPC_GenerateRandomPosition(); // ランダムな位置を生成
+            }
+            else
+            {
+                return;
+            }
         }
 
         if (_actionState != EnemyActionState.SEARCHING)
@@ -328,7 +356,15 @@ public class Fishman : BaseEnemy
         // 壁を検知
         if (IsPathBlocked(direction, _detectionDistance))
         {
-            _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
+            if (Runner.IsServer)
+            {
+                _randomTargetPos = RPC_GenerateRandomPosition(); // ランダムな位置を生成
+            }
+            else
+            {
+                return;
+            }
+
             _movementState = EnemyMovementState.IDLE;
             _lookAroundState = EnemyLookAroundState.TURNING;
             return;
@@ -339,7 +375,15 @@ public class Fishman : BaseEnemy
         new Vector2(transform.position.x, transform.position.z),
         new Vector2(_randomTargetPos.x, _randomTargetPos.z)) < 0.1f)
         {
-            _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
+            if (Runner.IsServer)
+            {
+                _randomTargetPos = RPC_GenerateRandomPosition(); // ランダムな位置を生成
+            }
+            else
+            {
+                return;
+            }
+
             _movementState = EnemyMovementState.IDLE;
             _lookAroundState = EnemyLookAroundState.LOOKING_AROUND;
             _lookAroundTimer = 3.0f; // 見渡し時間をセット
@@ -350,7 +394,8 @@ public class Fishman : BaseEnemy
     /// <summary>
     /// ランダムな位置を生成する
     /// </summary>
-    private Vector3 GenerateRandomPosition()
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private Vector3 RPC_GenerateRandomPosition()
     {
         float range = 10.0f; // ランダム移動範囲
         Vector3 randomOffset = new Vector3(
@@ -465,7 +510,8 @@ public class Fishman : BaseEnemy
     /// 攻撃動作を処理する。
     /// 攻撃終了後、待機状態に戻る。
     /// </summary>
-    private void EnemyAttacking()
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_EnemyAttacking()
     {
         // 攻撃アニメーションが終了したら待機に戻る
         if (IsAnimationFinished("Attack01") || IsAnimationFinished("Attack02"))
@@ -497,7 +543,7 @@ public class Fishman : BaseEnemy
         StartCoroutine(ResetAnimationFlag());
 
         // プレイヤーがいたら攻撃を繰り返す
-        PlayerSearch();
+        RPC_PlayerSearch();
         if (_targetTrans != null && _targetTrans.gameObject.layer == 6)
         {
             _targetTrans = null;
@@ -557,7 +603,7 @@ public class Fishman : BaseEnemy
         {
             _animator.SetInteger("TransitionNo", 0);
 
-            _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
+            _randomTargetPos = RPC_GenerateRandomPosition(); // ランダムな位置を生成
 
             _movementState = EnemyMovementState.RUNNING;
             _actionState = EnemyActionState.SEARCHING;
@@ -610,24 +656,6 @@ public class Fishman : BaseEnemy
     }
 
     /// <summary>
-    /// レイキャスト設定
-    /// </summary>
-    private void RayCastSetting()
-    {
-        //例キャスト初期設定
-        BasicRaycast();
-
-        // 中心点を取得
-        _boxCastStruct._originPos = this.transform.position;
-
-        // 自分のスケール(x)を取得
-        float squareSize = transform.localScale.x;
-
-        // BoxCastを正方形のサイズにする
-        _boxCastStruct._size = new Vector2(squareSize, squareSize);
-    }
-
-    /// <summary>
     /// レイキャストの距離(探索範囲)
     /// </summary>
     protected override void SetDistance()
@@ -637,41 +665,10 @@ public class Fishman : BaseEnemy
     }
 
     /// <summary>
-    /// Lookat設定
-    /// ここでは、
-    ///    [SerializeField, Header("追いかけたいオブジェクトのトランスフォーム")]
-    ///    private Transform _objTrans = default;
-    /// の中に入れたオブジェクトをずっと見つめ続ける処理が書いてあるよ
-    /// これで方向は取得できるので、あとは前進するだけで、上記で格納したオブジェクトを追うようになります(Playerとか)
+    /// プレイヤーを探す
     /// </summary>
-    private void PlayerLook()
-    {
-        // プレイヤーのTransformを取得
-        Transform playerTrans = _targetTrans;
-
-        if (playerTrans != null)
-        {
-            // プレイヤーの位置を取得
-            Vector3 playerPosition = playerTrans.position;
-
-            // プレイヤーのY軸を無視したターゲットの位置を計算
-            Vector3 lookPosition = new Vector3(playerPosition.x, transform.position.y, playerPosition.z);
-
-            // プレイヤーの方向に向く
-            transform.LookAt(lookPosition);
-        }
-    }
-
-    /// <summary>
-    /// オブジェクトを探す(サンプル)
-    /// サーチの例。好きなように改良してね。
-    /// 私の作ったメソッドを解説すると、
-    /// プレイヤーの方向に常にレイキャストを伸ばし、オブジェクトなどに邪魔されず、直接プレイヤーにレイキャストが触れたときに
-    /// アクションEnumをサーチから攻撃に切り替える処理を書いてるよ。
-    /// で、もしレイキャストがオブジェクトなどに邪魔されて、プレイヤーに届かなかった場合は、アクションEnumはサーチのまま
-    /// MoveEnumは移動にし、サーチしながら移動（目の前にある障害物を回避するため）する処理を書いているよ。
-    /// </summary>
-    private void PlayerSearch()
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_PlayerSearch()
     {
         // ボックスキャストの設定
         Vector3 center = transform.position - (transform.forward * 10f); // キャスト開始位置
