@@ -313,20 +313,15 @@ public class EvilMage : BaseEnemy
         // トリガーをセット
         _animator.SetInteger("TransitionNo", 4);
 
-        // 攻撃エフェクト停止
-        _magicCharge.SetActive(false);
-
+        // 攻撃エフェクトが存在する場合のみ停止
+        if (_magicCharge != null)
+        {
+            _magicCharge.SetActive(false);
+        }
         // 秒後
         yield return new WaitForSeconds(fadeDuration);
 
-        RPC_EnemyDie();
-    }
-
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    private void RPC_EnemyDie()
-    {
-        // 完全に透明にした後、オブジェクトを非アクティブ化
-        this.gameObject.SetActive(false);
+        EnemyDespawn();
     }
 
     /// <summary>

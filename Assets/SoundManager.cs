@@ -20,14 +20,14 @@ public class SoundManager : ISound
     /// <param name="delay"></param>
     public async void ProduceSE(AudioSource audioSource, AudioClip audioClip, float audioSpeed , float audioVolume , float delay)
     {
-
-        if(audioSource == null || audioSource == null)
+        if (audioSource == null || audioSource == null)
         {
 
             return;
 
         }
         await UniTask.Delay((int)(delay * 1000f));
+
         audioSource.pitch = audioSpeed;
         audioSource.volume = audioVolume;
         audioSource.PlayOneShot(audioClip);

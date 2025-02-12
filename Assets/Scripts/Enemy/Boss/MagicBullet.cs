@@ -67,4 +67,9 @@ public class MagicBullet : BaseEnemy
     {
 
     }
+
+    public override void RPC_ReceiveDamage(int damegeValue)
+    {
+
+    }
 }
