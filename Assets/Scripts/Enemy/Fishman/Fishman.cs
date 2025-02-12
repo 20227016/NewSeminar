@@ -177,14 +177,7 @@ public class Fishman : BaseEnemy
             // 追跡
             case EnemyMovementState.RUNNING:
 
-                if (Runner.IsServer)
-                {
-                    RPC_EnemyRunning();
-                }
-                else
-                {
-                    return;
-                }
+                EnemyRunning();
 
                 break;
 
@@ -435,8 +428,7 @@ public class Fishman : BaseEnemy
     /// <summary>
     /// プレイヤーの最後の場所まで移動する
     /// </summary>
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    private void RPC_EnemyRunning()
+    private void EnemyRunning()
     {
         if (_actionState == EnemyActionState.SEARCHING)
         {
@@ -649,6 +641,8 @@ public class Fishman : BaseEnemy
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_PlayerSearch()
     {
+        if (_targetTrans != null) return;
+
         // ボックスキャストの設定
         Vector3 center = transform.position - (transform.forward * 10f); // キャスト開始位置
         Vector3 halfExtents = new Vector3(1f, 1f, 1f); // ボックスの半径
