@@ -30,9 +30,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     [Networked(OnChanged = nameof(OnNetworkedHPChanged))]
     protected float NetworkedHP { get; set; } = 100f;
 
-    // 現在のステート
-    [HideInInspector]
     public CharacterStateEnum CurrentState { get; set; } = default;
+
+    public Subject<float> SkillCoolTimeSubject { get => skillCoolTimeSubject; set => skillCoolTimeSubject = value; }
     #endregion
 
     #region 定数
@@ -140,6 +140,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// </summary>
     protected bool _notAttackAccepted = default;
     protected bool _isInvincible = false;
+
+    protected Subject<float> skillCoolTimeSubject = new();
 
     #endregion
 
@@ -398,7 +400,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// <param name="input">入力情報</param>
     protected virtual void ProcessInput(PlayerNetworkInput input)
     {
-
+        Debug.Log(_isRun);
         // Run状態を切り替える
         if (input.IsRunning)
         {
@@ -412,20 +414,21 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         {
             return;
         }
+
         if(CurrentState != CharacterStateEnum.AVOIDANCE && input.IsAvoidance)
         {
 
             Debug.Log($"<color=#AFDFE4>回避ステート以外のステータス中に回避入力</color>");
 
         }
+
         // 回避中に回避をできないようにする
         if (CurrentState == CharacterStateEnum.AVOIDANCE)
         {
-
             return;
-
         }
-        //色コード#AFDFE4
+
+        // 色コード#AFDFE4
         if (CurrentState != CharacterStateEnum.ATTACK)
         {
             // 移動処理
@@ -652,6 +655,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         Observable.Timer(TimeSpan.FromSeconds(skillCoolTime))
             .Subscribe(_ => _isSkillCoolTime = false);
 
+        SkillCoolTimeSubject.OnNext(skillCoolTime);
+
         // 発動後スキルポイントを０に
         _currentSkillPoint.Value = 0f;
 
@@ -682,6 +687,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         //ResetState(_characterStatusStruct._ressurectionTime);
     }
+
 
     public virtual void RPC_ReceiveDamage(int damageValue)
     {
@@ -776,10 +782,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             CurrentState = CharacterStateEnum.IDLE;
 
             _notAttackAccepted = false;
-
-            _moveProvider.GetWalk();
-
-            _isRun = false;
 
             // リセット完了を通知
             onResetComplete?.Invoke();

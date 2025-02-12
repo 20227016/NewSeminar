@@ -28,6 +28,8 @@ public class HealerCharacter : CharacterBase
         Observable.Timer(TimeSpan.FromSeconds(skillCoolTime))
             .Subscribe(_ => _isSkillCoolTime = false);
 
+        SkillCoolTimeSubject.OnNext(skillCoolTime);
+
         // 発動後スキルポイントを０に
         _currentSkillPoint.Value = 0f;
 
