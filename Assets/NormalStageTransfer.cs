@@ -30,7 +30,7 @@ public class NormalStageTransfer : NetworkBehaviour
     /// <summary>
     /// 敵管理クラス
     /// </summary>
-    private EnemySpawner _enemySpawner = default;
+    private WaveClear _waveClear = default;
 
     /// <summary>
     /// ノーマルステージをクリアしたかのフラグ
@@ -66,7 +66,7 @@ public class NormalStageTransfer : NetworkBehaviour
     public override void Spawned()
     {
 
-        _enemySpawner = FindObjectOfType<EnemySpawner>();
+        _waveClear = FindObjectOfType<WaveClear>();
 
         _normalTeleportPosition = GameObject.Find("NormalTeleportPosition");
 
@@ -82,13 +82,6 @@ public class NormalStageTransfer : NetworkBehaviour
         }
 
         _normalStageteleportPos = _normalTeleportPosition.transform;
-
-        _enemySpawner.OnAllEnemiesDefeatedObservable.Subscribe(_ =>
-        {
-            // エネミー全滅時の処理を記述
-            Debug.Log("他のスクリプトでエネミー全滅イベントを受け取りました！");
-            HandleAllEnemiesDefeated();
-        }).AddTo(this);
     }
 
     /// <summary>

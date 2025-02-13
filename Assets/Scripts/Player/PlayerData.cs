@@ -32,8 +32,17 @@ public class PlayerData : NetworkBehaviour
 
     public override void Spawned()
     {
+
         _enemySpawner = FindObjectOfType<EnemySpawner>();
         _normalStageTransfer = FindObjectOfType<NormalStageTransfer>();
+
+        // 敵の全滅イベントを購読
+        _enemySpawner.OnAllEnemiesDefeatedObservable.Subscribe(_ =>
+        {
+            Debug.Log("GameManager: 敵が全滅しました！ボス戦の準備を開始します。");
+            HandleAllEnemiesDefeated();
+        }).AddTo(this);
+
         if (_normalStageTransfer == null)
         {
 
@@ -59,13 +68,6 @@ public class PlayerData : NetworkBehaviour
             characterSelectionManager.SetPlayer(this);
         }
 
-        _enemySpawner.OnAllEnemiesDefeatedObservable.Subscribe(_ =>
-        {
-            // エネミー全滅時の処理を記述
-            Debug.Log("他のスクリプトでエネミー全滅イベントを受け取りました！");
-            HandleAllEnemiesDefeated();
-        }).AddTo(this);
-
         RPC_PlayerJoined();
 
     }
@@ -76,8 +78,8 @@ public class PlayerData : NetworkBehaviour
     private void HandleAllEnemiesDefeated()
     {
         // 敵が全滅してからFindする。そして、プレイヤー人数を代入する
-        _bossStageTransfer = Resources.FindObjectsOfTypeAll<BossStageTransfer>().FirstOrDefault(obj => obj.name == "IsHitPlayer");
-        _normalStageTransfer.StageRequiredPlayers = _playerCount;
+        _bossStageTransfer = Resources.FindObjectsOfTypeAll<BossStageTransfer>().FirstOrDefault(obj => obj.name == "BosteReporter");
+        _bossStageTransfer.BossStageRequiredPlayers = _playerCount;
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)

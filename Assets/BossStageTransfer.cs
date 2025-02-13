@@ -12,8 +12,8 @@ public class BossStageTransfer : NetworkBehaviour
     [ Tooltip("ノーマルステージにテレポートするために必要な人数")]
     public int BossStageRequiredPlayers { get; set; }// 必要なプレイヤー数
 
-    [Tooltip("テレポーターPosのオブジェクト")]
-    private GameObject _bossTeleportOBJ = default;
+    [Tooltip("ボスステージのテレポート座標OBJ")]
+    private GameObject _bossTeleportPosOBJ = default;
 
     [Tooltip("ボスステージのテレポート座標")]
     private Transform _bossTeleportPos = default;
@@ -31,22 +31,9 @@ public class BossStageTransfer : NetworkBehaviour
     public override void Spawned()
     {
         print("ボスのテレポーターがうまれました");
-        _bossTeleportOBJ = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(obj => obj.name == "IsHitPlayerPos");
-        _bossTeleportPos = _bossTeleportOBJ.transform;
-        this.transform.position = _bossTeleportPos.transform.position;
-        print("出現+移動が完了しました");
-
-        RPC_SetStart();
+        _bossTeleportPosOBJ = GameObject.Find("BossTeleportPosition");
+        _bossTeleportPos = _bossTeleportPosOBJ.transform;
     }
-
-    [Rpc(RpcSources.All,RpcTargets.All)]
-
-    private void RPC_SetStart()
-    {
-        print("非表示にしといたよ");
-        this.gameObject.SetActive(false);
-    }
-
 
     /// <summary>
     /// 転送ポータルにプレイヤーが入ったときにリストに追加する
