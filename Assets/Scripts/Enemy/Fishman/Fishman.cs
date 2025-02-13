@@ -12,11 +12,11 @@ using Fusion;
 /// </summary>
 public class Fishman : BaseEnemy
 {
-    [SerializeField, Networked]
-    private EnemyMovementState _movementState { get; set; } = EnemyMovementState.IDLE;
+    [SerializeField]
+    private EnemyMovementState _movementState = EnemyMovementState.IDLE;
 
-    [SerializeField, Networked]
-    private EnemyActionState _actionState { get; set; } = EnemyActionState.SEARCHING;
+    [SerializeField]
+    private EnemyActionState _actionState = EnemyActionState.SEARCHING;
 
     [SerializeField, Header("追いかけたいオブジェクトのトランスフォーム")]
     private Transform _targetTrans = default;

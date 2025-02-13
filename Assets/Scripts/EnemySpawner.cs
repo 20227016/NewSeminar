@@ -289,7 +289,7 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
             _spawnEnd = true;
         }
 
-        BossDemo bossDemo = FindObjectOfType<BossDemo>();
+        Boss bossDemo = FindObjectOfType<Boss>();
 
         if (bossDemo != null)
         {
