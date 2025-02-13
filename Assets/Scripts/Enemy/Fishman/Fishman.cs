@@ -404,7 +404,7 @@ public class Fishman : BaseEnemy
     /// </summary>
     private void LookAround()
     {
-        _animator.SetInteger("TransitionNo", 0);
+        _animator.SetInteger("TransitionNo", 1);
 
         // 見渡しが終了した場合、方向転換を開始
         if (_lookAroundTimer <= 0)
@@ -427,7 +427,7 @@ public class Fishman : BaseEnemy
     /// </summary>
     private void SmoothTurn()
     {
-        _animator.SetInteger("TransitionNo", 0);
+        _animator.SetInteger("TransitionNo", 1);
 
         Vector3 direction = (_randomTargetPos - transform.position).normalized;
 
