@@ -21,6 +21,9 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField, Tooltip("プレイヤープレハブ")]
     private NetworkPrefabRef _playerPrefab = default;
 
+    [SerializeField, Tooltip("ゲームオーバープレハブ")]
+    private NetworkPrefabRef _gameOverPrefab = default;
+
     [SerializeField, Tooltip("プレイヤーのスポーン位置")]
     private Vector3 _playerSpawnPos = default;
 
@@ -61,7 +64,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
-
     private async void Start()
     {
         _playerInput = GetComponent<PlayerInput>();
@@ -88,6 +90,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             GameMode = GameMode.AutoHostOrClient,
             SceneManager = NetworkRunner.GetComponent<NetworkSceneManagerDefault>()
         });
+
+        _networkRunner.Spawn(_gameOverPrefab,transform.position,Quaternion.identity);
 
         _startGameSubject.OnNext(Unit.Default);
     }
