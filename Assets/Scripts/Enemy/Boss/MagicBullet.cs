@@ -55,7 +55,7 @@ public class MagicBullet : BaseEnemy
             // ˆê’èŽžŠÔŒã‚É”ñ•\Ž¦
             if (_currentTimer >= _displayTime)
             {
-                gameObject.SetActive(false);
+                Destroy(gameObject);
             }
         }
     }
