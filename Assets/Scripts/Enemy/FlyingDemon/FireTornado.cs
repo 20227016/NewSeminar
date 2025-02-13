@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using Fusion;
 using System.Collections;
 
 /// <summary>
@@ -70,4 +71,24 @@ public class FireTornado : BaseEnemy
     {
 
     }
+
+    /// <summary>
+    /// ダメージ処理
+    /// </summary>
+    /// <param name="damegeValue">ダメージ</param>
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public override void RPC_ReceiveDamage(int damegeValue)
+    {
+        // ダメージ処理
+        _enemyStatusStruct._hp -= damegeValue - _enemyStatusStruct._diffencePower;
+
+        // HPUIの更新
+        RPC_UpdateHPBar();
+        if (_enemyStatusStruct._hp <= 0)
+        {
+            OnDeath();
+        }
+        return;
+    }
+
 }
