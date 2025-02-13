@@ -2835,7 +2835,7 @@ MonoBehaviour:
     _skillDuration: 20
     _skillCoolTime: 25
     _counterTime: 0.5
-    _skillPointUpperLimit: 100
+    _skillPointUpperLimit: 500
     _ressurectionTime: 5
     _recoveryStamina: 25
     _runStamina: 10
