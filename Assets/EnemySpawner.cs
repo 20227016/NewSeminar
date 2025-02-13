@@ -7,6 +7,7 @@ using UniRx;
 using System.Threading.Tasks;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 [Serializable]
 public class EnemyWave
@@ -30,8 +31,11 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField, Tooltip("エネミーのウェーブごとの設定")]
     private List<EnemyWave> _enemyWaves = new List<EnemyWave>();
 
-    [SerializeField,Tooltip("テレポーターPosのオブジェクト")]
-    private GameObject _bossTeleportOBJ = default;
+    [SerializeField,Tooltip("テレポーターオブジェクト")]
+    private NetworkObject _bossTeleportOBJ = default;
+
+    [SerializeField, Tooltip("テレポーターPosのオブジェクト")]
+    private Transform _bossTeleportPos = default;
 
     // ボス関連のリスト
     [SerializeField]
@@ -63,6 +67,8 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRunner _networkRunner = default;
 
     private bool _isStart = false;
+
+    private bool _normalClear = false;
 
     /// <summary>
     /// 初期処理
@@ -172,7 +178,14 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
         {
             Debug.Log("すべてのウェーブが終了しました！");
 
-            OnAllEnemiesDefeated.OnNext(Unit.Default);
+            if(!_normalClear)
+            {
+                runner.Spawn(_bossTeleportOBJ, _bossTeleportPos.position, _bossTeleportOBJ.transform.rotation);
+                _normalClear = true;
+            }
+
+
+            StartCoroutine(BossStageStartCoroutine());
 
             return;
         }
@@ -180,6 +193,12 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
         Debug.Log($"ウェーブ {_currentWave + 1} 開始！");
         SpawnEnemies(runner, _currentWave);
 
+    }
+
+    private IEnumerator BossStageStartCoroutine()
+    {
+        yield return new WaitForSeconds(2f);
+        OnAllEnemiesDefeated.OnNext(Unit.Default);
     }
 
     /// <summary>
@@ -276,14 +295,6 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
         {
             bossDemo.BossDeathSubject.Subscribe(_ => BossDefeat());
         }
-    }
-
-    public void BossStart(NetworkRunner runner)
-    {
-        print("ボスのテレポーター出現準備");
-        runner.Spawn(_bossTeleportOBJ, transform.position, Quaternion.identity);
-        print("ボスのテレポーター出現完了");
-
     }
 
     // INetworkRunnerCallbacksの必要なメソッド
