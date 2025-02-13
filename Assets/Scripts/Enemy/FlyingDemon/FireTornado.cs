@@ -74,6 +74,8 @@ public class FireTornado : BaseEnemy
     public override void RPC_ReceiveDamage(int damegeValue)
     {
 
+        return;
+
     }
 
 }
