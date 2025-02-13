@@ -408,17 +408,14 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// <param name="input">入力情報</param>
     protected virtual void ProcessInput(PlayerNetworkInput input)
     {
-        //if(CurrentState == CharacterStateEnum.RESURRECTION)
-        //{
-        //    if (input.IsResurrection)
-        //    {
-        //        _resurrection.CancelResurrection(this.transform);
-        //    }
-        //    else
-        //    {
-        //        return;
-        //    }
-        //}
+        if (CurrentState == CharacterStateEnum.RESURRECTION)
+        {
+            if (input.IsResurrection)
+            {
+                ResetState(0);
+            }
+            return;
+        }
 
         // Run状態を切り替える
         if (input.IsRunning)
