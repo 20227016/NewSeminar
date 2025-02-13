@@ -17,6 +17,12 @@ public class PlayerResurrection : IResurrection
     // キャンセレーショントークン
     private CancellationTokenSource _cancellationTokenSource = default;
 
+    public void CancelResurrection(Transform thisTransform)
+    {
+        _cancellationTokenSource?.Cancel();
+        Debug.Log("蘇生キャンセル");
+    }
+
     public async void Resurrection(Transform thisTransform, float resurrectionTime)
     {
         // 前の処理が残っていればキャンセル
@@ -60,7 +66,7 @@ public class PlayerResurrection : IResurrection
                 try
                 {
                     // (resurrectionTime * 1000)ミリ秒待機
-                    await UniTask.Delay((int)(resurrectionTime), cancellationToken: _cancellationTokenSource.Token);
+                    await UniTask.Delay((int)(resurrectionTime * 1000), cancellationToken: _cancellationTokenSource.Token);
                 }
                 catch (OperationCanceledException)
                 {

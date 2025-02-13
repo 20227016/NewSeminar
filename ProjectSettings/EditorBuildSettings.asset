@@ -5,10 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/WorkSpace/Yamada.unity
     guid: 8c4d7ea83bda5f34381f6f0823c90671
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Title.unity
     guid: a00a5ec91322f3d4a9ae5d8c178a9146
   - enabled: 1
