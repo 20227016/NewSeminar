@@ -33,6 +33,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     public CharacterStateEnum CurrentState { get; set; } = default;
 
     public Subject<float> SkillCoolTimeSubject { get => skillCoolTimeSubject; set => skillCoolTimeSubject = value; }
+    public Subject<Unit> DeathSubject { get => _deathSubject; set => _deathSubject = value; }
+    public Subject<Unit> ResurrectionSubject { get => _resurrectionSubject; set => _resurrectionSubject = value; }
     #endregion
 
     #region 定数
@@ -142,6 +144,10 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected bool _isInvincible = false;
 
     protected Subject<float> skillCoolTimeSubject = new();
+
+    private Subject<Unit> _deathSubject = new();
+
+    private Subject<Unit> _resurrectionSubject = new();
 
     #endregion
 
@@ -402,6 +408,18 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// <param name="input">入力情報</param>
     protected virtual void ProcessInput(PlayerNetworkInput input)
     {
+        //if(CurrentState == CharacterStateEnum.RESURRECTION)
+        //{
+        //    if (input.IsResurrection)
+        //    {
+        //        _resurrection.CancelResurrection(this.transform);
+        //    }
+        //    else
+        //    {
+        //        return;
+        //    }
+        //}
+
         // Run状態を切り替える
         if (input.IsRunning)
         {
@@ -409,7 +427,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         }
 
         // 状態が特定のものなら入力を無視
-        if (  ( _notAttackAccepted || CurrentState == CharacterStateEnum.SKILL||CurrentState == CharacterStateEnum.DAMAGE_REACTION )  && 
+        if (  ( _notAttackAccepted ||
+            CurrentState == CharacterStateEnum.SKILL ||
+            CurrentState == CharacterStateEnum.DAMAGE_REACTION )  && 
             !input.IsAvoidance ||
             CurrentState == CharacterStateEnum.DEATH)
         {
@@ -418,9 +438,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         if(CurrentState != CharacterStateEnum.AVOIDANCE && input.IsAvoidance)
         {
-
             Debug.Log($"<color=#AFDFE4>回避ステート以外のステータス中に回避入力</color>");
-
         }
 
         // 回避中に回避をできないようにする
@@ -461,7 +479,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
             case { IsResurrection: true }:
                 Resurrection(this.transform, _characterStatusStruct._ressurectionTime);
-                break;
+                return;
 
             default:
                 break;
@@ -613,6 +631,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     protected virtual void Targetting()
     {
+        RPC_ReceiveDamage(100);
         _target.Targetting();
     }
 
@@ -684,6 +703,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _resurrection.Resurrection(transform, resurrectionTime);
 
+        ResetState(resurrectionTime);
     }
 
 
@@ -700,7 +720,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 現在HPから最終ダメージを引く
         NetworkedHP = Mathf.Clamp(NetworkedHP - damage, 0, _characterStatusStruct._playerStatus.MaxHp);
 
-        if(NetworkedHP <= 0 && _currentHP.Value <= 0)
+        if(NetworkedHP <= 0)
         {
             Death();
 
@@ -709,7 +729,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         // 被弾時のリアクション
         float animationDuration;
-        if (damage <= _characterStatusStruct._playerStatus.MaxHp / 2)
+        if (damageValue <= 30)
         {
             animationDuration = _animation.GetAnimationLength(_animator, _characterAnimationStruct._damageReactionLightAnimation.name);
             // 怯み
@@ -761,6 +781,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 既存のトークンソースがあればキャンセル
         _resetStateTokenSource?.Cancel();
         _resetStateTokenSource = new CancellationTokenSource();
+
+        _resurrection.CancelResurrection(this.transform);
+
         var token = _resetStateTokenSource.Token;
 
         try
@@ -781,6 +804,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             {
                 return;
             }
+
 
             // アニメーション速度を元に戻す
             _animator.speed = 1.0f;
