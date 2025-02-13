@@ -9,6 +9,7 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -20,9 +21,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     [SerializeField, Tooltip("プレイヤープレハブ")]
     private NetworkPrefabRef _playerPrefab = default;
-
-    [SerializeField, Tooltip("ゲームオーバープレハブ")]
-    private NetworkPrefabRef _gameOverPrefab = default;
 
     [SerializeField, Tooltip("プレイヤーのスポーン位置")]
     private Vector3 _playerSpawnPos = default;
@@ -44,6 +42,9 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRunner _networkRunner = default;
 
     private Subject<Unit> _startGameSubject = new();
+
+    [SerializeField]
+    private EnemySpawner _enemySpawner = default;
 
     /// <summary>
     /// スポーンしたかのフラグ
@@ -90,8 +91,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             GameMode = GameMode.AutoHostOrClient,
             SceneManager = NetworkRunner.GetComponent<NetworkSceneManagerDefault>()
         });
-
-        _networkRunner.Spawn(_gameOverPrefab,transform.position,Quaternion.identity);
 
         _startGameSubject.OnNext(Unit.Default);
     }
@@ -277,6 +276,15 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     {
         runner.Spawn(_comboCounterPrefab, Vector3.zero, Quaternion.identity);
         runner.Spawn(_portal, _portalPosition, Quaternion.Euler(90, 0, 0));
+
+        StartCoroutine(GameOverStart());
+
+    }
+
+    private IEnumerator GameOverStart()
+    {
+        yield return new WaitForSeconds(2); // 2秒待つ
+        _enemySpawner.GameOverStart();
     }
 
     /// <summary>

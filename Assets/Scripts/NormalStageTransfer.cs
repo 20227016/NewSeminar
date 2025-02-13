@@ -2,10 +2,16 @@ using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
-using System.Collections;
+using System;
 
 public class NormalStageTransfer : NetworkBehaviour
 {
+
+    // ポータル起動を通知する
+    private Subject<Unit> _portalStartSubject = new Subject<Unit>();
+    public IObservable<Unit> OnPortalStart => _portalStartSubject;
+
+
 
     /// <summary>
     ///  テレポート内のプレイヤーを管理するリスト
@@ -148,6 +154,10 @@ public class NormalStageTransfer : NetworkBehaviour
         // ノーマルステージにテレポート
         foreach (GameObject player in _playersInPortal)
         {
+
+            // ポータル起動を通知する
+            _portalStartSubject.OnNext(Unit.Default); // イベント発行
+            print("イベント発火させたよ");
 
             player.transform.position = _normalStageteleportPos.position;
             print($"{player.name} をノーマルステージにテレポートしました");

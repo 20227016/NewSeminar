@@ -25,6 +25,9 @@ public class EnemyWave
 public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
 
+    [SerializeField, Tooltip("ゲームオーバープレハブ")]
+    private NetworkPrefabRef _gameOverPrefab = default;
+
     [SerializeField, Tooltip("真ん中のEFを管理するオブジェクト")]
     private GameObject _wave2ClearManager = default;
 
@@ -70,6 +73,8 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     private bool _normalClear = false;
 
+    private NormalStageTransfer _normalStageTransfer = default;
+
     /// <summary>
     /// 初期処理
     /// </summary>
@@ -79,6 +84,26 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
         
         _gameLauncher.StartGameSubject.Subscribe(_ => EnemyStart());
 
+    }
+
+    public void GameOverStart()
+    {
+        print("呼んだよ");
+
+        _normalStageTransfer = FindObjectOfType<NormalStageTransfer>();
+
+        // ポータル起動イベントの購読
+        _normalStageTransfer.OnPortalStart.Subscribe(_ =>
+        {
+            HandlePortalStart();
+        }).AddTo(this);
+
+    }
+
+    private void HandlePortalStart()
+    {
+        print("ポータルの起動を検知、ゲームオーバーを生成します");
+        _networkRunner.Spawn(_gameOverPrefab, transform.position, Quaternion.identity);
     }
 
     private void BossDefeat()
