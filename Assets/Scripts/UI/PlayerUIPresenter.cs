@@ -64,15 +64,21 @@ public class PlayerUIPresenter : MonoBehaviour
         CharacterBase thisPlayer = player.GetComponentInChildren<CharacterBase>();
 
         // HP1の更新購読
-        thisPlayer.CurrentHP.Subscribe(value =>
+        thisPlayer.CurrentHP
+            .Skip(1)
+            .Subscribe(value =>
             _playerUIViews.UpdateGauge(_hpGauges[0], value, _animationSpeed));
 
         // スタミナの更新購読
-        thisPlayer.CurrentStamina.Subscribe(value =>
+        thisPlayer.CurrentStamina
+            .Skip(1)
+            .Subscribe(value =>
             _playerUIViews.UpdateGauge(_staminaGauge, value, _animationSpeed));
 
         // スキルポイントの更新購読
-        thisPlayer.CurrentSkillPoint.Subscribe(value =>
+        thisPlayer.CurrentSkillPoint
+            .Skip(1)
+            .Subscribe(value =>
             _playerUIViews.UpdateGauge(_skillPointGauge, value, _animationSpeed));
 
         // スキルクールタイムの更新購読

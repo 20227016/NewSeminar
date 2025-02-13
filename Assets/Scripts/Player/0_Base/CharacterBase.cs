@@ -197,6 +197,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             PlayerUIPresenter.SetMyModel(this.gameObject);
             lockOnCursorPresenter.SetModel(this.gameObject);
 
+
         }
         RPC_SetAllyHPBar(this);
     }
@@ -250,10 +251,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         
     }
 
-    /// <summary>
-    /// 数値等の初期設定
-    /// </summary>
-    protected virtual void InitialValues()
+    protected async virtual void InitialValues()
     {
 
         // 初期化
@@ -261,31 +259,35 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _moveSpeed = _characterStatusStruct._walkSpeed;
         _characterStatusStruct._playerStatus = new WrapperPlayerStatus();
 
-        // ネットワーク同期用変数とリアクティブプロパティを初期化
-        _currentHP.Value = _characterStatusStruct._playerStatus.MaxHp;
-        NetworkedHP = _currentHP.Value;
-
-        _currentStamina.Value = _characterStatusStruct._playerStatus.MaxStamina;
-        _currentSkillPoint.Value = 0f;
-
         CurrentState = CharacterStateEnum.IDLE;
 
         // エフェクトを配列に格納
         Effects = new NetworkObject[]
         {
-            _characterEffectStruct._attackLight1Effect,
-            _characterEffectStruct._attackLight2Effect,
-            _characterEffectStruct._attackLight3Effect,
-            _characterEffectStruct._attackStrongEffect,
-            _characterEffectStruct._skillEffect
+        _characterEffectStruct._attackLight1Effect,
+        _characterEffectStruct._attackLight2Effect,
+        _characterEffectStruct._attackLight3Effect,
+        _characterEffectStruct._attackStrongEffect,
+        _characterEffectStruct._skillEffect
         };
-
 
         // エフェクトを設定
         InstanceEffect();
 
         // スタミナ管理
         StaminaManagement();
+
+        // 1フレーム待つ
+        await UniTask.Yield(PlayerLoopTiming.PostLateUpdate);
+
+        // ネットワーク同期用変数とリアクティブプロパティを初期化
+        _currentHP.Value = _characterStatusStruct._playerStatus.MaxHp;
+        NetworkedHP = _currentHP.Value;
+
+        _currentStamina.Value = _characterStatusStruct._playerStatus.MaxStamina;
+
+        _currentSkillPoint.Value = _characterStatusStruct._skillPointUpperLimit;
+        _currentSkillPoint.Value = 0f;
     }
 
 
@@ -400,7 +402,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// <param name="input">入力情報</param>
     protected virtual void ProcessInput(PlayerNetworkInput input)
     {
-        Debug.Log(_isRun);
         // Run状態を切り替える
         if (input.IsRunning)
         {
@@ -608,8 +609,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         }
 
         ResetState(animationDuration, () => _notAttackAccepted = false);
-
-        _currentSkillPoint.Value = 100f;
     }
 
     protected virtual void Targetting()
@@ -762,6 +761,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 既存のトークンソースがあればキャンセル
         _resetStateTokenSource?.Cancel();
         _resetStateTokenSource = new CancellationTokenSource();
+        var token = _resetStateTokenSource.Token;
 
         try
         {
@@ -769,9 +769,15 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             resetTime *= 1000;
 
             // キャンセル可能な遅延処理
-            await UniTask.Delay((int)resetTime, cancellationToken: _resetStateTokenSource.Token);
+            await UniTask.Delay((int)resetTime, cancellationToken: token);
 
-            if(CurrentState == CharacterStateEnum.DEATH)
+            // GameObjectがDestroyされていたら処理を中断
+            if (this == null || _animator == null)
+            {
+                return;
+            }
+
+            if (CurrentState == CharacterStateEnum.DEATH)
             {
                 return;
             }
@@ -789,7 +795,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         }
         catch (OperationCanceledException)
         {
-            //Debug.Log("ResetStateがキャンセルされました");
+            // キャンセルされた場合は処理しない
         }
     }
 
