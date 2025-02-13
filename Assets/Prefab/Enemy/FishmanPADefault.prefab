@@ -375,18 +375,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1136870879617010161}
-  m_LocalRotation: {x: -0, y: -0.09208726, z: -0, w: 0.995751}
-  m_LocalPosition: {x: 0, y: 0, z: 0.286}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.03, y: 0.05, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7015461773122465138}
   - {fileID: 183937808075571014}
   m_Father: {fileID: 2316046806621330338}
-  m_LocalEulerAnglesHint: {x: 0, y: -10.567, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -959.8777, y: -537.91}
+  m_AnchoredPosition: {x: -960, y: -538}
   m_SizeDelta: {x: 120, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1725359213764519774
@@ -855,7 +855,6 @@ MonoBehaviour:
     _attackDelayTime: 0
     _downedTime: 0
   _tags: []
-  _hpBarUI: {fileID: 2952942072605314101}
   _hpBarFill: {fileID: 1725359213764519774}
   __movementState: 0
   __actionState: 0
