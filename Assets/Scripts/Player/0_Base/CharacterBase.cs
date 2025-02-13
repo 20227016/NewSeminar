@@ -759,7 +759,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         { 
             float animationDuration = _animation.GetAnimationLength(_animator, _characterAnimationStruct._reviveAnimation.name);
             RPC_PlayAnimation(_characterAnimationStruct._reviveAnimation.name);
-
+            _resurrectionSubject.OnNext(Unit.Default);
             ResetState(animationDuration);
         }
         NetworkedHP = Mathf.Clamp(NetworkedHP + healValue, 0, _characterStatusStruct._playerStatus.MaxHp);
@@ -830,6 +830,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     {
         CurrentState = CharacterStateEnum.DEATH;
         RPC_PlayAnimation(_characterAnimationStruct._deathAnimation.name);
+        _deathSubject.OnNext(Unit.Default);
     }
 
     protected async virtual void Invincible(float resetTime)
