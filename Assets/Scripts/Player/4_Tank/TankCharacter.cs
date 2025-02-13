@@ -59,7 +59,7 @@ public class TankCharacter : CharacterBase
     }
 
 
-    protected override void Avoidance(Transform transform)
+    protected override void Avoidance(Transform transform, PlayerNetworkInput input)
     {
         // 回避処理をガードに置き換える
         CurrentState = CharacterStateEnum.AVOIDANCE;

@@ -20,7 +20,6 @@ public class PlayerResurrection : IResurrection
     public void CancelResurrection(Transform thisTransform)
     {
         _cancellationTokenSource?.Cancel();
-        Debug.Log("蘇生キャンセル");
     }
 
     public async void Resurrection(Transform thisTransform, float resurrectionTime)

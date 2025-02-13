@@ -774,8 +774,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _resetStateTokenSource?.Cancel();
         _resetStateTokenSource = new CancellationTokenSource();
 
-        _resurrection.CancelResurrection(this.transform);
-
         var token = _resetStateTokenSource.Token;
 
         try
