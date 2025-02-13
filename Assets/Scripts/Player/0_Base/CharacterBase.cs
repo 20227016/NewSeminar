@@ -400,6 +400,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// <param name="input">入力情報</param>
     protected virtual void ProcessInput(PlayerNetworkInput input)
     {
+        Debug.Log(_isRun);
         // Run状態を切り替える
         if (input.IsRunning)
         {
@@ -758,7 +759,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     protected async virtual void ResetState(float resetTime, Action onResetComplete = null)
     {
-        var token = _resetStateTokenSource.Token;
+        // 既存のトークンソースがあればキャンセル
+        _resetStateTokenSource?.Cancel();
+        _resetStateTokenSource = new CancellationTokenSource();
 
         try
         {
@@ -766,15 +769,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             resetTime *= 1000;
 
             // キャンセル可能な遅延処理
-            await UniTask.Delay((int)resetTime, cancellationToken: token);
+            await UniTask.Delay((int)resetTime, cancellationToken: _resetStateTokenSource.Token);
 
-            // GameObjectがDestroyされていたら処理を中断
-            if (this == null || _animator == null)
-            {
-                return;
-            }
-
-            if (CurrentState == CharacterStateEnum.DEATH)
+            if(CurrentState == CharacterStateEnum.DEATH)
             {
                 return;
             }
@@ -792,10 +789,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         }
         catch (OperationCanceledException)
         {
-            // キャンセルされた場合は処理しない
+            //Debug.Log("ResetStateがキャンセルされました");
         }
     }
-
 
     /// <summary>
     /// 死亡処理

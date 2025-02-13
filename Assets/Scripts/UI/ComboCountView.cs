@@ -8,6 +8,7 @@ public class ComboCountView
 
     public void UpdateText(float value, TextMeshProUGUI text, float initializeValue)
     {
+
         text.text = value.ToString();
         text.gameObject.SetActive(value > initializeValue);
     }

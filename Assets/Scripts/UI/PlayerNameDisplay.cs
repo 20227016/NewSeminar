@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NameDisplay : MonoBehaviour
+public class PlayerNameDisplay : MonoBehaviour
 {
     private void Update()
     {
