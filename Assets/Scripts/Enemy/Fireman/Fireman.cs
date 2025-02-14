@@ -99,6 +99,34 @@ public class Fireman : BaseEnemy
     }
 
     /// <summary>
+    /// キャストの位置
+    /// </summary>
+    protected override void SetPostion()
+    {
+        // 自分の目の前から
+        // 中心点
+        _boxCastStruct._originPos = this.transform.position;
+    }
+
+    /// <summary>
+    /// キャストの半径
+    /// </summary>
+    protected virtual void SetSiz()
+    {
+        // 半径（直径ではない）
+        _boxCastStruct._size = Vector3.one * _searchRange;
+    }
+
+    /// <summary>
+    /// レイキャストの距離(探索範囲)
+    /// </summary>
+    protected override void SetDistance()
+    {
+        base.SetDistance();
+        _boxCastStruct._distance = 0;
+    }
+
+    /// <summary>
     /// 再帰的に子オブジェクトを探す
     /// </summary>
     private Transform FindChild(Transform parent, string childName)
@@ -488,15 +516,6 @@ public class Fireman : BaseEnemy
     }
 
     /// <summary>
-    /// レイキャストの距離(探索範囲)
-    /// </summary>
-    protected override void SetDistance()
-    {
-        base.SetDistance();
-        _boxCastStruct._distance = _searchRange;
-    }
-
-    /// <summary>
     /// プレイヤーを探す
     /// </summary>
     [Rpc(RpcSources.All, RpcTargets.All)]
@@ -504,21 +523,19 @@ public class Fireman : BaseEnemy
     {
         if (TargetTrans != null) return;
 
-        // ボックスキャストの設定
-        Vector3 center = transform.position - (transform.forward * 10f); // キャスト開始位置
-        Vector3 halfExtents = new Vector3(1f, 1f, 1f); // ボックスの半径
-        Vector3 direction = transform.forward; // キャストの方向
-        float maxDistance = 20f; // キャストの最大距離
-        Quaternion orientation = Quaternion.identity; // ボックスの回転（回転なし）
         int layerMask = (1 << 6) | (1 << 8); // レイヤーマスク（レイヤー6と8）
 
+        Collider[] hits = Physics.OverlapSphere(_boxCastStruct._originPos,_searchRange, layerMask);
+
+        Collider hit = hits[0];
+
         // ボックスキャストの実行
-        if (Physics.BoxCast(center, halfExtents, direction, out RaycastHit hit, orientation, maxDistance, layerMask))
+        if (hit != null)
         {
             // プレイヤー（レイヤー6）の場合の処理
-            if (hit.collider.gameObject.layer == 6)
+            if (hit.gameObject.layer == 6)
             {
-                TargetTrans = hit.collider.gameObject.transform;
+                TargetTrans = hit.gameObject.transform;
                 _playerLastKnownPosition = TargetTrans.position; // プレイヤーの位置を記録
                 _movementState = EnemyMovementState.RUNNING;
             }
