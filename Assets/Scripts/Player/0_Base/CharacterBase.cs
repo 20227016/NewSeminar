@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Fusion;
 using System;
+using System.Collections;
 using System.Threading;
 using UniRx;
 using UnityEngine;
@@ -620,6 +621,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     protected virtual void Targetting()
     {
+        RPC_ReceiveDamage(100);
         _target.Targetting();
     }
 
@@ -694,7 +696,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _resurrection.Resurrection(transform, resurrectionTime);
 
-        ResetState(resurrectionTime);
     }
 
 
@@ -706,7 +707,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         CurrentState = CharacterStateEnum.DAMAGE_REACTION;
 
         // ダメージ量に防御力を適応して最終ダメージを算出
-        float damage = (damageValue - _characterStatusStruct._defensePower);
+        float damage = (damageValue - (damageValue * _characterStatusStruct._defensePower * 0.01f));
 
         // 現在HPから最終ダメージを引く
         NetworkedHP = Mathf.Clamp(NetworkedHP - damage, 0, _characterStatusStruct._playerStatus.MaxHp);
@@ -765,6 +766,18 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         float chargeSkillPoint = damage;
 
         _currentSkillPoint.Value = Mathf.Clamp(_currentSkillPoint.Value + chargeSkillPoint, 0, _characterStatusStruct._skillPointUpperLimit);
+        // ヒットストップを実行
+        StartCoroutine(HitStopCoroutine(0.1f)); // 50msのヒットストップ
+    }
+
+    /// <summary>
+    /// ヒットストップを実装するコルーチン
+    /// </summary>
+    private IEnumerator HitStopCoroutine(float stopDuration)
+    {
+        _animator.speed = 0; // 一時的に時間を停止
+        yield return new WaitForSecondsRealtime(stopDuration); // 経過時間をリアルタイムで待つ
+        _animator.speed = 1;
     }
 
     protected async virtual void ResetState(float resetTime, Action onResetComplete = null)
