@@ -159,13 +159,13 @@ public class EvilMage : BaseEnemy
     /// </summary>
     private void SmoothTurn()
     {
-        if (_targetTrans == null)
+        if (TargetTrans == null)
         {
             return;
         }
 
         // ターゲットの位置を加工して高さYを無視
-        Vector3 targetPosition = new Vector3(_targetTrans.position.x, transform.position.y, _targetTrans.position.z);
+        Vector3 targetPosition = new Vector3(TargetTrans.position.x, transform.position.y, TargetTrans.position.z);
 
         // 自分とターゲットの方向を計算
         Vector3 direction = (targetPosition - transform.position).normalized;
@@ -197,7 +197,7 @@ public class EvilMage : BaseEnemy
     /// </summary>
     private void EnemyAttacking()
     {
-        _targetTrans = null;
+        TargetTrans = null;
         _chargeTime -= Time.deltaTime;
 
         // 溜め時間の待機
@@ -346,7 +346,7 @@ public class EvilMage : BaseEnemy
     private void PlayerLook()
     {
         // プレイヤーのTransformを取得
-        Transform playerTrans = _targetTrans;
+        Transform playerTrans = TargetTrans;
 
         if (playerTrans != null)
         {
@@ -367,7 +367,7 @@ public class EvilMage : BaseEnemy
     /// </summary>
     private void PlayerSearch()
     {
-        if (_targetTrans != null)
+        if (TargetTrans != null)
         {
             return;
         }
@@ -398,7 +398,7 @@ public class EvilMage : BaseEnemy
         }
 
         // 最も近いオブジェクトをプロパティに保存
-        _targetTrans = closestObject;
+        TargetTrans = closestObject;
     }
 
     /// <summary>

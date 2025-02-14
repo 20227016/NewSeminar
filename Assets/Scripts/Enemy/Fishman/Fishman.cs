@@ -526,9 +526,9 @@ public class Fishman : BaseEnemy
 
         // プレイヤーがいたら攻撃を繰り返す
         RPC_PlayerSearch();
-        if (_targetTrans != null && _targetTrans.gameObject.layer == 6)
+        if (TargetTrans != null && TargetTrans.gameObject.layer == 6)
         {
-            _targetTrans = null;
+            TargetTrans = null;
             return;
         }
     }
@@ -646,7 +646,7 @@ public class Fishman : BaseEnemy
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_PlayerSearch()
     {
-        if (_targetTrans != null) return;
+        if (TargetTrans != null) return;
 
         // ボックスキャストの設定
         Vector3 center = transform.position - (transform.forward * 10f); // キャスト開始位置
@@ -662,19 +662,19 @@ public class Fishman : BaseEnemy
             // プレイヤー（レイヤー6）の場合の処理
             if (hit.collider.gameObject.layer == 6)
             {
-                _targetTrans = hit.collider.gameObject.transform;
-                _playerLastKnownPosition = _targetTrans.position; // プレイヤーの位置を記録
+                TargetTrans = hit.collider.gameObject.transform;
+                _playerLastKnownPosition = TargetTrans.position; // プレイヤーの位置を記録
                 _movementState = EnemyMovementState.RUNNING;
             }
             else
             {
-                _targetTrans = null; // プレイヤー以外ならターゲットを解除
+                TargetTrans = null; // プレイヤー以外ならターゲットを解除
             }
         }
         else
         {
             // ヒットしなかった場合
-            _targetTrans = null;
+            TargetTrans = null;
         }
     }
 

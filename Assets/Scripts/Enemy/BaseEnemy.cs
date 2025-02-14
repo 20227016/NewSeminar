@@ -17,6 +17,9 @@ using UnityEngine.UI;
 /// </summary>
 public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
 {
+
+    protected Transform TargetTrans { get; set; } = default;
+
     [SerializeField, Header("無視するレイヤー")]
     protected LayerMask ignoreLayer = default;
     [SerializeField, Header("キャラクターステータス")]
@@ -39,9 +42,8 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
 
     protected IEnemyAnimation _enemyAnimation = new EnemyAnimation();
 
-    protected Transform _targetTrans = default;
-
     protected float _currentAttackMultiplier = 1;
+
 
     public override void Spawned()
     {
