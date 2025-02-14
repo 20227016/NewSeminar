@@ -525,15 +525,26 @@ public class Fireman : BaseEnemy
 
         Collider[] hits = Physics.OverlapSphere(_boxCastStruct._originPos,_searchRange, layerMask);
 
-        Collider hit = hits[0];
-
         // ボックスキャストの実行
-        if (hit != null)
+        if (hits.Length > 0)
         {
-            // プレイヤー（レイヤー6）の場合の処理
-            if (hit.gameObject.layer == 6)
+
+            Collider playerCollider = default;
+            foreach(Collider hit in hits)
             {
-                TargetTrans = hit.gameObject.transform;
+
+                if (hit.gameObject.layer == 6)
+                {
+
+                    playerCollider = hit;
+
+                }
+
+            }
+            // プレイヤー（レイヤー6）の場合の処理
+            if (playerCollider != null)
+            {
+                TargetTrans = playerCollider.gameObject.transform;
                 _playerLastKnownPosition = TargetTrans.position; // プレイヤーの位置を記録
                 _movementState = EnemyMovementState.RUNNING;
             }
