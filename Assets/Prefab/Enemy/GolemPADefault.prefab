@@ -50433,14 +50433,13 @@ MonoBehaviour:
     _downedTime: 0
   _tags: []
   _hpBarFill: {fileID: 3448463147932255525}
-  __movementState: 0
-  __actionState: 0
-  _targetTrans: {fileID: 0}
+  _movementState: 0
+  _actionState: 0
   _searchRange: 20
-  _moveSpeed: 0
-  _stopDistance: 2
-  _attackingPlayer: {fileID: 0}
-  _damage: 10
+  _walkMoveSpeed: 5
+  _runMoveSpeed: 10
+  _stopDistance: 6
+  _detectionDistance: 3
   _lookAroundState: 0
   _audioSource: {fileID: 4862131585626961313}
   _chargeSE: {fileID: 8300000, guid: 9a542e3ec51fa114a9d05e9c1237f6d6, type: 3}

@@ -754,13 +754,12 @@ MonoBehaviour:
     _downedTime: 0
   _tags: []
   _hpBarFill: {fileID: 9200949865873133790}
-  __movementState: 0
-  __actionState: 0
-  _targetTrans: {fileID: 0}
+  _movementState: 0
+  _actionState: 0
   _searchRange: 20
-  _moveSpeed: 0
+  _walkMoveSpeed: 2.5
+  _runMoveSpeed: 5
   _stopDistance: 2
-  _attackingPlayer: {fileID: 0}
   _damage: 10
   _lookAroundState: 0
   _audioSource: {fileID: -4430115615509472739}

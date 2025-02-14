@@ -18,12 +18,10 @@ public class FlyingDemon : BaseEnemy
     [SerializeField]
     private EnemyActionState _actionState = EnemyActionState.SEARCHING;
 
-    [SerializeField]
     private float _walkStateSwitchInterval = 3.0f; // 移動状態切り替え間隔
 
     private float _walkStateTimer = 0.0f; // 移動状態管理用タイマー
 
-    [SerializeField]
     private float _attackStateSwitchInterval = 2.0f; // 攻撃状態切り替え間隔
 
     private float _attackStateTimer = 0.0f; // 攻撃状態管理用タイマー
@@ -31,21 +29,18 @@ public class FlyingDemon : BaseEnemy
     private float _searchHeight = default;
 
     [Tooltip("検索範囲の半径を指定します")]
-    [SerializeField] private float _searchRadius = 50f; // 検索範囲（半径）
+    [SerializeField] private float _searchRadius = default; // 検索範囲（半径）
 
-    [SerializeField] private float _stopDistance = 5.0f; // プレイヤーの手前で止まる距離
+    [SerializeField] private float _stopDistance = default; // プレイヤーの手前で止まる距離
 
     [SerializeField, Tooltip("攻撃範囲")]
-    private float _attackRange = 5.5f;
+    private float _attackRange = default;
 
     [SerializeField, Tooltip("追跡範囲")]
-    private float _trackingRange = 7.5f;
+    private float _trackingRange = default;
 
     [SerializeField, Tooltip("歩くスピード")]
-    private float _walkRange = 3.0f;
-
-    [SerializeField, Tooltip("ダメージを受ける時間")]
-    private float _damageRange = 1.0f;
+    private float _walkRange = default;
 
     [Header("検索対象の設定")]
     [Tooltip("検索対象となるレイヤー番号を指定します")]
@@ -53,15 +48,9 @@ public class FlyingDemon : BaseEnemy
 
     private Vector3 _startPosition; // 開始時の位置を保持
     [Networked] private Vector3 _randomTargetPos { get; set; } // ランダム移動の目標位置
-    [SerializeField] private float _randomRange = 10f; // ランダム移動範囲（±X軸, Z軸）
+    [SerializeField] private float _randomRange = default; // ランダム移動範囲（±X軸, Z軸）
 
-    [Tooltip("物理攻撃ダメージ")]
-    [SerializeField] private float _damage = 10f;
-
-    [SerializeField]
     private bool _attackAction = true;
-
-    [SerializeField]
     private bool _attackEnd = true;
 
     // アニメーター変数

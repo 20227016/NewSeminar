@@ -19,32 +19,26 @@ public class Golem : BaseEnemy
     private EnemyActionState _actionState = EnemyActionState.SEARCHING;
 
     [SerializeField, Tooltip("探索範囲(前方距離)")]
-    protected float _searchRange = 20f;
+    protected float _searchRange = default;
 
-    [SerializeField, Tooltip("移動速度")]
-    private float _moveSpeed = default; // ゴーレムの移動速度
+    [SerializeField, Tooltip("歩く移動速度")]
+    private float _walkMoveSpeed = default;
+
+    [SerializeField, Tooltip("走る移動速度")]
+    private float _runMoveSpeed = default;
 
     [SerializeField, Tooltip("停止する距離")]
-    private float _stopDistance = 2.0f; // プレイヤー手前で停止する距離
+    private float _stopDistance = default; // プレイヤー手前で停止する距離
 
     private Vector3 _playerLastKnownPosition; // プレイヤーの最後の位置
 
-    [SerializeField]
-    private Transform _attackingPlayer; // 攻撃してきたプレイヤーのTransform
-
-    private float _detectionDistance = 3.0f; // 壁を検出する距離
+    [SerializeField] private float _detectionDistance = default; // 壁を検出する距離
 
     [Networked] private Vector3 _randomTargetPos { get; set; } // ランダム移動の目標位置
-
-    [Tooltip("物理攻撃ダメージ")]
-    [SerializeField] private float _damage = 10f;
 
     private bool isAttackInterval = default; // 連続攻撃をしない
 
     private bool isAnimationFinished = default; // 一度だけ判定するためのフラグ
-
-    private float _downedTimer = 5f; // ダウンタイマー
-    private float _stunnedTimer = default; // のけぞりタイマー
 
     /// <summary>
     /// ゴーレムの周囲を見渡す状態を表す列挙型。
@@ -158,9 +152,6 @@ public class Golem : BaseEnemy
         SetPostion(); // レイキャストの中心位置を設定
         SetDirection(); // レイキャストの方向を更新
 
-        // のけぞるまでの時間
-        _stunnedTimer -= Time.deltaTime;
-
         switch (_movementState)
         {
             // 待機
@@ -204,20 +195,6 @@ public class Golem : BaseEnemy
                 }
                 
                 break;
-
-            // ダウン(ブレイク状態)
-            case EnemyMovementState.DOWNED:
-
-                EnemyDowned();
-
-                return;
-
-            // のけぞり中
-            case EnemyMovementState.STUNNED:
-
-                EnemyStunned();
-
-                return;
 
             // 死亡
             case EnemyMovementState.DIE:
@@ -340,8 +317,6 @@ public class Golem : BaseEnemy
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_EnemyWalking()
     {
-        _moveSpeed = 2.5f;
-
         // 現在の位置
         Vector3 currentPosition = transform.position;
 
@@ -349,7 +324,7 @@ public class Golem : BaseEnemy
         Vector3 targetPosition = new Vector3(_randomTargetPos.x, currentPosition.y, _randomTargetPos.z);
 
         // 移動
-        transform.position = Vector3.MoveTowards(currentPosition, targetPosition, _moveSpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(currentPosition, targetPosition, _walkMoveSpeed * Time.deltaTime);
 
         // 方向ベクトルを計算し、Y軸回転のみを適用
         Vector3 direction = _randomTargetPos - transform.position;
@@ -380,7 +355,7 @@ public class Golem : BaseEnemy
 
             _movementState = EnemyMovementState.IDLE;
             _lookAroundState = EnemyLookAroundState.LOOKING_AROUND;
-            _lookAroundTimer = 3.0f; // 見渡し時間をセット
+            //_lookAroundTimer = 3.0f; // 見渡し時間をセット
             _currentAngle = transform.rotation.eulerAngles.y; // 現在の回転角度を取得（Y軸回転）
         }
     }
@@ -454,17 +429,9 @@ public class Golem : BaseEnemy
             _animator.SetInteger("TransitionNo", 1);
         }
 
-        // 前進速度
-        _moveSpeed = 5.0f;
-
         // 現在の高さを維持する
         Vector3 currentPosition = transform.position;
         Vector3 targetPosition = _playerLastKnownPosition;
-
-        if (_attackingPlayer != null)
-        {
-            targetPosition = _attackingPlayer.position; // プレイヤーの位置を更新
-        }
 
         targetPosition.y = currentPosition.y; // ゴーレムの高さを固定
 
@@ -484,7 +451,6 @@ public class Golem : BaseEnemy
         {
             _movementState = EnemyMovementState.IDLE;  // 待機状態に戻す
             _actionState = EnemyActionState.ATTACKING;
-            _attackingPlayer = null;
             return;
         }
 
@@ -492,7 +458,7 @@ public class Golem : BaseEnemy
         transform.position = Vector3.MoveTowards(
             currentPosition,
             targetPosition,
-            _moveSpeed * Time.deltaTime
+            _runMoveSpeed * Time.deltaTime
         );
     }
 
@@ -542,55 +508,6 @@ public class Golem : BaseEnemy
     }
 
     /// <summary>
-    /// ダウン状態
-    /// </summary>
-    private void EnemyDowned()
-    {
-        // ダウンが終了した場合、状態を戻す
-        if (_downedTimer <= 0)
-        {
-            _animator.SetInteger("TransitionNo", 0);
-
-            _movementState = EnemyMovementState.IDLE;
-            _actionState = EnemyActionState.SEARCHING;
-            _lookAroundState = EnemyLookAroundState.NONE;
-            isAttackInterval = false;
-
-            _downedTimer = 5f;
-            return;
-        }
-
-        // トリガーをセット
-        _animator.SetInteger("TransitionNo", 4);
-
-        _downedTimer -= Time.deltaTime;
-    }
-    
-    private void EnemyStunned()
-    {
-        // のけぞり終わったら状態遷移
-        if (IsAnimationFinished("Stunned"))
-        {
-            _animator.SetInteger("TransitionNo", 0);
-
-            _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
-
-            _movementState = EnemyMovementState.RUNNING;
-            _actionState = EnemyActionState.SEARCHING;
-            _lookAroundState = EnemyLookAroundState.NONE;
-            isAttackInterval = false;
-
-            return;
-        }
-
-        // トリガーをセット
-        _animator.SetInteger("TransitionNo", 5);
-
-        // 次にのけぞるまでの時間をセット
-        _stunnedTimer = 3f; 
-    }
-
-    /// <summary>
     /// 倒れる
     /// </summary>
     private IEnumerator EnemyDie(float fadeDuration)
@@ -629,12 +546,31 @@ public class Golem : BaseEnemy
     }
 
     /// <summary>
+    /// キャストの位置
+    /// </summary>
+    protected override void SetPostion()
+    {
+        // 自分の目の前から
+        // 中心点
+        _boxCastStruct._originPos = this.transform.position;
+    }
+
+    /// <summary>
+    /// キャストの半径
+    /// </summary>
+    protected override void SetSiz()
+    {
+        // 半径（直径ではない）
+        _boxCastStruct._size = Vector3.one * _searchRange;
+    }
+
+    /// <summary>
     /// レイキャストの距離(探索範囲)
     /// </summary>
     protected override void SetDistance()
     {
         base.SetDistance();
-        _boxCastStruct._distance = _searchRange;
+        _boxCastStruct._distance = 0;
     }
 
     /// <summary>
@@ -645,21 +581,25 @@ public class Golem : BaseEnemy
     {
         if (TargetTrans != null) return;
 
-        // ボックスキャストの設定
-        Vector3 center = transform.position - (transform.forward * 10f); // キャスト開始位置
-        Vector3 halfExtents = new Vector3(1f, 1f, 1f); // ボックスの半径
-        Vector3 direction = transform.forward; // キャストの方向
-        float maxDistance = 20f; // キャストの最大距離
-        Quaternion orientation = Quaternion.identity; // ボックスの回転（回転なし）
         int layerMask = (1 << 6) | (1 << 8); // レイヤーマスク（レイヤー6と8）
 
+        Collider[] hits = Physics.OverlapSphere(_boxCastStruct._originPos, _searchRange, layerMask);
+
         // ボックスキャストの実行
-        if (Physics.BoxCast(center, halfExtents, direction, out RaycastHit hit, orientation, maxDistance, layerMask))
+        if (hits.Length > 0)
         {
-            // プレイヤー（レイヤー6）の場合の処理
-            if (hit.collider.gameObject.layer == 6)
+            Collider playerCollider = default;
+            foreach (Collider hit in hits)
             {
-                TargetTrans = hit.collider.gameObject.transform;
+                if (hit.gameObject.layer == 6)
+                {
+                    playerCollider = hit;
+                }
+            }
+            // プレイヤー（レイヤー6）の場合の処理
+            if (playerCollider != null)
+            {
+                TargetTrans = playerCollider.gameObject.transform;
                 _playerLastKnownPosition = TargetTrans.position; // プレイヤーの位置を記録
                 _movementState = EnemyMovementState.RUNNING;
             }
