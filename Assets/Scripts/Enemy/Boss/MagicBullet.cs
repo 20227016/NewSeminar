@@ -10,6 +10,9 @@ using Fusion;
 /// </summary>
 public class MagicBullet : BaseEnemy
 {
+
+    private List<Collider> _playerColliders = new List<Collider>();
+
     private Vector3 _targetScale = new Vector3(5f, 5f, 5f); // 最終的な大きさ
     private float _scaleSpeed = 2f; // 大きくなる速度
     private float _moveSpeed = 5f; // 飛ぶ速度
@@ -19,8 +22,11 @@ public class MagicBullet : BaseEnemy
 
     private bool isMoving = false; // 移動状態フラグ
 
-    [SerializeField, Tooltip("探索範囲(前方距離)")]
+    [SerializeField, Header("探索範囲")]
     protected float _searchRange = default;
+
+    [SerializeField, Header("吸い込みの速さ")]
+    protected float _suctionSpeed = default;
 
     //AudioSource型の変数を宣言
     [SerializeField] private AudioSource _audioSource = default;
@@ -64,6 +70,26 @@ public class MagicBullet : BaseEnemy
             }
         }
         SetPostion();
+        PlayerSearch();
+        if(_playerColliders.Count <= 0)
+        {
+
+            return;
+
+        }
+        foreach (Collider collider in _playerColliders)
+        {
+
+            Debug.Log("ダイソン中");
+            Transform transform = collider.transform;
+
+            Vector3 direction = this.transform.position - transform.position;
+
+            direction.y = 0;
+
+            transform.position += direction * _suctionSpeed * Time.deltaTime;
+
+        }
 
     }
 
@@ -98,7 +124,7 @@ public class MagicBullet : BaseEnemy
     /// <summary>
     /// プレイヤーを探す
     /// </summary>
-    private void RPC_PlayerSearch()
+    private void PlayerSearch()
     {
         if (TargetTrans != null) return;
 
@@ -109,24 +135,14 @@ public class MagicBullet : BaseEnemy
         // ボックスキャストの実行
         if (hits.Length > 0)
         {
-            List<Collider> playerColliders = default;
+
             foreach (Collider hit in hits)
             {
                 if (hit.gameObject.layer == 6)
                 {
-                    playerColliders.Add(hit);
+                    Debug.Log($"{hit.name}");
+                    _playerColliders.Add(hit);
                 }
-            }
-            // プレイヤー（レイヤー6）の場合の処理
-            if (playerColliders != null)
-            {
-                //TargetTrans = playerCollider.gameObject.transform;
-                //_playerLastKnownPosition = TargetTrans.position; // プレイヤーの位置を記録
-                //_movementState = EnemyMovementState.RUNNING;
-            }
-            else
-            {
-                TargetTrans = null; // プレイヤー以外ならターゲットを解除
             }
         }
         else
