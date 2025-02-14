@@ -165,7 +165,7 @@ public class FlyingDemon : BaseEnemy
             }
         }
         
-        if (_targetTrans == null)
+        if (TargetTrans == null)
         {
             return;
         }
@@ -377,7 +377,7 @@ public class FlyingDemon : BaseEnemy
 
         // 現在の高さを維持する
         Vector3 currentPosition = transform.position;
-        Vector3 targetPosition = _targetTrans.position;
+        Vector3 targetPosition = TargetTrans.position;
 
         targetPosition.y = currentPosition.y; // 高さを固定
 
@@ -407,9 +407,9 @@ public class FlyingDemon : BaseEnemy
     /// </summary>
     private void CheckAttackRange()
     {
-        if (_targetTrans != null)
+        if (TargetTrans != null)
         {
-            float distanceToTarget = Vector3.Distance(transform.position, _targetTrans.position);
+            float distanceToTarget = Vector3.Distance(transform.position, TargetTrans.position);
 
             if (distanceToTarget <= _attackRange && transform.position.y <= _startY + 0.5f)
             {
@@ -514,10 +514,10 @@ public class FlyingDemon : BaseEnemy
     /// </summary>
     private void PlayerLook()
     {
-        if (_targetTrans != null)
+        if (TargetTrans != null)
         {
             // プレイヤーのTransformを取得
-            Transform playerTrans = _targetTrans;
+            Transform playerTrans = TargetTrans;
 
             // プレイヤーの位置を取得
             Vector3 playerPosition = playerTrans.position;
@@ -564,14 +564,14 @@ public class FlyingDemon : BaseEnemy
             }
         }
 
-        _targetTrans = closestObject;
+        TargetTrans = closestObject;
 
-        if (_targetTrans == null)
+        if (TargetTrans == null)
         {
             return;
         }
 
-        float distanceToTarget = Vector3.Distance(transform.position, _targetTrans.position);
+        float distanceToTarget = Vector3.Distance(transform.position, TargetTrans.position);
 
         // 追跡範囲
         if (distanceToTarget <= _trackingRange)
@@ -579,7 +579,7 @@ public class FlyingDemon : BaseEnemy
             _movementState = EnemyMovementState.RUNNING;
 
             // Y座標が初期値を下回ったら停止
-            if (transform.position.y < _targetTrans.position.y)
+            if (transform.position.y < TargetTrans.position.y)
             {
                 return;
             }
@@ -622,7 +622,7 @@ public class FlyingDemon : BaseEnemy
     private void FirebulletInstantiate()
     {
         // ターゲット方向を計算
-        Vector3 directionToTarget = (_targetTrans.position - _firePoint.position).normalized;
+        Vector3 directionToTarget = (TargetTrans.position - _firePoint.position).normalized;
 
         // ターゲット方向に回転を設定
         Quaternion rotationToTarget = Quaternion.LookRotation(directionToTarget);
