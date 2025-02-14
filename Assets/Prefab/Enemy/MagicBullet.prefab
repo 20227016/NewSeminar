@@ -178,7 +178,7 @@ MonoBehaviour:
   _damageTextPrefab: {fileID: 0}
   _damageTextSpawnPoint: {fileID: 0}
   _searchRange: 100
-  _suctionSpeed: 0.001
+  _suctionSpeed: 1000
   _audioSource: {fileID: -1254385271870074852}
   _magicBulletSE: {fileID: 8300000, guid: 5bf540c1652d3044591bdefb945aa743, type: 3}
 --- !u!114 &-4397892527730880130
