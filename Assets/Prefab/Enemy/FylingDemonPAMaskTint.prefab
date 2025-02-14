@@ -6699,7 +6699,7 @@ MonoBehaviour:
   _enemyStatusStruct:
     _maxHp: 250
     _hp: 250
-    _attackPower: 30
+    _attackPower: 20
     _attackPowerSpeed: 0
     _moveSpeed: 0
     _diffencePower: 0
@@ -6710,20 +6710,13 @@ MonoBehaviour:
   _hpBarFill: {fileID: 8056935335838418204}
   _movementState: 0
   _actionState: 0
-  _walkStateSwitchInterval: 3
-  _attackStateSwitchInterval: 2
-  _targetTrans: {fileID: 0}
   _searchRadius: 50
   _stopDistance: 3
   _attackRange: 5.5
   _trackingRange: 7.5
   _walkRange: 3
-  _damageRange: 1
   _targetLayer: 6
   _randomRange: 10
-  _damage: 10
-  _attackAction: 1
-  _attackEnd: 1
   _riseLimit: 5
   _speed: 5
   _fireballPrefab: {fileID: 8446527596219986189, guid: f5ed9388adec780478315416392e5285, type: 3}
