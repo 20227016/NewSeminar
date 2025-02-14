@@ -154,7 +154,7 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     }
 
     /// <summary>
-    /// ダメージ処理
+    /// ダメージを受ける処理
     /// </summary>
     /// <param name="damegeValue">ダメージ</param>
     [Rpc(RpcSources.All, RpcTargets.All)]

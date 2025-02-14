@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class FireShield : BaseEnemy
 {
-    private Vector3 _targetScale = new Vector3(2.5f, 2.5f, 2.5f); // 最終的な大きさ
-    private float _scaleSpeed = 0.75f; // 大きくなる速度
+    private Vector3 _targetScale = new Vector3(3.0f, 3.0f, 3.0f); // 最終的な大きさ
+    private float _scaleSpeed = 3.0f; // 大きくなる速度
 
     //AudioSource型の変数を宣言
     [SerializeField] private AudioSource _audioSource = default;
