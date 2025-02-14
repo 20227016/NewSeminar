@@ -30,9 +30,6 @@ public class FlyingDemon : BaseEnemy
 
     private float _searchHeight = default;
 
-    [SerializeField, Header("追いかけたいオブジェクトのトランスフォーム")]
-    private Transform _targetTrans = default;
-
     [Tooltip("検索範囲の半径を指定します")]
     [SerializeField] private float _searchRadius = 50f; // 検索範囲（半径）
 

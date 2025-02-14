@@ -449,7 +449,7 @@ MonoBehaviour:
   WordCount: 0
   _interpolationDataSource: 0
   Animator: {fileID: 0}
-  TotalWords: -1
+  TotalWords: 0
   SyncSettings: 79
   FloatAccuracy:
     _value: 0
@@ -463,8 +463,8 @@ MonoBehaviour:
     _value: 0
     _inverse: 0
     _hash: -814817977
-  StateHashes: 
-  TriggerHashes: 
+  StateHashes: 00000000bcabe81f8f18cd28
+  TriggerHashes: 00000000
 --- !u!82 &4733831210123351953
 AudioSource:
   m_ObjectHideFlags: 0
