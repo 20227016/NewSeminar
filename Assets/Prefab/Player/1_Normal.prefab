@@ -1770,13 +1770,13 @@ MonoBehaviour:
     _attackLightMultiplier: 1
     _attackStrongMultiplier: 1.5
     _attackSpeed: 1
-    _attackLight1HitboxDelay: 0.2
+    _attackLight1HitboxDelay: 0.25
     _attackLight1HitboxRange: 3
-    _attackLight2HitboxDelay: 0.2
+    _attackLight2HitboxDelay: 0.25
     _attackLight2HitboxRange: 3
-    _attackLight3HitboxDelay: 0.2
+    _attackLight3HitboxDelay: 0.25
     _attackLight3HitboxRange: 3
-    _attackStrongHitboxDelay: 0.2
+    _attackStrongHitboxDelay: 0.25
     _attackStrongHitboxRange: 2
     _defensePower: 10
     _skillDuration: 0

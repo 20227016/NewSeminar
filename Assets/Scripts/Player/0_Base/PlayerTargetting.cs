@@ -99,10 +99,12 @@ public class PlayerTargetting : MonoBehaviour, ITargetting
 
             // ターゲッティングカメラの回転角をノーマルカメラのPOVに反映
             _normalCameraPOV.m_VerticalAxis.Value = Mathf.Repeat(_targettingCamera.transform.eulerAngles.x + HalfCircleDegrees, FullCircleDegrees) - HalfCircleDegrees;
+
             _normalCameraPOV.m_HorizontalAxis.Value = _targettingCamera.transform.eulerAngles.y;
 
         }
         if (_currentTarget == null) return;
+
         // カメラを切り替える
         _isTargetting = !_isTargetting;
         _normalCamera.enabled = !_isTargetting;
