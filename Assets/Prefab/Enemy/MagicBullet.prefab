@@ -169,13 +169,16 @@ MonoBehaviour:
     _attackPower: 70
     _attackPowerSpeed: 0
     _moveSpeed: 0
-    _diffencePower: 0
+    _defensePercentage: 0
     _attackCoolTime: 0
     _attackDelayTime: 0
     _downedTime: 0
   _tags: []
-  _hpBarUI: {fileID: 0}
   _hpBarFill: {fileID: 0}
+  _damageTextPrefab: {fileID: 0}
+  _damageTextSpawnPoint: {fileID: 0}
+  _searchRange: 100
+  _suctionSpeed: 0.001
   _audioSource: {fileID: -1254385271870074852}
   _magicBulletSE: {fileID: 8300000, guid: 5bf540c1652d3044591bdefb945aa743, type: 3}
 --- !u!114 &-4397892527730880130
