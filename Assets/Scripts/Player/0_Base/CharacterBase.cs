@@ -620,7 +620,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     protected virtual void Targetting()
     {
-        RPC_ReceiveDamage(100);
         _target.Targetting();
     }
 

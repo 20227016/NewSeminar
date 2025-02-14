@@ -65,21 +65,33 @@ public class PlayerTargetting : MonoBehaviour, ITargetting
             .Where(_ => _isTargetting && !IsTargetVisible(_currentTarget))
             .Subscribe(_ => Targetting());
 
+        this.UpdateAsObservable()
+            .Where(_ => _isTargetting && (_currentTarget == null || !IsTargetVisible(_currentTarget)))
+            .Subscribe(_ => CancelTargetting());
+
         _normalCamera.Follow = transform;
         _normalCamera.LookAt = transform;
         _targettingCamera.Follow = transform;
     }
 
+    private void CancelTargetting()
+    {
+        _isTargetting = false;
+        _normalCamera.enabled = true;
+        _targettingCamera.enabled = false;
+        _currentTarget = null;
+        _lockonEvent.OnNext(null); // ロックオン解除を通知
+    }
+
     public void Targetting()
     {
+        
         // ターゲッティングしてないとき
         if (!_isTargetting)
         {
             // 現在のターゲットにターゲット検索結果を格納
             _currentTarget = SearchTarget();
-
             if (_currentTarget == null) return;
-
             _targettingCamera.LookAt = _currentTarget.transform;
         }
         else
@@ -90,7 +102,7 @@ public class PlayerTargetting : MonoBehaviour, ITargetting
             _normalCameraPOV.m_HorizontalAxis.Value = _targettingCamera.transform.eulerAngles.y;
 
         }
-
+        if (_currentTarget == null) return;
         // カメラを切り替える
         _isTargetting = !_isTargetting;
         _normalCamera.enabled = !_isTargetting;
@@ -105,15 +117,13 @@ public class PlayerTargetting : MonoBehaviour, ITargetting
     /// <returns>ターゲットが視認できているか</returns>
     private bool IsTargetVisible(GameObject target)
     {
-        // ターゲットと自身の距離を計算
+        if (target == null || target.gameObject == null) return false; // 破壊チェック
+
         Vector3 direction = target.transform.position - _mainCamera.transform.position;
 
-        // 射線が通っているときはtrue
         if (Physics.Raycast(_mainCamera.transform.position, direction, out RaycastHit hit, TargettingDistance, _ignoreLayer))
         {
-
             return hit.collider.gameObject.layer != _targetLayer;
-
         }
 
         return false;
@@ -124,60 +134,38 @@ public class PlayerTargetting : MonoBehaviour, ITargetting
     /// </summary>
     private GameObject SearchTarget()
     {
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position, TargettingDistance, Vector3.up, 0, _targetLayer);
+        // まずは敵レイヤーのオブジェクトを検索
+        RaycastHit[] enemyHits = Physics.SphereCastAll(transform.position, TargettingDistance, Vector3.up, 0, _targetLayer);
 
-        if (hits.Length == 0) return null;
+        if (enemyHits.Length == 0) return null;
 
-        List<GameObject> targetObjects = new List<GameObject>();
+        // 一番近い敵を見つける
+        GameObject closestEnemy = null;
+        float minDistance = float.MaxValue;
 
-        foreach (var hit in hits)
+        foreach (var hit in enemyHits)
         {
-
-            Vector3 directionToHit = hit.collider.gameObject.transform.position - transform.position;
-
-            if (Physics.Raycast(transform.position, directionToHit, out RaycastHit hitResult, TargettingDistance, _ignoreLayer))
+            float distance = Vector3.Distance(transform.position, hit.collider.gameObject.transform.position);
+            if (distance < minDistance)
             {
-
-                if (hitResult.collider.gameObject.layer == hit.collider.gameObject.layer)
-                {
-
-                    // 射線上にいるターゲットをリストに追加
-                    targetObjects.Add(hit.collider.gameObject);
-
-                }
-
+                minDistance = distance;
+                closestEnemy = hit.collider.gameObject;
             }
-
         }
 
-        if (targetObjects.Count == 0) return null;
+        if (closestEnemy == null) return null;
 
-        // 一番近いターゲットを選択
-        float playerCameraForwardAngle = Mathf.Atan2(_mainCamera.transform.forward.x, _mainCamera.transform.forward.z);
-        float closestAngle = CameraRotationCorrectionFactor;
-        GameObject closestTarget = null;
-
-        foreach (GameObject target in targetObjects)
+        // 近い敵の子オブジェクトの中から targeting レイヤーを持つオブジェクトを探す
+        Transform[] childTransforms = closestEnemy.GetComponentsInChildren<Transform>();
+        foreach (var child in childTransforms)
         {
-
-            Vector3 cameraToTarget = target.transform.position - _mainCamera.transform.position;
-            Vector3 directionToTarget = cameraToTarget.normalized;
-
-            float targetAngle = Mathf.Atan2(directionToTarget.x, directionToTarget.z);
-
-            targetAngle = AdjustAngle(playerCameraForwardAngle, targetAngle, cameraToTarget.magnitude);
-
-            if (Mathf.Abs(closestAngle) >= Mathf.Abs(targetAngle))
+            if (child.gameObject.layer == LayerMask.NameToLayer("Targeting"))
             {
-
-                closestAngle = targetAngle;
-                closestTarget = target;
-
+                return child.gameObject;
             }
-
         }
 
-        return Mathf.Abs(closestAngle) <= TargettingThreshold ? closestTarget : null;
+        return null;
     }
 
     /// <summary>
