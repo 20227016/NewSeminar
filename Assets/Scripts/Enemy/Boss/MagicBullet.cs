@@ -119,9 +119,9 @@ public class MagicBullet : BaseEnemy
             // プレイヤー（レイヤー6）の場合の処理
             if (playerColliders != null)
             {
-                TargetTrans = playerCollider.gameObject.transform;
-                _playerLastKnownPosition = TargetTrans.position; // プレイヤーの位置を記録
-                _movementState = EnemyMovementState.RUNNING;
+                //TargetTrans = playerCollider.gameObject.transform;
+                //_playerLastKnownPosition = TargetTrans.position; // プレイヤーの位置を記録
+                //_movementState = EnemyMovementState.RUNNING;
             }
             else
             {
