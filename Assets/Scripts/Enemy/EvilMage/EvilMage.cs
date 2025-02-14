@@ -25,9 +25,6 @@ public class EvilMage : BaseEnemy
 
     private bool isAttackInterval = default; // 連続攻撃をしない
 
-    private float _downedTimer = 5f; // ダウンタイマー
-    private float _stunnedTimer = default; // のけぞりタイマー
-
     private float _turnSpeed = 60f; // 回転速度 (度/秒)
 
     // アニメーター変数
@@ -83,9 +80,6 @@ public class EvilMage : BaseEnemy
         SetPostion(); // レイキャストの中心位置を設定
         SetDirection(); // レイキャストの方向を更新
 
-        // のけぞるまでの時間
-        _stunnedTimer -= Time.deltaTime;
-
         switch (_movementState)
         {
             // 待機
@@ -94,20 +88,6 @@ public class EvilMage : BaseEnemy
                 EnemyIdle();
 
                 break;
-
-            // ダウン(ブレイク状態)
-            case EnemyMovementState.DOWNED:
-
-                EnemyDowned();
-
-                return;
-
-            // のけぞり中
-            case EnemyMovementState.STUNNED:
-
-                EnemyStunned();
-
-                return;
 
             // 死亡
             case EnemyMovementState.DIE:
@@ -240,65 +220,6 @@ public class EvilMage : BaseEnemy
         }
 
         _audioSource.PlayOneShot(_chargeSE);
-    }
-
-    /// <summary>
-    /// ダウン状態
-    /// </summary>
-    private void EnemyDowned()
-    {
-        // ダウンが終了した場合、状態を戻す
-        if (_downedTimer <= 0)
-        {
-            _animator.SetInteger("TransitionNo", 0);
-
-            _movementState = EnemyMovementState.IDLE;
-            _actionState = EnemyActionState.SEARCHING;
-
-            isAttackInterval = false;
-            _chargeTime = 1.4f;
-
-            _magicCharge.SetActive(true);
-
-            _downedTimer = 5f;
-            return;
-        }
-
-        // トリガーをセット
-        _animator.SetInteger("TransitionNo", 2);
-
-        // 攻撃エフェクト停止
-        _magicCharge.SetActive(false);
-
-        _downedTimer -= Time.deltaTime;
-    }
-
-    private void EnemyStunned()
-    {
-        // のけぞり終わったら状態遷移
-        if (IsAnimationFinished("Stunned"))
-        {
-            _animator.SetInteger("TransitionNo", 0);
-
-            _movementState = EnemyMovementState.IDLE;
-            _actionState = EnemyActionState.SEARCHING;
-
-            isAttackInterval = false;
-            _chargeTime = 1.4f;
-
-            _magicCharge.SetActive(true);
-
-            return;
-        }
-
-        // トリガーをセット
-        _animator.SetInteger("TransitionNo", 3);
-
-        // 攻撃エフェクト停止
-        _magicCharge.SetActive(false);
-
-        // 次にのけぞるまでの時間をセット
-        _stunnedTimer = 3f;
     }
 
     /// <summary>

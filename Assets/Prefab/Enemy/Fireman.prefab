@@ -44509,12 +44509,11 @@ MonoBehaviour:
   _hpBarFill: {fileID: 0}
   _movementState: 0
   _actionState: 0
-  _targetTrans: {fileID: 0}
   _searchRange: 20
-  _workMoveSpeed: 5
+  _workMoveSpeed: 10
   _runMoveSpeed: 20
   _stopDistance: 2
-  _damage: 10
+  _detectionDistance: 3
   _fireShieldPrefab: {fileID: 7982981875697598959, guid: fbe9e4de58317c64a91958b0fc3134d2, type: 3}
   _lookAroundState: 0
   _audioSource: {fileID: -8543489136864758906}
