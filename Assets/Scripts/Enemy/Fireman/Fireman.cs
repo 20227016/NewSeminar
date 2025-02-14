@@ -24,8 +24,11 @@ public class Fireman : BaseEnemy
     [SerializeField, Tooltip("探索範囲(前方距離)")]
     protected float _searchRange = 20f;
 
-    [SerializeField, Tooltip("移動速度")]
-    private float _moveSpeed = default; // ファイアーマンの移動速度
+    [SerializeField, Tooltip("移動速度(歩く)")]
+    private float _workMoveSpeed = default; // ファイアーマンの移動速度
+
+    [SerializeField, Tooltip("移動速度(走る)")]
+    private float _runMoveSpeed = default; // ファイアーマンの移動速度
 
     [SerializeField, Tooltip("停止する距離")]
     private float _stopDistance = 2.0f; // プレイヤー手前で停止する距離
@@ -297,8 +300,6 @@ public class Fireman : BaseEnemy
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_EnemyWalking()
     {
-        _moveSpeed = 2.5f;
-
         // 現在の位置
         Vector3 currentPosition = transform.position;
 
@@ -306,7 +307,7 @@ public class Fireman : BaseEnemy
         Vector3 targetPosition = new Vector3(_randomTargetPos.x, currentPosition.y, _randomTargetPos.z);
 
         // 移動
-        transform.position = Vector3.MoveTowards(currentPosition, targetPosition, _moveSpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(currentPosition, targetPosition, _workMoveSpeed * Time.deltaTime);
 
         // 方向ベクトルを計算し、Y軸回転のみを適用
         Vector3 direction = _randomTargetPos - transform.position;
@@ -411,9 +412,6 @@ public class Fireman : BaseEnemy
             _animator.SetInteger("TransitionNo", 1);
         }
 
-        // 前進速度
-        _moveSpeed = 5.0f;
-
         // 現在の高さを維持する
         Vector3 currentPosition = transform.position;
         Vector3 targetPosition = _playerLastKnownPosition;
@@ -443,8 +441,8 @@ public class Fireman : BaseEnemy
         transform.position = Vector3.MoveTowards(
             currentPosition,
             targetPosition,
-            _moveSpeed * Time.deltaTime
-        );
+            _runMoveSpeed * Time.deltaTime
+        ); ;
     }
 
     /// <summary>
