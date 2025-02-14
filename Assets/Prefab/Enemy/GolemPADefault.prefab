@@ -50427,12 +50427,14 @@ MonoBehaviour:
     _attackPower: 30
     _attackPowerSpeed: 0
     _moveSpeed: 0
-    _diffencePower: 0
+    _defensePercentage: 0.3
     _attackCoolTime: 0
     _attackDelayTime: 0
     _downedTime: 0
   _tags: []
   _hpBarFill: {fileID: 3448463147932255525}
+  _damageTextPrefab: {fileID: 0}
+  _damageTextSpawnPoint: {fileID: 0}
   _movementState: 0
   _actionState: 0
   _searchRange: 20

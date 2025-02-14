@@ -1,4 +1,5 @@
 using UnityEngine;
+using Fusion;
 
 /// <summary>
 /// MagicBullet.cs
@@ -16,6 +17,9 @@ public class MagicBullet : BaseEnemy
     private float _displayTime = 5f; // 表示時間
 
     private bool isMoving = false; // 移動状態フラグ
+
+    [SerializeField, Tooltip("探索範囲(前方距離)")]
+    protected float _searchRange = default;
 
     //AudioSource型の変数を宣言
     [SerializeField] private AudioSource _audioSource = default;
@@ -57,6 +61,77 @@ public class MagicBullet : BaseEnemy
             {
                 Destroy(gameObject);
             }
+        }
+        SetPostion();
+
+    }
+
+    /// <summary>
+    /// キャストの位置
+    /// </summary>
+    protected override void SetPostion()
+    {
+        // 自分の目の前から
+        // 中心点
+        _boxCastStruct._originPos = this.transform.position;
+    }
+
+    /// <summary>
+    /// キャストの半径
+    /// </summary>
+    protected override void SetSiz()
+    {
+        // 半径（直径ではない）
+        _boxCastStruct._size = Vector3.one * _searchRange;
+    }
+
+    /// <summary>
+    /// レイキャストの距離(探索範囲)
+    /// </summary>
+    protected override void SetDistance()
+    {
+        base.SetDistance();
+        _boxCastStruct._distance = 0;
+    }
+
+    /// <summary>
+    /// プレイヤーを探す
+    /// </summary>
+    private void RPC_PlayerSearch()
+    {
+        if (TargetTrans != null) return;
+
+        int layerMask = (1 << 6) | (1 << 8); // レイヤーマスク（レイヤー6と8）
+
+        Collider[] hits = Physics.OverlapSphere(_boxCastStruct._originPos, _searchRange, layerMask);
+
+        // ボックスキャストの実行
+        if (hits.Length > 0)
+        {
+            []Collider playerColliders = default;
+            foreach (Collider hit in hits)
+            {
+                if (hit.gameObject.layer == 6)
+                {
+                    playerColliders = hit;
+                }
+            }
+            // プレイヤー（レイヤー6）の場合の処理
+            if (playerColliders != null)
+            {
+                TargetTrans = playerCollider.gameObject.transform;
+                _playerLastKnownPosition = TargetTrans.position; // プレイヤーの位置を記録
+                _movementState = EnemyMovementState.RUNNING;
+            }
+            else
+            {
+                TargetTrans = null; // プレイヤー以外ならターゲットを解除
+            }
+        }
+        else
+        {
+            // ヒットしなかった場合
+            TargetTrans = null;
         }
     }
 

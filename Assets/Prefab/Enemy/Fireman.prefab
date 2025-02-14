@@ -44501,12 +44501,14 @@ MonoBehaviour:
     _attackPower: 0
     _attackPowerSpeed: 0
     _moveSpeed: 0
-    _diffencePower: 0
+    _defensePercentage: 0.5
     _attackCoolTime: 0
     _attackDelayTime: 0
     _downedTime: 0
   _tags: []
   _hpBarFill: {fileID: 0}
+  _damageTextPrefab: {fileID: 0}
+  _damageTextSpawnPoint: {fileID: 0}
   _movementState: 0
   _actionState: 0
   _searchRange: 20
@@ -44547,7 +44549,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9088969353063499695}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
