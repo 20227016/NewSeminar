@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 using Fusion;
 
 /// <summary>
@@ -108,12 +109,12 @@ public class MagicBullet : BaseEnemy
         // ボックスキャストの実行
         if (hits.Length > 0)
         {
-            []Collider playerColliders = default;
+            List<Collider> playerColliders = default;
             foreach (Collider hit in hits)
             {
                 if (hit.gameObject.layer == 6)
                 {
-                    playerColliders = hit;
+                    playerColliders.Add(hit);
                 }
             }
             // プレイヤー（レイヤー6）の場合の処理
