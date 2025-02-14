@@ -16874,12 +16874,14 @@ MonoBehaviour:
     _attackPower: 0
     _attackPowerSpeed: 0
     _moveSpeed: 0
-    _diffencePower: 0
+    _defensePercentage: 0.1
     _attackCoolTime: 0
     _attackDelayTime: 0
     _downedTime: 0
   _tags: []
   _hpBarFill: {fileID: 4654724982433786452}
+  _damageTextPrefab: {fileID: 0}
+  _damageTextSpawnPoint: {fileID: 0}
   _magicProjectilePrefab: {fileID: 810653205754761373, guid: f1fdc9886ac3a2842807fbff501d9ebe, type: 3}
   _audioSource: {fileID: 7671055620160780745}
   _chargeSE: {fileID: 8300000, guid: 9a542e3ec51fa114a9d05e9c1237f6d6, type: 3}
@@ -16912,7 +16914,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9020446898532371600}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}

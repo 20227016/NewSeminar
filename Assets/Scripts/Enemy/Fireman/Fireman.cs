@@ -18,7 +18,7 @@ public class Fireman : BaseEnemy
     [SerializeField]
     private EnemyActionState _actionState = EnemyActionState.SEARCHING;
 
-    [SerializeField, Tooltip("’Tõ”ÍˆÍ(‘O•û‹——£)")]
+    [SerializeField, Tooltip("’Tõ”ÍˆÍ")]
     protected float _searchRange = default;
 
     [SerializeField, Tooltip("ˆÚ“®‘¬“x(•à‚­)")]

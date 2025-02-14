@@ -169,15 +169,16 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     [Rpc(RpcSources.All, RpcTargets.All)]
     public virtual void RPC_ReceiveDamage(int damegeValue)
     {
+
+        int damage = (int)(damegeValue - (damegeValue * _enemyStatusStruct._defensePercentage));
         // ダメージ処理
-        _enemyStatusStruct._hp -= damegeValue - _enemyStatusStruct._diffencePower;
-        int _damage = damegeValue - _enemyStatusStruct._diffencePower;
+        _enemyStatusStruct._hp -= damage;
 
         // ダメージUIを敵の上に表示する
         Vector3 damagePosition = transform.position + new Vector3(0, 2, 0); 
 
         // DamageTextにダメージ量と表示する位置を渡す
-        FindObjectOfType<DamageText>().ShowDamage(_damage, damagePosition);
+        FindObjectOfType<DamageText>().ShowDamage(damage, damagePosition);
 
         // HPUIの更新
         RPC_UpdateHPBar();
