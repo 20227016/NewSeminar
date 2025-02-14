@@ -1881,10 +1881,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _targetLayer:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 128
   _ignoreLayer:
     serializedVersion: 2
-    m_Bits: 823
+    m_Bits: 4294967295
 --- !u!1 &1937563792966552275
 GameObject:
   m_ObjectHideFlags: 0

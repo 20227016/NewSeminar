@@ -27,7 +27,22 @@ public class TankCharacter : CharacterBase
             .DistinctUntilChanged()
             .Subscribe(isBlock =>
             {
+                // パラメーターを配列に取得
+                AnimatorControllerParameter[] parameters = _animator.parameters;
+
+                // 各パラメーターを調べてBool型の場合、リセットする
+                foreach (AnimatorControllerParameter parameter in parameters)
+                {
+                    if (parameter.type == AnimatorControllerParameterType.Bool)
+                    {
+                        _animator.SetBool(parameter.name, false);
+                    }
+                }
                 RPC_BoolAnimation(_characterAnimationStruct._avoidanceActionAnimation.name, isBlock);
+                if (!isBlock)
+                {
+                    ResetState(0.5f);
+                }
             })
             .AddTo(this);
     }
@@ -47,8 +62,6 @@ public class TankCharacter : CharacterBase
         // ガード解除入力
         if (_isBlockReactive.Value && input.IsAvoidance)
         {
-            CurrentState = CharacterStateEnum.IDLE;
-
             _isBlockReactive.Value = false;
 
             _passive.Passive(this);
@@ -100,7 +113,7 @@ public class TankCharacter : CharacterBase
 
         // 被弾時のリアクション
         float animationDuration;
-        if (damage <= _characterStatusStruct._playerStatus.MaxHp / 2)
+        if (damage <= 30)
         {
             animationDuration = _animation.GetAnimationLength(_animator, _characterAnimationStruct._damageReactionLightAnimation.name);
             // 怯み
