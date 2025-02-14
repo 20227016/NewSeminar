@@ -18,9 +18,6 @@ public class Fishman : BaseEnemy
     [SerializeField]
     private EnemyActionState _actionState = EnemyActionState.SEARCHING;
 
-    [SerializeField, Header("追いかけたいオブジェクトのトランスフォーム")]
-    private Transform _targetTrans = default;
-
     [SerializeField, Tooltip("探索範囲(前方距離)")]
     protected float _searchRange = 20f;
 

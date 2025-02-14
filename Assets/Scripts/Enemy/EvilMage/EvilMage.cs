@@ -23,9 +23,6 @@ public class EvilMage : BaseEnemy
     [Tooltip("検索範囲の半径を指定します")]
     private float _searchRadius = 50f; // 検索範囲（半径）
 
-    [Header("追いかけたいオブジェクトのトランスフォーム")]
-    private Transform _targetTrans = default;
-
     private bool isAttackInterval = default; // 連続攻撃をしない
 
     private float _downedTimer = 5f; // ダウンタイマー

@@ -39,6 +39,8 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
 
     protected IEnemyAnimation _enemyAnimation = new EnemyAnimation();
 
+    protected Transform _targetTrans = default;
+
     protected float _currentAttackMultiplier = 1;
 
     public override void Spawned()
