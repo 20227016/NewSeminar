@@ -45,6 +45,11 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     protected float _currentAttackMultiplier = 1;
 
 
+    [SerializeField] 
+    private GameObject _damageTextPrefab; // ダメージテキストのプレハブ
+    [SerializeField] 
+    private Transform _damageTextSpawnPoint; // ダメージテキストの表示位置
+
     public override void Spawned()
     {
         base.Spawned();
@@ -166,6 +171,13 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     {
         // ダメージ処理
         _enemyStatusStruct._hp -= damegeValue - _enemyStatusStruct._diffencePower;
+        int _damage = damegeValue - _enemyStatusStruct._diffencePower;
+
+        // ダメージUIを敵の上に表示する
+        Vector3 damagePosition = transform.position + new Vector3(0, 2, 0); 
+
+        // DamageTextにダメージ量と表示する位置を渡す
+        FindObjectOfType<DamageText>().ShowDamage(_damage, damagePosition);
 
         // HPUIの更新
         RPC_UpdateHPBar();
