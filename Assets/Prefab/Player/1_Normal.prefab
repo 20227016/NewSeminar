@@ -1778,7 +1778,7 @@ MonoBehaviour:
     _attackLight3HitboxRange: 3
     _attackStrongHitboxDelay: 0.25
     _attackStrongHitboxRange: 2
-    _defensePower: 100
+    _defensePower: 10
     _skillDuration: 0
     _skillCoolTime: 5
     _counterTime: 0.5
