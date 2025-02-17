@@ -718,7 +718,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         if (NetworkedHP <= 0)
         {
-            print(NetworkedHP + " 現在のHP.0以下になったので死亡します");
+            print(" 現在のHPが0以下になったので死亡します : " + NetworkedHP);
             
             Death();
 
