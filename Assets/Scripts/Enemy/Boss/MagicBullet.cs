@@ -81,13 +81,13 @@ public class MagicBullet : BaseEnemy
         {
 
             Debug.Log("ダイソン中");
-            Rigidbody rigidbody = collider.transform.GetComponent<Rigidbody>();
 
-            Vector3 direction = this.transform.position - transform.position;
+            Vector3 direction = this.transform.position - collider.transform.position;
 
             direction.y = 0;
-
-            rigidbody.AddForce(direction * _suctionSpeed);
+            Debug.Log($"方向ベクトル：{direction}");
+            collider.transform.position += direction * _suctionSpeed * Time.deltaTime;
+            Debug.Log($"力{direction * _suctionSpeed * Time.deltaTime}");
 
         }
 
