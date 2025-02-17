@@ -129,5 +129,24 @@ public class GameOverManagement : NetworkBehaviour
         }
 
         ChangeAlpha(mat, 1f); // 完全に黒くする
+
+        NetworkRunner networkRunner = FindObjectOfType<NetworkRunner>(); 
+        NetworkObject[] networkObjects = FindObjectsOfType<NetworkObject>();
+
+        foreach (var networkObject in networkObjects)
+        {
+            if (networkObject != null)
+            {
+                networkRunner.Despawn(networkObject);
+            }
+        }
+
+        if (networkRunner != null && networkRunner.IsRunning)
+        {
+            networkRunner.Shutdown(); // ネットワークをシャットダウン
+        }
+
+        // シーン遷移を全クライアントに通知
+        SceneManager.LoadScene("Title");
     }
 }
