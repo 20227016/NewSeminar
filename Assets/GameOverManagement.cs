@@ -2,6 +2,8 @@
 using Fusion;
 using UnityEngine.SceneManagement;
 using UniRx;
+using UnityEngine.Playables;
+using System.Collections;
 
 public class GameOverManagement : NetworkBehaviour
 {
@@ -11,10 +13,19 @@ public class GameOverManagement : NetworkBehaviour
 
     private CharacterBase _characterBase = default;
 
+    private PlayableDirector _movieGameOver = default;
+
+    [SerializeField]
+    private Material _gameOverMaterial = default;
+
     public override void Spawned()
     {
         print("とりあえずゲームオーバーマネージャーは爆誕したお");
         CharacterBase[] characters = FindObjectsOfType<CharacterBase>();
+
+
+        _movieGameOver = FindObjectOfType<PlayableDirector>();
+
 
         if (characters.Length > 0)
         {
@@ -68,6 +79,48 @@ public class GameOverManagement : NetworkBehaviour
     private void RPC_GameOver()
     {
         print("はい、おつかれ～");
-        SceneManager.LoadScene("GameOver");
+        _movieGameOver.Play();
+        StartCoroutine(FadeIn(_gameOverMaterial, 2.0f));
+    }
+
+    /// <summary>
+    /// マテリアル関数
+    /// </summary>
+    /// <param name="mat"></param>
+    /// <param name="alpha"></param>
+    private void ChangeAlpha(Material mat, float alpha)
+    {
+        if (mat.HasProperty("_Color"))
+        {
+            Color color = mat.color;
+            color.a = alpha;
+            mat.color = color;
+        }
+        else
+        {
+            Debug.LogError("このマテリアルには _Color プロパティがありません！");
+        }
+    }
+
+    /// <summary>
+    /// 徐々に暗くする
+    /// </summary>
+    /// <param name="mat"></param>
+    /// <param name="duration"></param>
+    /// <returns></returns>
+    private IEnumerator FadeIn(Material mat, float duration)
+    {
+        float startAlpha = mat.color.a;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = Mathf.Lerp(startAlpha, 1f, elapsedTime / duration); // 0 → 1 に増やす
+            ChangeAlpha(mat, alpha);
+            yield return null;
+        }
+
+        ChangeAlpha(mat, 1f); // 完全に黒くする
     }
 }

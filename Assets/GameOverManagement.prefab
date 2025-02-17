@@ -48,6 +48,7 @@ MonoBehaviour:
   WordOffset: 0
   WordCount: 0
   _interpolationDataSource: 0
+  _gameOverMaterial: {fileID: 2100000, guid: 4c0fe5f09a9098844ad983a4357d0240, type: 2}
 --- !u!114 &1153084540422420888
 MonoBehaviour:
   m_ObjectHideFlags: 0
