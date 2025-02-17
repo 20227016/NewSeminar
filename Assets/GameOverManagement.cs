@@ -18,6 +18,8 @@ public class GameOverManagement : NetworkBehaviour
     [SerializeField]
     private Material _gameOverMaterial = default;
 
+    private bool _gameOverStart = false;
+
     public override void Spawned()
     {
         print("とりあえずゲームオーバーマネージャーは爆誕したお");
@@ -26,6 +28,7 @@ public class GameOverManagement : NetworkBehaviour
 
         _movieGameOver = FindObjectOfType<PlayableDirector>();
 
+        ChangeAlpha(_gameOverMaterial, 0f);
 
         if (characters.Length > 0)
         {
@@ -80,7 +83,11 @@ public class GameOverManagement : NetworkBehaviour
     {
         print("はい、おつかれ～");
         _movieGameOver.Play();
-        StartCoroutine(FadeIn(_gameOverMaterial, 2.0f));
+        if(!_gameOverStart)
+        {
+            StartCoroutine(FadeIn(_gameOverMaterial, 5.0f));
+            _gameOverStart = true;
+        }
     }
 
     /// <summary>
