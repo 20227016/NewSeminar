@@ -82,7 +82,6 @@ public class TankCharacter : CharacterBase
         _passive.Passive(this);
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
     public override void RPC_ReceiveDamage(int damageValue)
     {
         if (!Object.HasStateAuthority) return;

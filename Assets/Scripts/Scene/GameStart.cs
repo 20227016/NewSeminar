@@ -24,7 +24,6 @@ public class GameStart : MonoBehaviour
         }
         else
         {
-            _sessionManager.SessionName = "a";
             SceneManager.LoadScene("高橋デバック");
         }
     }
