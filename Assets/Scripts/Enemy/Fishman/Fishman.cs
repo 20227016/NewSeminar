@@ -196,7 +196,7 @@ public class Fishman : BaseEnemy
             // €–S
             case EnemyMovementState.DIE:
 
-                StartCoroutine(EnemyDie(3f));
+                EnemyDie();
 
                 return;
         }
@@ -514,15 +514,15 @@ public class Fishman : BaseEnemy
     /// <summary>
     /// “|‚ê‚é
     /// </summary>
-    private IEnumerator EnemyDie(float fadeDuration)
+    private void EnemyDie()
     {
         // ƒgƒŠƒK[‚ğƒZƒbƒg
         _animator.SetInteger("TransitionNo", 7);
 
-        // •bŒã
-        yield return new WaitForSeconds(fadeDuration);
-
-        EnemyDespawn();
+        if (IsAnimationFinished("Die"))
+        {
+            EnemyDespawn();
+        }
     }
 
 

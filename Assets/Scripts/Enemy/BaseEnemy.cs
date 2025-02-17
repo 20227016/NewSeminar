@@ -221,8 +221,8 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
             {
                 Destroy(netObj);
             }
-            Debug.Log("ですぽーん" + this.name);
-            //Runner.Despawn(Object);
+            Debug.Log("デスポーン" + this.name);
+            Runner.Despawn(Object);
         }
     }
 }

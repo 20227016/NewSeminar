@@ -92,7 +92,7 @@ public class EvilMage : BaseEnemy
             // 死亡
             case EnemyMovementState.DIE:
 
-                StartCoroutine(EnemyDie(3f));
+                EnemyDie();
 
                 return;
         }
@@ -225,9 +225,8 @@ public class EvilMage : BaseEnemy
     /// <summary>
     /// 倒れる
     /// </summary>
-    private IEnumerator EnemyDie(float fadeDuration)
+    private void EnemyDie()
     {
-
         // トリガーをセット
         _animator.SetInteger("TransitionNo", 4);
 
@@ -236,10 +235,11 @@ public class EvilMage : BaseEnemy
         {
             _magicCharge.SetActive(false);
         }
-        // 秒後
-        yield return new WaitForSeconds(fadeDuration);
 
-        EnemyDespawn();
+        if (IsAnimationFinished("Die"))
+        {
+            EnemyDespawn();
+        }
     }
 
     /// <summary>
