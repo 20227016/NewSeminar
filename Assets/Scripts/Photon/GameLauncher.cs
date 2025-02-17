@@ -335,19 +335,10 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log($"シャットダウン理由: {shutdownReason}");
 
-        if (runner.IsServer)
-        {
-            runner.Shutdown();
-            Destroy(runner);
+        runner.Shutdown();
+        Destroy(runner);
 
-            SceneManager.LoadScene("Title");
-        }
-        else
-        {
-            Debug.Log("クライアントシャットダウン");
-        }
-
-        
+        SceneManager.LoadScene("Title");
     }
     public void OnConnectedToServer(NetworkRunner runner) { }
     public void OnDisconnectedFromServer(NetworkRunner runner) 
