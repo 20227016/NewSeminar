@@ -714,10 +714,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         float damage = (damageValue - (damageValue * _characterStatusStruct._defensePower * 0.01f));
 
         // 現在HPから最終ダメージを引く
-        NetworkedHP = Mathf.Clamp(NetworkedHP - damage, 0, _characterStatusStruct._playerStatus.MaxHp);
+        NetworkedHP = NetworkedHP - damage;
 
         if (NetworkedHP <= 0)
         {
+            NetworkedHP = 0f;
             Death();
 
             return;

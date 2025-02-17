@@ -51,8 +51,24 @@ public class PlayerUIPresenter : MonoBehaviour
     private float _coolTimeRemaining = 0f;
     private bool _isCoolTimeActive = false;
 
+    [SerializeField]
+    private TextMeshProUGUI _sessionNameText = default;
+
     // 追跡用リスト（登録済みのプレイヤーキャラクター）
     private readonly List<CharacterBase> _registeredAllyModels = new();
+
+
+    private void Start()
+    {
+        SessionManager sessionManager = FindObjectOfType<SessionManager>();
+        if(sessionManager == null)
+        {
+            return;
+        }
+
+        _sessionNameText.text = sessionManager.SessionName.ToString();
+    }
+
 
     /// <summary>
     /// 自分自身のモデルをUIに設定する

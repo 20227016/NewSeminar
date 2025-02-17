@@ -56,6 +56,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     public Subject<Unit> StartGameSubject { get => _startGameSubject; set => _startGameSubject = value; }
 
     public NetworkRunner NetworkRunner { get => _networkRunner; set => _networkRunner = value; }
+    public string SessionName { get => _sessionName; set => _sessionName = value; }
 
     private void Awake()
     {
@@ -93,23 +94,23 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         {
             if(sessionManager.SessionName == null)
             {
-                _sessionName = UnityEngine.Random.Range(10000, 99999).ToString();
+                SessionName = UnityEngine.Random.Range(10000, 99999).ToString();
             }
             else
             {
-                _sessionName = sessionManager.SessionName;
+                SessionName = sessionManager.SessionName;
             }
         }
         else
         {
-            _sessionName = UnityEngine.Random.Range(10000, 99999).ToString();
+            SessionName = UnityEngine.Random.Range(10000, 99999).ToString();
         }
-        Debug.Log("セッション名" + _sessionName);
+        Debug.Log("セッション名" + SessionName);
         // ゲーム開始処理
         await NetworkRunner.StartGame(new StartGameArgs
         {
             GameMode = GameMode.AutoHostOrClient,
-            SessionName = _sessionName,
+            SessionName = SessionName,
             SceneManager = NetworkRunner.GetComponent<NetworkSceneManagerDefault>()
         });
 
