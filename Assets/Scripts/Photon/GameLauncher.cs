@@ -46,6 +46,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField]
     private EnemySpawner _enemySpawner = default;
 
+    private string _sessionName = default;
+
     /// <summary>
     /// スポーンしたかのフラグ
     /// </summary>
@@ -85,10 +87,29 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             NetworkRunner.AddCallbacks(this);
         }
 
+        SessionManager sessionManager = FindObjectOfType<SessionManager>();
+        
+        if (sessionManager != null)
+        {
+            if(sessionManager.SessionName == null)
+            {
+                _sessionName = "a";
+            }
+            else
+            {
+                _sessionName = sessionManager.SessionName;
+            }
+        }
+        else
+        {
+            _sessionName = "a";
+        }
+
         // ゲーム開始処理
         await NetworkRunner.StartGame(new StartGameArgs
         {
             GameMode = GameMode.AutoHostOrClient,
+            SessionName = _sessionName,
             SceneManager = NetworkRunner.GetComponent<NetworkSceneManagerDefault>()
         });
 
@@ -258,7 +279,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         // 現在のプレイヤー数を確認
         if (runner.ActivePlayers.Count() > 4) // 最大4人まで
         {
-            Debug.Log("最大参加人数に達しています。新しいプレイヤーを追加できません。");
+            runner.Disconnect(player);  // ネットワークから切断
             return;
         }
 
@@ -314,13 +335,26 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log($"シャットダウン理由: {shutdownReason}");
 
-        runner.Shutdown();
-        Destroy(runner);
+        if (runner.IsServer)
+        {
+            runner.Shutdown();
+            Destroy(runner);
 
-        SceneManager.LoadScene("Title");
+            SceneManager.LoadScene("Title");
+        }
+        else
+        {
+            Debug.Log("クライアントシャットダウン");
+        }
+
+        
     }
     public void OnConnectedToServer(NetworkRunner runner) { }
-    public void OnDisconnectedFromServer(NetworkRunner runner) { }
+    public void OnDisconnectedFromServer(NetworkRunner runner) 
+    {
+        Destroy(runner);
+        SceneManager.LoadScene("Title");
+    }
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
