@@ -506,10 +506,14 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         if (isWalking)
         {
+            Debug.Log("歩き");
+            RPC_BoolAnimation(_characterAnimationStruct._runAnimation.name, false);
             RPC_BoolAnimation(_characterAnimationStruct._walkAnimation.name, true);
         }
         else
         {
+            Debug.Log("走り");
+            RPC_BoolAnimation(_characterAnimationStruct._walkAnimation.name, false);
             RPC_BoolAnimation(_characterAnimationStruct._runAnimation.name, true);
         }
 
