@@ -216,7 +216,7 @@ public class FlyingDemon : BaseEnemy
                     transform.position -= _speed * Time.deltaTime * transform.up * 2;
                 }
 
-                StartCoroutine(EnemyDie(3f));
+                EnemyDie();
 
                 return;
         }
@@ -482,15 +482,15 @@ public class FlyingDemon : BaseEnemy
     /// <summary>
     /// 倒れる
     /// </summary>
-    private IEnumerator EnemyDie(float fadeDuration)
+    private void EnemyDie()
     {
         // トリガーをセット
         _animator.SetInteger("TransitionNo", 9);
 
-        // 秒後
-        yield return new WaitForSeconds(fadeDuration);
-
-        EnemyDespawn();
+        if (IsAnimationFinished("Die"))
+        {
+            EnemyDespawn();
+        }
     }
 
     /// <summary>

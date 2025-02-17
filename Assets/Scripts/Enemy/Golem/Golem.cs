@@ -199,7 +199,7 @@ public class Golem : BaseEnemy
             // 死亡
             case EnemyMovementState.DIE:
 
-                StartCoroutine(EnemyDie(3f));
+                EnemyDie();
 
                 return;
         }
@@ -510,7 +510,7 @@ public class Golem : BaseEnemy
     /// <summary>
     /// 倒れる
     /// </summary>
-    private IEnumerator EnemyDie(float fadeDuration)
+    private void EnemyDie()
     {
         // トリガーをセット
         _animator.SetInteger("TransitionNo", 6);
@@ -525,10 +525,10 @@ public class Golem : BaseEnemy
             effect.Stop();
         }
 
-        // 秒後
-        yield return new WaitForSeconds(fadeDuration);
-
-        EnemyDespawn();
+        if (IsAnimationFinished("Die"))
+        {
+            EnemyDespawn();
+        }   
     }
 
     /// <summary>
