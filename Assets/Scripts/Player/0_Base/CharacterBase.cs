@@ -835,6 +835,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// </summary>
     protected virtual void Death()
     {
+        print("Deathステート。死亡アニメーションを再生します。現在のHPは : " + NetworkedHP);
         CurrentState = CharacterStateEnum.DEATH;
         RPC_PlayAnimation(_characterAnimationStruct._deathAnimation.name);
         _deathSubject.OnNext(Unit.Default);
