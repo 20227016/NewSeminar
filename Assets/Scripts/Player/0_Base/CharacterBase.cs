@@ -716,11 +716,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // 現在HPから最終ダメージを引く
         NetworkedHP = NetworkedHP - damage;
 
-        print(" 現在の体力 : " + NetworkedHP);
+        print("現在の体力 : " + NetworkedHP);
 
         if (NetworkedHP <= 0)
         {
-            NetworkedHP = 0f;
+            print("死亡");
             Death();
 
             return;
