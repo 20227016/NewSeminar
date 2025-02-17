@@ -213,8 +213,16 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     {
         if (HasStateAuthority)
         {
+            // このスクリプトがアタッチされているゲームオブジェクトからNetworkObjectコンポーネントを取得
+            NetworkObject netObj = this.GetComponent<NetworkObject>();
+
+            // NetworkObjectコンポーネントが存在する場合、削除
+            if (netObj != null)
+            {
+                Destroy(netObj);
+            }
             Debug.Log("ですぽーん" + this.name);
-            Runner.Despawn(Object);
+            //Runner.Despawn(Object);
         }
     }
 }

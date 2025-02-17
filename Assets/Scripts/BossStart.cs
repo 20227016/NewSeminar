@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
+using System.Linq;
+using UniRx;
+
 public class BossStart : MonoBehaviour
 {
     [SerializeField] private float _detectionRadius = 40f; // 検知範囲
@@ -42,8 +45,9 @@ public class BossStart : MonoBehaviour
 
         if (hitColliders.Length > 0)
         {
-            _text = GameObject.Find("BossNameText");
-            _bar = GameObject.Find("BossHP_Bar");
+            Debug.Log($"<color=red> ボスUI表示 </color>");
+            _text = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(obj => obj.name == "BossNameText");
+            _bar = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(obj => obj.name == "BossHP_Bar");
             if (_text != null)
             {
                 _text.SetActive(false);
