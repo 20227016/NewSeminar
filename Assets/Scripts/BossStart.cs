@@ -22,29 +22,7 @@ public class BossStart : MonoBehaviour
         // Magic circle Enemy
         _playableDirector = GetComponent<PlayableDirector>();
 
-        // ボス召喚待ち
-        StartCoroutine(Delay(7f));
     }
-
-    /// <summary>
-    /// ボス召喚まで待機してから初期化
-    /// </summary>
-    private IEnumerator Delay(float fadeDuration)
-    {
-        yield return new WaitForSeconds(fadeDuration);
-
-        _text = GameObject.Find("BossNameText");
-        _bar = GameObject.Find("BossHP_Bar");
-        if (_text != null)
-        {
-            _text.SetActive(false);
-        }
-        if(_bar != null)
-        {
-            _bar.SetActive(false);
-        }
-    }
-
     private void Update()
     {
         if (!isPlayerNearby)
@@ -64,6 +42,16 @@ public class BossStart : MonoBehaviour
 
         if (hitColliders.Length > 0)
         {
+            _text = GameObject.Find("BossNameText");
+            _bar = GameObject.Find("BossHP_Bar");
+            if (_text != null)
+            {
+                _text.SetActive(false);
+            }
+            if (_bar != null)
+            {
+                _bar.SetActive(false);
+            }
             // プレイヤーが1人以上範囲内にいる
             isPlayerNearby = true;
             _playableDirector.Play();

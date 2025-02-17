@@ -45,6 +45,12 @@ public class NormalStageTransfer : NetworkBehaviour
     public bool ClearNormalStage { get; set; } = false;
 
     /// <summary>
+    /// ボスのデバックをするかのフラグ
+    /// </summary>
+    [SerializeField, Header("ボスのデバックをするかのフラグ")]
+    private bool _isDebug = false;
+
+    /// <summary>
     /// スポーンしたことがあるかのフラグ
     /// </summary>
     [Networked]
@@ -75,10 +81,11 @@ public class NormalStageTransfer : NetworkBehaviour
         _waveClear = FindObjectOfType<WaveClear>();
 
         _normalTeleportPosition = GameObject.Find("NormalTeleportPosition");
+        _bossTeleportPosition = GameObject.Find("BossTeleportPosition");
 
         _normalStageSkyBox = Resources.Load<Material>("Day1");
         _bossStageSkyBox = Resources.Load<Material>("Sunset3");
-        if(_normalStageSkyBox != null)
+        if (_normalStageSkyBox != null)
         {
             print("取得できたよ");
         }
@@ -88,6 +95,8 @@ public class NormalStageTransfer : NetworkBehaviour
         }
 
         _normalStageteleportPos = _normalTeleportPosition.transform;
+        _bossStageteleportPos = _bossTeleportPosition.transform;
+
     }
 
     /// <summary>
@@ -102,21 +111,25 @@ public class NormalStageTransfer : NetworkBehaviour
             _playersInPortal.Add(collider.gameObject);
             print($"プレイヤーを検知。現在の人数は {_playersInPortal.Count}/{StageRequiredPlayers} です");
         }
-        // 必要人数が揃ったら全員をテレポート
-        if ((_playersInPortal.Count >= StageRequiredPlayers) && !ClearNormalStage || HasTeleport && !ClearNormalStage )
+        if (_isDebug)
         {
-            Debug.Log($"<color=red>ポータル人数：{_playersInPortal.Count}</color>");
-            Debug.Log($"<color=red>参加人数：{StageRequiredPlayers}</color>");
-            print("ただのテレポート");
+
+            BossTeleportAllPlayers();
+            return;
+        }
+        // 必要人数が揃ったら全員をテレポート
+        if ((_playersInPortal.Count >= StageRequiredPlayers) && !ClearNormalStage || HasTeleport && !ClearNormalStage)
+        {
             NormalTeleportAllPlayers();
             if (Runner.IsServer)
             {
                 ChecgeBool();
             }
         }
-        else if ((_playersInPortal.Count >= StageRequiredPlayers) && ClearNormalStage ||  HasTeleport &&  ClearNormalStage)
+        // もうすでに見方がテレポートしているとき
+        else if ((_playersInPortal.Count >= StageRequiredPlayers) && ClearNormalStage || HasTeleport && ClearNormalStage)
         {
-            print("ボステレポート、成功");
+
             BossTeleportAllPlayers();
 
         }
@@ -164,7 +177,7 @@ public class NormalStageTransfer : NetworkBehaviour
         }
         Debug.Log($"<color=red>スカイボックス</color>{_normalStageSkyBox}");
         RenderSettings.skybox = _normalStageSkyBox;
-        _sound.ProduceSE(_audioSource,_audioClip,1,1,0);
+        _sound.ProduceSE(_audioSource, _audioClip, 1, 1, 0);
 
     }
 
