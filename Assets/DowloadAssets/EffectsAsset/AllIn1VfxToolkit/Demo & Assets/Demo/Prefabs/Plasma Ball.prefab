@@ -4790,7 +4790,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 9be01d2e74bda2546ac0acde825ff730, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9631,7 +9630,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 2827b03e198e86d4b8c424bdcc340bf9, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -14472,7 +14470,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 803b2981fce29b54cbdc3a3d1b0f26f5, type: 2}
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -14584,8 +14581,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 71fa75b2e2a47024ebaae9232b4d2ea1, type: 2}
-  - {fileID: 2100000, guid: 56496d363441a6946a3da40fc99e51f8, type: 2}
+  - {fileID: 2100000, guid: 40fc21e12453c0a4bb55c5e93c114c60, type: 2}
+  - {fileID: 2100000, guid: 40fc21e12453c0a4bb55c5e93c114c60, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -14617,7 +14614,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8102155473089344358}
   - component: {fileID: 3582961655239857758}
-  - component: {fileID: 7831187318613023245}
   m_Layer: 0
   m_Name: Plasma Ball
   m_TagString: Untagged
@@ -14665,15 +14661,3 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7831187318613023245
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8102155473089344357}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2be3006fea39ea42a02a162709b7ce7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
