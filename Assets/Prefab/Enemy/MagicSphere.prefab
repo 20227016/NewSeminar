@@ -61,8 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 71fa75b2e2a47024ebaae9232b4d2ea1, type: 2}
-  - {fileID: 2100000, guid: 56496d363441a6946a3da40fc99e51f8, type: 2}
+  - {fileID: 2100000, guid: 9b1bae49c0eccca43bdea8f3725cd825, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -163,7 +162,7 @@ MonoBehaviour:
   AoiPositionSource: {fileID: 0}
   Flags: 2305
   NetworkGuid:
-    RawGuidValue: 9b7b3abb5937b4249b155508f1d805bc
+    RawGuidValue: 917f84137d5f7834a8ccd13ccf980003
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: -9136137265209171178}
