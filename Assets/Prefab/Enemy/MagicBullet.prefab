@@ -93,6 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2903405863879293240}
   - component: {fileID: 940001794257169360}
+  - component: {fileID: -696804974750820308}
   - component: {fileID: -4397892527730880130}
   - component: {fileID: -9136137265209171178}
   - component: {fileID: -1254385271870074852}
@@ -113,7 +114,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5629813958111607671}
@@ -143,6 +144,42 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-696804974750820308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1126514637383894338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2be3006fea39ea42a02a162709b7ce7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  ignoreLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _enemyStatusStruct:
+    _maxHp: 10
+    _hp: 10
+    _attackPower: 70
+    _attackPowerSpeed: 0
+    _moveSpeed: 0
+    _defensePercentage: 0
+    _attackCoolTime: 0
+    _attackDelayTime: 0
+    _downedTime: 0
+  _tags: []
+  _hpBarFill: {fileID: 0}
+  _damageTextPrefab: {fileID: 0}
+  _damageTextSpawnPoint: {fileID: 0}
+  _searchRange: 100
+  _suctionSpeed: 0.003
+  _audioSource: {fileID: -1254385271870074852}
+  _magicBulletSE: {fileID: 8300000, guid: 5bf540c1652d3044591bdefb945aa743, type: 3}
 --- !u!114 &-4397892527730880130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,6 +202,7 @@ MonoBehaviour:
     RawGuidValue: 23658e71bc12f2f45ace0d62b8037618
   NestedObjects: []
   NetworkedBehaviours:
+  - {fileID: -696804974750820308}
   - {fileID: -9136137265209171178}
   SimulationBehaviours: []
 --- !u!114 &-9136137265209171178
