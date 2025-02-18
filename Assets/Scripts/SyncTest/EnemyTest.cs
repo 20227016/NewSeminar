@@ -7,8 +7,8 @@ public class EnemyTest : BaseEnemy
     public int Health { get; private set; } // 同期される体力
     private EnemyNetworkManager _networkManager;
 
-    [SerializeField]
-    private int maxHealth = 100; // 最大体力
+    //[SerializeField]
+    //private int maxHealth = 100; // 最大体力
 
     [SerializeField]
     private GameObject deathEffectPrefab; // 死亡エフェクト

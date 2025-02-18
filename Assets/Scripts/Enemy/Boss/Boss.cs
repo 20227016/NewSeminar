@@ -23,9 +23,6 @@ public class Boss : BaseEnemy
     [Tooltip("”­Ë‚·‚é–‚’e‚ÌPrefab")]
     [SerializeField] private GameObject _magicBullet;
 
-    [Tooltip("–‚’eUŒ‚‚Ì—­‚ßŠÔ")]
-    [SerializeField] private float _bulletChargeTime = 1.3f;
-
     [Tooltip("–‚’e‚Ì¶¬‹–‰Â")]
     [SerializeField] private bool isBulletGeneration = true;
 

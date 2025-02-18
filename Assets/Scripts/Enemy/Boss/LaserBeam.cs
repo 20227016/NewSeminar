@@ -13,9 +13,6 @@ using UnityEngine;
 public class LaserBeam : MonoBehaviour
 {
     [SerializeField]
-    private int damageOverTime = 30;
-
-    [SerializeField]
     private GameObject HitEffect;
     private float HitOffset = 0;
     private bool useLaserRotation = false;
