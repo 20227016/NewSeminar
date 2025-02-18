@@ -133,6 +133,12 @@ public class Boss : BaseEnemy
     /// </summary>
     private void Start()
     {
+        // 位置を (-33656, -1, 22.34) に設定
+        transform.position = new Vector3(-33656f, -1f, 22.34f);
+
+        // Y軸を180度回転（x, y, z の順で指定）
+        transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+        
         _wingNoticeLine = transform.Find("WingNoticeLine");
         _wingNoticeLine.gameObject.SetActive(false);
         _bulletNoticeLine = transform.Find("BulletNoticeLine");
@@ -141,12 +147,14 @@ public class Boss : BaseEnemy
         _LaserBeam = transform.Find("LaserBeam");
         _LaserBeam.gameObject.SetActive(false);
 
-        // スポーン時の反転を直す
-        Quaternion currentRotation = transform.rotation;
-        Quaternion rotationY180 = Quaternion.Euler(0, 180, 0);
-        transform.rotation = currentRotation * rotationY180;
-
         EnemySpawn();
+        StartCoroutine(EnableAnimatorAfterDelay(3f));
+    }
+
+    private IEnumerator EnableAnimatorAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay); // 指定時間待つ
+        _animator.enabled = true; // アニメーターを有効化
     }
 
     /// <summary>
@@ -381,11 +389,6 @@ public class Boss : BaseEnemy
 
         // 予告線を表示
         _wingNoticeLine.gameObject.SetActive(true);
-
-        foreach (BoxCollider collider in _boxColliders)
-        {
-            collider.enabled = true;
-        }
     }
 
     /// <summary>
@@ -599,6 +602,12 @@ public class Boss : BaseEnemy
     private void WingSE()
     {
         _audioSource.PlayOneShot(_wingSE);
+
+        // 当たり判定を出す
+        foreach (BoxCollider collider in _boxColliders)
+        {
+            collider.enabled = true;
+        }
     }
 
     /// <summary>
