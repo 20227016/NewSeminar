@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: -4397892527730880130}
   - component: {fileID: -9136137265209171178}
   - component: {fileID: -1254385271870074852}
+  - component: {fileID: -3248045419169920334}
   m_Layer: 7
   m_Name: MagicBullet
   m_TagString: Untagged
@@ -166,6 +167,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: -9136137265209171178}
+  - {fileID: -3248045419169920334}
   SimulationBehaviours: []
 --- !u!114 &-9136137265209171178
 MonoBehaviour:
@@ -293,6 +295,42 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-3248045419169920334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1126514637383894338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2be3006fea39ea42a02a162709b7ce7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WordOffset: 0
+  WordCount: 0
+  _interpolationDataSource: 0
+  ignoreLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _enemyStatusStruct:
+    _maxHp: 0
+    _hp: 0
+    _attackPower: 0
+    _attackPowerSpeed: 0
+    _moveSpeed: 0
+    _defensePercentage: 0
+    _attackCoolTime: 0
+    _attackDelayTime: 0
+    _downedTime: 0
+  _tags: []
+  _hpBarFill: {fileID: 0}
+  _damageTextPrefab: {fileID: 0}
+  _damageTextSpawnPoint: {fileID: 0}
+  _searchRange: 0
+  _suctionSpeed: 0
+  _audioSource: {fileID: 0}
+  _magicBulletSE: {fileID: 0}
 --- !u!1 &3162226182132745278
 GameObject:
   m_ObjectHideFlags: 0

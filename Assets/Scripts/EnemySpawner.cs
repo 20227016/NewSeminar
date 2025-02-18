@@ -308,7 +308,14 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
             for (int i = 0; i < _bossObjList.Count; i++)
             {
                 NetworkObject enemyPrefab = _bossObjList[i];
-                runner.Spawn(enemyPrefab, _bossObjPosList[i].transform.position, Quaternion.identity);
+                enemyPrefab = runner.Spawn(enemyPrefab, _bossObjPosList[i].transform.position, Quaternion.identity);
+                if (enemyPrefab.name != "Wraith")
+                {
+
+                    continue;
+
+                }
+                Debug.Log($"<color=red>{enemyPrefab.transform.position}</color>");
 
             }
             _spawnEnd = true;
