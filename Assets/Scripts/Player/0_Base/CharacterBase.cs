@@ -299,14 +299,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         _currentSkillPoint.Value = _characterStatusStruct._skillPointUpperLimit;
         _currentSkillPoint.Value = 0f;
 
-        //_currentHP
-        //    .Where(_ => _ <= 0f)
-        //    .Subscribe(_ => 
-        //    {
-        //        Debug.Log(_);
-        //        Death();
-        //    }
-        //    );
     }
 
 
@@ -687,7 +679,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         float animationDuration = _animation.GetAnimationLength(_animator, _characterAnimationStruct._skillAnimation.name);
 
-        RPC_TriggerAnimation(_characterAnimationStruct._skillAnimation.name);
+        RPC_PlayAnimation(_characterAnimationStruct._skillAnimation.name);
 
         // 効果音
         _sound.ProduceSE(_characterSoundStruct._audioSource, _characterSoundStruct._attack_Special, _characterSoundStruct._playBackSpeed_Special, _characterSoundStruct._audioVolume_Special, _characterSoundStruct._delay_Special);
@@ -839,7 +831,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     protected virtual void Death()
     {
         CurrentState = CharacterStateEnum.DEATH;
-        Debug.Log("死んだ");
+
         RPC_PlayAnimation(_characterAnimationStruct._deathAnimation.name);
 
         _deathSubject.OnNext(Unit.Default);
@@ -872,6 +864,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         {
             _animator = GetComponent<Animator>();
         }
+
         _animation.PlayAnimation(_animator, animationClipName);
     }
 

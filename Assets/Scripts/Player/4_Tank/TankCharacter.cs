@@ -103,6 +103,7 @@ public class TankCharacter : CharacterBase
         // ガード中なら盾受けアニメーションを再生
         if (_isBlockReactive.Value)
         {
+            Debug.Log("ガード");
             RPC_PlayAnimation(_blockReactionAnimation.name);
             return;
         }

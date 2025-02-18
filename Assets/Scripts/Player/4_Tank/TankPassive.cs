@@ -3,7 +3,7 @@ using UnityEngine;
 public class TankPassive : MonoBehaviour, IPassive
 {
     [SerializeField, Tooltip("パッシブによるガード時の防御力上昇率( * 防御力)")]
-    private float _guardMultiplier = 2.0f;
+    private float _guardMultiplier = 4.0f;
 
     // ガードフラグ
     private bool _isGuard = false;
