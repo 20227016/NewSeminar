@@ -16,7 +16,7 @@ using Fusion;
 public class StageEnemyManagement : MonoBehaviour
 {
 
-    private NetworkRunner _runner = default;
+    //private NetworkRunner _runner = default;
 
     private Subject<Unit> OnAllEnemiesDefeated = new Subject<Unit>();
 
@@ -116,6 +116,4 @@ public class StageEnemyManagement : MonoBehaviour
             _hasExecuted = true;
         }
     }
-
-
 }

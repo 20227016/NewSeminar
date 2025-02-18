@@ -36,9 +36,6 @@ public class Fishman : BaseEnemy
 
     [Networked] private Vector3 _randomTargetPos { get; set; } // ランダム移動の目標位置
 
-    [Tooltip("物理攻撃ダメージ")]
-    [SerializeField] private float _damage = 10f;
-
     private bool isAttackInterval = default; // 連続攻撃をしない
 
     private bool isAnimationFinished = default; // 一度だけ判定するためのフラグ
@@ -85,7 +82,6 @@ public class Fishman : BaseEnemy
     //AudioClip型の変数を宣言
     [SerializeField] private AudioClip _chargeSE = default;
     [SerializeField] private AudioClip _AttackSE1 = default;
-    [SerializeField] private AudioClip _AttackSE2 = default;
 
     public override void Spawned()
     {
