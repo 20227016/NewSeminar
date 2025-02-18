@@ -84,25 +84,22 @@ public class TankCharacter : CharacterBase
 
     public override void RPC_ReceiveDamage(int damageValue)
     {
-        if (!Object.HasStateAuthority) return;
+        if (CurrentState == CharacterStateEnum.DEATH) return;
 
-        // 被弾中は無敵
-        if (CurrentState == CharacterStateEnum.DAMAGE_REACTION) return;
+        // 無敵中はリターン
+        if (_isInvincible) return;
 
         CurrentState = CharacterStateEnum.DAMAGE_REACTION;
 
+
         // ダメージ量に防御力を適応して最終ダメージを算出
-        float damage = (damageValue - _characterStatusStruct._defensePower);
+        float damage = (damageValue - (damageValue * _characterStatusStruct._defensePower * 0.01f));
 
         // 現在HPから最終ダメージを引く
         NetworkedHP = Mathf.Clamp(NetworkedHP - damage, 0, _characterStatusStruct._playerStatus.MaxHp);
 
-        if (NetworkedHP <= 0)
-        {
-            Death();
-            return;
-        }
-
+        _sound.ProduceSE(_characterSoundStruct._audioSource, _characterSoundStruct._getHit, _characterSoundStruct._playBackSpeed_GetHit, _characterSoundStruct._audioVolume_GetHit, _characterSoundStruct._delay_GetHit);
+        
         // ガード中なら盾受けアニメーションを再生
         if (_isBlockReactive.Value)
         {
@@ -127,6 +124,7 @@ public class TankCharacter : CharacterBase
             // ノックバック
             _avoidance.Avoidance(transform, _rigidbody, new Vector2(-transform.forward.x, -transform.forward.z), _characterStatusStruct._avoidanceDistance, animationDuration / 5);
         }
+        
         Invincible(animationDuration * 2f);
         ResetState(animationDuration);
     }

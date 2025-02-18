@@ -178,6 +178,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// </summary>
     public override void FixedUpdateNetwork()
     {
+        if(NetworkedHP <= 0 && _currentHP.Value == 0 && CurrentState != CharacterStateEnum.DEATH)
+        {
+            Death();
+        }
+
         if (GetInput(out PlayerNetworkInput data))
         {
             // 入力情報収集
@@ -203,8 +208,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             LockOnCursorPresenter lockOnCursorPresenter = canvas.GetComponentInChildren<LockOnCursorPresenter>();
             PlayerUIPresenter.SetMyModel(this.gameObject);
             lockOnCursorPresenter.SetModel(this.gameObject);
-
-
         }
         RPC_SetAllyHPBar(this);
     }
@@ -295,6 +298,15 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         _currentSkillPoint.Value = _characterStatusStruct._skillPointUpperLimit;
         _currentSkillPoint.Value = 0f;
+
+        //_currentHP
+        //    .Where(_ => _ <= 0f)
+        //    .Subscribe(_ => 
+        //    {
+        //        Debug.Log(_);
+        //        Death();
+        //    }
+        //    );
     }
 
 
@@ -506,14 +518,10 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         if (isWalking)
         {
-            Debug.Log("歩き");
-            RPC_BoolAnimation(_characterAnimationStruct._runAnimation.name, false);
             RPC_BoolAnimation(_characterAnimationStruct._walkAnimation.name, true);
         }
         else
         {
-            Debug.Log("走り");
-            RPC_BoolAnimation(_characterAnimationStruct._walkAnimation.name, false);
             RPC_BoolAnimation(_characterAnimationStruct._runAnimation.name, true);
         }
 
@@ -702,9 +710,13 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     }
 
-
     public virtual void RPC_ReceiveDamage(int damageValue)
     {
+        if(CurrentState == CharacterStateEnum.DEATH)
+        {
+            return;
+        }
+
         // 無敵中はリターン
         if (_isInvincible) return;
 
@@ -714,17 +726,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         float damage = (damageValue - (damageValue * _characterStatusStruct._defensePower * 0.01f));
 
         // 現在HPから最終ダメージを引く
-        NetworkedHP = NetworkedHP - damage;
-
-        print("現在の体力 : " + NetworkedHP);
-
-        if (NetworkedHP <= 0)
-        {
-            print("死亡");
-            Death();
-
-            return;
-        }
+        NetworkedHP = Mathf.Clamp(NetworkedHP - damage, 0, _characterStatusStruct._playerStatus.MaxHp);
 
         // 被弾時のリアクション
         float animationDuration;
@@ -750,7 +752,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         ResetState(animationDuration);
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
     public virtual void RPC_ReceiveHeal(int healValue)
     {
         // 死亡状態から回復処理をした場合は蘇生
@@ -837,9 +838,10 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// </summary>
     protected virtual void Death()
     {
-        print("Deathステート。死亡アニメーションを再生します。現在のHPは : " + NetworkedHP);
         CurrentState = CharacterStateEnum.DEATH;
+        Debug.Log("死んだ");
         RPC_PlayAnimation(_characterAnimationStruct._deathAnimation.name);
+
         _deathSubject.OnNext(Unit.Default);
     }
 

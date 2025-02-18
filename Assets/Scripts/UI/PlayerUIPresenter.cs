@@ -61,7 +61,13 @@ public class PlayerUIPresenter : MonoBehaviour
     private void Start()
     {
         SessionManager sessionManager = FindObjectOfType<SessionManager>();
+
         if(sessionManager == null)
+        {
+            return;
+        }
+
+        if(sessionManager.SessionName == null)
         {
             return;
         }
