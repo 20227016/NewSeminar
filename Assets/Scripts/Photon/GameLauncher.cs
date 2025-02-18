@@ -98,7 +98,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             }
             else
             {
-                SessionName = sessionManager.SessionName;
+                SessionName = "あ";
             }
         }
         else
