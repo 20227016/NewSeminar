@@ -18,6 +18,10 @@ public class TankCharacter : CharacterBase
     // ガードフラグ
     private ReactiveProperty<bool> _isBlockReactive = new(false);
 
+    private float guardDefencePower = default;
+
+    public float GuardDefencePower { get => guardDefencePower; set => guardDefencePower = value; }
+
     public override void Spawned()
     {
         base.Spawned();
@@ -59,6 +63,7 @@ public class TankCharacter : CharacterBase
 
     protected override void ProcessInput(PlayerNetworkInput input)
     {
+        Debug.Log(guardDefencePower);
         // ガード解除入力
         if (_isBlockReactive.Value && input.IsAvoidance)
         {
@@ -69,6 +74,7 @@ public class TankCharacter : CharacterBase
             return;
         }
         base.ProcessInput(input);
+        
     }
 
 
@@ -80,6 +86,7 @@ public class TankCharacter : CharacterBase
         _isBlockReactive.Value = true;
 
         _passive.Passive(this);
+
     }
 
     public override void RPC_ReceiveDamage(int damageValue)
@@ -91,9 +98,16 @@ public class TankCharacter : CharacterBase
 
         CurrentState = CharacterStateEnum.DAMAGE_REACTION;
 
+        // 防御力の合計値を0以上100以下に制限
+        float defensePower = Mathf.Clamp(_characterStatusStruct._defensePower + GuardDefencePower, 0, 100);
 
-        // ダメージ量に防御力を適応して最終ダメージを算出
-        float damage = (damageValue - (damageValue * _characterStatusStruct._defensePower * 0.01f));
+        // ダメージ量を計算
+        float damage = damageValue - (damageValue * (defensePower * 0.01f));
+
+        if (damage <= 0)
+        {
+            return;
+        }
 
         // 現在HPから最終ダメージを引く
         NetworkedHP = Mathf.Clamp(NetworkedHP - damage, 0, _characterStatusStruct._playerStatus.MaxHp);
@@ -103,14 +117,13 @@ public class TankCharacter : CharacterBase
         // ガード中なら盾受けアニメーションを再生
         if (_isBlockReactive.Value)
         {
-            Debug.Log("ガード");
             RPC_PlayAnimation(_blockReactionAnimation.name);
             return;
         }
 
         // 被弾時のリアクション
         float animationDuration;
-        if (damage <= 30)
+        if (damage <= FATAL_DAMAGE_REACTION)
         {
             animationDuration = _animation.GetAnimationLength(_animator, _characterAnimationStruct._damageReactionLightAnimation.name);
             // 怯み

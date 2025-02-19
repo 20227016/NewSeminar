@@ -1631,7 +1631,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fc48ffcd734dfd46993e41d2caa777f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _guardMultiplier: 4
+  _guardMultiplier: 60
 --- !u!114 &2493756517466308921
 MonoBehaviour:
   m_ObjectHideFlags: 0

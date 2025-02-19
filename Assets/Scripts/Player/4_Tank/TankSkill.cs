@@ -6,18 +6,16 @@ using UnityEngine;
 
 public class TankSkill : MonoBehaviour, ISkill
 {
-    [SerializeField, Tooltip("ƒXƒLƒ‹‚É‚æ‚é–hŒä—Íã¸”{—¦")]
-    private float _defenceMaltiplier = 2.0f;
+    [SerializeField, Tooltip("ƒXƒLƒ‹‚É‚æ‚é–hŒä—Íã¸”{—¦(* –hŒä—Í)")]
+    private float _defenceMaltiplier = 2f;
 
     public void Skill(CharacterBase characterBase, float skillTime)
     {
-        // Œ³‚ÌUŒ‚‘¬“x‚ð•ÛŽ
         float originalDefence = characterBase._characterStatusStruct._defensePower;
 
-        // UŒ‚‘¬“x‚ðˆêŽž“I‚É•ÏX
         characterBase._characterStatusStruct._defensePower *= _defenceMaltiplier;
 
-        // skillTimeŒã‚ÉŒ³‚ÌUŒ‚‘¬“x‚É–ß‚·
+        // skillTimeŒã‚ÉŒ³‚Ì–hŒä—Í‚É–ß‚·
         Observable.Timer(TimeSpan.FromSeconds(skillTime))
             .Subscribe(_ =>
             {
