@@ -94,18 +94,18 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         {
             if(sessionManager.SessionName == null)
             {
-                SessionName = UnityEngine.Random.Range(10000, 99999).ToString();
+                SessionName = "あ";
             }
             else
             {
-                SessionName = "あ";
+                SessionName = sessionManager.SessionName;
             }
         }
         else
         {
             SessionName = UnityEngine.Random.Range(10000, 99999).ToString();
         }
-        Debug.Log("セッション名" + SessionName);
+
         // ゲーム開始処理
         await NetworkRunner.StartGame(new StartGameArgs
         {

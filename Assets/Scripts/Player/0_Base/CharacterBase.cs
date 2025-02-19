@@ -41,13 +41,16 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     #region 定数
 
     // スタミナの更新頻度定数
-    const float STAMINA_UPDATE_INTERVAL = 0.1f;
+    protected const float STAMINA_UPDATE_INTERVAL = 0.1f;
 
     // 攻撃の受付時間定数
-    const float ATTACK_ACCEPTED_TIME = 0.7f;
+    protected const float ATTACK_ACCEPTED_TIME = 0.7f;
 
     // コンボのリセット時間定数
-    const float COMBO_RESET_TIME = 1.0f;
+    protected const float COMBO_RESET_TIME = 1.0f;
+
+    // 致命ダメージリアクション定数
+    protected const float FATAL_DAMAGE_REACTION = 30f;
 
     #endregion
 
@@ -625,7 +628,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     protected virtual void Targetting()
     {
-        RPC_ReceiveDamage(100);
         _target.Targetting();
     }
 
@@ -717,12 +719,17 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         // ダメージ量に防御力を適応して最終ダメージを算出
         float damage = (damageValue - (damageValue * _characterStatusStruct._defensePower * 0.01f));
 
+        if (damage <= 0)
+        {
+            return;
+        }
+
         // 現在HPから最終ダメージを引く
         NetworkedHP = Mathf.Clamp(NetworkedHP - damage, 0, _characterStatusStruct._playerStatus.MaxHp);
 
         // 被弾時のリアクション
         float animationDuration;
-        if (damageValue <= 30)
+        if (damageValue <= FATAL_DAMAGE_REACTION)
         {
             animationDuration = _animation.GetAnimationLength(_animator, _characterAnimationStruct._damageReactionLightAnimation.name);
             // 怯み
@@ -766,18 +773,21 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         float chargeSkillPoint = damage;
 
         _currentSkillPoint.Value = Mathf.Clamp(_currentSkillPoint.Value + chargeSkillPoint, 0, _characterStatusStruct._skillPointUpperLimit);
-        // ヒットストップを実行
-        StartCoroutine(HitStopCoroutine(0.1f)); // 50msのヒットストップ
+
+        // ヒットストップを実行（Unitaskに変更）
+        HitStopAsync(0.1f).Forget();
     }
 
     /// <summary>
-    /// ヒットストップを実装するコルーチン
+    /// ヒットストップを実装する非同期メソッド（UniTask版）
     /// </summary>
-    private IEnumerator HitStopCoroutine(float stopDuration)
+    private async UniTaskVoid HitStopAsync(float stopDuration)
     {
         _animator.speed = 0; // 一時的に時間を停止
-        yield return new WaitForSecondsRealtime(stopDuration); // 経過時間をリアルタイムで待つ
-        _animator.speed = 1;
+
+        await UniTask.Delay(Mathf.RoundToInt(stopDuration * 1000), true);
+
+        _animator.speed = 1; // アニメーション再開
     }
 
     protected async virtual void ResetState(float resetTime, Action onResetComplete = null)

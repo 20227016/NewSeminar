@@ -51,7 +51,6 @@ public class PlayerAttackLight : IAttackLight
 
                         // 攻撃がヒットしたことをプレイヤー側に通知
                         characterBase.AttackHit(damage);
-                        Debug.Log("弱攻撃");
                     }
                 }
             })

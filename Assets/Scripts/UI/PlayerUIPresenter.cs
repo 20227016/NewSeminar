@@ -48,11 +48,20 @@ public class PlayerUIPresenter : MonoBehaviour
 
     [SerializeField, Tooltip("スキルクールタイムテキスト")]
     private TextMeshProUGUI _skillCoolTimeText = default;
-    private float _coolTimeRemaining = 0f;
-    private bool _isCoolTimeActive = false;
 
-    [SerializeField]
+    [SerializeField, Tooltip("回避アイコン")]
+    private Image _avoidanceIconImage = default;
+
+    [SerializeField, Tooltip("回避テキスト")]
+    private TextMeshProUGUI _avoidanceText = default;
+
+    [SerializeField, Tooltip("セッション名テキスト")]
     private TextMeshProUGUI _sessionNameText = default;
+
+    private float _coolTimeRemaining = 0f;
+
+    // クールタイムフラグ
+    private bool _isCoolTimeActive = false;
 
     // 追跡用リスト（登録済みのプレイヤーキャラクター）
     private readonly List<CharacterBase> _registeredAllyModels = new();
@@ -250,6 +259,8 @@ public class PlayerUIPresenter : MonoBehaviour
             case 4:
                 rollText.text = "タンク";
                 rollText.color = Color.yellow;
+                _avoidanceIconImage.sprite = _skillIcons[3];
+                _avoidanceText.text = "ガード";
                 break;
 
             // 選択されていないとき（ノーマル）
