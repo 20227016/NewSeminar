@@ -67,6 +67,7 @@ public class Fishman : BaseEnemy
     // TransitionNo.5 Downed
     // TransitionNo.6 Stunned
     // TransitionNo.7 Die
+    // TransitionNo.8 SenseSomethingMaint
     private Animator _animator;
 
     // 子オブジェクトのParticleSystemを取得
@@ -377,7 +378,7 @@ public class Fishman : BaseEnemy
     /// </summary>
     private void LookAround()
     {
-        _animator.SetInteger("TransitionNo", 1);
+        _animator.SetInteger("TransitionNo", 8);
 
         // 見渡しが終了した場合、方向転換を開始
         if (_lookAroundTimer <= 0)

@@ -762,12 +762,10 @@ MonoBehaviour:
   _walkMoveSpeed: 2.5
   _runMoveSpeed: 5
   _stopDistance: 2
-  _damage: 10
   _lookAroundState: 0
   _audioSource: {fileID: -4430115615509472739}
   _chargeSE: {fileID: 8300000, guid: 2b12ba4ac95dda44d80c500ee63df3d5, type: 3}
   _AttackSE1: {fileID: 8300000, guid: 0c1f1fe523b48e640b1f97a27d4a468f, type: 3}
-  _AttackSE2: {fileID: 0}
 --- !u!65 &-7087979274757902768
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -902,7 +900,7 @@ MonoBehaviour:
     _value: 0
     _inverse: 0
     _hash: -814817977
-  StateHashes: 00000000bea86a9c1bec8d23f3b09ce077934a0fedb25a4ff72360a56bd5a32d398fdc0457e353d64d72693c855035e50173e30ae94d9dd8aae3aedb37b935014e73a6a72b1a167c79406955
+  StateHashes: 00000000bea86a9c1bec8d23f3b09ce077934a0fedb25a4ff72360a56bd5a32d398fdc0457e353d64d72693c855035e50173e30ae94d9dd8aae3aedb37b935014e73a6a72b1a167c79406955506e48a52d62776e
   TriggerHashes: 00000000
 --- !u!82 &-4430115615509472739
 AudioSource:
