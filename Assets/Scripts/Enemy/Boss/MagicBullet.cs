@@ -1,6 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Fusion;
+using Cysharp.Threading.Tasks;
+using System;
+using System.Collections;
+using System.Threading;
+using UniRx;
+
 
 /// <summary>
 /// MagicBullet.cs
@@ -28,11 +34,16 @@ public class MagicBullet : BaseEnemy
     [SerializeField, Header("吸い込みの速さ")]
     protected float _suctionSpeed = default;
 
+    [SerializeField, Header("吸い込みの間隔")]
+    protected float _suctionOffset = 0.1f;
+
     //AudioSource型の変数を宣言
     [SerializeField] private AudioSource _audioSource = default;
 
     //AudioClip型の変数を宣言
     [SerializeField] private AudioClip _magicBulletSE = default;
+
+    private Vector3 _myPos = default;
 
     /// <summary>
     /// 効果音発生
@@ -42,7 +53,7 @@ public class MagicBullet : BaseEnemy
         _audioSource.PlayOneShot(_magicBulletSE);
     }
 
-    private void Update()
+    private async UniTaskVoid Update()
     {
         // まだ目標サイズに達していない場合、徐々に大きくする
         if (!isMoving)
@@ -77,17 +88,21 @@ public class MagicBullet : BaseEnemy
             return;
 
         }
+        if(this.gameObject != null)
+        {
+
+            _myPos = this.gameObject.transform.position;
+
+        }
+        await UniTask.Delay((int)(_suctionOffset * 1000));
         foreach (Collider collider in _playerColliders)
         {
 
-            Debug.Log("ダイソン中");
-
-            Vector3 direction = this.transform.position - collider.transform.position;
+           
+            Vector3 direction = _myPos - collider.transform.position;
 
             direction.y = 0;
-            Debug.Log($"方向ベクトル：{direction}");
             collider.transform.position += direction * _suctionSpeed * Time.deltaTime;
-            Debug.Log($"力{direction * _suctionSpeed * Time.deltaTime}");
 
         }
 
@@ -140,7 +155,7 @@ public class MagicBullet : BaseEnemy
             {
                 if (hit.gameObject.layer == 6)
                 {
-                    Debug.Log($"{hit.name}");
+
                     _playerColliders.Add(hit);
                 }
             }

@@ -31,8 +31,11 @@ public class Boss : BaseEnemy
     // 魔弾の予告線
     private Transform _bulletNoticeLine = default;
 
+    /// <summary>
+    /// 攻撃と攻撃の間隔
+    /// </summary>
     [SerializeField]
-    private float _currentTimer = 5f; // 現在時間
+    private float _currentTimer = 3f;
 
     // アニメーター変数
     // TransitionNo.-2 Appearance
@@ -44,32 +47,43 @@ public class Boss : BaseEnemy
     // TransitionNo.4  Summon
     // TransitionNo.5  Fainting
     // TransitionNo.6  Heel
-    // TransitionNo.7  Die
+    // TransitionNo.7  Die  
+    // TransitionNo.8  MagicSphere
     private Animator _animator; // アニメーター
 
     private Transform _LaserBeam = default; // レーザービーム
 
     private bool isStartAction = default;
 
+    /// <summary>
     // ボスの行動パターン用.変数(最初はアイドル状態からスタート)
     // 1.アイドル
     // 2.攻撃
     // 3.ダウン
     // 4.死亡
+    /// </summary>
     [SerializeField]
     private int _actionState = 1;
 
+    /// <summary>
     // ボスの攻撃パターン用.変数(抽選し、行動パターンを決める)
     // 1.羽の薙ぎ払い攻撃
     // 2.魔弾
     // 3.レーザー
+    // 4.電撃チェイン
+    /// </summary>
     [SerializeField, Networked]
     private int _currentAttack { get; set; } = default;
+    /// <summary>
+    /// 現在の抽選目
+    /// </summary>
     [Networked]
-    private int _currentLottery { get; set; } = default; // 現在の抽選目
+    private int _currentLottery { get; set; } = default; // 
 
-    // 行動パターンを抽選し、その結果を配列に格納する
-    private int[] _confirmedAttackState = new int[3];
+    /// <summary>
+    /// 行動パターンを抽選し、その結果を配列に格納する
+    /// </summary>
+    private int[] _confirmedAttackState = new int[4];
     private int _lastValue = default;
 
     // ボスの体力
@@ -104,7 +118,7 @@ public class Boss : BaseEnemy
     [SerializeField] private AudioClip _wingSE = default;
     [SerializeField] private AudioClip _magicCircleSE = default;
     [SerializeField] private AudioClip _laserSE = default;
-    [SerializeField] private AudioClip _summonSE = default; 
+    [SerializeField] private AudioClip _summonSE = default;
     [SerializeField] private AudioClip _heelSE = default;
 
     private Subject<Unit> _bossDeathSubject = new();
@@ -138,7 +152,7 @@ public class Boss : BaseEnemy
 
         // Y軸を180度回転（x, y, z の順で指定）
         transform.rotation = Quaternion.Euler(0f, 180f, 0f);
-        
+
         _wingNoticeLine = transform.Find("WingNoticeLine");
         _wingNoticeLine.gameObject.SetActive(false);
         _bulletNoticeLine = transform.Find("BulletNoticeLine");
@@ -195,6 +209,10 @@ public class Boss : BaseEnemy
             _actionState = 4;
         }
 
+
+
+
+
         // ボスの行動パターンステート
         switch (_actionState)
         {
@@ -207,11 +225,11 @@ public class Boss : BaseEnemy
 
             // 攻撃
             case 2:
-                
+
                 // 抽選してなければ
                 if (_currentLottery == 0)
                 {
-                    if(Runner.IsServer)
+                    if (Runner.IsServer)
                     {
                         // 攻撃パターンを抽選する
                         RPC_AttackState();
@@ -224,68 +242,84 @@ public class Boss : BaseEnemy
 
                 // 抽選した攻撃パターンを変数に格納。順に実行する
                 _currentAttack = _confirmedAttackState[_currentLottery];
-
+                Debug.Log($"選んだパターン{_currentAttack}");
                 switch (_currentAttack)
-                    {
-                        case 1:
+                {
+                    case 1:
 
-                            if (Runner.IsServer)
-                            {
-                                // 羽の薙ぎ払い攻撃
-                                RPC_WingAttack();
-                            }
-                            else
-                            {
-                                return;
-                            }
+                        if (Runner.IsServer)
+                        {
+                            // 羽の薙ぎ払い攻撃
+                            RPC_WingAttack();
+                        }
+                        else
+                        {
+                            return;
+                        }
 
-                            break;
+                        break;
 
-                        case 2:
+                    case 2:
 
-                            if (Runner.IsServer)
-                            {
-                                // 魔弾攻撃
-                                RPC_MagicBulletAttack();
-                            }
-                            else
-                            {
-                                return;
-                            }
+                        if (Runner.IsServer)
+                        {
+                            // 魔弾攻撃
+                            RPC_MagicBulletAttack();
+                        }
+                        else
+                        {
+                            return;
+                        }
 
-                            break;
+                        break;
 
-                        case 3:
+                    case 3:
 
-                            if (Runner.IsServer)
-                            {
-                                // レーザー攻撃
-                                RPC_LaserAttack();
-                            }
-                            else
-                            {
-                                return;
-                            }
+                        if (Runner.IsServer)
+                        {
+                            // レーザー攻撃
+                            RPC_LaserAttack();
+                        }
+                        else
+                        {
+                            return;
+                        }
 
-                            break;
+                        break;
 
-                        default:
-                            print("ボスの攻撃パターンで例外を検知。自動敵に攻撃パターン1を選択します。");
-                            _currentAttack = 1;
-                            break;
-                    }
+                    case 4:
+
+
+                        if (Runner.IsServer)
+                        {
+                            // 電撃チェイン攻撃
+                            RPC_LightningChain();
+                        }
+                        else
+                        {
+                            return;
+                        }
+
+                        break;
+
+                    default:
+                        print("ボスの攻撃パターンで例外を検知。自動敵に攻撃パターン1を選択します。");
+                        _currentAttack = 1;
+                        break;
+                }
 
                 _currentLottery++; // 次の攻撃へ
 
                 // 全ての攻撃をしたら抽選リセット
                 if (_currentLottery == _confirmedAttackState.Length)
                 {
+
                     _currentLottery = 0;
                 }
 
                 break;
 
-　　　　　　// ダウン
+            // ダウン
             case 3:
 
                 // 例(HPが半分切ったらすべてのステートを強制終了し、ダウン状態に移行する)
@@ -353,25 +387,38 @@ public class Boss : BaseEnemy
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_AttackState()
     {
-        Random _random = new Random();
+        Random random = new Random();
+        // 攻撃パターン配列にインデックス＋１を詰めていく
         for (_currentLottery = 0; _currentLottery < _confirmedAttackState.Length; _currentLottery++)
         {
             _confirmedAttackState[_currentLottery] = _currentLottery + 1;
+            Debug.Log($"<color=red>{_currentLottery + 1}</color>");
         }
 
-        // 攻撃パターンをシャッフルし、前回の配列の最後と次の配列の最初が同じ値にならないようにする
+        // 攻撃パターン配列をシャッフルする、なお前回の配列の最後と次の配列の最初が同じ値にならないようにする
         do
         {
+            Debug.Log($"<color=red>抽選最大{_currentLottery}</color>");
+            // 抽選最大数分ループ
             for (_currentLottery = _confirmedAttackState.Length - 1; _currentLottery > 0; _currentLottery--)
             {
-                int j = _random.Next(_currentLottery + 1);
-                int tmp = _confirmedAttackState[_currentLottery];
-                _confirmedAttackState[_currentLottery] = _confirmedAttackState[j];
-                _confirmedAttackState[j] = tmp;
+                int value = random.Next(_currentLottery + 1);
+               
+                Debug.Log($"<color=red>抽選{ value}</color>");
+                int work = _confirmedAttackState[_currentLottery];
+                _confirmedAttackState[_currentLottery] = _confirmedAttackState[value];
+                _confirmedAttackState[value] = work;
             }
 
         } while (_confirmedAttackState[0] == _lastValue);
+        string text = "";
+        foreach (int item in _confirmedAttackState)
+        {
 
+            text += $"{item},";
+
+        }
+        Debug.Log(text);
         _lastValue = _confirmedAttackState[^1]; // 前回の配列の最後の値
 
         // Debug.Log("シャッフル後の配列: " + string.Join(", ", _confirmedAttackState));
@@ -429,7 +476,22 @@ public class Boss : BaseEnemy
         _animator.SetInteger("TransitionNo", 3);
         _LaserBeam.gameObject.SetActive(true);
         _actionState = 1;
-        _currentTimer = 15f;
+        _currentTimer = 12f;
+    }
+
+    /// <summary>
+    /// 電撃連鎖攻撃
+    /// </summary>
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_LightningChain()
+    {
+
+        print("電撃攻撃");
+        _animator.SetInteger("TransitionNo", 8);
+
+        _actionState = 1;
+        _currentTimer = 10f;
+
     }
 
     /// <summary>
@@ -452,7 +514,7 @@ public class Boss : BaseEnemy
                     _demon.SetActive(true);
 
                     _summonTimer = 10.0f;
-                    _faintingState = 2;           
+                    _faintingState = 2;
                 }
 
                 break;
@@ -550,12 +612,12 @@ public class Boss : BaseEnemy
                 _evilMage = col.gameObject;
                 _evilMage.SetActive(false);
             }
-            else if(col.gameObject.name == "FishmanPADefault(Clone)")
+            else if (col.gameObject.name == "FishmanPADefault(Clone)")
             {
                 _fishman = col.gameObject;
                 _fishman.SetActive(false);
             }
-            else if(col.gameObject.name == "FylingDemonPAMaskTint(Clone)")
+            else if (col.gameObject.name == "FylingDemonPAMaskTint(Clone)")
             {
                 _demon = col.gameObject;
                 _demon.SetActive(false);

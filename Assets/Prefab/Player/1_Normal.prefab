@@ -1771,7 +1771,7 @@ MonoBehaviour:
     _attackStrongMultiplier: 1.5
     _attackSpeed: 1
     _attackLight1HitboxDelay: 0.25
-    _attackLight1HitboxRange: 3
+    _attackLight1HitboxRange: 10000
     _attackLight2HitboxDelay: 0.25
     _attackLight2HitboxRange: 3
     _attackLight3HitboxDelay: 0.25
@@ -1853,7 +1853,7 @@ MonoBehaviour:
   _skillAttackMultiplier: 0.4
   _skillAttackHitCount: 5
   _skillAttackHitInterval: 0.05
-  _skillAttackHitboxRange: 25
+  _skillAttackHitboxRange: 1000
   _skillAttackHitboxDelay: 1
 --- !u!114 &2833035376307005735
 MonoBehaviour:
