@@ -82,8 +82,6 @@ public class Fireman : BaseEnemy
     {
         base.Spawned();
 
-        _searchRange = 20f;
-
         // Raycast‚ğ‚Â‚©‚¤‚½‚ß‚ÌŠî–{İ’è‚ğ‚µ‚Ä‚­‚ê‚éŠÖ”
         BasicRaycast();
 
