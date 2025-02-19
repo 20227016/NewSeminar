@@ -5,9 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/WorkSpace/Yamada.unity
-    guid: 8c4d7ea83bda5f34381f6f0823c90671
   - enabled: 1
     path: Assets/Scenes/Title.unity
     guid: a00a5ec91322f3d4a9ae5d8c178a9146
@@ -17,7 +14,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameClear.unity
     guid: 5363eb1432497344a80ad3dc2f895d46
-  - enabled: 1
-    path: Assets/Scenes/Test/GameOver.unity
-    guid: 7d4fc8a47d16ef247ab27f08e97e9ca6
   m_configObjects: {}
