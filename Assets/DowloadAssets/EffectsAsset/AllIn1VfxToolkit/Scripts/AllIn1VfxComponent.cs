@@ -378,6 +378,7 @@ namespace AllIn1VfxToolkit
             SetSceneDirty();
             return true;
 #endif
+            return false;
         }
 
         private void SaveMaterialWithOtherName(string path, int i = 1)
