@@ -60,10 +60,10 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     private void Awake()
     {
+        
         var existingRunners = FindObjectsOfType<NetworkSceneManagerDefault>();
         foreach (var runner in existingRunners)
         {
-            Debug.Log("Destroying extra NetworkRunner");
             Destroy(runner.gameObject);
         }
     }

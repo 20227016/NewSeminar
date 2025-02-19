@@ -13,6 +13,7 @@ public class GameStart : MonoBehaviour
     private void Awake()
     {
         _sessionManager = FindObjectOfType<SessionManager>();
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public void Decision()

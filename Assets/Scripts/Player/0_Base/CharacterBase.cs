@@ -165,6 +165,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// </summary>
     public override void Spawned()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+
         // 値の初期化
         InitialValues();
 
