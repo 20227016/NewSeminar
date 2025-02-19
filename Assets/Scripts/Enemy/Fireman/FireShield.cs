@@ -41,7 +41,7 @@ public class FireShield : BaseEnemy
 
     }
 
-    public override void RPC_ReceiveDamage(int damegeValue)
+    public override void ReceiveDamage(int damegeValue)
     {
 
     }

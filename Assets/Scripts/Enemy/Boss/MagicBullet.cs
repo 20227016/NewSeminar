@@ -160,7 +160,7 @@ public class MagicBullet : BaseEnemy
 
     }
 
-    public override void RPC_ReceiveDamage(int damegeValue)
+    public override void ReceiveDamage(int damegeValue)
     {
 
     }

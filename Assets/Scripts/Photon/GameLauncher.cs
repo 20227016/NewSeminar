@@ -284,7 +284,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             return;
         }
 
-        // 
         Vector3 spawnPosition = new Vector3(_playerSpawnPos.x + UnityEngine.Random.Range(0, 10), _playerSpawnPos.y, _playerSpawnPos.z);
 
         // プレイヤーを生成

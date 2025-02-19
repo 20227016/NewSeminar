@@ -80,6 +80,8 @@ public class Fireman : BaseEnemy
 
     public override void Spawned()
     {
+        base.Spawned();
+
         _searchRange = 20f;
 
         // Raycast‚ğ‚Â‚©‚¤‚½‚ß‚ÌŠî–{İ’è‚ğ‚µ‚Ä‚­‚ê‚éŠÖ”

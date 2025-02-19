@@ -86,6 +86,8 @@ public class Golem : BaseEnemy
 
     public override void Spawned()
     {
+        base.Spawned();
+
         _searchRange = 20f;
 
         // Raycastをつかうための基本設定をしてくれる関数

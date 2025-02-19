@@ -73,7 +73,7 @@ public class PlayerResurrection : IResurrection
                 }
 
                 // 蘇生完了の処理
-                targetCharacter.RPC_ReceiveHeal((int)targetCharacter._characterStatusStruct._playerStatus.MaxHp);
+                targetCharacter.ReceiveHeal((int)targetCharacter._characterStatusStruct._playerStatus.MaxHp);
             }
 
             break;
