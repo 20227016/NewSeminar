@@ -47,7 +47,7 @@ public class PlayerAttackLight : IAttackLight
                         int damage = Mathf.FloorToInt(attackPower * attackMultiplier * comboMultiplier);
 
                         // 相手にダメージを与える
-                        target.RPC_ReceiveDamage(damage);
+                        target.ReceiveDamage(damage);
 
                         // 攻撃がヒットしたことをプレイヤー側に通知
                         characterBase.AttackHit(damage);

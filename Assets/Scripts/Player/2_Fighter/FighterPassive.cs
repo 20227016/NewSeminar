@@ -15,6 +15,6 @@ public class FighterPassive : MonoBehaviour, IPassive
 
     public void Passive(CharacterBase characterBase)
     {
-        characterBase.RPC_ReceiveHeal(_passiveHealValue);
+        characterBase.ReceiveHeal(_passiveHealValue);
     }
 }

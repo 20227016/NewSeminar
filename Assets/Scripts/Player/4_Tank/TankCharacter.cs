@@ -89,7 +89,7 @@ public class TankCharacter : CharacterBase
 
     }
 
-    public override void RPC_ReceiveDamage(int damageValue)
+    public override void ReceiveDamage(int damageValue)
     {
         if (CurrentState == CharacterStateEnum.DEATH) return;
 

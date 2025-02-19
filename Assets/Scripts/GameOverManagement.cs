@@ -22,9 +22,7 @@ public class GameOverManagement : NetworkBehaviour
 
     public override void Spawned()
     {
-        print("とりあえずゲームオーバーマネージャーは爆誕したお");
         CharacterBase[] characters = FindObjectsOfType<CharacterBase>();
-
 
         _movieGameOver = FindObjectOfType<PlayableDirector>();
 
@@ -32,28 +30,29 @@ public class GameOverManagement : NetworkBehaviour
 
         if (characters.Length > 0)
         {
-            _characterBase = characters[0]; // ひとまず最初のキャラを取得
-            print($"取得完了！ {_characterBase.name}");
+            foreach (var character in characters)
+            {
+                print($"プレイヤーを登録: {character.name}");
 
+                // 死亡イベントの購読
+                character.DeathSubject.Subscribe(_ =>
+                {
+                    Debug.Log($"{character.name} が死亡しました");
+                    HandlePlayerDeath();
+                }).AddTo(this);
+
+                // 復活イベントの購読
+                character.ResurrectionSubject.Subscribe(_ =>
+                {
+                    Debug.Log($"{character.name} が復活しました");
+                    HandlePlayerResurrection();
+                }).AddTo(this);
+            }
         }
         else
         {
-            print("プレイヤーキャラクターが見つからない！やべえ！");
+            print("プレイヤーキャラクターが見つかりません");
         }
-
-        // 死亡イベントの購読
-        _characterBase.DeathSubject.Subscribe(_ =>
-        {
-            Debug.Log("プレイヤーが死亡しました！");
-            HandlePlayerDeath();
-        }).AddTo(this);
-
-        // 復活イベントの購読
-        _characterBase.ResurrectionSubject.Subscribe(_ =>
-        {
-            Debug.Log("プレイヤーが復活しました！");
-            HandlePlayerResurrection();
-        }).AddTo(this);
     }
 
     /// <summary>

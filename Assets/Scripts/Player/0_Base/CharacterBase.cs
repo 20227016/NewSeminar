@@ -704,7 +704,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     }
 
-    public virtual void RPC_ReceiveDamage(int damageValue)
+    public virtual void ReceiveDamage(int damageValue)
     {
         if(CurrentState == CharacterStateEnum.DEATH)
         {
@@ -751,7 +751,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         ResetState(animationDuration);
     }
 
-    public virtual void RPC_ReceiveHeal(int healValue)
+    public virtual void ReceiveHeal(int healValue)
     {
         // 死亡状態から回復処理をした場合は蘇生
         if (CurrentState == CharacterStateEnum.DEATH)

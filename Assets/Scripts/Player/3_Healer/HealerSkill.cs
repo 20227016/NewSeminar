@@ -67,7 +67,7 @@ public class HealerSkill : MonoBehaviour, ISkill
 
             if (target != null)
             {
-                target.RPC_ReceiveHeal(healPerTick);
+                target.ReceiveHeal(healPerTick);
             }
         }
     }

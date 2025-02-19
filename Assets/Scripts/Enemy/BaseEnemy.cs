@@ -28,7 +28,7 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     protected List<string> _tags = new List<string>();
 
     [SerializeField,Tooltip("UIのHPバー(Imageコンポーネント)")]
-    private Slider _hpBarFill;
+    private Slider _hpBarFill = default;
 
     // UniTaskキャンセルトークン
     // private CancellationTokenSource _cancellatToken = default;
@@ -44,15 +44,19 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
 
     protected float _currentAttackMultiplier = 1;
 
+    [Networked]
+    protected float _currentHP { get; set; } = default;
+
 
     [SerializeField] 
     private GameObject _damageTextPrefab; // ダメージテキストのプレハブ
+
     [SerializeField] 
     private Transform _damageTextSpawnPoint; // ダメージテキストの表示位置
 
     public override void Spawned()
     {
-        base.Spawned();
+        _currentHP = _enemyStatusStruct._hp;
     }
 
     private void OnDrawGizmos()
@@ -159,21 +163,20 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
             return;
         }
         // 攻撃力に攻撃倍率を渡して渡す
-        receiveDamage.RPC_ReceiveDamage((int)(_enemyStatusStruct._attackPower * _currentAttackMultiplier));
+        receiveDamage.ReceiveDamage((int)(_enemyStatusStruct._attackPower * _currentAttackMultiplier));
     }
 
     /// <summary>
     /// ダメージを受ける処理
     /// </summary>
     /// <param name="damegeValue">ダメージ</param>
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public virtual void RPC_ReceiveDamage(int damegeValue)
+    public virtual void ReceiveDamage(int damegeValue)
     {
 
         int damage = (int)(damegeValue - (damegeValue * _enemyStatusStruct._defensePercentage));
         // ダメージ処理
         _enemyStatusStruct._hp -= damage;
-
+        _currentHP = _enemyStatusStruct._hp;
         // ダメージUIを敵の上に表示する
         Vector3 damagePosition = transform.position + new Vector3(0, 2, 0); 
 
@@ -199,7 +202,7 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
         if (_hpBarFill != null)
         {
             print("敵のUIと現在のHPを同期させました。UI同期は成功です");
-            _hpBarFill.value = (float)_enemyStatusStruct._hp;
+            _hpBarFill.value = (float)_currentHP;
         }
     }
 
