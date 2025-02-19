@@ -14,7 +14,6 @@ public class HealerEF : MonoBehaviour
 
     public void StaetEF()
     {
-        Debug.Log("StartEF 呼ばれました");
         StartCoroutine(ScaleEffect());
     }
 
@@ -22,7 +21,6 @@ public class HealerEF : MonoBehaviour
     private IEnumerator ScaleEffect()
     {
         effect.SetActive(true);
-        Debug.Log("スケール変更開始");
         Vector3 initialScale = effect.transform.localScale;
         float timeElapsed = 0f;
 
@@ -34,6 +32,5 @@ public class HealerEF : MonoBehaviour
         }
 
         effect.transform.localScale = targetScale;
-        Debug.Log("スケール変更完了");
     }
 }
