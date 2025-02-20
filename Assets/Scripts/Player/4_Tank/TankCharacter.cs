@@ -15,6 +15,9 @@ public class TankCharacter : CharacterBase
     [SerializeField, Tooltip("ガード成功時のリアクションアニメーション")]
     private AnimationClip _blockReactionAnimation = default;
 
+    [SerializeField, Tooltip("ガード時のスキルポイント取得量")]
+    private float _blockSPHealValue = 2f;
+
     // ガードフラグ
     private ReactiveProperty<bool> _isBlockReactive = new(false);
 
@@ -63,7 +66,6 @@ public class TankCharacter : CharacterBase
 
     protected override void ProcessInput(PlayerNetworkInput input)
     {
-        Debug.Log(guardDefencePower);
         // ガード解除入力
         if (_isBlockReactive.Value && input.IsAvoidance)
         {
@@ -117,6 +119,7 @@ public class TankCharacter : CharacterBase
         // ガード中なら盾受けアニメーションを再生
         if (_isBlockReactive.Value)
         {
+            _currentSkillPoint.Value += _blockSPHealValue;
             RPC_PlayAnimation(_blockReactionAnimation.name);
             return;
         }
