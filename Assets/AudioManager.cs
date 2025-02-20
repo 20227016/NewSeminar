@@ -53,14 +53,14 @@ public class AudioManager : MonoBehaviour
     public void OnStageNormalBGM()
     {
         print("BGM変更 : ノーマル");
-        _currentBGMIndex = 2;
+        _currentBGMIndex = 1;
         NextBGM();
     }
 
     public void OnStageBossBGM()
     {
         print("BGM変更 : ボス");
-        _currentBGMIndex = 3;
+        _currentBGMIndex = 2;
         NextBGM();
     }
 
