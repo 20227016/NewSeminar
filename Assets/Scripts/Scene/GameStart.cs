@@ -10,10 +10,14 @@ public class GameStart : MonoBehaviour
     [SerializeField]
     private TMP_InputField _roomNameInputField = default;
 
+    [SerializeField]
+    private TextMeshProUGUI _warningText = default;
+
     private void Awake()
     {
         _sessionManager = FindObjectOfType<SessionManager>();
         Cursor.lockState = CursorLockMode.None;
+        _warningText.gameObject.SetActive(false);
     }
 
     public void Decision()
@@ -25,7 +29,9 @@ public class GameStart : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene("高橋デバック");
+            _warningText.text = "ルーム名を入力してください";
+            _warningText.gameObject.SetActive(true);
+            //SceneManager.LoadScene("高橋デバック");
         }
     }
 }

@@ -97,10 +97,10 @@ public class CharacterSelectionManager : MonoBehaviour
         // 名前が入力されていない場合はリターン
         if (string.IsNullOrWhiteSpace(_nameInputField.text))
         {
-            //_warningText.text = "名前を入力してください";
-            //_warningText.gameObject.SetActive(true);
-            //return;
-            _nameInputField.text = "あああ";
+            _warningText.text = "名前を入力してください";
+            _warningText.gameObject.SetActive(true);
+            return;
+            //_nameInputField.text = "あああ";
         }
 
         switch (_currentSelectionCharacter)
@@ -123,9 +123,9 @@ public class CharacterSelectionManager : MonoBehaviour
                 break;
             // 選択されてないとき
             default:
-                //_warningText.text = "キャラクターを選択してください";
-                //_warningText.gameObject.SetActive(true);
-                //return;
+                _warningText.text = "キャラクターを選択してください";
+                _warningText.gameObject.SetActive(true);
+                return;
 
                 _currentSelectionCharacter = 1;
                 break;
