@@ -34,8 +34,14 @@ public class Salamaner : BaseEnemy
     [Networked] private Vector3 _randomTargetPos { get; set; } // ランダム移動の目標位置
 
     private bool _isAttack = default;
-    private float _attackTime = 1.5f;
+    private float _currentAttackTime = 1.5f;
     private float _breakTime = default;
+
+    [SerializeField, Tooltip("突進の持続時間")]
+    private float _attackTime = default;
+
+    [SerializeField, Tooltip("突進クールタイム")]
+    private float _attackCoolTime = default;
 
     /// <summary>
     /// サラマンダーの周囲を見渡す状態を表す列挙型。
@@ -412,15 +418,15 @@ public class Salamaner : BaseEnemy
         // 突進中のアニメーション
         if (_isAttack)
         {
-            _attackTime -= Time.deltaTime;
+            _currentAttackTime -= Time.deltaTime;
 
             // 突進時間
-            if (_attackTime <= 0)
+            if (_currentAttackTime <= 0)
             {
                 _randomTargetPos = GenerateRandomPosition();
                 _isAttack = false;
-                _attackTime = 1.0f;
-                _breakTime = 3.0f;
+                _currentAttackTime = _attackTime;
+                _breakTime = _attackCoolTime;
                 TargetTrans = null;
                 _attackEffects2.gameObject.SetActive(false);
                 _boxCollider.enabled = false;
@@ -596,8 +602,8 @@ public class Salamaner : BaseEnemy
             // 障害物にぶつかったら突進を終了し、次の行動へ
             _randomTargetPos = GenerateRandomPosition();     
             _isAttack = false;
-            _attackTime = 1.0f;
-            _breakTime = 3.0f;
+            _currentAttackTime = _attackTime;
+            _breakTime = _attackCoolTime;
             TargetTrans = null;
             _attackEffects2.gameObject.SetActive(false);
             _boxCollider.enabled = false;

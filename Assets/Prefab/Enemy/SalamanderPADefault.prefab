@@ -10702,10 +10702,12 @@ MonoBehaviour:
   _damageTextSpawnPoint: {fileID: 0}
   _movementState: 0
   _actionState: 0
-  _searchRange: 30
+  _searchRange: 35
   _workMoveSpeed: 5
   _runMoveSpeed: 20
   _detectionDistance: 3
+  _attackTime: 2
+  _attackCoolTime: 3
   _lookAroundState: 0
   _audioSource: {fileID: -2944591596682600796}
   _chargeSE: {fileID: 8300000, guid: 9a542e3ec51fa114a9d05e9c1237f6d6, type: 3}
