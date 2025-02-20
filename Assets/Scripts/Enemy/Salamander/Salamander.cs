@@ -35,6 +35,7 @@ public class Salamaner : BaseEnemy
 
     private bool _isAttack = default;
     private float _attackTime = 1.5f;
+    private float _breakTime = default;
 
     /// <summary>
     /// サラマンダーの周囲を見渡す状態を表す列挙型。
@@ -267,7 +268,6 @@ public class Salamaner : BaseEnemy
             // 壁のレイヤーを検出
             if (hit.collider.gameObject.layer == 8)
             {
-                print (hit.collider.gameObject.name);
                 return true; // 壁に衝突
             }
         }
@@ -409,28 +409,30 @@ public class Salamaner : BaseEnemy
             }
         }
 
-        _attackTime -= Time.deltaTime;
-
-        // 突進時間
-        if (_attackTime <= 0)
-        {
-            _randomTargetPos = GenerateRandomPosition();
-            _movementState = EnemyMovementState.IDLE;
-            _lookAroundState = EnemyLookAroundState.TURNING;
-            _isAttack = false;
-            _attackTime = 1.5f;
-            TargetTrans = null;
-            _attackEffects2.gameObject.SetActive(false);
-            _boxCollider.enabled = false;
-
-            // 突進方向をリセット
-            _chargeDirection = Vector3.zero;
-            return;
-        }
-
         // 突進中のアニメーション
         if (_isAttack)
         {
+            _attackTime -= Time.deltaTime;
+
+            // 突進時間
+            if (_attackTime <= 0)
+            {
+                _randomTargetPos = GenerateRandomPosition();
+                _isAttack = false;
+                _attackTime = 1.0f;
+                _breakTime = 3.0f;
+                TargetTrans = null;
+                _attackEffects2.gameObject.SetActive(false);
+                _boxCollider.enabled = false;
+
+                // 突進方向をリセット
+                _chargeDirection = Vector3.zero;
+
+                _movementState = EnemyMovementState.IDLE;
+                _lookAroundState = EnemyLookAroundState.TURNING;
+                return;
+            }
+
             _animator.SetInteger("TransitionNo", 3);
 
             // 突進（高さを維持し、XZ方向のみ移動）
@@ -520,7 +522,6 @@ public class Salamaner : BaseEnemy
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPC_PlayerSearch()
     {
-        print("探してる");
         if (TargetTrans != null) return;
 
         int layerMask = (1 << 6) | (1 << 8); // レイヤーマスク（レイヤー6と8）
@@ -541,7 +542,15 @@ public class Salamaner : BaseEnemy
             // プレイヤー（レイヤー6）の場合の処理
             if (playerCollider != null)
             {
-                print("プレイヤー見つけた");
+                print(_breakTime);
+                if (_breakTime > 0)
+                {
+                    _breakTime -= Time.deltaTime;
+                    print("休憩中");
+                    return;
+                }
+                print("攻撃できるよ");
+
                 TargetTrans = playerCollider.gameObject.transform;
                 _playerLastKnownPosition = TargetTrans.position; // プレイヤーの位置を記録
                 _movementState = EnemyMovementState.RUNNING;
@@ -581,20 +590,23 @@ public class Salamaner : BaseEnemy
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == 8) // Layer 8: Stage
+        if (collision.gameObject.layer == 8
+            && _movementState == EnemyMovementState.RUNNING) // Layer 8: Stage
         {
             // 障害物にぶつかったら突進を終了し、次の行動へ
-            _randomTargetPos = GenerateRandomPosition();
-            _movementState = EnemyMovementState.IDLE;
-            _lookAroundState = EnemyLookAroundState.TURNING;
+            _randomTargetPos = GenerateRandomPosition();     
             _isAttack = false;
-            _attackTime = 1.5f;
+            _attackTime = 1.0f;
+            _breakTime = 3.0f;
             TargetTrans = null;
             _attackEffects2.gameObject.SetActive(false);
             _boxCollider.enabled = false;
 
             // 突進方向をリセット
             _chargeDirection = Vector3.zero;
+
+            _movementState = EnemyMovementState.IDLE;
+            _lookAroundState = EnemyLookAroundState.TURNING;
         }
     }
 }
