@@ -435,10 +435,10 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             return;
         }
 
-        if (CurrentState != CharacterStateEnum.AVOIDANCE && input.IsAvoidance)
-        {
-            Debug.Log($"<color=#AFDFE4>回避ステート以外のステータス中に回避入力</color>");
-        }
+        //if (CurrentState != CharacterStateEnum.AVOIDANCE && input.IsAvoidance)
+        //{
+        //    //Debug.Log($"<color=#AFDFE4>回避ステート以外のステータス中に回避入力</color>");
+        //}
 
         // 回避中に回避をできないようにする
         if (CurrentState == CharacterStateEnum.AVOIDANCE)
