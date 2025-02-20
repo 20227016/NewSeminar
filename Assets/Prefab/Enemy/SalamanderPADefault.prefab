@@ -10614,7 +10614,7 @@ MonoBehaviour:
   _enemyStatusStruct:
     _maxHp: 100
     _hp: 100
-    _attackPower: 10
+    _attackPower: 35
     _attackPowerSpeed: 0
     _moveSpeed: 0
     _defensePercentage: 0.15
@@ -10627,7 +10627,7 @@ MonoBehaviour:
   _damageTextSpawnPoint: {fileID: 0}
   _movementState: 0
   _actionState: 0
-  _searchRange: 10
+  _searchRange: 30
   _workMoveSpeed: 5
   _runMoveSpeed: 20
   _detectionDistance: 3
