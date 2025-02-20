@@ -92,7 +92,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2903405863879293240}
-  - component: {fileID: 940001794257169360}
+  - component: {fileID: -5501340385035193935}
+  - component: {fileID: 7150421739489545167}
   - component: {fileID: -4397892527730880130}
   - component: {fileID: -9136137265209171178}
   - component: {fileID: -1254385271870074852}
@@ -121,8 +122,35 @@ Transform:
   - {fileID: 2461870846176591098}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &940001794257169360
-SphereCollider:
+--- !u!54 &-5501340385035193935
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1126514637383894338}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &7150421739489545167
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -136,12 +164,12 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2.1355395, y: 2.1596491, z: 2.1508915}
+  m_Center: {x: -0.000205338, y: -0.0010424852, z: -0.0078008072}
 --- !u!114 &-4397892527730880130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,7 +189,7 @@ MonoBehaviour:
   AoiPositionSource: {fileID: 0}
   Flags: 2305
   NetworkGuid:
-    RawGuidValue: 917f84137d5f7834a8ccd13ccf980003
+    RawGuidValue: 9c1d629610cdfe94888f7e37a32ead4b
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: -9136137265209171178}

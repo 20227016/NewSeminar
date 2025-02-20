@@ -37,6 +37,11 @@ public class Boss : BaseEnemy
     [SerializeField]
     private float _currentTimer = 3f;
 
+    [Header("ライトニングチェインのPrefab")]
+    [Tooltip("ライトニングチェインのPrefab")]
+    [SerializeField] private NetworkObject _lightningChain = default;
+    [Header("ライトニングチェインを生成する高さ")]
+    [SerializeField] private float _SpawnHeight = default;
     [Header("ボスステージの位置")]
     [SerializeField] private Vector3 _bossStagePos = default;
 
@@ -91,7 +96,7 @@ public class Boss : BaseEnemy
     /// <summary>
     /// 行動パターンを抽選し、その結果を配列に格納する
     /// </summary>
-    private int[] _confirmedAttackState = new int[3];
+    private int[] _confirmedAttackState = new int[4];
     private int _lastValue = default;
 
 
@@ -254,7 +259,9 @@ public class Boss : BaseEnemy
                         if (Runner.IsServer)
                         {
                             // 羽の薙ぎ払い攻撃
-                            RPC_WingAttack();
+                            //RPC_WingAttack();
+                            // 電撃チェイン攻撃
+                            RPC_LightningChain();
                         }
                         else
                         {
@@ -268,7 +275,9 @@ public class Boss : BaseEnemy
                         if (Runner.IsServer)
                         {
                             // 魔弾攻撃
-                            RPC_MagicBulletAttack();
+                            //RPC_MagicBulletAttack();
+                            // 電撃チェイン攻撃
+                            RPC_LightningChain();
                         }
                         else
                         {
@@ -282,7 +291,9 @@ public class Boss : BaseEnemy
                         if (Runner.IsServer)
                         {
                             // レーザー攻撃
-                            RPC_LaserAttack();
+                            //RPC_LaserAttack();
+                            // 電撃チェイン攻撃
+                            RPC_LightningChain();
                         }
                         else
                         {
@@ -493,10 +504,25 @@ public class Boss : BaseEnemy
 
         print("電撃攻撃");
         _animator.SetInteger("TransitionNo", 8);
+        if(_lightningChain == null)
+        {
 
+            Debug.LogError("電撃連鎖のプレハブが見つからない");
+
+        }
+        Random random = new Random();
         for (int i = 0; _countLightningChain > i ;i++)
         {
 
+           
+            float offsetX = random.Next((int)-_bossStageSize.x, (int)_bossStageSize.x);
+            float offsetZ = random.Next((int)-_bossStageSize.z, (int)_bossStageSize.z);
+            Vector3 SpawnPos = Vector3.right * offsetX;
+            SpawnPos += Vector3.forward * offsetZ;
+            SpawnPos += Vector3.up * _SpawnHeight;
+            SpawnPos += _bossStagePos;
+            NetworkObject a = Runner.Spawn(_lightningChain, SpawnPos);
+            Debug.LogError($"seisei{a}");
 
         }
 
