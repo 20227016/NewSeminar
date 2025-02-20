@@ -25,13 +25,13 @@ public class GameStart : MonoBehaviour
         if (!string.IsNullOrWhiteSpace(_roomNameInputField.text))
         {
             _sessionManager.SessionName = _roomNameInputField.text;
-            SceneManager.LoadScene("高橋デバック");
+            SceneManager.LoadScene("GameMain");
         }
         else
         {
             _warningText.text = "ルーム名を入力してください";
             _warningText.gameObject.SetActive(true);
-            //SceneManager.LoadScene("高橋デバック");
+            //SceneManager.LoadScene("GameMain");
         }
     }
 }
