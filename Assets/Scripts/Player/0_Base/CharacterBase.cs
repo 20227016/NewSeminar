@@ -516,9 +516,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         if (isWalking)
         {
             RPC_BoolAnimation(_characterAnimationStruct._walkAnimation.name, true);
+            RPC_BoolAnimation(_characterAnimationStruct._runAnimation.name, false);
         }
         else
         {
+            RPC_BoolAnimation(_characterAnimationStruct._walkAnimation.name, false);
             RPC_BoolAnimation(_characterAnimationStruct._runAnimation.name, true);
         }
 
