@@ -75,6 +75,9 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     private NormalStageTransfer _normalStageTransfer = default;
 
+    private Subject<Unit> _gameClearSubject = new();
+    public IObservable<Unit> OnGameClearObservable => _gameClearSubject;
+
     /// <summary>
     /// 初期処理
     /// </summary>
@@ -108,6 +111,8 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     private void BossDefeat()
     {
+        _gameClearSubject.OnNext(Unit.Default);
+
         NetworkObject[] networkObjects = FindObjectsOfType<NetworkObject>();
 
         foreach (var networkObject in networkObjects)
@@ -124,7 +129,7 @@ public class EnemySpawner : MonoBehaviour, INetworkRunnerCallbacks
         }
 
         // シーン遷移を全クライアントに通知
-        SceneManager.LoadScene("GameClear");
+        //SceneManager.LoadScene("GameClear");
     }
 
 
