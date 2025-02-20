@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: -9136137265209171178}
   - component: {fileID: -1254385271870074852}
   m_Layer: 7
-  m_Name: MagicSphere
+  m_Name: LightningChain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
