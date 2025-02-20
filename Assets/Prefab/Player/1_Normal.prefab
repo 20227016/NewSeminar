@@ -1764,7 +1764,7 @@ MonoBehaviour:
   _interpolationDataSource: 0
   _characterStatusStruct:
     _walkSpeed: 1
-    _runSpeed: 2
+    _runSpeed: 2.5
     _avoidanceDistance: 5
     _attackPower: 10
     _attackLightMultiplier: 1

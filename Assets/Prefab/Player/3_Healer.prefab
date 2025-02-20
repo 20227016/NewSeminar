@@ -3029,7 +3029,7 @@ MonoBehaviour:
     _walkSpeed: 1
     _runSpeed: 2.5
     _avoidanceDistance: 5
-    _attackPower: 100000
+    _attackPower: 10
     _attackLightMultiplier: 1
     _attackStrongMultiplier: 1.5
     _attackSpeed: 1
