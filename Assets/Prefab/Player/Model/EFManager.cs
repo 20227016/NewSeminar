@@ -22,14 +22,10 @@ public class EFManager : MonoBehaviour
         _initialScale = _player.transform.localScale;
     }
 
-    private void Update()
+    private void OnDisable()
     {
-        // プレイヤーが非アクティブになった場合
-        if (!_player.activeSelf)
-        {
-            ResetPlayerState();
-            ResetEffect();
-        }
+        ResetPlayerState();
+        ResetEffect();
     }
 
     /// <summary>
