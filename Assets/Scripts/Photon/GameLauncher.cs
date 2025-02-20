@@ -58,6 +58,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     public NetworkRunner NetworkRunner { get => _networkRunner; set => _networkRunner = value; }
     public string SessionName { get => _sessionName; set => _sessionName = value; }
 
+    private bool _isGameClear = false;
+
     private void Awake()
     {
         
@@ -70,6 +72,10 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     private async void Start()
     {
+        _enemySpawner.OnGameClearObservable
+            .Subscribe(_ => _isGameClear = true)
+            .AddTo(this);
+
         _playerInput = GetComponent<PlayerInput>();
         RegisterInputActions(true);
 
@@ -337,14 +343,28 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
         runner.Shutdown();
         Destroy(runner);
-
-        SceneManager.LoadScene("Title");
+        Debug.Log(_isGameClear);
+        if (_isGameClear)
+        {
+            SceneManager.LoadScene("GameClear");
+        }
+        else
+        {
+            SceneManager.LoadScene("Title");
+        }
     }
     public void OnConnectedToServer(NetworkRunner runner) { }
     public void OnDisconnectedFromServer(NetworkRunner runner) 
     {
         Destroy(runner);
-        SceneManager.LoadScene("Title");
+        if (_isGameClear)
+        {
+            SceneManager.LoadScene("GameClear");
+        }
+        else
+        {
+            SceneManager.LoadScene("Title");
+        }
     }
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }

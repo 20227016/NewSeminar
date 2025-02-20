@@ -165,7 +165,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
     /// </summary>
     public override void Spawned()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
 
         // 値の初期化
         InitialValues();
@@ -722,11 +722,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
         // ダメージ量に防御力を適応して最終ダメージを算出
         float damage = (damageValue - (damageValue * _characterStatusStruct._defensePower * 0.01f));
-
-        if (damage <= 0)
-        {
-            return;
-        }
 
         // 現在HPから最終ダメージを引く
         NetworkedHP = Mathf.Clamp(NetworkedHP - damage, 0, _characterStatusStruct._playerStatus.MaxHp);
