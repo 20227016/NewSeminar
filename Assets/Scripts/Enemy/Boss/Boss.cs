@@ -125,7 +125,6 @@ public class Boss : BaseEnemy
 
     public Subject<Unit> BossDeathSubject { get => _bossDeathSubject; set => _bossDeathSubject = value; }
 
-
     /// <summary>
     /// 初期化
     /// </summary>
@@ -208,10 +207,6 @@ public class Boss : BaseEnemy
         {
             _actionState = 4;
         }
-
-
-
-
 
         // ボスの行動パターンステート
         switch (_actionState)
@@ -350,6 +345,7 @@ public class Boss : BaseEnemy
         if (IsAnimationFinished("WingAttack")
             || IsAnimationFinished("MagicBullet")
             || IsAnimationFinished("LaserBeam")
+            || IsAnimationFinished("LightningChain")
             || IsAnimationFinished("Heel"))
         {
             _animator.SetInteger("TransitionNo", 0);

@@ -34,6 +34,7 @@ public class Salamaner : BaseEnemy
     [Networked] private Vector3 _randomTargetPos { get; set; } // ランダム移動の目標位置
 
     private bool _isAttack = default;
+    private float _attackTime = 1.5f;
 
     /// <summary>
     /// サラマンダーの周囲を見渡す状態を表す列挙型。
@@ -408,14 +409,16 @@ public class Salamaner : BaseEnemy
             }
         }
 
-        // 障害物チェック
-        if (IsPathBlocked(_chargeDirection, _detectionDistance))
+        _attackTime -= Time.deltaTime;
+
+        // 突進時間
+        if (_attackTime <= 0)
         {
-            // 障害物にぶつかったら突進を終了し、次の行動へ
             _randomTargetPos = GenerateRandomPosition();
             _movementState = EnemyMovementState.IDLE;
             _lookAroundState = EnemyLookAroundState.TURNING;
             _isAttack = false;
+            _attackTime = 1.5f;
             TargetTrans = null;
             _attackEffects2.gameObject.SetActive(false);
             _boxCollider.enabled = false;
@@ -585,6 +588,7 @@ public class Salamaner : BaseEnemy
             _movementState = EnemyMovementState.IDLE;
             _lookAroundState = EnemyLookAroundState.TURNING;
             _isAttack = false;
+            _attackTime = 1.5f;
             TargetTrans = null;
             _attackEffects2.gameObject.SetActive(false);
             _boxCollider.enabled = false;
