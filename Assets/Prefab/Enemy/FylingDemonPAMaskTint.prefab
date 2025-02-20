@@ -17707,6 +17707,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 4.05
       objectReference: {fileID: 0}
+    - target: {fileID: 5231200955028723830, guid: 695ed5f003b297940af40fc63ddeba20, type: 3}
+      propertyPath: m_Value
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 5231200955028723830, guid: 695ed5f003b297940af40fc63ddeba20, type: 3}
+      propertyPath: m_MaxValue
+      value: 250
+      objectReference: {fileID: 0}
     - target: {fileID: 7724412930357675147, guid: 695ed5f003b297940af40fc63ddeba20, type: 3}
       propertyPath: m_Name
       value: EnemyHP_Canvas

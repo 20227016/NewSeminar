@@ -71069,9 +71069,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyHP_Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 5231200955028723830, guid: 695ed5f003b297940af40fc63ddeba20, type: 3}
+      propertyPath: m_Value
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 5231200955028723830, guid: 695ed5f003b297940af40fc63ddeba20, type: 3}
+      propertyPath: m_MaxValue
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 5387628530590920078, guid: 695ed5f003b297940af40fc63ddeba20, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -537.17004
+      objectReference: {fileID: 0}
+    - target: {fileID: 8190258088305873907, guid: 695ed5f003b297940af40fc63ddeba20, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8190258088305873907, guid: 695ed5f003b297940af40fc63ddeba20, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

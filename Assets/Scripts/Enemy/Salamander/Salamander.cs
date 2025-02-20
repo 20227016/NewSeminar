@@ -64,17 +64,22 @@ public class Salamaner : BaseEnemy
     private Animator _animator;
 
     // 子オブジェクトのParticleSystemを取得
-    private ParticleSystem[] _attackEffects = default;
+    private ParticleSystem[] _attackEffects1 = default;
+    private Transform _attackEffects2 = default;
+
+    // 攻撃時の当たり判定
+    private BoxCollider _boxCollider = default;
 
     //AudioSource型の変数を宣言
     [SerializeField] private AudioSource _audioSource = default;
 
     //AudioClip型の変数を宣言
     [SerializeField] private AudioClip _chargeSE = default;
-    [SerializeField] private AudioClip _runSE = default;
 
     public override void Spawned()
     {
+        base.Spawned();
+
         // Raycastをつかうための基本設定をしてくれる関数
         BasicRaycast();
 
@@ -84,9 +89,15 @@ public class Salamaner : BaseEnemy
         _animator = GetComponent<Animator>();
 
         // 子のオブジェクト名
-        Transform effectObj = FindChild(transform, "");
+        Transform effectObj = FindChild(transform, "AttackChargeEffects");
 
-        //_attackEffects = effectObj.GetComponentsInChildren<ParticleSystem>();
+        _attackEffects1 = effectObj.GetComponentsInChildren<ParticleSystem>();
+        _attackEffects2 = transform.Find("RushEffect");
+        _attackEffects2.gameObject.SetActive(false);
+
+        Transform boxObj = FindChild(transform, "DamageJudgment");
+
+        _boxCollider = boxObj.GetComponent<BoxCollider>();
 
         _randomTargetPos = GenerateRandomPosition(); // ランダムな位置を生成
     }
@@ -406,6 +417,8 @@ public class Salamaner : BaseEnemy
             _lookAroundState = EnemyLookAroundState.TURNING;
             _isAttack = false;
             TargetTrans = null;
+            _attackEffects2.gameObject.SetActive(false);
+            _boxCollider.enabled = false;
 
             // 突進方向をリセット
             _chargeDirection = Vector3.zero;
@@ -422,6 +435,9 @@ public class Salamaner : BaseEnemy
             targetPosition.y = _initialYPosition; // Y座標を突進開始時の高さに固定
 
             transform.position = targetPosition; // 高さを維持して移動
+
+            _attackEffects2.gameObject.SetActive(true);
+            _boxCollider.enabled = true;
         }
         else
         {
@@ -545,5 +561,36 @@ public class Salamaner : BaseEnemy
     protected override void OnDeath()
     {
         _movementState = EnemyMovementState.DIE;
+    }
+
+    /// <summary>
+    /// 攻撃のエフェクト
+    /// </summary>
+    private void AttackEffect()
+    {
+        foreach (var effect in _attackEffects1)
+        {
+            effect.Play();
+        }
+
+        _audioSource.PlayOneShot(_chargeSE);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == 8) // Layer 8: Stage
+        {
+            // 障害物にぶつかったら突進を終了し、次の行動へ
+            _randomTargetPos = GenerateRandomPosition();
+            _movementState = EnemyMovementState.IDLE;
+            _lookAroundState = EnemyLookAroundState.TURNING;
+            _isAttack = false;
+            TargetTrans = null;
+            _attackEffects2.gameObject.SetActive(false);
+            _boxCollider.enabled = false;
+
+            // 突進方向をリセット
+            _chargeDirection = Vector3.zero;
+        }
     }
 }
