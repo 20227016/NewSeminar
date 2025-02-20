@@ -11,7 +11,8 @@ public class NormalStageTransfer : NetworkBehaviour
     private Subject<Unit> _portalStartSubject = new Subject<Unit>();
     public IObservable<Unit> OnPortalStart => _portalStartSubject;
 
-
+    [SerializeField]
+    private AudioManager _audioManager = default;
 
     /// <summary>
     ///  テレポート内のプレイヤーを管理するリスト
@@ -79,6 +80,7 @@ public class NormalStageTransfer : NetworkBehaviour
     {
 
         _waveClear = FindObjectOfType<WaveClear>();
+        _audioManager = FindObjectOfType<AudioManager>();
 
         _normalTeleportPosition = GameObject.Find("NormalTeleportPosition");
         _bossTeleportPosition = GameObject.Find("BossTeleportPosition");
@@ -171,6 +173,8 @@ public class NormalStageTransfer : NetworkBehaviour
             // ポータル起動を通知する
             _portalStartSubject.OnNext(Unit.Default); // イベント発行
             print("イベント発火させたよ");
+
+            _audioManager.OnStageNormalBGM();
 
             player.transform.position = _normalStageteleportPos.position;
             print($"{player.name} をノーマルステージにテレポートしました");
