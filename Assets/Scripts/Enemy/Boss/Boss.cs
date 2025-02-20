@@ -37,6 +37,14 @@ public class Boss : BaseEnemy
     [SerializeField]
     private float _currentTimer = 3f;
 
+    [Header("ボスステージの位置")]
+    [SerializeField] private Vector3 _bossStagePos = default;
+
+    [Header("ボスステージのサイズ")]
+    [SerializeField] private Vector3 _bossStageSize = default;
+    [Space(50)]
+    [Header("生成する玉の数")]
+    [SerializeField] private int _countLightningChain = default;
     // アニメーター変数
     // TransitionNo.-2 Appearance
     // TransitionNo.-1 Roar
@@ -83,8 +91,9 @@ public class Boss : BaseEnemy
     /// <summary>
     /// 行動パターンを抽選し、その結果を配列に格納する
     /// </summary>
-    private int[] _confirmedAttackState = new int[4];
+    private int[] _confirmedAttackState = new int[3];
     private int _lastValue = default;
+
 
     // ボスの体力
     private int _hp = default;
@@ -484,6 +493,12 @@ public class Boss : BaseEnemy
 
         print("電撃攻撃");
         _animator.SetInteger("TransitionNo", 8);
+
+        for (int i = 0; _countLightningChain > i ;i++)
+        {
+
+
+        }
 
         _actionState = 1;
         _currentTimer = 10f;

@@ -35,7 +35,7 @@ public class MagicBullet : BaseEnemy
     protected float _suctionSpeed = default;
 
     [SerializeField, Header("吸い込みの間隔")]
-    protected float _suctionOffset = 0.1f;
+    protected float _delayTime = 0.1f;
 
     //AudioSource型の変数を宣言
     [SerializeField] private AudioSource _audioSource = default;
@@ -45,6 +45,8 @@ public class MagicBullet : BaseEnemy
 
     private Vector3 _myPos = default;
 
+    private float _delayTimer = default;
+
     /// <summary>
     /// 効果音発生
     /// </summary>
@@ -53,7 +55,7 @@ public class MagicBullet : BaseEnemy
         _audioSource.PlayOneShot(_magicBulletSE);
     }
 
-    private async UniTaskVoid Update()
+    private void Update()
     {
         // まだ目標サイズに達していない場合、徐々に大きくする
         if (!isMoving)
@@ -94,16 +96,22 @@ public class MagicBullet : BaseEnemy
             _myPos = this.gameObject.transform.position;
 
         }
-        await UniTask.Delay((int)(_suctionOffset * 1000));
+       
+        if(_delayTime > _delayTimer)
+        {
+
+            _delayTimer += Time.deltaTime;
+            return;
+
+        }
+        _delayTimer = 0f;
         foreach (Collider collider in _playerColliders)
         {
 
-           
             Vector3 direction = _myPos - collider.transform.position;
 
             direction.y = 0;
             collider.transform.position += direction * _suctionSpeed * Time.deltaTime;
-
         }
 
     }
