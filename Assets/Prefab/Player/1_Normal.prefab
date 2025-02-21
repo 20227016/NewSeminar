@@ -1786,7 +1786,7 @@ MonoBehaviour:
     _ressurectionTime: 5
     _recoveryStamina: 25
     _runStamina: 10
-    _avoidanceStamina: 10
+    _avoidanceStamina: 30
   _characterAnimationStruct:
     _idleAnimation: {fileID: 7400000, guid: f8c2d6a0ce3bc2d40b090cd67dd23862, type: 3}
     _walkAnimation: {fileID: 7400016, guid: df74f516f8958a24bab217e3603c71cd, type: 3}
