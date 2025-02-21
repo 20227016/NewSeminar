@@ -34,7 +34,7 @@ public class Salamaner : BaseEnemy
     [Networked] private Vector3 _randomTargetPos { get; set; } // ランダム移動の目標位置
 
     private bool _isAttack = default;
-    private float _currentAttackTime = 1.5f;
+    private float _currentAttackTime = default;
     private float _breakTime = default;
 
     [SerializeField, Tooltip("突進の持続時間")]
@@ -441,11 +441,8 @@ public class Salamaner : BaseEnemy
 
             _animator.SetInteger("TransitionNo", 3);
 
-            // 突進（高さを維持し、XZ方向のみ移動）
-            Vector3 targetPosition = transform.position + _chargeDirection * _runMoveSpeed * Time.deltaTime;
-            targetPosition.y = _initialYPosition; // Y座標を突進開始時の高さに固定
-
-            transform.position = targetPosition; // 高さを維持して移動
+            // 向いている方向に移動
+            transform.position += _chargeDirection * _runMoveSpeed * Time.deltaTime;
 
             _attackEffects2.gameObject.SetActive(true);
             _boxCollider.enabled = true;
@@ -455,14 +452,22 @@ public class Salamaner : BaseEnemy
             _animator.SetInteger("TransitionNo", 2);
 
             // プレイヤーの方向を計算
-            _chargeDirection = (_playerLastKnownPosition - transform.position).normalized;
-            _chargeDirection.y = 0; // Y軸を固定
+            Vector3 targetPosition = _playerLastKnownPosition;
+            targetPosition.y = transform.position.y; // Y軸を無視して高さを固定
 
-            // プレイヤーの方向に向きを変える
-            transform.rotation = Quaternion.LookRotation(_chargeDirection);
+            // 方向を求める
+            Vector3 direction = (targetPosition - transform.position).normalized;
 
-            // 突進開始時のY座標を記録
-            _initialYPosition = transform.position.y;
+            // Y軸のみ回転
+            if (direction != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Euler(0, targetRotation.eulerAngles.y, 0);
+            }
+
+            // 進行方向を決定（Y軸は無視）
+            _chargeDirection = transform.forward;
+            _chargeDirection.y = 0; // 地面に固定
         }
     }
 
@@ -601,6 +606,41 @@ public class Salamaner : BaseEnemy
         {
             // 障害物にぶつかったら突進を終了し、次の行動へ
             _randomTargetPos = GenerateRandomPosition();     
+            _isAttack = false;
+            _currentAttackTime = _attackTime;
+            _breakTime = _attackCoolTime;
+            TargetTrans = null;
+            _attackEffects2.gameObject.SetActive(false);
+            _boxCollider.enabled = false;
+
+            // 突進方向をリセット
+            _chargeDirection = Vector3.zero;
+
+            _movementState = EnemyMovementState.IDLE;
+            _lookAroundState = EnemyLookAroundState.TURNING;
+        }
+    }
+
+    public override void OnTriggerEnter(Collider other)
+    {
+        base.OnTriggerEnter(other);
+
+        if (other.gameObject.layer == 8)
+        {
+            // 現在の位置
+            Vector3 currentPosition = transform.position;
+
+            // 自分の後ろ方向を計算（forward の反対方向）
+            Vector3 backwardDirection = -transform.forward;
+
+            // 後ろに少しワープ
+            float warpDistance = 1.5f;
+            Vector3 newPosition = currentPosition + backwardDirection * warpDistance;
+
+            // ワープ
+            transform.position = newPosition;
+
+            _randomTargetPos = GenerateRandomPosition();
             _isAttack = false;
             _currentAttackTime = _attackTime;
             _breakTime = _attackCoolTime;

@@ -10706,7 +10706,7 @@ MonoBehaviour:
   _workMoveSpeed: 5
   _runMoveSpeed: 20
   _detectionDistance: 3
-  _attackTime: 2
+  _attackTime: 1.5
   _attackCoolTime: 3
   _lookAroundState: 0
   _audioSource: {fileID: -2944591596682600796}
