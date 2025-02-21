@@ -1,4 +1,5 @@
 using Fusion;
+using System;
 using UniRx;
 using UnityEngine;
 
@@ -54,6 +55,37 @@ public class TankCharacter : CharacterBase
             .AddTo(this);
     }
 
+    public override void FixedUpdateNetwork()
+    {
+        base.FixedUpdateNetwork();
+
+        if(_currentStamina.Value <= 0)
+        {
+            _isBlockReactive.Value = false;
+
+            _passive.Passive(this);
+        }
+    }
+
+    protected override void HandleStaminaRecovery()
+    {
+        Observable.Interval(TimeSpan.FromSeconds(STAMINA_UPDATE_INTERVAL))
+            // 回避状態ではない
+            .Where(_ => CurrentState != CharacterStateEnum.AVOIDANCE)
+            // 走っていない or スタミナ切れ or 移動していない
+            .Where(_ => !_isRun || _isOutOfStamina || _moveDirection == Vector2.zero)
+            // スタミナが最大値以下
+            .Where(_ => _currentStamina.Value < _characterStatusStruct._playerStatus.MaxStamina)
+            .Subscribe(_ =>
+            {
+                // スタミナ切れ時は回復速度が半減
+                float recoveryRate = _isOutOfStamina ? 2.0f : 1.0f;
+                recoveryRate = _isBlockReactive.Value ? 2.0f : 1.0f;
+                _currentStamina.Value += _characterStatusStruct._recoveryStamina * STAMINA_UPDATE_INTERVAL / recoveryRate;
+            })
+            .AddTo(this);
+    }
+
     protected override void Move(Transform transform, Vector2 moveDirection, float moveSpeed, Rigidbody rigidbody, CharacterStateEnum characterState)
     {
         if(_isBlockReactive.Value == true)
@@ -82,8 +114,10 @@ public class TankCharacter : CharacterBase
 
     protected override void Avoidance(Transform transform, PlayerNetworkInput input)
     {
-        // 回避処理をガードに置き換える
-        CurrentState = CharacterStateEnum.AVOIDANCE;
+        if (_isOutOfStamina)
+        {
+            return;
+        }
 
         _isBlockReactive.Value = true;
 
@@ -120,6 +154,7 @@ public class TankCharacter : CharacterBase
         if (_isBlockReactive.Value)
         {
             _currentSkillPoint.Value += _blockSPHealValue;
+            _currentStamina.Value -= damageValue / 2;
             RPC_PlayAnimation(_blockReactionAnimation.name);
             return;
         }
