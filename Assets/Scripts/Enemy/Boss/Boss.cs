@@ -96,7 +96,7 @@ public class Boss : BaseEnemy
     /// <summary>
     /// 行動パターンを抽選し、その結果を配列に格納する
     /// </summary>
-    private int[] _confirmedAttackState = new int[4];
+    private int[] _confirmedAttackState = new int[3];
     private int _lastValue = default;
 
 
@@ -259,9 +259,9 @@ public class Boss : BaseEnemy
                         if (Runner.IsServer)
                         {
                             // 羽の薙ぎ払い攻撃
-                            //RPC_WingAttack();
+                            RPC_WingAttack();
                             // 電撃チェイン攻撃
-                            RPC_LightningChain();
+                            //RPC_LightningChain();
                         }
                         else
                         {
@@ -275,9 +275,9 @@ public class Boss : BaseEnemy
                         if (Runner.IsServer)
                         {
                             // 魔弾攻撃
-                            //RPC_MagicBulletAttack();
+                            RPC_MagicBulletAttack();
                             // 電撃チェイン攻撃
-                            RPC_LightningChain();
+                            //RPC_LightningChain();
                         }
                         else
                         {
@@ -291,9 +291,9 @@ public class Boss : BaseEnemy
                         if (Runner.IsServer)
                         {
                             // レーザー攻撃
-                            //RPC_LaserAttack();
+                            RPC_LaserAttack();
                             // 電撃チェイン攻撃
-                            RPC_LightningChain();
+                            //RPC_LightningChain();
                         }
                         else
                         {
