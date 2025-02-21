@@ -8,6 +8,7 @@ TagManager:
   - Canvas
   - Enemy
   - BGM
+  - LightningChain
   layers:
   - Default
   - TransparentFX
