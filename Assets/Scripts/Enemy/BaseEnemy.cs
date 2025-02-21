@@ -47,7 +47,6 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     [Networked]
     protected float _currentHP { get; set; } = default;
 
-
     [SerializeField] 
     private GameObject _damageTextPrefab; // ダメージテキストのプレハブ
 
@@ -132,13 +131,11 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
         _boxCastStruct._size -= Vector3.one / 100;
     }
 
-
     protected virtual void SetDirection()
     {
         // 方向
         _boxCastStruct._direction = transform.forward;
     }
-
 
     protected virtual void SetDistance()
     {
@@ -210,7 +207,6 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     /// エネミーの死亡処理(具体的な処理は個別で設定)
     /// </summary>
     protected abstract void OnDeath();
-
 
     public virtual void EnemyDespawn()
     {
