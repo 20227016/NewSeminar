@@ -7,6 +7,7 @@ using Random = System.Random;
 using System.Collections;
 using System.Net.NetworkInformation;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 
 /// <summary>
 /// ボスエネミーの基盤
@@ -96,7 +97,7 @@ public class Boss : BaseEnemy
     /// <summary>
     /// 行動パターンを抽選し、その結果を配列に格納する
     /// </summary>
-    private int[] _confirmedAttackState = new int[3];
+    private int[] _confirmedAttackState = new int[4];
     private int _lastValue = default;
 
 
@@ -260,8 +261,6 @@ public class Boss : BaseEnemy
                         {
                             // 羽の薙ぎ払い攻撃
                             RPC_WingAttack();
-                            // 電撃チェイン攻撃
-                            //RPC_LightningChain();
                         }
                         else
                         {
@@ -276,8 +275,6 @@ public class Boss : BaseEnemy
                         {
                             // 魔弾攻撃
                             RPC_MagicBulletAttack();
-                            // 電撃チェイン攻撃
-                            //RPC_LightningChain();
                         }
                         else
                         {
@@ -292,8 +289,6 @@ public class Boss : BaseEnemy
                         {
                             // レーザー攻撃
                             RPC_LaserAttack();
-                            // 電撃チェイン攻撃
-                            //RPC_LightningChain();
                         }
                         else
                         {
@@ -508,13 +503,23 @@ public class Boss : BaseEnemy
         {
 
             Debug.LogError("電撃連鎖のプレハブが見つからない");
-
+            return;
         }
+        LightningChain().Forget();
+        _actionState = 1;
+        _currentTimer = 10f;
+
+    }
+
+    private async UniTask LightningChain()
+    {
+
+        await UniTask.Delay(3000);
         Random random = new Random();
-        for (int i = 0; _countLightningChain > i ;i++)
+        for (int i = 0; _countLightningChain > i; i++)
         {
 
-           
+
             float offsetX = random.Next((int)-_bossStageSize.x, (int)_bossStageSize.x);
             float offsetZ = random.Next((int)-_bossStageSize.z, (int)_bossStageSize.z);
             Vector3 SpawnPos = Vector3.right * offsetX;
@@ -522,12 +527,10 @@ public class Boss : BaseEnemy
             SpawnPos += Vector3.up * _SpawnHeight;
             SpawnPos += _bossStagePos;
             NetworkObject a = Runner.Spawn(_lightningChain, SpawnPos);
-            Debug.LogError($"seisei{a}");
 
         }
+       
 
-        _actionState = 1;
-        _currentTimer = 10f;
 
     }
 

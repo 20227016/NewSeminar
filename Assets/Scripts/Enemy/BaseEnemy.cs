@@ -172,7 +172,7 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
     /// <param name="damegeValue">ダメージ</param>
     public virtual void ReceiveDamage(int damegeValue)
     {
-
+        Debug.Log($"ダメージをもらう{this.gameObject.name}");
         int damage = (int)(damegeValue - (damegeValue * _enemyStatusStruct._defensePercentage));
         // ダメージ処理
         _enemyStatusStruct._hp -= damage;
@@ -187,6 +187,7 @@ public abstract class BaseEnemy : NetworkBehaviour,IReceiveDamage
         RPC_UpdateHPBar();
         if (_enemyStatusStruct._hp <= 0)
         {
+            Debug.Log($"消える");
             OnDeath();
         }
         return;

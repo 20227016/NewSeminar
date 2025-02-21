@@ -4911,7 +4911,7 @@ MonoBehaviour:
   _interpolationDataSource: 0
   _audioManager: {fileID: 0}
   _ClearNormalStage: 0
-  _isDebug: 0
+  _isDebug: 1
   _HasTeleport: 0
   _StageRequiredPlayers: 0
   _audioSource: {fileID: 6924648712958202239}
