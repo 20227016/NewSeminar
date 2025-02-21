@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5629813958111607671}
   - component: {fileID: 7060108363448575865}
   - component: {fileID: 4689826974023289630}
-  m_Layer: 7
+  m_Layer: 2
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,12 +93,13 @@ GameObject:
   m_Component:
   - component: {fileID: 2903405863879293240}
   - component: {fileID: -5501340385035193935}
+  - component: {fileID: 6481310608342594636}
   - component: {fileID: 7150421739489545167}
   - component: {fileID: -4397892527730880130}
   - component: {fileID: -9136137265209171178}
   - component: {fileID: -1254385271870074852}
   - component: {fileID: -2067027146112472488}
-  m_Layer: 7
+  m_Layer: 2
   m_Name: LightningChain
   m_TagString: LightningChain
   m_Icon: {fileID: 0}
@@ -151,6 +152,29 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!136 &6481310608342594636
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1126514637383894338}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 5.0022144
+  m_Height: 10.023094
+  m_Direction: 1
+  m_Center: {x: 0.025855303, y: 0, z: 0}
 --- !u!65 &7150421739489545167
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -237,11 +261,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 5bf540c1652d3044591bdefb945aa743, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
+  m_Volume: 0.2
+  m_Pitch: -2.01
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -344,7 +368,7 @@ MonoBehaviour:
   _enemyStatusStruct:
     _maxHp: 10
     _hp: 10
-    _attackPower: 0
+    _attackPower: 5
     _attackPowerSpeed: 0
     _moveSpeed: 0
     _defensePercentage: 0
@@ -355,8 +379,7 @@ MonoBehaviour:
   _hpBarFill: {fileID: 0}
   _damageTextPrefab: {fileID: 0}
   _damageTextSpawnPoint: {fileID: 0}
-  _laserRangeView: {fileID: 0}
-  _laserView: {fileID: 0}
+  _time: 30
 --- !u!1 &2089901796687366101
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,7 +391,7 @@ GameObject:
   - component: {fileID: 3352533750992289623}
   - component: {fileID: 8112979409546105249}
   - component: {fileID: 888216812979979878}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: NoticeLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -451,7 +474,7 @@ GameObject:
   - component: {fileID: 5544537378347165989}
   - component: {fileID: 5321387361594474340}
   - component: {fileID: 6161612512917217659}
-  m_Layer: 7
+  m_Layer: 2
   m_Name: Ray
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5291,7 +5314,7 @@ GameObject:
   - component: {fileID: 2461870846176591098}
   - component: {fileID: 1566955516501008495}
   - component: {fileID: 840111360413223031}
-  m_Layer: 7
+  m_Layer: 2
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
