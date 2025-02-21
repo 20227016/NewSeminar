@@ -405,9 +405,9 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             .Subscribe(_ => _isOutOfStamina = true)
             .AddTo(this);
 
-        // スタミナが最大値の半分まで回復したらスタミナ切れフラグをfalseに
+        // スタミナが最大値の1/3まで回復したらスタミナ切れフラグをfalseに
         _currentStamina
-            .Where(stamina => stamina >= _characterStatusStruct._playerStatus.MaxStamina / 2)
+            .Where(stamina => stamina >= _characterStatusStruct._playerStatus.MaxStamina / 3)
             .Subscribe(_ => _isOutOfStamina = false)
             .AddTo(this);
     }
@@ -701,11 +701,11 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     protected virtual void Resurrection(Transform transform, float resurrectionTime)
     {
-        Debug.Log("蘇生入力検知");
-        CurrentState = CharacterStateEnum.RESURRECTION;
+        //Debug.Log("蘇生入力検知");
+        //CurrentState = CharacterStateEnum.RESURRECTION;
 
-        _resurrection.Resurrection(transform, resurrectionTime);
-
+        //_resurrection.Resurrection(transform, resurrectionTime);
+        //ResetState(0);
     }
 
     public virtual void ReceiveDamage(int damageValue)
@@ -716,7 +716,10 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         }
 
         // 無敵中はリターン
-        if (_isInvincible) return;
+        if (_isInvincible) 
+        {
+            return;
+        }
 
         CurrentState = CharacterStateEnum.DAMAGE_REACTION;
 
@@ -752,6 +755,8 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
 
     public virtual void ReceiveHeal(int healValue)
     {
+        NetworkedHP = Mathf.Clamp(NetworkedHP + healValue, 0, _characterStatusStruct._playerStatus.MaxHp);
+
         // 死亡状態から回復処理をした場合は蘇生
         if (CurrentState == CharacterStateEnum.DEATH)
         {
@@ -760,7 +765,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
             _resurrectionSubject.OnNext(Unit.Default);
             ResetState(animationDuration);
         }
-        NetworkedHP = Mathf.Clamp(NetworkedHP + healValue, 0, _characterStatusStruct._playerStatus.MaxHp);
+        
     }
 
     /// <summary>
@@ -816,7 +821,6 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
                 return;
             }
 
-
             // アニメーション速度を元に戻す
             _animator.speed = 1.0f;
 
@@ -832,6 +836,7 @@ public abstract class CharacterBase : NetworkBehaviour, IReceiveDamage, IReceive
         {
             // キャンセルされた場合は処理しない
         }
+
     }
 
     /// <summary>
