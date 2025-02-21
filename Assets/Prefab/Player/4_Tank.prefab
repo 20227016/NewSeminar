@@ -1551,9 +1551,9 @@ MonoBehaviour:
     _counterTime: 0.5
     _skillPointUpperLimit: 100
     _ressurectionTime: 5
-    _recoveryStamina: 20
+    _recoveryStamina: 10
     _runStamina: 20
-    _avoidanceStamina: 30
+    _avoidanceStamina: 0
   _characterAnimationStruct:
     _idleAnimation: {fileID: 7400000, guid: f8c2d6a0ce3bc2d40b090cd67dd23862, type: 3}
     _walkAnimation: {fileID: 7400016, guid: df74f516f8958a24bab217e3603c71cd, type: 3}
@@ -1606,6 +1606,7 @@ MonoBehaviour:
     _audioVolume_Dodge: 0.5
     _delay_Dodge: 0
   _blockReactionAnimation: {fileID: 7400002, guid: 06b2d730cc61165409b7dfc816822cbc, type: 3}
+  _blockSPHealValue: 2
 --- !u!114 &2544810034382573789
 MonoBehaviour:
   m_ObjectHideFlags: 0
